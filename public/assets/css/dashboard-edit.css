@@ -1,0 +1,238 @@
+.active-tab {
+    border-bottom: 3px solid #2563eb;
+    color: #2563eb;
+}
+
+#dash-tabs {
+    border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+    .top-divs {
+        text-align: left;
+    }
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    background-color: #f1f1f1;
+    border: 1px solid #c8e2ff;
+    border-radius: 50%;
+}
+
+.font-28 {
+    font-size: 28px;
+}
+.font-22 {
+    font-size: 22px;
+}
+
+.border-gray {
+    border: 1px solid #f1f1f1;
+}
+
+.blog-image {
+    height: 250px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.like-image {
+    text-decoration: none !important;
+    background-color: #ffb6b6;
+    border-radius: 50%;
+    padding: 4px;
+    display: inline-block;
+    width: 32px;
+}
+
+.comment-image {
+    background-color: #e5e5e5;
+    border-radius: 50%;
+    padding: 4px;
+    display: inline-block;
+    width: 32px;
+}
+
+.blog-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.play-icon {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+}
+
+.user-image {
+    width: 64px;
+    height: 64px;
+    background-color: #f0f0f0;
+    border: 1px solid #e0d7f0;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-left: 8px;
+}
+
+.user-image-div {
+    position: relative;
+    display: inline-block;
+    margin: 16px 0;
+}
+
+#user-image-input {
+    display: none;
+}
+
+#loading-image-icon {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background-color: rgb(255 255 255 / 70%);
+    padding: 8px;
+    border-radius: 50%;
+    display: none;
+}
+
+#loading-image-icon {
+    animation: rotation 6s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.post-box {
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 8px 8px 4px 4px;
+    background-color: #fdfdfd;
+    height: auto;
+}
+.post-box:hover {
+    background-color: #f7f7f7;
+}
+
+.post-img {
+    width: 60px;
+    height: 60px;
+    object-fit: scale-down;
+    border-radius: 50%;
+}
+.img-count {
+    width: 20px;
+}
+.span-count {
+    position: absolute;
+    top: 2px;
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.edit-post-img {
+    width: 22px;
+}
+.s-v-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+div[id^="post-edit-"] {
+    height: 60px;
+    display: none;
+}
+
+.min-img {
+    border: 2px solid #a5a5a5;
+    padding: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #fff;
+    position: absolute;
+    top: 24px;
+    left: 8px;
+}
+.open-img {
+    border: 2px solid #a5a5a5;
+    padding: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #fff;
+    width: 30px;
+    position: absolute;
+    top: 24px;
+    left: 8px;
+}
+
+.ad-edit-icons {
+    width: 20px;
+}
+
+#active-email-msg {
+    display: block;
+    margin-top: 12px;
+    color: #dc3545;
+    font-weight: 500;
+}
+
+#change-email-msg {
+    display: block;
+    margin-top: 8px;
+    text-align: center;
+    color: #dc3545;
+    font-weight: 500;
+}
+
+#money-amount-txt {
+    font-size: 16px;
+}
+
+.ad-item-div {
+    border-bottom: 1px solid #dee2e6;
+    padding: 16px 4px;
+    display: flex;
+}
+
+.ad-item-div:hover {
+    background-color: #f8f9fa;
+}
+
+.ad-item-div img {
+    width: 54px;
+    height: 54px;
+    background-color: #f5f5f5;
+    border: 1px solid #eee;
+    padding: 4px;
+    object-fit: contain;
+    margin-left: 12px;
+}
+
+#ac-ad-ymoney-t {
+    color: #007bff;
+}
+.ac-ad-money-c {
+    font-size: 15px;
+    font-weight: 600;
+}
+#ac-ad-nmoney-t {
+    color: #6400ff;
+}
+button[id^="rock-ad-btn-loading-"] {
+    display: none;
+}
+button[id^="pay-ad-btn-loading-"] {
+    display: none;
+}

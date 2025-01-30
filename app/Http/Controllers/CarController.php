@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Jobs\Item\ChangeItemPageCount;
+use App\Models\Advertise;
+use App\Models\MongoAdvertise;
+use App\Models\ShortLink;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+class CarController extends Controller
+{
+
+    public function destroy($id)
+    {
+        $ad = MongoAdvertise::find($id);
+        if (!auth('admin')->check()) {
+            if (auth('user')->id() != $ad->user_id) {
+                abort(403);
+            }
+        }
+        $disk = Storage::disk('ftp');
+        foreach ($ad->featureValues as $fv) {
+            $fv->delete();
+        }
+        foreach ($ad->getImages() as $key => $image) {
+            if ($key == 0) {
+                $thumb = explode('.webp', $image['filename'])[0] . '2.webp';
+                $disk->delete($thumb);
+            }
+            $disk->delete($image['filename']);
+        }
+        if (isset($ad->items) && count($ad->items) > 0) {
+            dispatch(new ChangeItemPageCount($ad->items, 'advertise', 0))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
+        }
+        $ad->delete();
+
+        return redirect()->back()->with('success', 'آگهی با موفقیت حذف شد');
+    }
+
+    public function carPage(Request $request, $brandEn, $modelEn = null)
+    {
+        if (isset($modelEn)) {
+            $req = route('question.index', 'car') . "?s=1&" . "brand=" . $brandEn . "&model=" . $modelEn;
+        } else {
+            $req = route('question.index', 'car') . "?s=1&" . "brand=" . $brandEn;
+        }
+        return redirect()->to($req);
+    }
+
+    private function createShortLink($link_class, $link_id)
+    {
+        $random = Str::random(12);
+        if ($this->isShortLinkUnique($random)) {
+            $shortlink = new ShortLink();
+            $shortlink->short_link = $random;
+            $shortlink->link_id = $link_id;
+            $shortlink->link_class = $link_class;
+            $shortlink->save();
+        } else {
+            $this->createShortLink($link_class, $link_id);
+        }
+    }
+
+    private function isShortLinkUnique($short_link)
+    {
+        $shortLinks = ShortLink::all();
+        foreach ($shortLinks as $sh) {
+            if ($sh->short_link == $short_link) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

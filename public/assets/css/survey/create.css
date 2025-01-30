@@ -1,0 +1,50 @@
+.sopx {
+    display: none;
+    position: absolute;
+    background-color: #888;
+    padding: 8px;
+    border-radius: 50%;
+    left: 5%;
+    top: 10px;
+    cursor: pointer;
+}
+
+#surop3box {
+    display: none;
+}
+
+#surop4box {
+    display: none;
+}
+
+#sur-box {
+    text-align: center;
+    background-color: #fff;
+    margin: 4px;
+    margin-top: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    position: relative;
+    padding-top: 12px;
+    display: none;
+}
+
+.sur-title-label {
+    font-weight: 600;
+    font-size: 18px;
+    margin-top: 8px;
+    margin-right: 5px;
+    display: inline-block;
+    width: 95%;
+    text-align: right;
+}
+
+.sur-inputs {
+    font-size: 16px;
+    margin-bottom: 8px;
+    border-radius: 36px;
+    padding: 12px;
+    outline: none !important;
+    width: 95%;
+    border: 1px solid #ddd;
+}

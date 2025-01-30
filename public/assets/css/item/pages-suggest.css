@@ -1,0 +1,34 @@
+.suggest-item {
+    text-decoration: none !important;
+    color: #000;
+    border: 1px solid #bdbdbd;
+    padding: 6px;
+    display: block;
+    border-radius: 8px;
+}
+.suggest-item img {
+    max-width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+    margin-bottom: 4px;
+}
+.suggest-item span {
+    font-size: 14px;
+    display: block;
+}
+
+.breadcr {
+    margin-top: 6px;
+    display: inline-block;
+    color: #888;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+.breadcr-devider {
+    color: #888;
+    padding: 0 2px;
+    font-size: 14px;
+}

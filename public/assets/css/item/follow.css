@@ -1,0 +1,32 @@
+.btn-follow-item {
+    background-color: rgb(0, 123, 255);
+    outline: none !important;
+    border: none !important;
+    color: #fff;
+    border-radius: 24px;
+    padding: 2px 12px;
+    margin: 0 10px;
+    min-width: 92px;
+}
+.btn-nfollow-item {
+    background-color: #3a3a3a;
+    outline: none !important;
+    border: 1px solid #fff;
+    color: #ffffff;
+    border-radius: 24px;
+    text-wrap: nowrap;
+    padding: 2px 12px;
+    margin: 0 10px;
+    min-width: 92px;
+}
+.btn-following-item {
+    background-color: #b9b9b9;
+    outline: none !important;
+    border: 1px solid #fff;
+    color: #ffffff;
+    border-radius: 24px;
+    padding: 0 6px;
+    text-wrap: nowrap;
+    margin: 4px 0 4px 4px;
+    min-width: 92px;
+}

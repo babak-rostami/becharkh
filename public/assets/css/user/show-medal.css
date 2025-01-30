@@ -1,0 +1,37 @@
+/* for user medal */
+.user-ccom-medal {
+    border-radius: 50%;
+    border-left: 1px solid #ccc;
+    padding: 3px;
+    cursor: pointer;
+}
+.umedal-box {
+    position: absolute;
+    background-color: #f5faff;
+    top: 40px;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    padding: 12px;
+    left: 50px;
+    max-width: 260px;
+    display: none;
+}
+.umedal-title {
+    display: block;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #007bff;
+    color: #003d7f;
+}
+.umedal-item {
+    display: block;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    border-bottom: 1px solid #ffffff;
+}
+
+/* end for user medal */

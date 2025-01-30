@@ -1,0 +1,9 @@
+/node_modules
+/storage/*.key
+/storage/framework/sessions
+/vendor
+/public/files
+/public/ampbech
+/public/ckeditor
+.env
+.env.backup

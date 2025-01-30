@@ -1,0 +1,52 @@
+#s-q-box-title-b {
+    color: #25a925;
+}
+
+#s-q-box-help-img {
+    width: 32px;
+    height: 32px;
+}
+
+#s-q-box-title {
+    font-size: 18px;
+    border-bottom: 2px solid #669bbc;
+    display: inline-block;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+.s-q-item {
+    border: 2px solid #e0d7f0;
+}
+.sug-q-img {
+    width: 36px;
+    height: 36px;
+    background-color: #f1f1f1;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.sug-q-username {
+    font-size: 14px;
+    color: #00b2ff;
+    font-weight: 700;
+}
+.sug-q-title {
+    font-size: 18px;
+    font-weight: 800;
+}
+.sug-q-like-icon {
+    width: 18px;
+}
+.sug-q-c-shortans {
+    color: #888;
+    font-size: 14px;
+}
+.s-q-f-tilte {
+    font-size: 13px;
+    color: #363636;
+    font-weight: 500;
+    border: 1px solid #c9c9c9;
+    border-radius: 8px;
+    background-color: #e2e2e9;
+    padding-right: 4px;
+    padding-left: 4px;
+}

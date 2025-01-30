@@ -1,0 +1,145 @@
+#page-title {
+    font-size: 18px;
+}
+
+.comment-texterea {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    resize: none; /*remove the resize handle on the bottom right*/
+    min-height: 120px;
+}
+.nocm-title {
+    font-weight: 700;
+    font-size: 22px;
+}
+.reply-user-color {
+    color: #669bbc;
+}
+.cm-time-style {
+    font-size: 12px;
+}
+.comment-box {
+    background-color: #ffffff;
+    border: 2px solid #a4d0ff;
+}
+.comment-style {
+    border: 2px solid #e0d7f0;
+}
+.comment-text {
+    white-space: pre-line;
+    margin: 16px 0;
+}
+.reply-style {
+    background-color: #f7f7f7;
+    border: 1px solid #e9e9e9;
+}
+.like-icon {
+    background-color: #e3f2f9;
+    border: 1px solid #b6daff;
+    color: #075e91;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.dislike-icon {
+    color: #bf0000;
+    background-color: #fff2f3;
+    border: 1px solid #edaeb4;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.like-icon img,
+.dislike-icon img {
+    width: 18px;
+}
+.comment-reply-btn {
+    text-decoration: none !important;
+    border: 1px solid #cae4ff;
+    background-color: #fafffb;
+    font-weight: 500;
+    border-radius: 12px;
+    padding: 2px 16px;
+}
+.com-user-img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.product-post-content img {
+    max-width: 100%;
+}
+
+.product-post-content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #002a57;
+}
+
+.product-post-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #6d000a;
+}
+
+.product-post-content h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #373737;
+}
+
+.product-post-content .table {
+    overflow: auto;
+}
+
+.product-post-content ul,
+.product-post-content ol {
+    padding-inline-start: 24px;
+}
+
+.product-aflink {
+    background-color: rgb(105, 108, 231) !important;
+    padding: 12px 0 !important;
+    font-size: 16px;
+    font-weight: 700;
+    position: fixed;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 1;
+    max-width: 650px;
+}
+
+@media only screen and (max-width: 576px) {
+    .product-aflink {
+        bottom: 65px;
+    }
+}
+
+@keyframes rotate-pl-star {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.bp-star {
+    animation: rotate-pl-star 5s linear infinite;
+    margin-right: 4px;
+}

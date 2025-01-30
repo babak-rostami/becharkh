@@ -1,0 +1,160 @@
+.question-box {
+    border: 2px solid #e0d7f0;
+    display: block;
+    border-radius: 10px;
+    text-decoration: none !important;
+    color: #000;
+}
+
+.question-username {
+    font-size: 14px;
+    color: #00b2ff;
+    font-weight: 700;
+}
+
+.pagination .page-item {
+    width: 31px;
+}
+
+.question-title {
+    color: #333;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: "Roboto", sans-serif;
+    font-weight: bold;
+    position: relative;
+    margin: 15px 0 10px;
+    font-size: 26px;
+}
+
+.question-title::after {
+    content: "";
+    width: 100px;
+    position: absolute;
+    margin: 0 auto;
+    height: 3px;
+    background: #8fbc54;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+}
+
+.next {
+    left: 0 !important;
+    top: 40% !important;
+}
+.prev {
+    right: 0 !important;
+    top: 40% !important;
+}
+
+#page-img {
+    max-height: 164px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+#page-title {
+    font-weight: 700;
+    font-size: 18px;
+    margin: 12px 0;
+}
+
+#pititle {
+    text-align: right;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.q-user-image {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.video-slider-item {
+    text-align: center;
+}
+
+.q-item-title {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.like-icon {
+    background-color: #e3f2f9;
+    border: 1px solid #b6daff;
+    color: #075e91;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.dislike-icon {
+    color: #bf0000;
+    background-color: #fff2f3;
+    border: 1px solid #edaeb4;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.like-icon img,
+.dislike-icon img {
+    width: 18px;
+}
+
+.c-shortans {
+    color: #888;
+    font-size: 14px;
+}
+
+#new-q-btn {
+    position: fixed;
+    bottom: 76px;
+    left: 24px;
+    z-index: 10;
+    padding: 6px 12px;
+}
+#last-qs-title {
+    border-right: 3px solid #dc3545;
+    padding-right: 8px;
+    font-weight: 600;
+    font-size: 16px;
+}
+#dywt {
+    font-size: 21px;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#pdesctor h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #002053;
+}
+#pdesctor p,
+#pdesctor ul {
+    margin-bottom: 6px;
+}
+
+
+.rcir-glow {
+    animation: rcir-glow-anim 0.5s infinite alternate;
+}
+
+@keyframes rcir-glow-anim {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

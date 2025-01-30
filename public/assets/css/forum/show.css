@@ -1,0 +1,158 @@
+.breadcrumb-item + .breadcrumb-item::before {
+    padding-left: 4px;
+    padding-right: 2px;
+}
+
+.sq-box {
+    border: 1px solid #e1e1e1;
+}
+
+.sq-user-image {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+.sq-item-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.qa-form-ta {
+    width: 100%;
+    height: 150px;
+    resize: none;
+    padding: 8px;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+}
+
+.reply-box {
+    background-color: #f8f9f9;
+    border: 2px solid #e0e1be;
+}
+
+.forum-breadcrumb-item {
+    background-color: #495057;
+    border-radius: 6px;
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 0 8px;
+    display: inline-block;
+}
+
+#breadcrumb-box {
+    overflow-x: auto;
+    text-wrap: nowrap;
+    height: 44px;
+    overflow-y: hidden;
+}
+
+#cm-input {
+    min-height: 120px;
+    border: 1px solid #00b2ff;
+}
+
+.share-span {
+    border: 1px solid #6c757d;
+}
+
+.share-span img {
+    width: 21px;
+}
+
+.share-box {
+    position: absolute;
+    top: 40px;
+    width: 300px;
+    left: -100px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+    z-index: 1;
+    background-color: #f7f7f7;
+}
+
+.hide-share {
+    display: none;
+}
+
+#copy-clipboard-done-span {
+    width: 100%;
+    border-radius: 8px;
+    color: #ffffff;
+    background-color: #0b9100;
+    margin-top: 8px;
+    display: none;
+}
+
+.answer-box {
+    border: 2px solid #e0d7f0;
+    border-radius: 10px;
+}
+
+#qsh-can-help-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.like-icon {
+    background-color: #e3f2f9;
+    border: 1px solid #b6daff;
+    color: #075e91;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.dislike-icon {
+    color: #bf0000;
+    background-color: #fff2f3;
+    border: 1px solid #edaeb4;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.like-icon img,
+.dislike-icon img {
+    width: 18px;
+}
+.comment-reply-btn {
+    text-decoration: none !important;
+    border: 1px solid #cae4ff;
+    background-color: #fafffb;
+    font-weight: 500;
+    border-radius: 12px;
+    padding: 2px 16px;
+}
+
+.c-shortans {
+    color: #888;
+    font-size: 14px;
+}
+
+.sug-q-like-icon {
+    background-color: #e3f2f9;
+    border: 1px solid #b6daff;
+    color: #075e91;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.sug-q-like-icon img {
+    width: 18px;
+}
+
+.question-editor img {
+    width: 100%;
+}

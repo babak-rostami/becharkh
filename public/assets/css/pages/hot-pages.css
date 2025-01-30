@@ -1,0 +1,35 @@
+.hop-item {
+    display: block;
+    background-color: #f7f7f7;
+    border: 1px solid #dee2e6;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    text-decoration: none !important;
+}
+
+.hop-item:hover {
+    background-color: #dee2e6;
+}
+
+#hop-box-title {
+    display: block;
+    text-align: center;
+    background-color: #f7f7f7;
+    border-bottom: 2px solid #007bff;
+    border-top: 2px solid #007bff;
+    border-radius: 8px;
+    margin: 12px 0;
+    padding: 8px 0;
+}
+
+.hop-title {
+    font-weight: 600;
+    color: #1c244f;
+    display: block;
+}
+
+.hop-body {
+    font-size: 14px;
+    color: #525252;
+}

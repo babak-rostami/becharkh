@@ -1,0 +1,94 @@
+#fifil-box {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 0;
+}
+#fifil-box::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+#fifil-box::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+#fifil-box::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
+
+.fifil-feature {
+    background-color: #edeeff;
+    padding: 2px 14px;
+    border-radius: 16px;
+    border: 1px solid #cfceff;
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+#fifilter-ibox-loading {
+    display: none;
+}
+
+#fifilter-ibox-ftitle {
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+#fifilter-ibox-back {
+    display: none;
+    margin-right: 8px;
+    background-color: #ededed;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 2px 8px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+#fifilter-ibox-click {
+    font-size: 17px;
+    display: block;
+    padding: 21px 0;
+}
+#fifilter-ibox-items {
+    max-height: 290px;
+    overflow-y: auto;
+}
+#fifilter-ibox-items::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+#fifilter-ibox-items::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+#fifilter-ibox-items::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
+
+#fifilter-ibox-items span {
+    display: block;
+    padding: 12px 8px;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+#fifilter-ibox-items span:hover {
+    background-color: #f1f1f1;
+}
+
+#fifil-noitems {
+    padding: 36px 0;
+    display: block;
+    text-align: center;
+    font-size: 21px;
+}
