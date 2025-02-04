@@ -213,6 +213,8 @@
                 ])
             @else
                 @include('question.comment-items', ['firstItems' => 1, 'comments' => $comments])
+                <button class="btn btn-primary w-100 mt-4" onclick="loadMorePosts()" id="load-more-com-btn">نمایش نظرات
+                    بیشتر</button>
                 <div id="loadMore">
                     <span>در حال بارگیری نظرات بیشتر</span>
                     <br>

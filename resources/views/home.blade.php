@@ -140,8 +140,13 @@
                         @endforeach
                     </div>
                 @endif
-
             </div>
+
+            @if (isset($hot_pages))
+                <div class="row mt-4">
+                    @include('mainPart.hot-pages')
+                </div>
+            @endif
 
         </div>
     </div>

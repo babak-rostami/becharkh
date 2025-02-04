@@ -103,54 +103,7 @@
             ])
         </div>
 
-        <div class="col-12 col-md-4 px-2 mt-2 order-1 order-lg-0 text-right">
-            @if ($questions->count() > 1)
-                <div class="row mx-2">
-                    <div class="col-12 my-4">
-                        <h3 class="text-center">شما هم سوالی دارید؟</h3>
-                        <a class="btn btn-danger w-100 my-3" href="{{ route('question.create') }}">
-                            ثبت سوال در انجمن
-                            <img class="lazy-load" data-src="{{ asset('files/other/images/w-add.png') }}" alt="add">
-                        </a>
-                    </div>
-
-                    @foreach ($questions as $ques)
-                        <div class="col-12 py-2 shadow-sm mb-2 radius-10 sq-box text-right">
-                            <a class="bold-font-title text-decoration-none text-dark"
-                                href="{{ route('question.show', ['category' => $ques->category->slug, 'slug' => $ques->slug, 'random' => $ques->random_id]) }}">
-                                <div>
-                                    <img class="sq-user-image lazy-load" data-src="{{ asset($ques->user->thumb()) }}"
-                                        alt="User Image" />
-                                    <span class="text-gray font-14">{{ $ques->user->username }}</span>
-                                    @if ($ques->like_count > 0)
-                                        <span class="sug-q-like-icon float-left">
-                                            <span>{{ $ques->like_count }}</span>
-                                            <img class="lazy-load"
-                                                data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
-                                        </span>
-                                    @endif
-                                </div>
-                                <h2 class="sq-item-title">{{ $ques->title }}</h2>
-                                @if (isset($ques->answer))
-                                    <span class="c-shortans">-{{ $ques->answer }}
-                                    </span>
-                                @endif
-                                @if (isset($ques->items_title))
-                                    <div>
-                                        @foreach ($ques->items_title as $qi)
-                                            <span class="badge badge-light">{{ $qi }}
-                                            </span>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </a>
-                        </div>
-                    @endforeach
-                    <a href="{{ route('question.index') }}" class="btn btn-primary w-100">ورود به صفحه انجمن</a>
-                </div>
-            @endif
-        </div>
-        <div class="col-12 col-md-8 bg-wht order-0 order-lg-1 text-right">
+        <div class="col-12 col-md-10 bg-wht text-right">
 
             @if (session('success'))
                 <p class="alert alert-success text-center">{{ session('success') }}</p>
@@ -243,6 +196,10 @@
             <h3 class="text-center mt-4">نظر شما چیه؟</h3>
 
             @include('mainPart.comment-box', ['page' => 'show_question'])
+
+            <div class="row mt-4">
+                @include('item.top-users')
+            </div>
 
             @include('mainPart.mainPage.page-btns', ['page' => 'show_question'])
 
@@ -393,6 +350,59 @@
             @endif
 
             @include('category.rcats')
+
+            @if ($questions->count() > 1)
+                <div class="row mx-0">
+                    <div class="col-12 my-4 px-0">
+                        <h3 class="text-center">شما هم سوالی دارید؟</h3>
+                        <a class="btn btn-danger w-100 my-3" href="{{ route('question.create') }}">
+                            ثبت سوال در انجمن
+                            <img class="lazy-load" data-src="{{ asset('files/other/images/w-add.png') }}"
+                                alt="add">
+                        </a>
+                    </div>
+
+                    @foreach ($questions as $ques)
+                        <div class="col-12 py-2 shadow-sm mb-2 radius-10 sq-box text-right">
+                            <a class="bold-font-title text-decoration-none text-dark"
+                                href="{{ route('question.show', ['category' => $ques->category->slug, 'slug' => $ques->slug, 'random' => $ques->random_id]) }}">
+                                <div>
+                                    <img class="sq-user-image lazy-load" data-src="{{ asset($ques->user->thumb()) }}"
+                                        alt="User Image" />
+                                    <span class="text-gray font-14">{{ $ques->user->username }}</span>
+                                    @if ($ques->like_count > 0)
+                                        <span class="sug-q-like-icon float-left">
+                                            <span>{{ $ques->like_count }}</span>
+                                            <img class="lazy-load"
+                                                data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
+                                        </span>
+                                    @endif
+                                </div>
+                                <h2 class="sq-item-title">{{ $ques->title }}</h2>
+                                @if (isset($ques->answer))
+                                    <span class="c-shortans">-{{ $ques->answer }}
+                                    </span>
+                                @endif
+                                @if (isset($ques->items_title))
+                                    <div>
+                                        @foreach ($ques->items_title as $qi)
+                                            <span class="badge badge-light">{{ $qi }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </a>
+                        </div>
+                    @endforeach
+                    <a href="{{ route('question.index') }}" class="btn btn-primary w-100">ورود به صفحه انجمن</a>
+                </div>
+            @endif
+
+            @if (isset($hot_pages))
+                <div class="row mt-4">
+                    @include('mainPart.hot-pages')
+                </div>
+            @endif
 
         </div>
     </div>

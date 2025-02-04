@@ -246,7 +246,9 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/assets/css/home1.css", "public/assets/css/bslider/index.css"],
+    ["public/assets/css/home1.css",
+        "public/assets/css/bslider/index.css",
+        "public/assets/css/pages/hot-pages.css"],
     "public/mixassets/css/home.min.css"
 );
 
@@ -330,7 +332,8 @@ mix.minify(
         "public/assets/css/survey/show.css",
         "public/assets/css/category/rcats.css",
         "public/assets/css/pages/fifilter.css",
-        "public/assets/css/pages/share-page.css"
+        "public/assets/css/pages/share-page.css",
+        "public/assets/css/category/comment/uprof.css",
     ],
     "public/mixassets/css/category/comment/index.min.css"
 );
@@ -375,6 +378,7 @@ mix.minify(
         "public/assets/css/category/rcats.css",
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/hot-pages.css",
+        "public/assets/css/category/comment/uprof.css",
     ],
     "public/mixassets/css/blog/show.min.css"
 );
@@ -402,7 +406,10 @@ mix.minify(
         "public/assets/css/pages/comment-box.css",
         "public/assets/css/survey/show.css",
         "public/assets/css/category/rcats.css",
-        "public/assets/css/pages/share-page.css"
+        "public/assets/css/pages/share-page.css",
+        "public/assets/css/pages/hot-pages.css",
+        "public/assets/css/category/comment/uprof.css",
+        "public/assets/css/item/top-users.css"
     ],
     "public/mixassets/css/forum/show.min.css"
 );
@@ -450,7 +457,8 @@ mix.minify(
         "public/assets/css/gallery/show.css",
         "public/assets/css/category/rcats.css",
         "public/assets/css/pages/share-page.css",
-        "public/assets/css/pages/comment-box.css"
+        "public/assets/css/pages/comment-box.css",
+        "public/assets/css/category/comment/uprof.css",
     ],
     "public/mixassets/css/affilate/show.min.css"
 );

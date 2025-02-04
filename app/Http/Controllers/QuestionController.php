@@ -502,7 +502,10 @@ class QuestionController extends Controller
         $features = $category->features();
         $currentQueryParams = [];
 
+        $hot_pages = Cache::get('hot_pages');
+
         $compactVars = [
+            'hot_pages',
             'question',
             'answers',
             'acceptedAnswer',

@@ -144,23 +144,31 @@ $(document).ready(function () {
         $("#comment-img-prev-box").show();
     });
 
-    $(window).scroll(function () {
-        var hopBoxHeight = $('#hop-box').outerHeight();
-        if (
-            $(window).scrollTop() + $(window).height() >=
-            $(document).height() - 500 - hopBoxHeight
-        ) {
-            if (dontLoadMore == 0) {
-                if (nextPageUrl) {
-                    dontLoadMore = 1;
-                    $("#loadMore").show();
-                    loadMorePosts();
-                }
-            }
-        }
-    });
+    // $(window).scroll(function () {
+    //     var hopBoxHeight = $('#hop-box').outerHeight();
+    //     if (
+    //         $(window).scrollTop() + $(window).height() >=
+    //         $(document).height() - 500 - hopBoxHeight
+    //     ) {
+    // if (dontLoadMore == 0) {
+    // if (nextPageUrl) {
+    //     dontLoadMore = 1;
+    //     $("#loadMore").show();
+    //     loadMorePosts();
+    // }
+    // }
+    //     }
+    // });
+    if (!nextPageUrl) {
+        $("#load-more-com-btn").hide();
+    }
 });
+
 function loadMorePosts() {
+    let showmorebtn = $("#load-more-com-btn");
+    let showmorebox = $("#loadMore").show();
+    showmorebtn.hide();
+    showmorebox.show();
     $.ajax({
         url: nextPageUrl,
         type: "get",
@@ -170,10 +178,16 @@ function loadMorePosts() {
             $("#loadMore").hide();
             dontLoadMore = 0;
             scrollToId(data.scrollTo);
+            showmorebox.hide();
+            if (nextPageUrl) {
+                showmorebtn.show();
+            }
         },
         error: function (xhr, status, error) {
             dontLoadMore = 0;
             console.error("Error loading more comments");
+            showmorebtn.show();
+            showmorebox.hide();
         }
     });
 }

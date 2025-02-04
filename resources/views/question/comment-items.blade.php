@@ -9,7 +9,7 @@
                 </div>
             @endif
         @endif
-        <div class="col-12 bg-wht px-3 pb-3 pt-2 radius-10 mt-4 shadow-sm comment-box text-right"
+        <div class="col-12 px-3 pb-3 pt-2 radius-10 mt-4 shadow-sm comment-box text-right"
             id="comment-box-{{ $comment->id }}">
             @if (isset($comment->user))
                 @include('modals.userdash', [
@@ -110,7 +110,7 @@
             @endif
         </div>
         @foreach ($comment->replies as $reply)
-            <div class="col-12 bg-wht px-3 py-2 mr-2 radius-10 mt-1 comment-box text-right reply-div">
+            <div class="col-12 px-3 py-2 mr-2 radius-10 mt-1 comment-box text-right reply-div">
                 @if (isset($reply->user))
                     @include('modals.userdash', [
                         'dashuser' => $reply->user,

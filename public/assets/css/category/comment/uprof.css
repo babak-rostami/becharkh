@@ -1,0 +1,45 @@
+.comusr-link {
+    border: none !important;
+    outline: none !important;
+    background-color: unset;
+    display: inline-block;
+}
+
+.comusr-name {
+    font-weight: 500;
+}
+
+.comusr-label {
+    margin-right: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0 8px;
+    border-radius: 12px;
+    border-left: 2px solid #c1c8d1;
+    border-top: 1px solid #c1c8d1;
+    background-color: #fff;
+}
+
+.comusr-label-0 {
+    color: #558bc4;
+}
+
+.comusr-label-1 {
+    color: #8d7220;
+}
+
+.comusr-label-2 {
+    color: #6c9a6e;
+}
+
+.comusr-label-3 {
+    color: #8d61b7;
+}
+
+.comusr-style {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    background-color: #f1f1f1;
+    border: 1px solid #d9ecff;
+}

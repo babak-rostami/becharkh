@@ -33,8 +33,9 @@ class IndexController extends Controller
         $questions = MongoQuestion::where('status', 1)->orderBy('created_at', 'desc')->take(20)->with('user')->get();
 
         $hotItems = Cache::get('hot_items');
+        $hot_pages = Cache::get('hot_pages');
 
-        return view('home', compact('questions', 'products', 'categories', 'hotItems'));
+        return view('home', compact('questions', 'products', 'categories', 'hotItems', 'hot_pages'));
     }
 
     public function getCities(Request $request)

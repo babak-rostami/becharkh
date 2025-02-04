@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Cookie;
 
 class MongoUser extends Model implements AuthenticatableContract
 {
+
+    // سطح کاربرا
+    //default کاوشگر
+    //1 آگاه
+    //2 حرفه ای
+    //3 متخصص
+
     use Authenticatable;
 
     protected $connection = 'mongodb';
