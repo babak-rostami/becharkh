@@ -63,23 +63,14 @@ class SendEmailCategoryComment implements ShouldQueue
         if ($commentPage == null || $commentPageTitle == null) {
             return;
         }
-        $pCUser = $parentComment->user;
-        //if comment was reply to reply
         if ($this->reply_to_id != null) {
             $replyComment = MongoCategoryComment::find($this->reply_to_id);
             $rUser = $replyComment->user;
-            //send NE to replyUser if reply user is not $user
             if (isset($rUser) && (!isset($rUser->email_actived) || $rUser->email_actived != 0) && $this->user != $rUser) {
                 Mail::to($rUser->email)->send(new ReplyToCommentMail($commentPageTitle, $this->user->username, $commentPage));
             }
-            //send NE to ParentUser if parent user is not $this->user
-            if (isset($pCUser) && (!isset($pCUser->email_actived) || $pCUser->email_actived != 0) && $this->user != $pCUser && $pCUser != $rUser) {
-                Mail::to($pCUser->email)->send(new ReplyToCommentMail($commentPageTitle, $this->user->username, $commentPage));
-            }
-        }
-        //if comment was reply to comment
-        else {
-            //send Ne to ParentUser if parent user is not user
+        } else {
+            $pCUser = $parentComment->user;
             if (isset($pCUser) && (!isset($pCUser->email_actived) || $pCUser->email_actived != 0) && $this->user != $pCUser) {
                 Mail::to($pCUser->email)->send(new ReplyToCommentMail($commentPageTitle, $this->user->username, $commentPage));
             }

@@ -236,3 +236,31 @@ button[id^="rock-ad-btn-loading-"] {
 button[id^="pay-ad-btn-loading-"] {
     display: none;
 }
+
+.rcir-glow {
+    animation: rcir-glow-anim 0.5s infinite alternate;
+}
+
+@keyframes rcir-glow-anim {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#chusername-loading {
+    display: none;
+}
+
+#update-user-loading-btn {
+    display: none;
+}
+
+#new_username_msg {
+    display: block;
+    text-align: center;
+    color: #dc3545;
+}

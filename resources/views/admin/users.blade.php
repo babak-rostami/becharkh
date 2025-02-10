@@ -22,7 +22,7 @@
                             <th>ردیف</th>
                             <th>نام کاربری</th>
                             <th>ایمیل</th>
-                            <th>ایمیل تایید؟</th>
+                            <th>وضعیت تایید ایمیل</th>
                             <th>عملیات</th>
                         </tr>
                     </thead>
@@ -32,7 +32,15 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $user->username }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->email_actived == 1 ? 'بله' : 'خیر' }}</td>
+                                <td>
+                                    @if (!isset($user->email_actived))
+                                        <span class="badge badge-warning">تایید نشده</span>
+                                    @elseif(isset($user->email_actived) && $user->email_actived == 1)
+                                        <span class="badge badge-success">تایید شده</span>
+                                    @elseif(isset($user->email_actived) && $user->email_actived == 0)
+                                        <span class="badge badge-danger">ایمیل اشتباه</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <a class="btn btn-primary" href="" data-toggle="modal"
                                         data-target="#edit-{{ $user->id }}">
@@ -61,7 +69,10 @@
                                                     value="{{ $user->email }}">
                                                 <label>money</label>
                                                 <input class="form-control" type="text" name="money"
-                                                    value="{{ $user->money ?? 0 }}">
+                                                    value="{{ $user->money ?? '' }}">
+                                                <label>email actived</label>
+                                                <input class="form-control" type="text" name="email_actived"
+                                                    value="{{ $user->email_actived ?? '' }}">
                                                 <label>image</label>
                                                 <input class="form-control" type="file" name="image">
                                                 <label>body</label>

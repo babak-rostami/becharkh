@@ -38,8 +38,6 @@ class BlogCommentController extends Controller
         //if comment is not main comment 
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
-            $parentComment = MongoBlogComment::find($request->parent_id);
-            $pCUser = $parentComment->user;
             //if comment was reply to reply
             if (isset($request->reply_to_id)) {
                 $comment->reply_to_id = $request->reply_to_id;
@@ -49,33 +47,19 @@ class BlogCommentController extends Controller
                 if (isset($rUser) && $user != $rUser) {
                     $this->NE($user, $rUser, $blog);
                 }
-                //send NE to ParentUser if parent user is not $user
-                if (isset($pUser) && $user != $pCUser && $pCUser != $rUser) {
-                    $this->NE($user, $pCUser, $blog);
-                }
-                //send NE to BlogUser if blog user is not $user
-                if ($user != $blogUser && $blogUser != $pCUser && $blogUser != $rUser) {
-                    $this->NE($user, $blogUser, $blog);
-                }
             }
             //if comment was reply to comment
             else {
+                $parentComment = MongoBlogComment::find($request->parent_id);
+                $pCUser = $parentComment->user;
                 //send Ne to ParentUser if parent user is not user
                 if (isset($user) && $user != $pCUser) {
                     $this->NE($user, $pCUser, $blog);
-                }
-                //sent Ne to BlogUser if blog user is not user
-                if ($user != $blogUser && $blogUser != $pCUser) {
-                    $this->NE($user, $blogUser, $blog);
                 }
             }
         }
         //main comment
         else {
-            if ($user != $blogUser) {
-                $this->NE($user, $blogUser, $blog);
-            }
-
             $comment_count = $blog->comment_count ?? 0;
             $comment_count += 1;
             $blog->comment_count = $comment_count;
@@ -125,19 +109,8 @@ class BlogCommentController extends Controller
 
     private function NE($fromUser, $toUser, $blog)
     {
-        if (isset($toUser)) {
+        if (isset($toUser) && (!isset($toUser->email_actived) || $toUser->email_actived != 0)) {
             Mail::to($toUser->email)->send(new ReplyToCommentMail($blog->title, $fromUser->username, route('blog.show', ['category_slug' => $blog->category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id])));
-            //     $toUser->notify(new UserNotif([
-            //         'action' => ' یک نظر جدید از ' . $fromUser->username . ' دریافت کرده اید ',
-            //         'route' => route('blog.show', ['category_slug' => $blog->category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id]),
-            //         'userImage' => asset($fromUser->image()),
-            //         'pageImage' => asset('files/blog/images/' . $blog->image),
-            //         'pageType' => 'blog',
-            //         'notifType' => 'comment',
-            //         'important' => 0,
-            //         'pageId' => $blog->id,
-            //         'userId' => $fromUser->id,
-            //     ]));
         }
     }
 

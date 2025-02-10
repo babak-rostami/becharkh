@@ -13,14 +13,14 @@ if ($("#user-image").length > 0) {
             data: formUploadImgData,
             processData: false,
             contentType: false,
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#loading-image-icon").show();
             },
-            success: function(data) {
+            success: function (data) {
                 $("#loading-image-icon").hide();
                 user_img_preview.src = data.filePath;
             },
-            error: function() {
+            error: function () {
                 $("#loading-image-icon").hide();
             }
         });
@@ -35,8 +35,8 @@ let intervalId = setInterval(() => {
     clearInterval(intervalId);
 }, 1000);
 
-$(document).ready(function() {
-    $(".active-email-btn").on("click", function(e) {
+$(document).ready(function () {
+    $(".active-email-btn").on("click", function (e) {
         setTimeout(() => {
             $(".active-email-btn").removeAttr("href");
         }, 50);
@@ -120,7 +120,7 @@ if (typeof last_active_code !== "undefined") {
             $.ajax({
                 type: "GET",
                 url: active_email_route,
-                success: function(data) {
+                success: function (data) {
                     $("#active-email-msg").text(data.message);
                     if (data.success == 1) {
                         last_active_code = 0;
@@ -132,7 +132,7 @@ if (typeof last_active_code !== "undefined") {
                         $("#active-email-btn").prop("disabled", false);
                     }
                 },
-                error: function() {
+                error: function () {
                     $("#active-email-btn")
                         .removeClass("btn-light")
                         .addClass("btn-primary");
@@ -164,7 +164,7 @@ if (typeof last_active_code !== "undefined") {
                 _token: dash_edit_csrf,
                 email: email
             },
-            success: function(data) {
+            success: function (data) {
                 if (data.error == 1) {
                     $("#change-email-msg").text(data.message);
                     setTimeout(() => {
@@ -190,7 +190,7 @@ if (typeof last_active_code !== "undefined") {
                     activeEmail();
                 }
             },
-            error: function() {
+            error: function () {
                 $("#change-email-btn")
                     .removeClass("btn-light")
                     .addClass("btn-primary");
@@ -210,10 +210,90 @@ function rockAd(ad_id) {
     $(`#rock-ad-btn-loading-${ad_id}`).show();
 }
 
-$("#phone").on("input", function() {
+$("#phone").on("input", function () {
     this.value = this.value.replace(/[^0-9]/g, "");
 });
 
-$("#phone").on("paste", function(event) {
+$("#phone").on("paste", function (event) {
     event.preventDefault();
 });
+
+$(document).ready(function () {
+    $('#userUpdateForm').on('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    });
+});
+
+function handleUserUpdateSubmit() {
+    $('#update-user-submit-btn').hide();
+    $('#update-user-loading-btn').show();
+    $('#userUpdateForm').submit();
+}
+
+function handleChangeUsernameSubmit() {
+    let new_username = $('#new_username').val();
+    if (new_username.trim() !== '') {
+        let new_username_body = $('#new_username_body').val();
+
+        $('#chusername-submit').hide();
+        $('#chusername-loading').show();
+
+        $.ajax({
+            url: req_change_username_route,
+            type: "POST",
+            data: {
+                new_username: new_username,
+                body: new_username_body,
+                _token: dash_edit_csrf
+            },
+            success: function (data) {
+                if (data.success == 1) {
+                    $("#chusername-loading").removeClass('btn-light').addClass('btn-success');
+                    $("#chusername-loading").text('درخواست با موفقیت ثبت شد');
+                    $('#new_username').val('');
+                    $('#new_username_body').val('');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                }
+            },
+            error: function (jqXHR) {
+                $("#new_username_msg").show();
+                $("#new_username_msg").text(jqXHR.responseJSON.message);
+                setTimeout(() => {
+                    $("#new_username_msg").hide();
+                }, 8000);
+                $('#chusername-submit').show();
+                $('#chusername-loading').hide();
+            }
+        });
+    } else {
+        return false;
+    }
+}
+
+if ($("#new_username").length > 0) {
+    $("#new_username")
+        .on("input", function () {
+            let input = this.value;
+            input = input.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
+            if (/^\d/.test(input)) {
+                input = input.replace(/^\d+/, "");
+            }
+            this.value = input;
+        })
+        .on("paste", function (event) {
+            event.preventDefault();
+        })
+        .on("blur", function () {
+            let input = this.value;
+            input = input.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
+            if (/^\d/.test(input)) {
+                input = input.replace(/^\d+/, "");
+            }
+            this.value = input;
+        })
+        .attr("autocomplete", "off"); // غیرفعال کردن autocomplete
+}

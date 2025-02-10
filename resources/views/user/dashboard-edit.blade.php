@@ -64,6 +64,7 @@
                         <a class="btn btn-sm btn-secondary" href="" data-toggle="modal"
                             data-target="#change_email">تغییر ایمیل</a>
                         <span id="active-email-msg">ایمیل شما تایید نشده است!</span>
+                        <img class="lazy-load rcir-glow" data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
                         <hr>
                     </div>
                 @endif
@@ -396,7 +397,8 @@
                         <div class="row justify-content-center my-3">
                             <div class="col-11 col-sm-10 text-right">
                                 <form action="{{ route('user.update') }}" method="POST" role="form"
-                                    enctype="multipart/form-data">
+                                    enctype="multipart/form-data" id="userUpdateForm"
+                                    onsubmit="return handleUserUpdateSubmit();">
                                     @csrf
                                     {{ method_field('PUT') }}
                                     <div class="row">
@@ -426,6 +428,8 @@
                                             <div class="form-group">
                                                 <input readonly="readonly" required type="text" class="form-control"
                                                     placeholder="نام کاربری را اینجا وارد کنید" value="{{ $user->username }}">
+                                                <a class="btn btn-sm btn-danger" href="" data-toggle="modal"
+                                                    data-target="#changeUserNameModal">تغییر نام کاربری</a>
                                             </div>
                                             <div class="form-group">
                                                 <input type="text" readonly="readonly" class="form-control"
@@ -434,7 +438,10 @@
                                         </div>
 
                                         <div class="col-12 mb-4">
-                                            <button type="submit" class="btn btn-success mt-3 w-100">ذخیره تغییرات</button>
+                                            <button id="update-user-submit-btn" type="submit"
+                                                class="btn btn-success mt-3 w-100">ذخیره تغییرات</button>
+                                            <button id="update-user-loading-btn" type="button"
+                                                class="btn btn-light mt-3 w-100">در حال ثبت...</button>
                                         </div>
                                     </div>
                                 </form>
@@ -497,7 +504,8 @@
                         <div class="row justify-content-center my-3">
                             <div class="col-11 col-sm-10 text-right">
                                 <form action="{{ route('user.update') }}" method="POST" role="form"
-                                    enctype="multipart/form-data">
+                                    enctype="multipart/form-data" id="userUpdateForm"
+                                    onsubmit="return handleUserUpdateSubmit();">
                                     @csrf
                                     {{ method_field('PUT') }}
                                     <div class="row">
@@ -527,6 +535,8 @@
                                             <div class="form-group">
                                                 <input readonly="readonly" required type="text" class="form-control"
                                                     placeholder="نام کاربری را اینجا وارد کنید" value="{{ $user->username }}">
+                                                <a class="btn btn-sm btn-danger" href="" data-toggle="modal"
+                                                    data-target="#changeUserNameModal">تغییر نام کاربری</a>
                                             </div>
                                             <div class="form-group">
                                                 <input type="text" readonly="readonly" class="form-control"
@@ -535,7 +545,10 @@
                                         </div>
 
                                         <div class="col-12 mb-4">
-                                            <button type="submit" class="btn btn-success mt-3 w-100">ذخیره تغییرات</button>
+                                            <button id="update-user-submit-btn" type="submit"
+                                                class="btn btn-success mt-3 w-100">ذخیره تغییرات</button>
+                                            <button id="update-user-loading-btn" type="button"
+                                                class="btn btn-light mt-3 w-100">در حال ثبت...</button>
                                         </div>
                                     </div>
                                 </form>
@@ -543,6 +556,37 @@
                         </div>
                 @endswitch
 
+                <div class="modal fade text-right" id="changeUserNameModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>نام کاربری جدید را بنویسید(حروف انگلیسی)</label>
+                                            <input required type="text" class="form-control" name="new_username"
+                                                id="new_username" placeholder="نام کاربری جدید را اینجا بنویسید">
+                                            <span id="new_username_msg"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>توضیحات (اختیاری)</label>
+                                            <textarea id="new_username_body" name="body" class="form-control" rows="5"
+                                                placeholder="در صورت نیاز توضیحات خود را بنویسید"></textarea>
+                                        </div>
+                                        <button id="chusername-submit" type="button"
+                                            onclick="handleChangeUsernameSubmit()"
+                                            class="btn btn-warning mt-3 w-100">درخواست
+                                            تغییر</button>
+                                        <button id="chusername-loading" type="button"
+                                            class="btn btn-light mt-3 w-100">در حال
+                                            ثبت...</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -555,6 +599,7 @@
         const user_img_preview = document.getElementById('user-image');
         const dash_edit_csrf = "{{ csrf_token() }}";
         const upload_user_img_route = "{{ route('upload.user.image') }}";
+        const req_change_username_route = "{{ route('user.req.change.username') }}";
         const user_id = "{{ $user->id }}";
         // const first_post = "{{ count($user->blogs) > 0 ? $user->blogs->first()->id : null }}";
         const b_min = "{{ $ftp_path . 'files/other/images/b-minim.webp' }}";

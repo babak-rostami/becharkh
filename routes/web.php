@@ -98,10 +98,10 @@ Route::get('/parent-feature/{pid}', [SiteCategoryController::class, 'getParentFe
 Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('/', [IndexController::class, 'home'])->name('home');
 
-    Route::get('/image-compressor', [ImageCompressorController::class, 'index'])->name('image.compressor.index');
-    Route::post('/image-compressor-upload', [ImageCompressorController::class, 'upload'])->name('image.compressor.upload');
-    Route::post('/image-compressor-compress', [ImageCompressorController::class, 'compress'])->name('image.compressor.compress');
-    Route::get('/image-compress-download/{id}', [ImageCompressorController::class, 'downloadImage'])->name('image.compressor.download');
+    Route::get('image-compressor', [ImageCompressorController::class, 'index'])->name('image.compressor.index');
+    // Route::post('/image-compressor-upload', [ImageCompressorController::class, 'upload'])->name('image.compressor.upload');
+    // Route::post('/image-compressor-compress', [ImageCompressorController::class, 'compress'])->name('image.compressor.compress');
+    // Route::get('/image-compress-download/{id}', [ImageCompressorController::class, 'downloadImage'])->name('image.compressor.download');
 
     Route::get('/ads/{category_slug?}', [AdvertiseController::class, 'getAds'])->name('ads.index');
     Route::get('/ads/{category_slug}/{ad_slug}', function ($category_slug) {
@@ -132,6 +132,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     Route::get('users', [AdminController::class, 'users'])->name('admin.users');
     Route::post('user-update/{id}', [UserController::class, 'updateAdmin'])->name('user.update.admin');
+    Route::get('change-username-reqs', [UserController::class, 'changeUserNameReqs'])->name('admin.change.username.reqs');
+    Route::delete('destroy-chun-reqs', [UserController::class, 'DestroyChunReqs'])->name('admin.destroy.chun.reqs');
 
     Route::resource('brand', BrandController::class);
 
@@ -312,8 +314,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::put('affilate-update-plink/{id}', [AffilateController::class, 'plinkUpdate'])->name('affilate.update.public.link.admin');
     Route::post('affilate-store-plink', [AffilateController::class, 'plinkStore'])->name('affilate.store.public.link.admin');
 
-    Route::get('site-view-count/{page?}', [SiteCategoryController::class, 'AdminsiteViewIndex'])->name('site.view.count.index');
-
     Route::get('jobs', [WorkController::class, 'adminIndex'])->name('admin.job.index');
     Route::post('store-job', [WorkController::class, 'storeAdmin'])->name('job.store.admin');
     Route::put('update-job/{job_id}', [WorkController::class, 'updateAdmin'])->name('job.update.admin');
@@ -350,17 +350,18 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('/profile/{username}/{tab?}', [UserController::class, 'dashboard'])->name('user.dashboard');
 
     Route::get('new-question/{category_slug?}', [QuestionController::class, 'create'])->name('question.create');
-    Route::get('/new-ad/{cat_slug?}', [AdvertiseController::class, 'create'])->name('new.ad');
 
     Route::get('fifil-load-items', [CategoryFeatureController::class, 'fifilLoadItems'])->name('fifil.load.items');
 });
 
 Route::middleware(['user'])->group(function () {
 
-    Route::get('/dashboard/{tab?}', [UserController::class, 'dashboardEdit'])->name('user.dashboard.edit');
-    Route::post('/upload-user-image', [UserController::class, 'uploadUserImage'])->name('upload.user.image');
+    Route::get('dashboard/{tab?}', [UserController::class, 'dashboardEdit'])->name('user.dashboard.edit');
+    Route::post('upload-user-image', [UserController::class, 'uploadUserImage'])->name('upload.user.image');
 
-    Route::get('/your-packages', [UserController::class, 'yourPackages'])->name('user.packages');
+    Route::post('request-change-username', [UserController::class, 'requestChangeUsername'])->name('user.req.change.username');
+
+    Route::get('your-packages', [UserController::class, 'yourPackages'])->name('user.packages');
 
     Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
     Route::post('user-change-email', [UserController::class, 'userChangeEmail'])->name('user.change.email');
@@ -374,6 +375,7 @@ Route::middleware(['user'])->group(function () {
     Route::get('actice-email', [UserController::class, 'activeEmail'])->name('actice.email');
 
     //advertise 
+    Route::get('/new-ad/{cat_slug?}', [AdvertiseController::class, 'create'])->name('new.ad');
     Route::post('advertise-store', [AdvertiseController::class, 'store'])->name('ad.store');
 
     Route::get('click-cat-ad-create/{id}', [SiteCategoryController::class, 'clickCategoryCreateAd'])->name('ad.create.click.category');

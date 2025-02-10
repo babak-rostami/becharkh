@@ -379,6 +379,10 @@ class AdvertiseController extends Controller
 
     public function create(Request $request)
     {
+        $user = auth('user')->user();
+        if ($user->email_actived != 1) {
+            return redirect()->route('user.dashboard.edit')->with('success', 'برای ثبت آگهی ایمیل خود را تایید کنید');
+        }
         $categories = MongoCategory::where('status', 1)->get();
         $categories = $categories->map(function ($category) {
             return [

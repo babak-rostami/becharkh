@@ -49,10 +49,6 @@ class QuestionAnswerController extends Controller
             if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
                 $this->NE($user, $reply->user, $question);
             }
-            //NE to question user if Questionuser is not $user
-            if ($user != $questionUser) {
-                $this->NE($user, $questionUser, $question);
-            }
             $answer->body = $request->body;
         } else {
             //NE to question user if Questionuser is not $user
@@ -118,10 +114,6 @@ class QuestionAnswerController extends Controller
             //NE to reply user if reply user is not $user
             if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
                 $this->NE($user, $reply->user, $question);
-            }
-            //NE to question user if Questionuser is not $user
-            if ($user != $questionUser) {
-                $this->NE($user, $questionUser, $question);
             }
             $answer->body = $request->body;
         } else {

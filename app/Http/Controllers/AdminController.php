@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Advertise;
 use App\Models\Blog;
 use App\Models\CategoryFeatureItem;
+use App\Models\ChangeUsername;
 use App\Models\LetMeKnow;
 use App\Models\MongoAdvertise;
 use App\Models\MongoBlog;
@@ -34,10 +35,10 @@ class AdminController extends Controller
         $itemNotAccepted = MongoItem::where('status', 0)->get();
         $notAcceptedQuestions = MongoQuestion::where('status', 0)->count();
         $cat_waiting_count = MongoCategory::where('status', 0)->count();
-        $lmks_count = LetMeKnow::count();
+        $cun_count = ChangeUsername::count();
         return view(
             'admin.dashboard',
-            compact('lmks_count', 'blogs_count', 'user_count', 'ad_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
+            compact('cun_count', 'blogs_count', 'user_count', 'ad_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
         );
     }
 

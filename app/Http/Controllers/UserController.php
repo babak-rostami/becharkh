@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SendEmailActiveEmail;
 use App\Mail\ActiveCodeEmail;
 use App\Models\Admin;
+use App\Models\ChangeUsername;
 use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoUser;
@@ -338,6 +339,9 @@ class UserController extends Controller
         if (isset($request->money)) {
             $user->money = $request->money;
         }
+        if (isset($request->email_actived)) {
+            $user->email_actived = $request->email_actived;
+        }
         if (isset($request->body)) {
             $user->body = $request->body;
         }
@@ -504,5 +508,33 @@ class UserController extends Controller
         $followItems = MongoItem::whereIn('_id', $item_ids)->paginate(24);
 
         return view('user.favorite', compact('followItems'));
+    }
+
+    public function requestChangeUsername(Request $request)
+    {
+        $checkUser = MongoUser::where('username', $request->new_username)->first();
+        if (isset($checkUser)) {
+            return response()->json(['message' => 'این نام کاربری قبلا انتخاب شده است'], 403);
+        }
+        $user = auth('user')->user();
+        $change_user_name = new ChangeUsername();
+        $change_user_name->user_id = $user->id;
+        $change_user_name->username = $request->new_username;
+        $change_user_name->body = $request->body;
+        $change_user_name->save();
+        return response()->json(['success' => 1], 200);
+    }
+    public function changeUserNameReqs(Request $request)
+    {
+        $reqs = ChangeUsername::with('user')->get();
+        return view('user.change-username-reqs', compact('reqs'));
+    }
+    public function DestroyChunReqs(Request $request)
+    {
+        $req = ChangeUsername::find($request->req_id);
+        if (isset($req)) {
+            $req->delete();
+        }
+        return back()->with('success', 'درخواست با موفقیت حذف شد');
     }
 }

@@ -764,21 +764,21 @@ class CategoryCommentController extends Controller
         }
     }
 
-    private function NE($fromUser, $toUser, $route, $title)
-    {
-        if (isset($toUser)) {
-            Mail::to($toUser->email)->send(new ReplyToCommentMail($title, $fromUser->username, $route));
-            // $toUser->notify(new UserNotif([
-            //     'action' => ' یک نظر جدید از ' . $fromUser->username . ' در صفحه ' . $title . ' دریافت کرده اید ',
-            //     'route' => $route,
-            //     'userImage' => asset($fromUser->image()),
-            //     'pageImage' => null,
-            //     'pageType' => 'blog',
-            //     'notifType' => 'comment',
-            //     'important' => 0,
-            //     'pageId' => null,
-            //     'userId' => $fromUser->id,
-            // ]));
-        }
-    }
+    // private function NE($fromUser, $toUser, $route, $title)
+    // {
+    //     if (isset($toUser)) {
+    //         Mail::to($toUser->email)->send(new ReplyToCommentMail($title, $fromUser->username, $route));
+    //         // $toUser->notify(new UserNotif([
+    //         //     'action' => ' یک نظر جدید از ' . $fromUser->username . ' در صفحه ' . $title . ' دریافت کرده اید ',
+    //         //     'route' => $route,
+    //         //     'userImage' => asset($fromUser->image()),
+    //         //     'pageImage' => null,
+    //         //     'pageType' => 'blog',
+    //         //     'notifType' => 'comment',
+    //         //     'important' => 0,
+    //         //     'pageId' => null,
+    //         //     'userId' => $fromUser->id,
+    //         // ]));
+    //     }
+    // }
 }

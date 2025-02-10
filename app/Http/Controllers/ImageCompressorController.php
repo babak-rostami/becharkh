@@ -26,6 +26,7 @@ class ImageCompressorController extends Controller
     }
     public function index()
     {
+        return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است');
         return view('imageCompressor.index');
     }
 
