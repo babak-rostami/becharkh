@@ -23,19 +23,16 @@
     <link rel="apple-touch-icon" href="{{ $ftp_path . 'files/other/images/logo1.png' }}">
 
     @yield('style')
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script type="text/javascript" src="{{ asset('assets/js/gtagjs.js') }}"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EN95ELW4G1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {
             dataLayer.push(arguments);
         }
-
         gtag('js', new Date());
-
-        gtag('config', 'G-HSVG4GTDQJ');
+        gtag('config', 'G-EN95ELW4G1');
     </script>
 </head>
 
@@ -385,6 +382,14 @@
                 </div>
             </div>
         @endif
+
+
+        <div class="row">
+            <div class="col-12 text-center" id="motto-box">
+                <span id="motto1">بچرخ</span>
+                <span id="motto2"></span>
+            </div>
+        </div>
 
         @yield('content')
 

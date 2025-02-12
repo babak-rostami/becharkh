@@ -27,15 +27,9 @@ class MongoItem extends Model
     public static $elasticIndexName = 'items';
     public static $elasticField = [
         'properties' => [
-            'title' => [
+            'similar_search' => [
                 'type' => 'text',
-            ],
-            'title_en' => [
-                'type' => 'text',
-            ],
-            'full_title' => [
-                'type' => 'text',
-            ],
+            ]
         ],
     ];
 
@@ -47,9 +41,7 @@ class MongoItem extends Model
             if ($model->feature->is_in_filter_rtable == 1) {
                 $elasticsearch = new Elasticsearch();
                 $elasticsearch->createDocument(static::$elasticIndexName, $model->id, [
-                    'title' => $model->title,
-                    'title_en' => $model->title_en,
-                    'full_title' => $model->full_title,
+                    'similar_search' => $model->similar_search,
                 ]);
             }
         });
@@ -57,12 +49,10 @@ class MongoItem extends Model
         static::updated(function ($model) {
             if ($model->feature->is_in_filter_rtable == 1) {
                 $dirtyAttributes = $model->getDirty();
-                if (array_intersect(['title', 'title_en', 'full_title'], array_keys($dirtyAttributes))) {
+                if (array_intersect(['similar_search'], array_keys($dirtyAttributes))) {
                     $elasticsearch = new Elasticsearch();
                     $elasticsearch->updateDocument(static::$elasticIndexName, $model->id, [
-                        'title' => $model->title,
-                        'title_en' => $model->title_en,
-                        'full_title' => $model->full_title,
+                        'similar_search' => $model->similar_search
                     ]);
                 }
             }

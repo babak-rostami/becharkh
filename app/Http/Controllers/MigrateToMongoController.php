@@ -108,14 +108,12 @@ class MigrateToMongoController extends Controller
         // $this->test();
 
         // $this->createElasticIndexes();
-
         // $this->createCategoryElasticDocuments();
-
         // $this->createItemElasticDocuments();
-
         // $this->createQuestionElasticDocuments();
-
         // $this->createBlogElasticDocuments();
+
+        // dd('d');
 
         // $this->blogImage();
 
@@ -124,8 +122,53 @@ class MigrateToMongoController extends Controller
         // $this->itemPageCount();
 
         // $this->updateItemPriority();
-
+        
         dd("done");
+
+    }
+
+    private function generateIphoneSimilarSearch($model)
+    {
+        $similarSearches = [];
+
+        $base = str_replace("iPhone", "آیفون", $model);
+        $variations = [$base];
+
+        if (stripos($model, 'Pro Max') !== false) {
+            $variations[] = str_replace("Pro Max", "پرومکس", $base);
+            $variations[] = str_replace("Pro Max", "پرو مکس", $base);
+        } elseif (stripos($model, 'Pro') !== false) {
+            $variations[] = str_replace("Pro", "پرو", $base);
+        }
+
+        if (stripos($model, 'Plus') !== false) {
+            $variations[] = str_replace("Plus", "پلاس", $base);
+        }
+
+        if (stripos($model, 'Mini') !== false) {
+            $variations[] = str_replace("Mini", "مینی", $base);
+        }
+
+        if (stripos($model, 'XS') !== false) {
+            $variations[] = str_replace("XS", "ایکس اس", $base);
+        }
+
+        if (stripos($model, 'SE') !== false) {
+            $variations[] = str_replace("SE", "اس ای", $base);
+        }
+
+        if (stripos($model, 'XR') !== false) {
+            $variations[] = str_replace("XR", "ایکس ار", $base);
+            $variations[] = str_replace("XR", "ایکس آر", $base);
+        }
+
+        if (preg_match('/\bX\b/', $model)) {
+            $variations[] = str_replace("X", "ایکس", $base);
+        }
+
+        $similarSearches = implode(" ", array_unique($variations));
+
+        return $similarSearches;
     }
 
     // $this->clearHotItems();
@@ -288,9 +331,7 @@ class MigrateToMongoController extends Controller
             foreach ($items as $item) {
                 if ($item->feature->is_in_filter_rtable == 1) {
                     $client->createDocument('items', $item->id, [
-                        'title' => $item->title,
-                        'title_en' => $item->title_en,
-                        'full_title' => $item->full_title,
+                        'similar_search' => $item->similar_search,
                     ]);
                 }
             }
@@ -303,9 +344,7 @@ class MigrateToMongoController extends Controller
         MongoCategory::chunk(200, function ($categories) use ($client) {
             foreach ($categories as $category) {
                 $client->createDocument('categories', $category->id, [
-                    'title' => $category->title,
-                    'title_en' => $category->title_en,
-                    'full_title' => $category->full_title,
+                    'similar_search' => $category->similar_search
                 ]);
             }
         });

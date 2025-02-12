@@ -15,6 +15,7 @@ use App\Models\Ostan;
 use App\Models\Question;
 use App\Models\SiteCategory;
 use App\Models\User;
+use App\Models\UserSearch;
 use App\Services\Suggestion\SuggestionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -123,12 +124,24 @@ class IndexController extends Controller
         }
     }
 
+    private function convertPersianToEnglishNumerals($input)
+    {
+        $persianNumerals = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        return str_replace($persianNumerals, $englishNumerals, $input);
+    }
+
     public function mainSearch($type, $value = null)
     {
         if (!$value) {
             return;
         }
+        $user_search = new UserSearch();
+        $user_search->text = $value;
+        $user_search->save();
+
         $value = Str::lower($value);
+        $value = $this->convertPersianToEnglishNumerals($value);
 
         if ($type == 1) {
             $item_ids = MongoItem::elSearch($value);

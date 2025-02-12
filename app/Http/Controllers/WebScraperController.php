@@ -188,6 +188,11 @@ class WebScraperController extends Controller
                             //     $images[] = $path . $filename1;
                             //     $mobile_model->images = $images;
                             //     $mobile_model->save();
+
+                            //     if ($mobile_brand->slug == 'apple' && strpos($mobile_model_title, 'iPhone') !== false) {
+                            //         $mobile_model->similar_search = $this->generateIphoneSimilarSearch($mobile_model->title);
+                            //         $mobile_model->update();
+                            //     }
                             // }
                         }
                     });
@@ -207,6 +212,50 @@ class WebScraperController extends Controller
                 }
             }
         }
+    }
+
+    private function generateIphoneSimilarSearch($model)
+    {
+        $similarSearches = [];
+
+        $base = str_replace("iPhone", "آیفون", $model);
+        $variations = [$base];
+
+        if (stripos($model, 'Pro Max') !== false) {
+            $variations[] = str_replace("Pro Max", "پرومکس", $base);
+            $variations[] = str_replace("Pro Max", "پرو مکس", $base);
+        } elseif (stripos($model, 'Pro') !== false) {
+            $variations[] = str_replace("Pro", "پرو", $base);
+        }
+
+        if (stripos($model, 'Plus') !== false) {
+            $variations[] = str_replace("Plus", "پلاس", $base);
+        }
+
+        if (stripos($model, 'Mini') !== false) {
+            $variations[] = str_replace("Mini", "مینی", $base);
+        }
+
+        if (stripos($model, 'XS') !== false) {
+            $variations[] = str_replace("XS", "ایکس اس", $base);
+        }
+
+        if (stripos($model, 'SE') !== false) {
+            $variations[] = str_replace("SE", "اس ای", $base);
+        }
+
+        if (stripos($model, 'XR') !== false) {
+            $variations[] = str_replace("XR", "ایکس ار", $base);
+            $variations[] = str_replace("XR", "ایکس آر", $base);
+        }
+
+        if (preg_match('/\bX\b/', $model)) {
+            $variations[] = str_replace("X", "ایکس", $base);
+        }
+
+        $similarSearches = implode(" ", array_unique($variations));
+
+        return $similarSearches;
     }
 
     public function test()

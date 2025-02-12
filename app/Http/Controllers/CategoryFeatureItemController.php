@@ -146,6 +146,7 @@ class CategoryFeatureItemController extends Controller
         $item = MongoItem::find($item_id);
         $item->title = $request->title;
         $item->title_en = $request->title_en;
+        $item->similar_search = $request->similar_search;
 
         if ($request->slug) {
             $item->slug = $request->slug;

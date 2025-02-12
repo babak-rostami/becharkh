@@ -90,6 +90,12 @@
                             </option>
                         </select>
                     </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="similar_search">سرچ های مشابه</label>
+                            <textarea class="form-control" name="similar_search" rows="5">{{ $item->similar_search }}</textarea>
+                        </div>
+                    </div>
                     @if ($parent_itmes != null)
                         <div class="col-12 col-sm-6">
                             <div class="form-group">

@@ -890,4 +890,40 @@ $(document).ready(function () {
     });
 });
 
+let mottos = [
+    "بپرس",
+    "یاد بگیر",
+    "یاد بده",
+    "حرفه‌ای شو",
+    "سوال کن",
+    "رشد کن",
+    "همراه شو",
+    "الهام بگیر",
+    "الهام بده",
+    "نقد کن",
+    "بررسی کن",
+    "کمک کن",
+    "فکر کن",
+    "بحث کن",
+    "تحلیل کن",
+    "جستجو کن",
+    "مقایسه کن",
+    "نظر بده",
+];
+let motto_count = 0;
+
+function changeMotto() {
+    $("#motto2").text(mottos[motto_count]);
+    $("#motto2").removeClass('fadeMottoCls');
+    void $("#motto2")[0].offsetWidth;
+    $("#motto2").addClass('fadeMottoCls');
+
+    motto_count++;
+    if (motto_count >= mottos.length) {
+        motto_count = 0;
+    }
+}
+
+setInterval(changeMotto, 2500);
+
 const ftp_path = "https://dl.becharkh.com/user_files/";

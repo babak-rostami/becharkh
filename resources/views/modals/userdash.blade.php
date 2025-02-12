@@ -3,7 +3,7 @@
         @if ($lazyload == 1) data-src="{{ asset($dashuser->thumb()) }}" @else
             src="{{ asset($dashuser->thumb()) }}" @endif>
     <span class="comusr-name">{{ $dashuser->username }}</span>
-    @switch($dashuser->level)
+    {{-- @switch($dashuser->level)
         @case(1)
             <span class="comusr-label comusr-label-1">با تجربه</span>
         @break
@@ -18,5 +18,5 @@
 
         @default
             <span class="comusr-label comusr-label-0">کاوشگر</span>
-    @endswitch
+    @endswitch --}}
 </button>

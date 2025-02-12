@@ -63,6 +63,18 @@
             <a class="btn btn-primary" href="{{ route('admin.advertise.all') }}">آگهی ها
             </a>
 
+            <a class="btn btn-white" href="{{ route('admin.user.searches') }}">جستجو های اخیر
+                @if ($search_count > 0)
+                    <span class="badge badge-danger">{{ $search_count }}</span>
+                @endif
+            </a>
+
+            <a class="btn btn-primary" href="{{ route('admin.page.errors') }}">خطاهای سایت
+                @if ($site_errors_count > 0)
+                    <span class="badge badge-danger">{{ $site_errors_count }}</span>
+                @endif
+            </a>
+
             <div class="modal fade" id="newitems" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">

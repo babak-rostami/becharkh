@@ -15,9 +15,11 @@ use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
 use App\Models\MongoVideo;
+use App\Models\PageError;
 use App\Models\Question;
 use App\Models\SiteCategory;
 use App\Models\User;
+use App\Models\UserSearch;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,9 +38,11 @@ class AdminController extends Controller
         $notAcceptedQuestions = MongoQuestion::where('status', 0)->count();
         $cat_waiting_count = MongoCategory::where('status', 0)->count();
         $cun_count = ChangeUsername::count();
+        $search_count = UserSearch::count();
+        $site_errors_count = PageError::count();
         return view(
             'admin.dashboard',
-            compact('cun_count', 'blogs_count', 'user_count', 'ad_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
+            compact('cun_count', 'site_errors_count', 'search_count', 'blogs_count', 'user_count', 'ad_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
         );
     }
 

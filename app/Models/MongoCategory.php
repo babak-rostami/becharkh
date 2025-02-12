@@ -15,15 +15,9 @@ class MongoCategory extends Model
     public static $elasticIndexName = 'categories';
     public static $elasticField = [
         'properties' => [
-            'title' => [
+            'similar_search' => [
                 'type' => 'text',
-            ],
-            'title_en' => [
-                'type' => 'text',
-            ],
-            'full_title' => [
-                'type' => 'text',
-            ],
+            ]
         ],
     ];
 
@@ -34,20 +28,16 @@ class MongoCategory extends Model
         static::created(function ($model) {
             $elasticsearch = new Elasticsearch();
             $elasticsearch->createDocument(static::$elasticIndexName, $model->id, [
-                'title' => $model->title,
-                'title_en' => $model->title_en,
-                'full_title' => $model->full_title,
+                'similar_search' => $model->similar_search
             ]);
         });
 
         static::updated(function ($model) {
             $dirtyAttributes = $model->getDirty();
-            if (array_intersect(['title', 'title_en', 'full_title'], array_keys($dirtyAttributes))) {
+            if (array_intersect(['similar_search'], array_keys($dirtyAttributes))) {
                 $elasticsearch = new Elasticsearch();
                 $elasticsearch->updateDocument(static::$elasticIndexName, $model->id, [
-                    'title' => $model->title,
-                    'title_en' => $model->title_en,
-                    'full_title' => $model->full_title,
+                    'similar_search' => $model->similar_search
                 ]);
             }
         });

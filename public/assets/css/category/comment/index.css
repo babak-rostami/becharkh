@@ -2,6 +2,7 @@
     border: 2px solid #dee2e6;
     background-color: #f9f9f9;
     line-height: 32px;
+    word-wrap: break-word;
 }
 
 .comment-box h2 {

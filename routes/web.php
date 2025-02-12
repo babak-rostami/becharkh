@@ -42,6 +42,7 @@ use App\Http\Controllers\LetMeKnowController;
 use App\Http\Controllers\MigrateToMongoController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ModelDatailController;
+use App\Http\Controllers\PageErrorController;
 use App\Http\Controllers\ProductCommentController;
 use App\Http\Controllers\ProductCommentLikeController;
 use App\Http\Controllers\QuestionAnswerController;
@@ -62,6 +63,7 @@ use App\Http\Controllers\UserMessageController;
 use App\Http\Controllers\UserMissionController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\UserPasswordController;
+use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\UserWorkController;
 use App\Http\Controllers\VideoCommentController;
 use App\Http\Controllers\VideoCommentLikeController;
@@ -70,6 +72,7 @@ use App\Http\Controllers\VideoLikeController;
 use App\Http\Controllers\WebScraperController;
 use App\Http\Controllers\WorkController;
 use App\Models\MongoBlog;
+use App\Models\MongoQuestion;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -329,9 +332,16 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('image-compreses-desrtoy/{id}', [ImageCompressorController::class, 'adminDestroy'])->name('admin.image.compress.destroy');
 
     Route::get('let-me-know-index', [LetMeKnowController::class, 'index'])->name('lmk.index');
+
+    Route::get('user-searches', [UserSearchController::class, 'index'])->name('admin.user.searches');
+    Route::get('destroy-user-search/{id}', [UserSearchController::class, 'delete'])->name('admin.destroy.user.search');
+
+    Route::get('site-errors', [PageErrorController::class, 'index'])->name('admin.page.errors');
+    Route::get('destroy-site-error/{id}', [PageErrorController::class, 'delete'])->name('admin.destroy.page.error');
+    Route::get('destroy-site-errors', [PageErrorController::class, 'deleteAll'])->name('admin.destroy.page.errors');
 });
 
-// ----------------------------------------login routes -------------------------------------
+// ---------------------------------------- login routes -------------------------------------
 
 Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('/login', [UserController::class, 'login'])->name('user.login');
@@ -548,6 +558,17 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
 
     Route::get('forum/{category_slug?}', [QuestionController::class, 'index'])->name('question.index');
     Route::get('forum/{category}/{slug}/{random?}', [QuestionController::class, 'show'])->name('question.show');
+
+    Route::get('question/{username}/{slug}', function ($slug) {
+        $segments = explode('-', $slug);
+        $lastSegment = array_pop($segments);
+        $question = MongoQuestion::where('random_id', $lastSegment)->first();
+        if (isset($question)) {
+            return redirect()->route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
+        } else {
+            abort(404);
+        }
+    });
 
     Route::get('video/{category_slug}/{video_slug}/{random_id}', [VideoController::class, 'show'])->name('video.show');
     Route::get('video/embed-b/{category_slug}/{video_slug}/{random_id}', [VideoController::class, 'showEmbedb'])->name('video.embedb.show');

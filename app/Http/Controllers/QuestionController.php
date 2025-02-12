@@ -389,7 +389,7 @@ class QuestionController extends Controller
         }
     }
 
-    public function show($category, $slug, $random = null, SuggestionService $suggestionService)
+    public function show(SuggestionService $suggestionService, $category, $slug, $random = null)
     {
         $category = MongoCategory::where('slug', $category)->first();
         if (!isset($category)) {

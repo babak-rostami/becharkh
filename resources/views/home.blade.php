@@ -32,11 +32,8 @@
 
             <div class="row justify-content-center pb-3">
                 <div class="col-12 mx-2 text-center">
-                    <h1 id="page-title">انجمن بچرخ</h1>
+                    <h1 id="page-title">بچرخ</h1>
                     <p class="mb-0" id="page-desc">هر سوالی جوابی داره</p>
-                    <span id="page-desc1"><b>بچرخ</b> انجمنی برای </span>
-                    <span id="page-desc2">تبادل نظر</span>
-
 
                     <div class="bslider mt-4" id="cat-slider">
                         @foreach ($categories as $category)
