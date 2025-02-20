@@ -210,9 +210,7 @@ class MongoItem extends Model
         if (!isset($this->items)) {
             return collect();
         }
-        $items = Cache::rememberForever('items', function () {
-            return MongoItem::where('status', 1)->get();
-        });
+        $items = MongoItem::where('status', 1)->get();
         return $items->whereIn('_id', $this->items);
     }
 

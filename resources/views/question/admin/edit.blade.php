@@ -5,12 +5,9 @@
 @endsection
 
 @section('style')
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
-    <script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/translations/de.js"></script>
-    {{-- <script src="{{ asset('library/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('library/ckeditor/ckfinder.js') }}"></script>
-    <script src="{{ asset('library/ckeditor/de.js') }}"></script> --}}
+    <script src="{{ $ftp_path . 'library/ckeditor/ckeditor.js' }}"></script>
+    <script src="{{ $ftp_path . 'library/ckeditor/ckfinder.js' }}"></script>
+    <script src="{{ $ftp_path . 'library/ckeditor/de.js' }}"></script>
 
     <link href="{{ asset('mixassets/css/forum/create.min.css') . '?lm=' . filemtime('mixassets/css/forum/create.min.css') }}"
         rel="stylesheet" type="text/css" />

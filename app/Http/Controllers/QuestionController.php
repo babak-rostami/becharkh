@@ -210,7 +210,7 @@ class QuestionController extends Controller
             $affilateService = new AffilateService();
             $affilate = $affilateService->suggestForPages($category, $item);
 
-            $features = $category->features();
+            // $features = $category->features();
             $currentQueryParams = $request->query();
 
             $hot_pages = Cache::get('hot_pages');
@@ -228,11 +228,11 @@ class QuestionController extends Controller
                 'category',
                 'title',
                 'currentQueryParams',
-                'selected_items',
+                // 'selected_items',
             ];
-            if (isset($features)) {
-                $compactVars[] = 'features';
-            }
+            // if (isset($features)) {
+            //     $compactVars[] = 'features';
+            // }
             if (isset($affilate)) {
                 $compactVars[] = 'affilate';
             }
@@ -822,8 +822,16 @@ class QuestionController extends Controller
         $categories =  MongoCategory::where('status', 1)->get();
         $category = MongoCategory::find($question->category_id);
         $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
+
+        //for fix order object items
         $questionFeatueItems = $question->getItems();
-        $questionFeatueItems = $questionFeatueItems->reverse();
+        $itemIds = $question->items;
+        $itemIdPositionMap = array_flip($itemIds);
+        $orderedItems = $questionFeatueItems->sortBy(function ($item) use ($itemIdPositionMap) {
+            return $itemIdPositionMap[$item->_id];
+        });
+        $questionFeatueItems = $orderedItems->values()->reverse();
+        //end for fix order object items
         $citems = MongoItem::where('category_id', $category->id)->get();
         $categories = $categories->map(function ($category) {
             return [
@@ -926,6 +934,20 @@ class QuestionController extends Controller
         } else {
             $question->status = 1;
         }
+
+        if ($request->hasFile('image')) {
+            $cover = $request->file('image');
+            $basefilename = $category->slug . rand(1000, 9999) . time();
+            $path = 'question/images/' . $category->slug . '/';
+            //main image
+            $filename = $basefilename . '.webp';
+            $question->image = $path . $filename;
+            $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
+            //thum image
+            $filename2 = $basefilename . '2.webp';
+            $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
+        }
+
         $question->update();
 
         $this->updatePinQuestion($question, $request);
@@ -933,6 +955,19 @@ class QuestionController extends Controller
         return redirect()->route('question.index.admin')->with('success', 'تغییرات ثبت شد');
     }
 
+    private function uploadAndResizeImage($image, $path, $filename, $quality, $thumb)
+    {
+        $disk = Storage::disk('ftp');
+
+        if ($thumb == 1) {
+            $resizedImage = Image::make($image)->resize(256, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->encode('webp', $quality);
+        } else {
+            $resizedImage = Image::make($image)->encode('webp', $quality);
+        }
+        $disk->put($path . $filename, (string) $resizedImage);
+    }
 
     private function updatePinQuestion($question, $request)
     {

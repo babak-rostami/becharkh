@@ -52,14 +52,6 @@
 
         <div class="col-12 text-center">
 
-            @include('mainPart.mainPage.cat-slider', [
-                'page' => 'forum',
-                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
-                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
-            ])
-
-            @include('mainPart.mainPage.fifil')
-
             @if (isset($category))
                 @if (isset($item))
                     <img id="page-img" class="mb-3 mt-4" src="{{ asset($item->image()) }}" title="{{ $item->title }}"
@@ -137,6 +129,15 @@
                 @endif
             @endif
 
+
+            @include('mainPart.mainPage.breadc', ['page' => 'forum'])
+
+            @include('mainPart.mainPage.cat-slider', [
+                'page' => 'forum',
+                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
+                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
+            ])
+
             @if (isset($hot_pages))
                 <div class="row mt-4">
                     @include('mainPart.hot-pages')
@@ -165,25 +166,25 @@
         let product_ids = {!! isset($affilate) ? json_encode([$affilate->id]) : '[]' !!};
 
         //for fifil
-        const fifil_load_items_route = "{{ route('fifil.load.items') }}";
-        let features = @json($features ?? []);
-        features = features.map(function(feature) {
-            return {
-                id: feature._id,
-                title: feature.title,
-                slug: feature.slug,
-                p_id: feature.parent_id,
-            };
-        });
-        let selected_items = @json($selected_items ?? []);
-        selected_items = selected_items.map(function(item) {
-            return {
-                id: item._id,
-                title: item.title,
-                p_id: item.parent_id ?? null,
-                f_id: item.feature_id ?? null,
-            };
-        });
+        // const fifil_load_items_route = "{{ route('fifil.load.items') }}";
+        // let features = @json($features ?? []);
+        // features = features.map(function(feature) {
+        //     return {
+        //         id: feature._id,
+        //         title: feature.title,
+        //         slug: feature.slug,
+        //         p_id: feature.parent_id,
+        //     };
+        // });
+        // let selected_items = @json($selected_items ?? []);
+        // selected_items = selected_items.map(function(item) {
+        //     return {
+        //         id: item._id,
+        //         title: item.title,
+        //         p_id: item.parent_id ?? null,
+        //         f_id: item.feature_id ?? null,
+        //     };
+        // });
         //end for fifil
     </script>
 

@@ -64,10 +64,7 @@
                                 <option value="">ندارد</option>
                                 @foreach ($features as $pf)
                                     <option value="{{ $pf->id }}" {{ old('parent_id') == $pf->id ? 'selected' : '' }}>
-                                        {{ $pf->title }} -
-                                        @foreach ($pf->categories() as $c1)
-                                            {{ $c1->title }}
-                                        @endforeach
+                                        {{ $pf->title }} - {{ $pf->categories->first()->title }}
                                     </option>
                                 @endforeach
                             </select>

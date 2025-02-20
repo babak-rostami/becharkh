@@ -45,13 +45,6 @@
         </div>
 
         <div class="col-12 text-center">
-            @include('mainPart.mainPage.cat-slider', [
-                'page' => 'advertise',
-                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
-                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
-            ])
-
-            @include('mainPart.mainPage.fifil')
 
             @if (isset($category))
                 @if (isset($item))
@@ -183,6 +176,15 @@
                             @endif
                         @endif
 
+                        <div class="col-12">
+                            @include('mainPart.mainPage.breadc', ['page' => 'advertise'])
+                            @include('mainPart.mainPage.cat-slider', [
+                                'page' => 'advertise',
+                                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
+                                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
+                            ])
+                        </div>
+
                         @if (isset($hot_pages))
                             <div class="col-12">
                                 <div class="row mt-4">
@@ -213,25 +215,25 @@
         let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
 
         //for fifil
-        const fifil_load_items_route = "{{ route('fifil.load.items') }}";
-        let features = @json($features ?? []);
-        features = features.map(function(feature) {
-            return {
-                id: feature._id,
-                title: feature.title,
-                slug: feature.slug,
-                p_id: feature.parent_id,
-            };
-        });
-        let selected_items = @json($selected_items ?? []);
-        selected_items = selected_items.map(function(item) {
-            return {
-                id: item._id,
-                title: item.title,
-                p_id: item.parent_id ?? null,
-                f_id: item.feature_id ?? null,
-            };
-        });
+        // const fifil_load_items_route = "{{ route('fifil.load.items') }}";
+        // let features = @json($features ?? []);
+        // features = features.map(function(feature) {
+        //     return {
+        //         id: feature._id,
+        //         title: feature.title,
+        //         slug: feature.slug,
+        //         p_id: feature.parent_id,
+        //     };
+        // });
+        // let selected_items = @json($selected_items ?? []);
+        // selected_items = selected_items.map(function(item) {
+        //     return {
+        //         id: item._id,
+        //         title: item.title,
+        //         p_id: item.parent_id ?? null,
+        //         f_id: item.feature_id ?? null,
+        //     };
+        // });
         //end for fifil
     </script>
     <script type="text/javascript"

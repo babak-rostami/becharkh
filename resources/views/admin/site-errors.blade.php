@@ -21,7 +21,7 @@
             @endif
         </div>
 
-        <div class="col-12 text-center">
+        <div class="col-12 text-center overflow-auto">
 
             <a class="btn btn-danger mt-4" href="{{ route('admin.destroy.page.errors') }}">حذف همه</a>
 
@@ -30,6 +30,7 @@
                     <tr>
                         <th>آدرس</th>
                         <th>آی پی</th>
+                        <th>بات</th>
                         <th>متد</th>
                         <th>پیام</th>
                         <th>کد</th>
@@ -42,6 +43,7 @@
                         <tr>
                             <td> {{ $serror->url }}</td>
                             <td> {{ $serror->ip_address }}</td>
+                            <td> {{ $serror->user_agent }}</td>
                             <td> {{ $serror->method }}</td>
                             <td> {{ $serror->message }}</td>
                             <td> {{ $serror->status_code }}</td>

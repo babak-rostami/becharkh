@@ -65,6 +65,14 @@
             {{ method_field('PUT') }}
             <input type="hidden" id="category_id" name="category_id" value="{{ $question->category_id }}">
             <div class="form-group">
+                @if ($question->getImage())
+                    <img style="max-height: 256px; margin-bottom: 8px;" src="{{ $question->image() }}">
+                @else
+                    <span class="badge badge-warning">تصویر ثبت نشده</span>
+                @endif
+                <input type="file" class="form-control" name="image">
+            </div>
+            <div class="form-group">
                 <label>عنوان پرسش</label>
                 <input type="text" class="form-control required" oninput="countCharacters(this,20,60)" name="title"
                     id="title" placeholder="عنوان سوال مثلا : علت صدای تق تق زیر داشبورد پژو 206"
@@ -241,9 +249,8 @@
         @case('edit_blog')
             {{ method_field('PUT') }}
             <input type="hidden" id="category_id" name="category_id" value="{{ $blog->category_id }}">
-
             <div class="form-group">
-                <input oninput="countCharacters(this,30,60)" type="text" readonly="readonly" value="{{ $blog->title }}"
+                <input oninput="countCharacters(this,30,60)" type="text" value="{{ $blog->title }}"
                     class="form-control" name="title" id="title">
                 <span id="title-error"></span>
                 <span id="charCountMin-title" class="input-char-min"></span>

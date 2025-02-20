@@ -7,6 +7,12 @@
     border: 1px solid #e1e1e1;
 }
 
+#pquestion-title {
+    max-height: 164px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
 .sq-user-image {
     width: 36px;
     height: 36px;

@@ -207,7 +207,7 @@ class BlogController extends Controller
                 }
             }
 
-            $features = $category->features();
+            // $features = $category->features();
             $currentQueryParams = $request->query();
 
             $compactVars = [
@@ -223,9 +223,9 @@ class BlogController extends Controller
                 'currentQueryParams',
                 'selected_items',
             ];
-            if (isset($features)) {
-                $compactVars[] = 'features';
-            }
+            // if (isset($features)) {
+            //     $compactVars[] = 'features';
+            // }
             if (isset($forum_page)) {
                 $compactVars[] = 'forum_page';
             }
@@ -283,7 +283,7 @@ class BlogController extends Controller
         return $lap;
     }
 
-    public function show(Request $request, $category_slug, $slug, $random_id = null, SuggestionService $suggestionService)
+    public function show(Request $request, SuggestionService $suggestionService, $category_slug, $slug, $random_id = null)
     {
         $category = MongoCategory::where('slug', $category_slug)->first();
         if (isset($category)) {
@@ -738,6 +738,7 @@ class BlogController extends Controller
         $category = MongoCategory::find($blog->category_id);
 
         $blog->short_description = $request->short_description;
+        $blog->title = $request->title;
 
         $editor_service = new CommentEditorService();
         $editor_service->update('edit_blog', $request->body, $blog);

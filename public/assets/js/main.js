@@ -144,7 +144,7 @@ function w3_close() {
 //for main search
 
 var typingTimer; // timer identifier
-var doneTypingInterval = 1000; // time in ms, 1 second for example
+var doneTypingInterval = 1500; // time in ms, 1 second for example
 
 // on keyup, start the countdown
 $("#main_search_input").on("keyup", function () {
@@ -178,7 +178,7 @@ let main_search_blogs = -1;
 function searchForInput() {
     main_search_input = $("#main_search_input").val();
 
-    if (main_search_input?.length <= 2) {
+    if (main_search_input?.length <= 1) {
         $("#show-msearch-empty").show();
         $("#show-msearch-result").hide();
         return;

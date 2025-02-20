@@ -469,7 +469,7 @@ Route::middleware(['user'])->group(function () {
     Route::post('question-answer', [QuestionAnswerController::class, 'store'])->name('question.answer.store');
 
     //ctegory comment
-    Route::post('cat-comment/store', [CategoryCommentController::class, 'store'])->name('category.comment.store');
+    Route::post('cat-comment-store', [CategoryCommentController::class, 'store'])->name('category.comment.store');
 
     //advertise comment
     Route::post('ad-comment/store', [AdvertiseCommentController::class, 'store'])->name('advertise.comment.store');

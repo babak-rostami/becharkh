@@ -8,12 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {{-- <link href="{{ asset('admin_c/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" /> --}}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700|Open+Sans">
+    <link rel="stylesheet" href="{{ $ftp_path . 'library/bootstrap/bootstrap.min.css' }}">
+    <link rel="stylesheet" href="{{ $ftp_path . 'library/bootstrap/font-awesome.min.css' }}">
+    <link rel="stylesheet" href="{{ $ftp_path . 'library/family.css' }}">
 
-    <script src="{{ asset('js/axios.min.js') }}"></script>
-    <script src="{{ asset('admin_c/assets/js/libs/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ $ftp_path . 'library/axios.min.js' }}"></script>
+    <script src="{{ $ftp_path . 'library/jquery-3.1.1.min.js' }}"></script>
 
     <link href="{{ asset('assets/style.css') . '?lm=' . filemtime('assets/style.css') }}" rel="stylesheet"
         type="text/css" />
@@ -401,8 +401,8 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="{{ $ftp_path . 'library/bootstrap/popper.min.js' }}"></script>
+    <script src="{{ $ftp_path . 'library/bootstrap/bootstrap.min.js' }}"></script>
 
     @if ($user)
         <script>

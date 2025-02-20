@@ -233,7 +233,7 @@ class CategoryCommentController extends Controller
                     $advertise_page = $item->withParentsAdvertiseUrl();
                 }
                 if (isset($item->pin_question_ids)) {
-                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug', 'random_id', 'category_id')
+                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug', 'random_id', 'category_id', 'image')
                         ->whereIn('_id', $item->pin_question_ids)
                         ->get();
                 }
@@ -248,16 +248,15 @@ class CategoryCommentController extends Controller
                     $advertise_page = route('ads.index', $category->slug);
                 }
                 if (isset($category->pin_question_ids)) {
-                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug', 'random_id', 'category_id')
+                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug', 'random_id', 'category_id', 'image')
                         ->whereIn('_id', $category->pin_question_ids)
                         ->get();
                 }
             }
-
             $affilateService = new AffilateService();
             $affilate = $affilateService->suggestForPages($category, $item);
 
-            $features = $category->features();
+            // $features = $category->features();
             $currentQueryParams = $request->query();
 
             $comments = $this->sendCommentRefferIdToTop($request, $comments);
@@ -283,9 +282,9 @@ class CategoryCommentController extends Controller
             if (isset($pin_questions) && !$pin_questions->isEmpty()) {
                 $compactVars[] = 'pin_questions';
             }
-            if (isset($features)) {
-                $compactVars[] = 'features';
-            }
+            // if (isset($features)) {
+            //     $compactVars[] = 'features';
+            // }
             if (isset($affilate)) {
                 $compactVars[] = 'affilate';
             }
@@ -545,7 +544,17 @@ class CategoryCommentController extends Controller
             $category = $categories->find($comment->category_id);
             $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
             $citems = MongoItem::where('category_id', $category->id)->where('status', 1)->get();
+
+            //for fix order object items
             $commentFeatueItems = $comment->getItems();
+            $itemIds = $comment->items;
+            $itemIdPositionMap = array_flip($itemIds);
+            $orderedItems = $commentFeatueItems->sortBy(function ($item) use ($itemIdPositionMap) {
+                return $itemIdPositionMap[$item->_id];
+            });
+            $commentFeatueItems = $orderedItems->values()->reverse();
+            //end for fix order object items
+
             $categories = $categories->map(function ($category) {
                 return [
                     'id' => $category->id,

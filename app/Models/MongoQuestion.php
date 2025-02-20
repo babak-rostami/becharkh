@@ -11,24 +11,6 @@ class MongoQuestion extends Model
     protected $connection = 'mongodb';
     protected $collection = 'questions';
 
-    protected $fillable = [
-        'title',
-        'slug',
-        'seen_count',
-        'body',
-        'editor',
-        'random_id',
-        'status',
-        'google_index',
-        'like_count',
-        'unlike_count',
-        'category_id',
-        'user_id',
-        'items',
-        'created_at',
-        'updated_at',
-    ];
-
     public static $elasticIndexName = 'questions';
     public static $elasticField = [
         'properties' => [
@@ -133,5 +115,29 @@ class MongoQuestion extends Model
     public function nacVideo()
     {
         return $this->belongsTo(MongoVideo::class, 'nac_videos');
+    }
+
+    public function image()
+    {
+        if (isset($this->attributes['image'])) {
+            $path = "https://dl.becharkh.com/user_files/";
+            return $path . $this->attributes['image'];
+        }
+    }
+
+    public function getImage()
+    {
+        return $this->attributes['image'] ?? null;
+    }
+
+    public function thumb()
+    {
+        if (isset($this->attributes['image'])) {
+            $thumb = explode('.webp', $this->attributes['image'])[0] . '2.webp';
+            $path = "https://dl.becharkh.com/user_files/";
+            return $path . $thumb;
+        } else {
+            return 'files/other/images/blog1.png';
+        }
     }
 }

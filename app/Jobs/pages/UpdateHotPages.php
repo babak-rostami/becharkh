@@ -57,6 +57,7 @@ class UpdateHotPages implements ShouldQueue
                         $new_page->title = "نظرات در مورد " . $item->withParentsTitle();
                         $new_page->body = $cc->body;
                         $new_page->url = $item->withParentsCommentUrl();
+                        $new_page->image = $item->image();
                         $new_page->time = $cc->created_at->format('Y-m-d H:i:s');
                         $hot_pages->add($new_page);
                         $processed_item_ids[] = $item->id;
@@ -80,6 +81,7 @@ class UpdateHotPages implements ShouldQueue
                         'random_id' => $blog->random_id
                     ]);
                     $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $blog_route);
+                    $new_page->image = $blog->image();
                     $new_page->time = $bc->created_at->format('Y-m-d H:i:s');
                     $hot_pages->add($new_page);
                     $processed_blog_ids[] = $blog->id;
@@ -98,6 +100,15 @@ class UpdateHotPages implements ShouldQueue
                     $new_page->body = str_limit($qc->body, 100, '...');
                     $question_route = route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
                     $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $question_route);
+                    if ($question->getImage()) {
+                        $new_page->image = $question->image();
+                    } else {
+                        if (!$question->getItems()->isEmpty()) {
+                            $new_page->image = $question->getItems()->last()->image();
+                        } else {
+                            $new_page->image = $question->category()->image();
+                        }
+                    }
                     $new_page->time = $qc->created_at->format('Y-m-d H:i:s');
                     $hot_pages->add($new_page);
                     $processed_question_ids[] = $question->id;
@@ -116,6 +127,7 @@ class UpdateHotPages implements ShouldQueue
                     $new_page->body = str_limit($pc->body, 100, '...');
                     $product_route = route('product.show', $product->slug);
                     $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $product_route);
+                    $new_page->image = $product->image;
                     $new_page->time = $pc->created_at->format('Y-m-d H:i:s');
                     $hot_pages->add($new_page);
                     $processed_product_ids[] = $product->id;
@@ -124,7 +136,7 @@ class UpdateHotPages implements ShouldQueue
             $hot_pages = $hot_pages->sortByDesc(function ($page) {
                 return $page->time;
             });
-            $hot_pages = $hot_pages->values()->take(30);
+            $hot_pages = $hot_pages->values()->take(50);
             return $hot_pages;
         });
     }

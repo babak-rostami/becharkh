@@ -114,6 +114,14 @@
                 @endforeach
             @endif
 
+            <div class="row">
+                <div class="col-12 text-center">
+                    @if ($question->getImage())
+                        <img id="pquestion-title" src="{{ $question->image() }}" alt="{{ $question->title }}" title="{{ $question->title }}">
+                    @endif
+                </div>
+            </div>
+
             @include('mainPart.mainPage.pages-tabs', [
                 'page' => 'show_question',
                 'item' => isset($item) ? $item : null,

@@ -236,3 +236,14 @@ function shcomNewUrl(commentId) {
     currentUrl.searchParams.set('cri', commentId);
     return currentUrl.toString();
 }
+
+function openCCommentModal(forr, category_id, parent_id, reply_to_id = null) {
+    $("#ccomReplyModal").modal("show");
+    $("#ccom-rep-category-id").val(category_id);
+    $("#ccom-rep-parent-id").val(parent_id);
+    if (forr == 'replyto') {
+        $("#ccom-rep-replyto-id").val(reply_to_id);
+    } else {
+        $("#ccom-rep-replyto-id").val('');
+    }
+}

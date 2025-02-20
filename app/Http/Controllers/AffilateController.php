@@ -78,6 +78,9 @@ class AffilateController extends Controller
     public function show($slug, SuggestionService $suggestionService)
     {
         $product = Affilate::where('slug', $slug)->first();
+        if (!isset($product)) {
+            abort(404);
+        }
         if (!isset($_COOKIE['page_seen'])) {
             if (isset($product->seen_count)) {
                 $product->seen_count += 1;

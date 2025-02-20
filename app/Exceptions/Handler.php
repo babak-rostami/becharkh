@@ -57,6 +57,7 @@ class Handler extends ExceptionHandler
         $page_error->stack_trace = $exception->getTraceAsString();
         $page_error->status_code = $statusCode;
         $page_error->ip_address = request()->ip();
+        $page_error->user_agent =  request()->header('User-Agent');;
         $page_error->save();
 
         parent::report($exception);

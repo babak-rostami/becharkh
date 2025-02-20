@@ -107,13 +107,8 @@
         </div>
 
         <div class="col-12 text-center">
-            @include('mainPart.mainPage.cat-slider', [
-                'page' => 'comment',
-                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
-                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
-            ])
 
-            @include('mainPart.mainPage.fifil')
+            {{-- @include('mainPart.mainPage.fifil') --}}
 
             @if (isset($category))
                 @if (isset($item))
@@ -145,9 +140,7 @@
                 'user' => isset($user) ? $user : null,
                 'is_follow' => isset($is_follow) ? $is_follow : null,
             ])
-            <div class="row mt-4">
-                @include('item.top-users')
-            </div>
+
             @if (isset($category))
                 <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
                 <p class="textarea-preline text-right mt-2">{{ $meta_desc }}</p>
@@ -156,6 +149,10 @@
                 <p class="text-right mt-2">از تجربیات شخصی ، پیشنهادات و نظرات درباره مسائل روزمره خود بنویسید.
                 </p>
             @endif
+
+            <div class="row">
+                @include('item.top-users')
+            </div>
 
             @include('mainPart.mainPage.page-btns', ['page' => 'comment'])
 
@@ -176,15 +173,23 @@
             @endif
 
             @if (isset($pin_questions))
-                <div id="pin-qs-box">
-                    @foreach ($pin_questions as $pin_question)
-                        <a class="pin-q"
-                            href="{{ route('question.show', ['category' => $pin_question->category->slug, 'slug' => $pin_question->slug, 'random' => $pin_question->random_id]) }}">
-                            <img class="lazy-load rcir-glow"
-                                data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
-                            {{ $pin_question->title }}
-                        </a>
-                    @endforeach
+                <div class="row" id="pin-qs-box">
+                    <div class="col-12 text-center">
+                        @foreach ($pin_questions as $pin_question)
+                            <a class="hop-item"
+                                href="{{ route('question.show', ['category' => $pin_question->category->slug, 'slug' => $pin_question->slug, 'random' => $pin_question->random_id]) }}">
+                                @if ($pin_question->getImage())
+                                    <img class="lazy-load hop-img" data-src="{{ $pin_question->image() }}"
+                                        alt="{{ $pin_question->title }}">
+                                @else
+                                    <img class="lazy-load rcir-glow"
+                                        data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
+                                @endif
+                                <span class="hop-title">{{ $pin_question->title }}</span>
+                                <span class="hop-body">{{ $pin_question->body }}</span>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             @endif
 
@@ -232,6 +237,15 @@
                 @endif
             @endif
 
+
+            @include('mainPart.mainPage.breadc', ['page' => 'comment'])
+
+            @include('mainPart.mainPage.cat-slider', [
+                'page' => 'comment',
+                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
+                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
+            ])
+
             @if (isset($hot_pages))
                 <div class="row mt-4">
                     @include('mainPart.hot-pages')
@@ -271,25 +285,25 @@
         let product_ids = {!! isset($affilate) ? json_encode([$affilate->id]) : '[]' !!};
 
         //for fifil
-        const fifil_load_items_route = "{{ route('fifil.load.items') }}";
-        let features = @json($features ?? []);
-        features = features.map(function(feature) {
-            return {
-                id: feature._id,
-                title: feature.title,
-                slug: feature.slug,
-                p_id: feature.parent_id,
-            };
-        });
-        let selected_items = @json($selected_items ?? []);
-        selected_items = selected_items.map(function(item) {
-            return {
-                id: item._id,
-                title: item.title,
-                p_id: item.parent_id ?? null,
-                f_id: item.feature_id ?? null,
-            };
-        });
+        // const fifil_load_items_route = "{{ route('fifil.load.items') }}";
+        // let features = @json($features ?? []);
+        // features = features.map(function(feature) {
+        //     return {
+        //         id: feature._id,
+        //         title: feature.title,
+        //         slug: feature.slug,
+        //         p_id: feature.parent_id,
+        //     };
+        // });
+        // let selected_items = @json($selected_items ?? []);
+        // selected_items = selected_items.map(function(item) {
+        //     return {
+        //         id: item._id,
+        //         title: item.title,
+        //         p_id: item.parent_id ?? null,
+        //         f_id: item.feature_id ?? null,
+        //     };
+        // });
         //end for fifil
     </script>
 

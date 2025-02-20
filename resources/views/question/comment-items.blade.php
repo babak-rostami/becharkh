@@ -46,11 +46,12 @@
                 'object' => $comment,
             ])
 
-            <a class="comment-reply-btn" href="" data-toggle="modal"
-                data-target="#reply-{{ $comment->id }}">پاسخ<img
+            <button class="comment-reply-btn"
+                onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
                     class="mr-1 @if ($firstItems == 1) lazy-load @endif"
                     @if ($firstItems == 1) data-src="{{ asset('files/other/images/reply.png') }}"@else
-                        src="{{ asset('files/other/images/reply.png') }}" @endif></a>
+                        src="{{ asset('files/other/images/reply.png') }}" @endif>
+            </button>
 
             <span class="like-icon" onclick="likeCategoryComment('{{ $comment->id }}')">
                 <span
@@ -84,8 +85,8 @@
                     <img data-src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share"
                         class="share-com-image lazy-load" id="share-com-image-{{ $comment->id }}">
                 @else
-                    <img src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share" class="share-com-image"
-                        id="share-com-image-{{ $comment->id }}">
+                    <img src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share"
+                        class="share-com-image" id="share-com-image-{{ $comment->id }}">
                 @endif
             </span>
 
@@ -125,11 +126,12 @@
                 {{-- <span class="ml-1">({{ jdate($reply->created_at)->ago() }})</span> --}}
                 <p class="textarea-preline mt-2">{{ $reply->body }}</p>
 
-                <a class="comment-reply-btn" href="" data-toggle="modal"
-                    data-target="#reply-{{ $reply->id }}">پاسخ<img
+                <button type="button" class="comment-reply-btn"
+                    onclick="openCCommentModal('replyto','{{ $comment->category_id }}','{{ $comment->id }}','{{ $reply->id }}')">پاسخ<img
                         class="mr-1 @if ($firstItems == 1) lazy-load @endif"
                         @if ($firstItems == 1) data-src="{{ asset('files/other/images/reply.png') }}"@else
-                        src="{{ asset('files/other/images/reply.png') }}" @endif></a>
+                        src="{{ asset('files/other/images/reply.png') }}" @endif>
+                </button>
 
                 <span class="like-icon" onclick="likeCategoryComment('{{ $reply->id }}')">
                     <span
@@ -156,13 +158,13 @@
             </div>
 
             <!-- Comment Reply Modal-->
-            @include('modals.categoryComment.reply-to', [
+            {{-- @include('modals.categoryComment.reply-to', [
                 'reply' => $reply,
                 'comment' => $comment,
-            ])
+            ]) --}}
         @endforeach
-        @include('modals.categoryComment.reply', ['comment' => $comment])
     @endforeach
+    @include('modals.categoryComment.reply')
     @if ($firstItems == 1)
         @if ($count < 2)
             @if (isset($hasComments) && $hasComments == 1 && isset($affilate))

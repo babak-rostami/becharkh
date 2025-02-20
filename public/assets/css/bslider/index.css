@@ -15,7 +15,10 @@
 .bslider-item {
     display: inline-block;
     vertical-align: top;
-    margin: 0 12px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 8px;
+    text-align: center;
 }
 .bslider {
     /* For WebKit browsers (Chrome, Safari, Opera) */

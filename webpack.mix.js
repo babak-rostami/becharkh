@@ -20,7 +20,7 @@ mix.minify(
         "public/assets/js/bslider/index.js",
         "public/assets/js/gallery/show.js",
         "public/assets/js/affilate/show-box.js",
-        "public/assets/js/pages/fifilter.js",
+        // "public/assets/js/pages/fifilter.js",
         "public/assets/js/pages/share-page.js"
     ],
     "public/mixassets/js/forum/index.min.js"
@@ -69,7 +69,7 @@ mix.minify(
         "public/assets/js/survey/show.js",
         "public/assets/js/gallery/show.js",
         "public/assets/js/affilate/show-box.js",
-        "public/assets/js/pages/fifilter.js",
+        // "public/assets/js/pages/fifilter.js",
         "public/assets/js/pages/share-page.js"
     ],
     "public/mixassets/js/category/comment/index.min.js"
@@ -92,7 +92,7 @@ mix.minify(
         "public/assets/js/tabs/top-tab.js",
         "public/assets/js/gallery/show.js",
         "public/assets/js/affilate/show-box.js",
-        "public/assets/js/pages/fifilter.js",
+        // "public/assets/js/pages/fifilter.js",
         "public/assets/js/pages/share-page.js"
     ],
     "public/mixassets/js/advertise/index.min.js"
@@ -105,7 +105,7 @@ mix.minify(
         "public/assets/js/item/price.js",
         "public/assets/js/tabs/top-tab.js",
         "public/assets/js/bslider/index.js",
-        "public/assets/js/pages/fifilter.js"
+        // "public/assets/js/pages/fifilter.js"
     ],
     "public/mixassets/js/blog/index.min.js"
 );
@@ -274,7 +274,7 @@ mix.minify(
         "public/assets/css/affilate/show-box.css",
         "public/assets/css/gallery/show.css",
         "public/assets/css/category/rcats.css",
-        "public/assets/css/pages/fifilter.css",
+        // "public/assets/css/pages/fifilter.css",
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/hot-pages.css",
 
@@ -295,7 +295,7 @@ mix.minify(
         "public/assets/css/affilate/show-box.css",
         "public/assets/css/gallery/show.css",
         "public/assets/css/category/rcats.css",
-        "public/assets/css/pages/fifilter.css",
+        // "public/assets/css/pages/fifilter.css",
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/hot-pages.css",
     ],
@@ -331,7 +331,7 @@ mix.minify(
         "public/assets/css/survey/create.css",
         "public/assets/css/survey/show.css",
         "public/assets/css/category/rcats.css",
-        "public/assets/css/pages/fifilter.css",
+        // "public/assets/css/pages/fifilter.css",
         "public/assets/css/pages/share-page.css",
         "public/assets/css/category/comment/uprof.css",
     ],
@@ -357,7 +357,7 @@ mix.minify(
         "public/assets/css/item/top-users.css",
         "public/assets/css/bslider/index.css",
         "public/assets/css/category/rcats.css",
-        "public/assets/css/pages/fifilter.css"
+        // "public/assets/css/pages/fifilter.css"
     ],
     "public/mixassets/css/blog/index.min.css"
 );

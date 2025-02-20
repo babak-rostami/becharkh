@@ -170,17 +170,6 @@
     display: none;
 }
 
-#affilb-link {
-    background-color: #28a745;
-    border-radius: 16px;
-    color: #fff;
-    padding: 4px 22px;
-    text-wrap: nowrap;
-}
-#affilb-link img {
-    width: fit-content;
-}
-
 #page-title {
     font-size: 19px;
     font-weight: 700;
@@ -514,3 +503,33 @@
     font-size: 12px;
 }
 /*end for suggest videos */
+
+[id^="affilb-link-"] {
+    background-color: #28a745; /* Initial background color */
+    border-radius: 12px;
+    color: #fff;
+    padding: 10px !important;
+    width: 100%;
+    text-align: center;
+    text-wrap: nowrap;
+    border: none !important;
+    outline: none !important;
+    animation: aflink-back-change 5s infinite; /* Animation for background color change */
+}
+
+/* Keyframe animation for background color change */
+@keyframes aflink-back-change {
+    0% {
+        background-color: #28a745; /* Initial background color */
+    }
+    50% {
+        background-color: #007bff; /* Second change */
+    }
+    100% {
+        background-color: #28a745; /* Back to initial background color */
+    }
+}
+
+#affilb-link img {
+    width: fit-content;
+}

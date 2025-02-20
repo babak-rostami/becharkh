@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // Check if the 'page_seen' cookie is set for the current path
     if (getCookie("page_seen") == null) {
         // Set the 'page_seen' cookie for the current path with an expiration time of 1 hour
@@ -6,8 +6,8 @@ $(document).ready(function() {
     }
 });
 
-$(document).ready(function() {
-    $(document).on("click", function(event) {
+$(document).ready(function () {
+    $(document).on("click", function (event) {
         if (
             $(".share-box").hasClass("hide-share") &&
             $(event.target).closest(".share-span").length
@@ -20,7 +20,6 @@ $(document).ready(function() {
             $(".share-box").addClass("hide-share");
         }
     });
-    changeLikeAndUnlike(is_like, is_unlike);
 });
 function copyToClipboard() {
     document.getElementById("page-url-for-clipboard").select();
@@ -31,7 +30,7 @@ function copyToClipboard() {
     }, 2000);
 }
 
-$("#choose-f-btn").click(function() {
+$("#choose-f-btn").click(function () {
     $("#choose-format-box").slideToggle();
 });
 
@@ -50,7 +49,7 @@ function sentPageToWhatsapp() {
     window.open(shareUrl, "_blank");
 }
 
-$(".comment-span").click(function(e) {
+$(".comment-span").click(function (e) {
     $("html, body").animate(
         {
             scrollTop: $("#commentsSection").offset().top
@@ -69,7 +68,7 @@ function likeVideo(is_like) {
             like_or_unlike: is_like,
             video_id: video_id
         },
-        success: function(data) {
+        success: function (data) {
             if (data.status == 0) {
                 //delete like
                 changeLikeAndUnlike(0, 0);
@@ -132,7 +131,7 @@ function likeVideoComment(video_comment_id) {
             like_or_unlike: true,
             video_comment_id: video_comment_id
         },
-        success: function(data) {
+        success: function (data) {
             var ellike = "video-comment-like-count-" + video_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
@@ -151,7 +150,7 @@ function unlikeVideoComment(video_comment_id) {
             like_or_unlike: false,
             video_comment_id: video_comment_id
         },
-        success: function(data) {
+        success: function (data) {
             var ellike = "video-comment-like-count-" + video_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
@@ -243,36 +242,3 @@ function saveComment(id = null) {
         }
     }
 }
-
-var sugVidsSwiper = new Swiper(".sugVidsSwiper", {
-    spaceBetween: 5,
-    speed: 1500,
-    loop: true,
-    loopFillGroupWithBlank: true,
-    freeMode: true,
-    autoplay: {
-        delay: 4000,
-        disableOnInteraction: false
-    },
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev"
-    },
-    breakpoints: {
-        // when window width is <= 480px
-        150: {
-            slidesPerView: 2,
-            spaceBetweenSlides: 20
-        },
-        // when window width is <= 600px
-        600: {
-            slidesPerView: 3,
-            spaceBetweenSlides: 30
-        },
-        // when window width is <= 800px
-        800: {
-            slidesPerView: 4,
-            spaceBetweenSlides: 30
-        }
-    }
-});

@@ -164,6 +164,12 @@
     border-radius: 12px;
     padding: 4px 10px;
     font-size: 14px;
+    outline: none !important;
+    color: #007bff;
+    line-height: normal;
+}
+.comment-reply-btn:hover {
+    color: #0056b3;
 }
 .comment-reply-btn img {
     width: 12px;

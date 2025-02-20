@@ -5,7 +5,7 @@
         </div>
     @endif
     <div id="tab-actions">
-        @if (isset($item))
+        {{-- @if (isset($item))
             @if (isset($user))
                 @if ($is_follow == 1)
                     <button type="button" class="btn-nfollow-item followi-btn-{{ $item->id }}"
@@ -18,11 +18,11 @@
                 <button type="button" class="btn-follow-item" data-toggle="modal" data-target="#login_user"
                     onclick="setActionForAfterAuth(null, null)">دنبال کردن</button>
             @endif
-        @endif
+        @endif --}}
 
         @switch($page)
             @case('comment')
-                <span class="active-tab">نظرات</span>
+                <span class="active-tab">نظرات کاربران</span>
                 @if (isset($forum_page))
                     <a href="{{ $forum_page }}" class="not-active-tab">سوال ها
                         @if (isset($item) && isset($item->question_count))
@@ -37,19 +37,19 @@
                         @endif
                     </a>
                 @endif
-                @if (isset($blog_page))
+                {{-- @if (isset($blog_page))
                     <a href="{{ $blog_page }}" class="not-active-tab">آموزشی
                         @if (isset($item) && isset($item->blog_count))
                             <span>{{ $item->blog_count }}</span>
                         @endif
                     </a>
-                @endif
+                @endif --}}
             @break
 
             @case('forum')
                 <span class="active-tab">سوال ها</span>
                 @if (isset($comment_page))
-                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات
+                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات کاربران
                         @if (isset($item) && isset($item->comment_count))
                             <span>{{ $item->comment_count }}</span>
                         @endif
@@ -62,19 +62,19 @@
                         @endif
                     </a>
                 @endif
-                @if (isset($blog_page))
+                {{-- @if (isset($blog_page))
                     <a href="{{ $blog_page }}" class="not-active-tab">آموزشی
                         @if (isset($item) && isset($item->blog_count))
                             <span>{{ $item->blog_count }}</span>
                         @endif
                     </a>
-                @endif
+                @endif --}}
             @break
 
             @case('advertise')
                 <span class="active-tab">آگهی</span>
                 @if (isset($comment_page))
-                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات
+                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات کاربران
                         @if (isset($item) && isset($item->comment_count))
                             <span>{{ $item->comment_count }}</span>
                         @endif
@@ -87,19 +87,19 @@
                         @endif
                     </a>
                 @endif
-                @if (isset($blog_page))
+                {{-- @if (isset($blog_page))
                     <a href="{{ $blog_page }}" class="not-active-tab">آموزشی
                         @if (isset($item) && isset($item->blog_count))
                             <span>{{ $item->blog_count }}</span>
                         @endif
                     </a>
-                @endif
+                @endif --}}
             @break
 
             @case('blog-index')
                 <span class="active-tab">آموزشی</span>
                 @if (isset($comment_page))
-                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات
+                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات کاربران
                         @if (isset($item) && isset($item->comment_count))
                             <span>{{ $item->comment_count }}</span>
                         @endif
@@ -122,7 +122,7 @@
             @break
 
             @case('show_blog')
-                @if (isset($blog_page))
+                {{-- @if (isset($blog_page))
                     <a href="{{ $blog_page }}" class="active-tab">آموزشی
                         @if (isset($item) && isset($item->blog_count))
                             <span>{{ $item->blog_count }}</span>
@@ -130,9 +130,9 @@
                     </a>
                 @else
                     <span class="active-tab">آموزشی</span>
-                @endif
+                @endif --}}
                 @if (isset($comment_page))
-                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات
+                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات کاربران
                         @if (isset($item) && isset($item->comment_count))
                             <span>{{ $item->comment_count }}</span>
                         @endif
@@ -165,7 +165,7 @@
                     <span class="active-tab">سوال ها</span>
                 @endif
                 @if (isset($comment_page))
-                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات
+                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات کاربران
                         @if (isset($item) && isset($item->comment_count))
                             <span>{{ $item->comment_count }}</span>
                         @endif
@@ -178,13 +178,13 @@
                         @endif
                     </a>
                 @endif
-                @if (isset($blog_page))
+                {{-- @if (isset($blog_page))
                     <a href="{{ $blog_page }}" class="not-active-tab">آموزشی
                         @if (isset($item) && isset($item->blog_count))
                             <span>{{ $item->blog_count }}</span>
                         @endif
                     </a>
-                @endif
+                @endif --}}
             @break
 
             @case('show_advertise')
@@ -198,7 +198,7 @@
                     <span class="active-tab">آگهی</span>
                 @endif
                 @if (isset($comment_page))
-                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات
+                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات کاربران
                         @if (isset($item) && isset($item->comment_count))
                             <span>{{ $item->comment_count }}</span>
                         @endif
@@ -211,13 +211,13 @@
                         @endif
                     </a>
                 @endif
-                @if (isset($blog_page))
+                {{-- @if (isset($blog_page))
                     <a href="{{ $blog_page }}" class="not-active-tab">آموزشی
                         @if (isset($item) && isset($item->blog_count))
                             <span>{{ $item->blog_count }}</span>
                         @endif
                     </a>
-                @endif
+                @endif --}}
             @break
 
             @case('show_product')
@@ -233,7 +233,7 @@
                     @endif
                 @endif
                 @if (isset($comment_page))
-                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات
+                    <a href="{{ $comment_page }}" class="not-active-tab">نظرات کاربران
                         @if (isset($item) && isset($item->comment_count))
                             <span>{{ $item->comment_count }}</span>
                         @endif
@@ -246,13 +246,13 @@
                         @endif
                     </a>
                 @endif
-                @if (isset($blog_page))
+                {{-- @if (isset($blog_page))
                     <a href="{{ $blog_page }}" class="not-active-tab">آموزشی
                         @if (isset($item) && isset($item->blog_count))
                             <span>{{ $item->blog_count }}</span>
                         @endif
                     </a>
-                @endif
+                @endif --}}
             @break
 
         @endswitch
