@@ -46,9 +46,11 @@ use App\Models\QuestionAnswer;
 use App\Models\Shahr;
 use App\Models\SiteCategory;
 use App\Models\User;
+use App\Models\UserNotification;
 use App\Models\UserOrder;
 use App\Models\Video;
 use App\Models\Work;
+use App\Notifications\UserNotif;
 use App\Services\Elasticsearch;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Collection;
@@ -122,9 +124,8 @@ class MigrateToMongoController extends Controller
         // $this->itemPageCount();
 
         // $this->updateItemPriority();
-        
-        dd("done");
 
+        dd("done");
     }
 
     private function generateIphoneSimilarSearch($model)
@@ -178,9 +179,8 @@ class MigrateToMongoController extends Controller
         $items = MongoItem::all();
         foreach ($items as $item) {
             $comment_count = $item->comment_count ?? 0;
-            $follow_count = $item->follow_count ?? 0;
             $question_count = $item->question_count ?? 0;
-            $item_priority  = $comment_count + $follow_count + $question_count;
+            $item_priority  = $comment_count  + $question_count;
             if ($item_priority > 0) {
                 $item->priority = $item_priority;
                 $item->update();
@@ -230,6 +230,7 @@ class MigrateToMongoController extends Controller
 
     public function clearHotItems()
     {
+        $this->updateItemPriority();
         $items = MongoItem::where('suggest_items', '!=', null)->get();
         foreach ($items as $item) {
             $item->unset('suggest_items');
@@ -403,6 +404,18 @@ class MigrateToMongoController extends Controller
 
     public function createIndexes()
     {
+        ////////////////////////user notifications
+        UserNotification::raw(function ($collection) {
+            $collection->createIndex([
+                'user_id' => 1
+            ]);
+        });
+        UserNotification::raw(function ($collection) {
+            $collection->createIndex([
+                'type' => 1,
+                'type_id' => 1
+            ]);
+        });
         ////////////////////////user medals
         MongoUserMedal::raw(function ($collection) {
             $collection->createIndex([
@@ -546,27 +559,39 @@ class MigrateToMongoController extends Controller
         //////////////////////affilates
         Affilate::raw(function ($collection) {
             $collection->createIndex([
-                'slug' => 1
+                'created_at' => -1,
+                'google_index' => 1,
+                'status' => 1
             ]);
         });
         Affilate::raw(function ($collection) {
             $collection->createIndex([
-                'items' => 1
+                'slug' => 1,
+                'status' => 1
             ]);
         });
         Affilate::raw(function ($collection) {
             $collection->createIndex([
-                'categories' => 1
+                'items' => 1,
+                'status' => 1
             ]);
         });
         Affilate::raw(function ($collection) {
             $collection->createIndex([
-                'questions' => 1
+                'categories' => 1,
+                'status' => 1
             ]);
         });
         Affilate::raw(function ($collection) {
             $collection->createIndex([
-                'video_id' => 1
+                'questions' => 1,
+                'status' => 1
+            ]);
+        });
+        Affilate::raw(function ($collection) {
+            $collection->createIndex([
+                'video_id' => 1,
+                'status' => 1
             ]);
         });
         //////////////////////users

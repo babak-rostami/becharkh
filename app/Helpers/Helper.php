@@ -33,6 +33,9 @@ if (!function_exists('urlForSuggest')) {
         }
         if (isset($category)) {
             $queryParams = [];
+            if (!$features) {
+                $features = [];
+            }
             foreach ($features as $feature)
                 if (isset($suggestCat->feature_ids) && in_array($feature->id, $suggestCat->feature_ids)) {
                     if (array_key_exists($feature->slug, $currentQueryParams)) {

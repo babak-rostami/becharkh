@@ -293,8 +293,19 @@ class UserController extends Controller
     public function notifications()
     {
         $user = auth('user')->user();
-        $notifications = $user->notifications;
-        $user->unreadNotifications->markAsRead();
+        $notifications = $user->myNotifications;
+        if ($notifications) {
+            $notifications = $notifications->sortByDesc('created_at');
+        } else {
+            $notifications = collect();
+        }
+        foreach ($notifications as $notification) {
+            if ($notification->unread) {
+                $notification->seen = 1;
+                $notification->unset('unread');
+            }
+        }
+        $user->unset('notif_count');
         return view('user.notification', compact('notifications'));
     }
 
@@ -536,5 +547,15 @@ class UserController extends Controller
             $req->delete();
         }
         return back()->with('success', 'درخواست با موفقیت حذف شد');
+    }
+
+    public function isFakeuserExist(Request $request)
+    {
+        $user = MongoUser::where('username', $request->username)->first();
+        if ($user) {
+            return response()->json(['status' => 1], 200);
+        } else {
+            return response()->json(['status' => 0], 200);
+        }
     }
 }

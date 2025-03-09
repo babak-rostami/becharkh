@@ -120,8 +120,9 @@ $(document).ready(function () {
 
 function gtudash() {
     if (is_user_login) {
-        window.open(window.location.origin + "/dashboard", "_blank");
+        window.location.href = window.location.origin + "/dashboard";
     } else {
+        $("#login_user").modal("show");
         openCloseUserDashBox();
         openCloseNewBox(1);
     }

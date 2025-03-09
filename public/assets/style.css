@@ -345,6 +345,16 @@ body {
 
 /* bottom menu */
 
+#bm-unotif-count {
+    position: absolute;
+    top: -4px;
+    right: 10px;
+    background-color: #0a6cd5;
+    color: #fff;
+    padding: 0 6px;
+    border-radius: 8px;
+}
+
 .add-bottom-menu {
     display: none;
     position: absolute;
@@ -1019,4 +1029,27 @@ header {
 
 .fadeMottoCls {
     animation: fadeMotto 2.5s forwards;
+}
+
+#search-hint {
+    display: block;
+    color: #5a131a;
+    padding: 8px 4px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+#search-hint-table {
+    width: 100%;
+    margin-top: 16px;
+}
+
+#search-hint-table tr {
+    border-bottom: 1px solid #e9ecef;
+}
+#whtable {
+    color: #6f000b;
+}
+#thtable {
+    color: #086a1e;
 }

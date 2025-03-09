@@ -85,14 +85,14 @@ class SuggestionService
         } elseif ($cats !== null) {
             return ['cats' => $cats];
         } else {
-            $children = $this->categoryRepository->getCategoryChildren($category->id);
+            $children = $this->categoryRepository->getCategoryChildren($category->id)->where('is_active', 1);
             if (count($children) > 0) {
                 $cats = Cache::remember($catsCacheKey, 21600, function () use ($children) {
                     return $children;
                 });
             } else {
                 $items = Cache::remember($itemsCacheKey, 21600, function () use ($category) {
-                    return MongoItem::where('category_id', $category->id)->where('parent_id', null)->orderBy('follow_count', 'desc')->take(15)->get();
+                    return MongoItem::where('category_id', $category->id)->where('parent_id', null)->orderBy('priority', 'desc')->take(15)->get();
                 });
             }
             if (isset($cats)) {
@@ -141,9 +141,12 @@ class SuggestionService
 
     private function getItemsWithChildren($item, $itemChildren, $allItems)
     {
-        $items = $itemChildren->sortByDesc('priority')->take(20);
+        $items = $itemChildren->sortByDesc('priority')->take(40);
+        $randomItems = $items->slice(20, 20)->shuffle()->take(5);
+
+        $items = $itemChildren->sortByDesc('priority')->take(40);
         $new_items = $itemChildren->sortByDesc('created_at')->take(5);
-        $items = $items->merge($new_items)->unique();
+        $items = $items->merge($new_items)->merge($randomItems)->unique();
         if ($items->count() < 20) {
             if ($items->isNotEmpty()) {
                 $featureId = $items->first()->feature_id;
@@ -162,6 +165,7 @@ class SuggestionService
     private function getGlobalSuggestions()
     {
         $suggestKey = 'suggest_cats';
+        // Cache::forget($suggestKey);
         $suggestCats = Cache::remember($suggestKey, 21600, function () {
             $comment_categoryIds = MongoCategoryComment::raw(function ($collection) {
                 return $collection->distinct('category_id');
@@ -173,7 +177,7 @@ class SuggestionService
                 return $collection->distinct('category_id');
             });
             $categoryIds = array_unique(array_merge($comment_categoryIds, $question_categoryIds, $advertise_categoryIds));
-            return $this->categoryRepository->getCategoryByIds($categoryIds);
+            return $this->categoryRepository->getCategoryByIds($categoryIds)->where('is_active', 1);
         });
         return ['cats' => $suggestCats];
     }

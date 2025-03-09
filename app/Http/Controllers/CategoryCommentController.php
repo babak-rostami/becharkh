@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\Item\ChangeItemPageCount;
-use App\Jobs\Item\UpdateHotItems;
 use App\Jobs\pages\UpdateHotPages;
 use App\Jobs\SendEmailCategoryComment;
-use App\Mail\ReplyToCommentMail;
+use App\Jobs\SendUserNotification;
 use App\Models\Admin;
 use App\Models\CategoryCommentEditorImage;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
-use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
@@ -27,7 +25,6 @@ use App\Services\Item\AdditemsService;
 use App\Services\Survey\SurveyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryCommentController extends Controller
@@ -51,7 +48,6 @@ class CategoryCommentController extends Controller
         $meta_title = null;
         $meta_desc = null;
         $meta_desc_editor = null;
-        $is_follow = 0;
 
         $hasComments = 1;
 
@@ -149,14 +145,14 @@ class CategoryCommentController extends Controller
                         $meta_desc_editor = str_replace("*", $title, $category->desc_in_comment_editor);
                     }
                 }
-                if ($user) {
-                    $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                    if (isset($follow)) {
-                        $is_follow = 1;
-                    } else {
-                        $is_follow = 0;
-                    }
-                }
+                // if ($user) {
+                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+                //     if (isset($follow)) {
+                //         $is_follow = 1;
+                //     } else {
+                //         $is_follow = 0;
+                //     }
+                // }
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if ($category->title_in_comment) {
@@ -265,7 +261,6 @@ class CategoryCommentController extends Controller
 
             $compactVars = [
                 'hot_pages',
-                'is_follow',
                 'acceptedAnswer',
                 'hasComments',
                 'nextPageUrl',
@@ -324,7 +319,7 @@ class CategoryCommentController extends Controller
             $advertise_page = route('ads.index');
             $blog_page = route('blog.index');
 
-            return view('category.comment.index', compact('is_follow', 'suggestCats', 'forum_page', 'blog_page', 'hasComments', 'advertise_page', 'nextPageUrl', 'comments', 'title'));
+            return view('category.comment.index', compact('suggestCats', 'forum_page', 'blog_page', 'hasComments', 'advertise_page', 'nextPageUrl', 'comments', 'title'));
         }
     }
 
@@ -529,6 +524,7 @@ class CategoryCommentController extends Controller
         if (isset($comment->parent_id)) {
             $user = MongoUser::find($user_id);
             dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_to_id, $user))->onQueue('becharkhsite');
+            $this->sendUserNotification('ccomment', $user, $comment);
         }
 
         return redirect()->route('admin.category.comment.index')->with('success', 'نظر با موفقیت ثبت شد');
@@ -548,11 +544,13 @@ class CategoryCommentController extends Controller
             //for fix order object items
             $commentFeatueItems = $comment->getItems();
             $itemIds = $comment->items;
-            $itemIdPositionMap = array_flip($itemIds);
-            $orderedItems = $commentFeatueItems->sortBy(function ($item) use ($itemIdPositionMap) {
-                return $itemIdPositionMap[$item->_id];
-            });
-            $commentFeatueItems = $orderedItems->values()->reverse();
+            if ($itemIds) {
+                $itemIdPositionMap = array_flip($itemIds);
+                $orderedItems = $commentFeatueItems->sortBy(function ($item) use ($itemIdPositionMap) {
+                    return $itemIdPositionMap[$item->_id];
+                });
+                $commentFeatueItems = $orderedItems->values()->reverse();
+            }
             //end for fix order object items
 
             $categories = $categories->map(function ($category) {
@@ -669,6 +667,9 @@ class CategoryCommentController extends Controller
         if (isset($comment->items) && count($comment->items) > 0) {
             dispatch(new ChangeItemPageCount($comment->items, 'comment', 0))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
         }
+        if (isset($comment->parent_id) || isset($comment->reply_to_id)) {
+            app(UserNotificationController::class)->deleteNotification('ccomment', $comment->id);
+        }
         $comment->delete();
         return back()->with('success', 'با موفقیت حذف شد');
     }
@@ -738,6 +739,7 @@ class CategoryCommentController extends Controller
         if (isset($comment->parent_id)) {
             dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_to_id, $user))->onQueue('becharkhsite');
             $commentPage = route('question.index', $category->slug) . "?s=1";
+            $this->sendUserNotification('ccomment', $user, $comment);
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' یک ریپلای ارسال کرد',
                 'route' => $commentPage,
@@ -759,13 +761,18 @@ class CategoryCommentController extends Controller
         return back()->with('success', 'نظر شما با موفقیت ثبت شد');
     }
 
+    private function sendUserNotification($forr, $from_user, $new_object)
+    {
+        dispatch(new SendUserNotification($forr, $from_user, $new_object))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+    }
+
     private function updateHotItems()
     {
-        $update_hot_items_cache_key = 'is_update_hitems';
-        if (!Cache::has($update_hot_items_cache_key)) {
-            Cache::put($update_hot_items_cache_key, true, 3600);
-            dispatch(new UpdateHotItems())->onQueue('becharkhsite')->delay(now()->addHours(1));
-        }
+        // $update_hot_items_cache_key = 'is_update_hitems';
+        // if (!Cache::has($update_hot_items_cache_key)) {
+        //     Cache::put($update_hot_items_cache_key, true, 3600);
+        //     dispatch(new UpdateHotItems())->onQueue('becharkhsite')->delay(now()->addHours(1));
+        // }
         $update_hot_pages_cache_key = 'is_update_hpages';
         if (!Cache::has($update_hot_pages_cache_key)) {
             Cache::put($update_hot_pages_cache_key, true, 1800);

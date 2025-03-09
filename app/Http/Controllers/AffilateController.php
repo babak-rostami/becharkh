@@ -96,7 +96,6 @@ class AffilateController extends Controller
         $page = 'show_product';
         $item = null;
         $category = null;
-        $is_follow = 0;
         $user = null;
         if (auth('user')->check()) {
             $user = auth('user')->user();
@@ -128,14 +127,14 @@ class AffilateController extends Controller
             if ($category->has_ads) {
                 $advertise_page = $item->withParentsAdvertiseUrl();
             }
-            if ($user) {
-                $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                if (isset($follow)) {
-                    $is_follow = 1;
-                } else {
-                    $is_follow = 0;
-                }
-            }
+            // if ($user) {
+            //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+            //     if (isset($follow)) {
+            //         $is_follow = 1;
+            //     } else {
+            //         $is_follow = 0;
+            //     }
+            // }
         } else {
             if (isset($product->categories[0])) {
                 $category = MongoCategory::find($product->categories[0]);
@@ -171,7 +170,6 @@ class AffilateController extends Controller
         $affilates = $affilates->values();
 
         $compactVars = [
-            'is_follow',
             'user',
             'product',
             'page',
@@ -229,6 +227,7 @@ class AffilateController extends Controller
         $affilate->page_link = $request->page_link;
         $affilate->just_this_page = (int)$request->just_this_page;
         $affilate->google_index = (int)$request->google_index;
+        $affilate->status = (int)$request->status;
 
         $editor_service = new CommentEditorService();
         $editor_images = $editor_service->store('create_affilate', $request->body, $affilate);
@@ -348,6 +347,7 @@ class AffilateController extends Controller
         $affilate->page_link = $request->page_link;
         $affilate->just_this_page = (int) $request->just_this_page;
         $affilate->google_index = (int)$request->google_index;
+        $affilate->status = (int)$request->status;
 
         $unset_link = 0;
         $unset_plink = 0;

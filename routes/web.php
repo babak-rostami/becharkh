@@ -61,6 +61,7 @@ use App\Http\Controllers\UserAdvertisePackageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMessageController;
 use App\Http\Controllers\UserMissionController;
+use App\Http\Controllers\UserNotificationController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\UserSearchController;
@@ -127,6 +128,9 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('events', [AdminController::class, 'events'])->name('event.all');
     Route::get('event/delete/{notif}', [AdminController::class, 'deleteNotification'])->name('admin.event.delete');
+
+    Route::get('user-notifs', [UserNotificationController::class, 'adminUserNotifs'])->name('admin.user.notifs');
+    Route::get('user-notif-destroy/{id}', [UserNotificationController::class, 'adminUserNotifDestroy'])->name('admin.user.notif.destroy');
 
     Route::get('reminders', [CarReminderController::class, 'all'])->name('reminder.all');
     Route::delete('reminder/destroy/{id}', [CarReminderController::class, 'destroy'])->name('reminder.destroy');
@@ -339,6 +343,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('site-errors', [PageErrorController::class, 'index'])->name('admin.page.errors');
     Route::get('destroy-site-error/{id}', [PageErrorController::class, 'delete'])->name('admin.destroy.page.error');
     Route::get('destroy-site-errors', [PageErrorController::class, 'deleteAll'])->name('admin.destroy.page.errors');
+    
+    Route::get('is-fakeuser-exist', [UserController::class, 'isFakeuserExist'])->name('admin.is.fuser.exist');
 });
 
 // ---------------------------------------- login routes -------------------------------------
@@ -376,9 +382,9 @@ Route::middleware(['user'])->group(function () {
     Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
     Route::post('user-change-email', [UserController::class, 'userChangeEmail'])->name('user.change.email');
 
-    Route::get('/notifications', [UserController::class, 'notifications'])->name('user.notifications');
-    Route::get('/notification/destroy/{notif}', [UserController::class, 'destroyNotification'])->name('notification.destroy');
-    Route::get('/event/delete/{notif}', [AdminController::class, 'deleteNotification'])->name('event.delete');
+    Route::get('notifications', [UserController::class, 'notifications'])->name('user.notifications');
+    Route::get('notification/destroy/{notif}', [UserController::class, 'destroyNotification'])->name('notification.destroy');
+    Route::get('event/delete/{notif}', [AdminController::class, 'deleteNotification'])->name('event.delete');
 
     Route::put('user-update', [UserController::class, 'update'])->name('user.update');
 
@@ -547,6 +553,7 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
             abort(404);
         }
     });
+
     Route::get('blog/{slug}', function ($slug) {
         $blog = MongoBlog::where('slug', $slug)->first();
         if (isset($blog)) {

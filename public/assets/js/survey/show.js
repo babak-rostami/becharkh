@@ -1,4 +1,8 @@
+let choose_surop_is_processing = false;
+
 function chooseSurOp(obj_id, option_number) {
+    if (choose_surop_is_processing) return;
+    choose_surop_is_processing = true;
     let cs = null;
     let page_name = null;
 
@@ -19,7 +23,7 @@ function chooseSurOp(obj_id, option_number) {
             option_number: option_number,
             _token: cs
         },
-        success: function(data) {
+        success: function (data) {
             if (data.surop1_count) {
                 let surop1 = data.surop1_count.split("-");
                 $("#suropshow-" + obj_id + "-1").text(
@@ -45,8 +49,11 @@ function chooseSurOp(obj_id, option_number) {
                 );
             }
         },
-        error: function(jqXHR) {
+        error: function (jqXHR) {
             console.error("Error in AJAX request:", jqXHR);
+        },
+        complete: function () {
+            choose_surop_is_processing = false;
         }
     });
 }

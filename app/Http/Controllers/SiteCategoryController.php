@@ -142,6 +142,7 @@ class SiteCategoryController extends Controller
         $category->slug = $request->slug;
         $category->parent_id = $request->parent_id;
         $category->status = (int)$request->status;
+        $category->is_active = (int)$request->is_active;
         $category->has_ads = (int)$request->has_ads;
         $category->has_forums = (int)$request->has_forums;
         $category->has_comments = (int)$request->has_comments;

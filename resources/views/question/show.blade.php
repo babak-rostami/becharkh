@@ -117,7 +117,13 @@
             <div class="row">
                 <div class="col-12 text-center">
                     @if ($question->getImage())
-                        <img id="pquestion-title" src="{{ $question->image() }}" alt="{{ $question->title }}" title="{{ $question->title }}">
+                        <img id="pquestion-title" src="{{ $question->image() }}" alt="{{ $question->title }}"
+                            title="{{ $question->title }}">
+                    @else
+                        @if (isset($item))
+                            <img id="pquestion-title" src="{{ $item->image() }}" alt="{{ $question->title }}"
+                                title="{{ $question->title }}">
+                        @endif
                     @endif
                 </div>
             </div>
@@ -142,8 +148,10 @@
 
                 <div class="col-12 mt-2">
                     <h1 id="page-title" class="bold-font-title">{{ $question->title }}</h1>
-                    @if (isset($question->editor))
+                    @if ($question->editor)
                         <div class="question-editor">{!! $question->editor !!}</div>
+                    @else
+                        <div class="question-editor">{{ $question->body }}</div>
                     @endif
 
                     @include('survey.surshow', [
@@ -201,17 +209,30 @@
 
             </div>
 
-            <h3 class="text-center mt-4">نظر شما چیه؟</h3>
+            <div class="row mb-3">
+                @include('item.top-users')
+            </div>
 
             @include('mainPart.comment-box', ['page' => 'show_question'])
 
-            <div class="row mt-4">
-                @include('item.top-users')
-            </div>
 
             @include('mainPart.mainPage.page-btns', ['page' => 'show_question'])
 
             {{-- پاسخ ها --}}
+
+            @if ($answers->isEmpty())
+                <div id="noans-box">
+                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}" alt="arrow top">
+                    <span id="noans-title">شروع گفتگو</span>
+                    <span id="noans-decs">نظر خود را بنویسید</span>
+                </div>
+            @else
+                <div id="noans-box">
+                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}" alt="arrow top">
+                    <span id="noans-decs">نظر خود را اینجا بنویسید</span>
+                </div>
+            @endif
+
             @foreach ($answers as $key => $answer)
                 @if ($key == 2)
                     @if (isset($affilate))
@@ -361,23 +382,26 @@
 
             @if ($questions->count() > 1)
                 <div class="row mx-0">
-                    <div class="col-12 my-4 px-0">
-                        <h3 class="text-center">شما هم سوالی دارید؟</h3>
-                        <a class="btn btn-danger w-100 my-3" href="{{ route('question.create') }}">
-                            ثبت سوال در انجمن
-                            <img class="lazy-load" data-src="{{ asset('files/other/images/w-add.png') }}"
-                                alt="add">
+                    <div class="col-12 my-4 px-0 text-center">
+                        <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
+                        <br>
+                        <img class="mt-3 lazy-load" data-src="{{ $ftp_path . 'files/other/images/darrow.gif' }}"
+                            alt="arrow down">
+                        <br>
+                        <a class="btn btn-primary mb-3 mt-4" href="{{ route('question.create') }}">
+                            سوال جدید +
                         </a>
                     </div>
 
                     @foreach ($questions as $ques)
-                        <div class="col-12 py-2 shadow-sm mb-2 radius-10 sq-box text-right">
+                        <div class="col-12 p-2 shadow-sm mb-2 radius-10 sq-box text-right">
                             <a class="bold-font-title text-decoration-none text-dark"
                                 href="{{ route('question.show', ['category' => $ques->category->slug, 'slug' => $ques->slug, 'random' => $ques->random_id]) }}">
                                 <div>
-                                    <img class="sq-user-image lazy-load" data-src="{{ asset($ques->user->thumb()) }}"
-                                        alt="User Image" />
-                                    <span class="text-gray font-14">{{ $ques->user->username }}</span>
+                                    @if ($ques->getImage())
+                                        <img class="lazy-load hop-img" data-src="{{ $ques->image() }}"
+                                            alt="{{ $ques->title }}">
+                                    @endif
                                     @if ($ques->like_count > 0)
                                         <span class="sug-q-like-icon float-left">
                                             <span>{{ $ques->like_count }}</span>
@@ -402,7 +426,6 @@
                             </a>
                         </div>
                     @endforeach
-                    <a href="{{ route('question.index') }}" class="btn btn-primary w-100">ورود به صفحه انجمن</a>
                 </div>
             @endif
 

@@ -54,7 +54,6 @@ class QuestionController extends Controller
         $meta_title = null;
         $meta_desc = null;
         $meta_desc_editor = null;
-        $is_follow = 0;
 
         if ($category_slug != null) {
             $feature_repository = new FeatureRepository();
@@ -144,14 +143,14 @@ class QuestionController extends Controller
                         $meta_desc_editor = str_replace("*", $title, $category->desc_in_rtable_editor);
                     }
                 }
-                if ($user) {
-                    $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                    if (isset($follow)) {
-                        $is_follow = 1;
-                    } else {
-                        $is_follow = 0;
-                    }
-                }
+                // if ($user) {
+                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+                //     if (isset($follow)) {
+                //         $is_follow = 1;
+                //     } else {
+                //         $is_follow = 0;
+                //     }
+                // }
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if ($category->title_in_rtable) {
@@ -217,7 +216,6 @@ class QuestionController extends Controller
 
             $compactVars = [
                 'hot_pages',
-                'is_follow',
                 'hotQuestions',
                 'item',
                 'meta_title',
@@ -265,7 +263,7 @@ class QuestionController extends Controller
             $advertise_page = route('ads.index');
             $blog_page = route('blog.index');
 
-            return view('question.index', compact('is_follow', 'suggestCats', 'comment_page', 'blog_page', 'advertise_page', 'hotQuestions', 'data', 'questions'));
+            return view('question.index', compact('suggestCats', 'comment_page', 'blog_page', 'advertise_page', 'hotQuestions', 'data', 'questions'));
         }
     }
 
@@ -406,7 +404,6 @@ class QuestionController extends Controller
 
         $items = $question->items;
         $item = null;
-        $is_follow = 0;
         $user = null;
         if (auth('user')->check()) {
             $user = auth('user')->user();
@@ -425,14 +422,14 @@ class QuestionController extends Controller
             $item = MongoItem::find($item_id);
             if (isset($item)) {
                 $tab_title = $item->full_title ?? $item->title;
-                if ($user) {
-                    $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                    if (isset($follow)) {
-                        $is_follow = 1;
-                    } else {
-                        $is_follow = 0;
-                    }
-                }
+                // if ($user) {
+                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+                //     if (isset($follow)) {
+                //         $is_follow = 1;
+                //     } else {
+                //         $is_follow = 0;
+                //     }
+                // }
             }
         } else {
             $tab_title = $category->full_title ?? $category->title;
@@ -494,7 +491,9 @@ class QuestionController extends Controller
             }
         }
 
-        $question->editor = preg_replace('/<img(.*?)src=\"(.*?)\"/', '<img$1class="lazy-load" data-src="$2"', $question->editor);
+        if ($question->editor) {
+            $question->editor = preg_replace('/<img(.*?)src=\"(.*?)\"/', '<img$1class="lazy-load" data-src="$2"', $question->editor);
+        }
 
         $affilateService = new AffilateService();
         $affilate = $affilateService->suggestForQuestion($question->id, $category, $item);
@@ -511,7 +510,6 @@ class QuestionController extends Controller
             'acceptedAnswer',
             'questions',
             'isLike',
-            'is_follow',
             'user',
             'item',
             'category',
@@ -558,7 +556,7 @@ class QuestionController extends Controller
 
     public function create(Request $request)
     {
-        $categories = MongoCategory::where('status', 1)->get();
+        $categories = MongoCategory::where('status', 1)->where('is_active', 1)->get();
         $categories = $categories->map(function ($category) {
             return [
                 'id' => $category->id,
@@ -826,7 +824,11 @@ class QuestionController extends Controller
         //for fix order object items
         $questionFeatueItems = $question->getItems();
         $itemIds = $question->items;
-        $itemIdPositionMap = array_flip($itemIds);
+        if ($itemIds) {
+            $itemIdPositionMap = array_flip($itemIds);
+        } else {
+            $itemIdPositionMap = [];
+        }
         $orderedItems = $questionFeatueItems->sortBy(function ($item) use ($itemIdPositionMap) {
             return $itemIdPositionMap[$item->_id];
         });
@@ -902,6 +904,7 @@ class QuestionController extends Controller
         $question = MongoQuestion::find($question_id);
 
         $question->status = 1;
+        $question->google_index = $request->google_index;
         $question->title = $request->title;
 
         $editor_service = new CommentEditorService();

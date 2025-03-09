@@ -32,4 +32,14 @@ class MongoQuestionAnswer extends Model
     {
         return $this->belongsTo(MongoQuestion::class, 'question_id');
     }
+
+    public function parent()
+    {
+        return $this->belongsTo(MongoQuestionAnswer::class, 'parent_id');
+    }
+
+    public function parentReply()
+    {
+        return $this->belongsTo(MongoQuestionAnswer::class, 'reply_id');
+    }
 }

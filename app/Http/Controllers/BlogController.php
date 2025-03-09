@@ -61,7 +61,6 @@ class BlogController extends Controller
         $meta_title = null;
         $meta_desc = null;
         $meta_desc_editor = null;
-        $is_follow = 0;
 
         if ($category_slug != null) {
             $feature_repository = new FeatureRepository();
@@ -151,14 +150,14 @@ class BlogController extends Controller
                         $meta_desc_editor = str_replace("*", $title, $category->desc_in_blogs_editor);
                     }
                 }
-                if ($user) {
-                    $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                    if (isset($follow)) {
-                        $is_follow = 1;
-                    } else {
-                        $is_follow = 0;
-                    }
-                }
+                // if ($user) {
+                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+                //     if (isset($follow)) {
+                //         $is_follow = 1;
+                //     } else {
+                //         $is_follow = 0;
+                //     }
+                // }
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if ($category->title_in_blogs) {
@@ -211,7 +210,6 @@ class BlogController extends Controller
             $currentQueryParams = $request->query();
 
             $compactVars = [
-                'is_follow',
                 'item',
                 'meta_title',
                 'meta_desc',
@@ -252,7 +250,7 @@ class BlogController extends Controller
             $forum_page = route('question.index');
             $advertise_page = route('ads.index');
 
-            return view('blog.front-index', compact('is_follow', 'suggestCats', 'forum_page', 'comment_page', 'advertise_page', 'data', 'blogs'));
+            return view('blog.front-index', compact('suggestCats', 'forum_page', 'comment_page', 'advertise_page', 'data', 'blogs'));
         }
     }
 
@@ -303,7 +301,6 @@ class BlogController extends Controller
         $blog_items = $blog->items ?? collect();
         $item = null;
         $item_id = null;
-        $is_follow = 0;
         $user = null;
         if (auth('user')->check()) {
             $user = auth('user')->user();
@@ -331,14 +328,14 @@ class BlogController extends Controller
             $item = MongoItem::find($item_id);
             if (isset($item)) {
                 $tab_title = $item->full_title ?? $item->title;
-                if ($user) {
-                    $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                    if (isset($follow)) {
-                        $is_follow = 1;
-                    } else {
-                        $is_follow = 0;
-                    }
-                }
+                // if ($user) {
+                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+                //     if (isset($follow)) {
+                //         $is_follow = 1;
+                //     } else {
+                //         $is_follow = 0;
+                //     }
+                // }
             }
         } else {
             $tab_title = $category->full_title ?? $category->title;
@@ -406,7 +403,6 @@ class BlogController extends Controller
             'blog',
             'blogs',
             'blogVideo',
-            'is_follow',
             'user',
             'item',
             'category',

@@ -14,14 +14,15 @@
     <div class="row justify-content-center">
 
         <div class="col-12 text-center my-2">
+            <a href="{{ route('admin.user.notifs') }}" class="btn btn-light ml-2">اعلان های کاربران<span
+                    class="mx-2 badge badge-danger">{{ $user_notifs_count }}</span></a>
+
             <a href="{{ route('event.all') }}" class="btn btn-secondary ml-2">رویداد های اخیر<span
                     class="mx-2 badge badge-danger">{{ admin_notification_count() }}</span></a>
 
             @if (auth('admin')->user()->type == 1)
                 <a class="btn btn-dark" href="{{ route('admin.users') }}">مدیریت کاربران</a>
             @endif
-
-            <a class="btn btn-warning" href="{{ route('orders') }}">پرداخت ها</a>
 
             <a class="btn btn-dark" href="{{ route('cats.items.admin') }}">دسته بندی سایت
                 <span class="badge badge-danger">{{ $cat_waiting_count }}</span>

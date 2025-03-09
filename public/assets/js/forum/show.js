@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // Check if the 'page_seen' cookie is set for the current path
     if (getCookie("page_seen") == null) {
         // Set the 'page_seen' cookie for the current path with an expiration time of 1 hour
@@ -25,13 +25,13 @@ function doThisAfterAuth() {
 }
 //end for send comment after auth
 
-$("#cm-input").on("input", function() {
+$("#cm-input").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
 });
 
-$(document).ready(function() {
-    $(document).on("click", function(event) {
+$(document).ready(function () {
+    $(document).on("click", function (event) {
         if (
             $(".share-box").hasClass("hide-share") &&
             $(event.target).closest(".share-span").length
@@ -71,36 +71,41 @@ function sentPageToWhatsapp() {
 }
 
 
-$("#like-btn").click(function(e) {
-    e.preventDefault();
-    $("#like-btn").css("display", "none");
-    $.ajax({
-        type: "POST",
-        url: q_like_route,
-        data: {
-            _token: q_show_csrf,
-            question_id: question_id,
-            like_or_unlike: $("#like-span").text()
-        },
-        success: function(result) {
-            if (result.is_like == "لایک") {
-                $("#like-span").text("لایک شد");
-                $("#like-btn").removeClass("btn-outline-danger");
-                $("#like-btn").addClass("btn-outline-success");
-            } else {
-                $("#like-span").text("لایک");
-                $("#like-btn").removeClass("btn-outline-success");
-                $("#like-btn").addClass("btn-outline-danger");
-            }
-            $("#like-count-span").text(result.likes_count);
-        },
-        complete: function() {
-            $("#like-btn").css("display", "inline-block");
-        }
-    });
-});
+// $("#like-btn").click(function(e) {
+//     e.preventDefault();
+//     $("#like-btn").css("display", "none");
+//     $.ajax({
+//         type: "POST",
+//         url: q_like_route,
+//         data: {
+//             _token: q_show_csrf,
+//             question_id: question_id,
+//             like_or_unlike: $("#like-span").text()
+//         },
+//         success: function(result) {
+//             if (result.is_like == "لایک") {
+//                 $("#like-span").text("لایک شد");
+//                 $("#like-btn").removeClass("btn-outline-danger");
+//                 $("#like-btn").addClass("btn-outline-success");
+//             } else {
+//                 $("#like-span").text("لایک");
+//                 $("#like-btn").removeClass("btn-outline-success");
+//                 $("#like-btn").addClass("btn-outline-danger");
+//             }
+//             $("#like-count-span").text(result.likes_count);
+//         },
+//         complete: function() {
+//             $("#like-btn").css("display", "inline-block");
+//         }
+//     });
+// });
+
+let ans_like_unlike_is_processing = false; // Flag to track if a like or unlike request is in progress
 
 function like(question_answer_id) {
+    if (ans_like_unlike_is_processing) return;
+    ans_like_unlike_is_processing = true;
+
     $.ajax({
         type: "POST",
         url: q_answer_like_route,
@@ -109,17 +114,23 @@ function like(question_answer_id) {
             like_or_unlike: true,
             question_answer_id: question_answer_id
         },
-        success: function(data) {
-            var ellike = "like-answer-count-" + question_answer_id;
+        success: function (data) {
+            let ellike = "like-answer-count-" + question_answer_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
-            var elunlike = "unlike-answer-count-" + question_answer_id;
+            let elunlike = "unlike-answer-count-" + question_answer_id;
             document.getElementById(elunlike).innerHTML = data.unlikecount;
+        },
+        complete: function () {
+            ans_like_unlike_is_processing = false;
         }
     });
 }
 
 function unlike(question_answer_id) {
+    if (ans_like_unlike_is_processing) return;
+    ans_like_unlike_is_processing = true;
+
     $.ajax({
         type: "POST",
         url: q_answer_like_route,
@@ -128,12 +139,15 @@ function unlike(question_answer_id) {
             like_or_unlike: false,
             question_answer_id: question_answer_id
         },
-        success: function(data) {
-            var ellike = "like-answer-count-" + question_answer_id;
+        success: function (data) {
+            let ellike = "like-answer-count-" + question_answer_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
-            var elunlike = "unlike-answer-count-" + question_answer_id;
+            let elunlike = "unlike-answer-count-" + question_answer_id;
             document.getElementById(elunlike).innerHTML = data.unlikecount;
+        },
+        complete: function () {
+            ans_like_unlike_is_processing = false;
         }
     });
 }

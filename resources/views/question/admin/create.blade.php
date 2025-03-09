@@ -53,6 +53,8 @@
         //end for select features modal
         const editor_img_upload_route =
             "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'create_question_admin']) }}";
+
+        const is_fuser_exist = "{{ route('admin.is.fuser.exist') }}";
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/forum/admin-create.min.js') . '?lm=' . filemtime('mixassets/js/forum/admin-create.min.js') }}">

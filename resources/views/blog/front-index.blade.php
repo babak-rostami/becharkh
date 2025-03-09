@@ -50,6 +50,12 @@
 
         <div class="col-12 text-center">
 
+            @include('mainPart.mainPage.cat-slider', [
+                'page' => 'blog-index',
+                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
+                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
+            ])
+
             @if (isset($category))
                 @if (isset($item))
                     <img id="page-img" class="mb-3 mt-4" src="{{ asset($item->image()) }}" title="{{ $item->title }}"
@@ -131,11 +137,7 @@
             </div>
 
             @include('mainPart.mainPage.breadc', ['page' => 'blog-index'])
-            @include('mainPart.mainPage.cat-slider', [
-                'page' => 'blog-index',
-                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
-                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
-            ])
+
         </div>
 
 

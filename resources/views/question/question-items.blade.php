@@ -9,21 +9,13 @@
         @endif
     @endif
     <div class="col-12 text-right my-2">
-        <a class="px-3 py-2 question-box"
+        <a class="p-2 question-box"
             href="{{ route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]) }}">
-            <div>
-                <img class="q-user-image lazy-load" data-src="{{ asset($question->user->thumb()) }}" alt="User Image" />
-                <span class="question-username">{{ $question->user->username }}</span>
+            @if ($question->getImage())
+                <img class="lazy-load hop-img" data-src="{{ $question->image() }}" alt="{{ $question->title }}">
+            @endif
 
-                @if ($question->like_count > 0)
-                    <span class="like-icon float-left">
-                        <span>{{ $question->like_count }}</span>
-                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
-                    </span>
-                @endif
-            </div>
-
-            <h2 class="q-item-title my-4">{{ $question->title }}</h2>
+            <h2 class="q-item-title my-2">{{ $question->title }}</h2>
 
             @if ($question->answer)
                 <span class="c-shortans">-{{ $question->answer }}

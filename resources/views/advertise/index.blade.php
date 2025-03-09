@@ -46,6 +46,12 @@
 
         <div class="col-12 text-center">
 
+            @include('mainPart.mainPage.cat-slider', [
+                'page' => 'advertise',
+                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
+                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
+            ])
+
             @if (isset($category))
                 @if (isset($item))
                     <img id="page-img" class="mb-3 mt-4" src="{{ asset($item->image()) }}" title="{{ $item->title }}"
@@ -178,11 +184,6 @@
 
                         <div class="col-12">
                             @include('mainPart.mainPage.breadc', ['page' => 'advertise'])
-                            @include('mainPart.mainPage.cat-slider', [
-                                'page' => 'advertise',
-                                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
-                                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
-                            ])
                         </div>
 
                         @if (isset($hot_pages))

@@ -194,6 +194,15 @@
                     </div>
 
                     <div class="col-12 col-sm-6">
+                        <label for="is_active">فعال؟</label>
+                        <select class="form-control" name="is_active" id="is_active">
+                            <option {{ $selectedCat->is_active == 1 ? 'selected' : '' }} value="1">بله
+                            </option>
+                            <option {{ $selectedCat->is_active == 0 ? 'selected' : '' }} value="0">خیر
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-6">
                         <label for="status">تایید شده</label>
                         <select class="form-control" name="status" id="status">
                             <option {{ $selectedCat->status == 1 ? 'selected' : '' }} value="1">بله

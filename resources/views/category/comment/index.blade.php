@@ -109,6 +109,12 @@
         <div class="col-12 text-center">
 
             {{-- @include('mainPart.mainPage.fifil') --}}
+            @include('mainPart.mainPage.cat-slider', [
+                'page' => 'comment',
+                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
+                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
+            ])
+
 
             @if (isset($category))
                 @if (isset($item))
@@ -159,9 +165,8 @@
             @include('category.rcats', ['page' => 'comment'])
 
             @if (isset($category))
-                <div class="row align-items-center justify-content-center">
+                <div class="row align-items-center justify-content-center mt-3">
                     <div class="col-12 text-right">
-                        <span id="dywt">نظر شما چیه؟</span>
                         @include('mainPart.comment-box', ['page' => 'comment'])
                     </div>
                 </div>
@@ -169,6 +174,27 @@
                 <div id="edImageModal" class="ed-imgslider-modal">
                     <span id="close-ed-img">&times;</span>
                     <img class="ed-imgslider-modal-content" id="ed-img">
+                </div>
+            @endif
+
+            @if (isset($category))
+                <div class="row justify-content-center">
+                    <div class="col-12 text-center">
+                        @if ($hasComments == 0)
+                            <div id="nocoms-box">
+                                <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
+                                    alt="arrow top">
+                                <span id="nocoms-title">شروع گفتگو</span>
+                                <span id="nocoms-decs">نظر خود را بنویسید</span>
+                            </div>
+                        @else
+                            <div id="nocoms-box">
+                                <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
+                                    alt="arrow top">
+                                <span id="nocoms-decs">نظر خود را اینجا بنویسید</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             @endif
 
@@ -195,17 +221,6 @@
 
             @if ($hasComments == 0)
                 <div class="row justify-content-center">
-                    <div class="col-12 text-center">
-                        <div class="p-5">
-                            <img src="{{ $ftp_path . 'files/other/images/ad-chat.gif' }}">
-                            <br>
-                            <span id="nocom-title">اولین نظر را به اشتراک بگذارید</span>
-                            <br>
-                            <span>
-                                نظرات کاربران درباره {{ $title }} اینجا نمایش داده میشود
-                            </span>
-                        </div>
-                    </div>
                     @if (isset($affilate))
                         <div class="col-12 text-right py-2 px-0">
                             @include('affilate.show-box')
@@ -239,12 +254,6 @@
 
 
             @include('mainPart.mainPage.breadc', ['page' => 'comment'])
-
-            @include('mainPart.mainPage.cat-slider', [
-                'page' => 'comment',
-                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
-                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
-            ])
 
             @if (isset($hot_pages))
                 <div class="row mt-4">

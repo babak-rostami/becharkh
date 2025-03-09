@@ -52,7 +52,7 @@
     overflow: hidden;
     border-radius: 8px;
     border: 1px solid #ddd;
-    padding: 22px 8px;
+    padding: 8px;
 }
 .q-bg {
     background-color: #f8f9fa;
@@ -78,7 +78,7 @@
 }
 .q-title {
     font-size: 16px;
-    color: #000;
+    color: #2d2d2d;
     font-weight: 500;
     display: block;
     overflow: hidden;
@@ -95,7 +95,7 @@
 }
 .q-user {
     font-size: 13px;
-    color: #007bff;
+    color: #878787;
 }
 .blog-image {
     max-width: 164px;
@@ -133,9 +133,9 @@
     object-fit: contain;
 }
 .cat-slider-title {
-    font-weight: 700;
-    font-size: 18px;
-    color: #020054;
+    font-weight: 500;
+    font-size: 16px;
+    color: #343a40;
     display: block;
     margin-top: 4px;
 }
@@ -170,14 +170,15 @@
 }
 
 #page-title {
-    font-size: 21px;
-    display: inline-block;
+    font-size: 24px;
     margin-top: 8px;
+    color: #616c78;
 }
 #page-desc {
     font-weight: 700;
-    font-size: 32px;
+    font-size: 28px;
     display: block;
+    color: #818182;
 }
 #page-desc1 {
     font-size: 17px;

@@ -32,18 +32,15 @@
 
             <div class="row justify-content-center pb-3">
                 <div class="col-12 mx-2 text-center">
-                    <h1 id="page-title">بچرخ</h1>
-                    <p class="mb-0" id="page-desc">هر سوالی جوابی داره</p>
-
                     <div class="bslider mt-4" id="cat-slider">
                         @foreach ($categories as $category)
                             <div class="bslider-item cat-slider-item">
                                 <a draggable="false" class="decor-none" id="{{ $category->slug }}"
-                                    @if ($category->has_ads == 1) href="{{ route('ads.index', $category->slug) }}"
-                                    @elseif ($category->has_comments == 1)
-                                        href="{{ route('question.index', $category->slug) }}?s=1"
+                                    @if ($category->has_comments == 1) href="{{ route('question.index', $category->slug) }}?s=1"
+                                    @elseif ($category->has_forums == 1)
+                                    href="{{ route('question.index', $category->slug) }}"
                                     @else
-                                        href="{{ route('question.index', $category->slug) }}" @endif>
+                                    href="{{ route('ads.index', $category->slug) }}" @endif>
                                     <img draggable="false" class="home-cat-slider-img"
                                         alt="{{ $category->full_title ?? $category->title }}"
                                         title="{{ $category->full_title ?? $category->title }}"
@@ -58,22 +55,22 @@
             </div>
 
 
-            <div class="row justify-content-center q-bg mt-4 py-4">
+            <div class="row justify-content-center q-bg mt-2 py-4">
                 <div class="col-12 text-center">
-                    <h2 class="bold-font-title question-title">آخرین سوال ها در انجمن</h2>
-                    <p class="goto-desc">سوال خود را در انجمن مطرح کنید
-                        و از تجربیات دیگران بهره ببرید.</p>
+                    <h1 id="page-title">بچرخ</h1>
+                    <p class="mb-0" id="page-desc">هر سوالی جوابی داره</p>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mt-4 px-0">
                     <div class="bslider" id="question-slider">
                         @foreach ($questions as $question)
                             <div class="bslider-item mt-2 bg-wht">
                                 <a draggable="false" id="{{ $question->id }}"
                                     href="{{ route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]) }}"
                                     class="w-100 decor-none q-box">
-                                    <img alt="user image" draggable="false" class="q-box-img lazy-load"
-                                        data-src="{{ asset($question->user->thumb()) }}">
-                                    <span class="q-user">{{ $question->user->username }}</span>
+                                    @if ($question->getImage())
+                                        <img draggable="false" class="lazy-load hop-img"
+                                            data-src="{{ $question->image() }}" alt="{{ $question->title }}">
+                                    @endif
                                     <span class="q-title">{{ $question->title }}</span>
                                     <span class="q-ans">-{{ $question->answer }}</span>
                                     <br>
@@ -92,11 +89,6 @@
             </div>
 
             <div class="row justify-content-center bg-wht py-4" id="blog-box">
-                <div class="col-12 text-center">
-                    <h2 class="bold-font-title blog-title">پیشنهاد خرید</h2>
-                    <p>پرطرفدارترین محصولات بازار</p>
-                </div>
-
                 <div class="col-12">
                     <div class="bslider" id="blog-slider">
                         @foreach ($products as $product)
@@ -117,30 +109,8 @@
                 </div>
             </div>
 
-            <div class="row justify-content-center q-bg">
-                <div class="col-12 col-md-10 text-right">
-                    <h2 class="text-center mt-5">نظرات کاربران</h2>
-                    <p class="goto-desc">از تجربیات و نظرات کاربران در مورد موضوعات مختلف بهره ببرید</p>
-                </div>
-                @if ($hotItems)
-                    <div class="col-12 col-md-10 text-center">
-                        @foreach ($hotItems as $hitem)
-                            <a href="{{ $hitem->withParentsCommentUrl() }}" class="hot-item-a">
-                                <img class="lazy-load" data-src="{{ $hitem->thumb() }}"
-                                    alt="{{ $hitem->full_title ?? $hitem->title }}">
-                                <br>
-                                <span
-                                    class="hot-item-ctitle">{{ $hitem->category->full_title ?? $hitem->category->title }}</span>
-                                <br>
-                                <span class="hot-item-title">{{ $hitem->full_title ?? $hitem->title }}</span>
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
-
             @if (isset($hot_pages))
-                <div class="row mt-4">
+                <div class="row q-bg pt-4">
                     @include('mainPart.hot-pages')
                 </div>
             @endif

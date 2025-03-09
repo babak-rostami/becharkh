@@ -306,4 +306,9 @@ class MongoUser extends Model implements AuthenticatableContract
         }
         return $titles;
     }
+
+    public function myNotifications()
+    {
+        return $this->hasMany(UserNotification::class, 'user_id');
+    }
 }

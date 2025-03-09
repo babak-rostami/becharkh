@@ -41,6 +41,16 @@ class QuestionAnswer extends Model
         }
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(QuestionAnswer::class, 'parent_id');
+    }
+
+    public function parentReply()
+    {
+        return $this->belongsTo(QuestionAnswer::class, 'reply_id');
+    }
+
     public function replies()
     {
         return $this->hasMany(QuestionAnswer::class, 'parent_id');

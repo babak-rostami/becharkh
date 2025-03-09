@@ -174,7 +174,7 @@ class SitemapController extends Controller
 
     public function products()
     {
-        $products = Affilate::where('google_index', 1)->get();
+        $products = Affilate::orderBy('created_at', 'desc')->where('google_index', 1)->where('status', 1)->get();
         foreach ($products as $product) {
             $product->first_p = $this->getFirstParagraph($product->body);
         }

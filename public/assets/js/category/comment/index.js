@@ -37,12 +37,18 @@ function setNextImageId(open_image_id) {
     }
 }
 
+let ccom_like_unlike_is_processing = false; // Flag to track if a like or unlike request is in progress
+
 function likeCategoryComment(category_comment_id) {
+    if (ccom_like_unlike_is_processing) return;
+    ccom_like_unlike_is_processing = true;
+
     let likeImage = $(`#like-com-image-${category_comment_id}`);
     likeImage.addClass('clicked');
     likeImage.one('animationend', function () {
         $(this).removeClass('clicked');
     });
+
     $.ajax({
         type: "POST",
         url: category_comment_like_route,
@@ -55,20 +61,25 @@ function likeCategoryComment(category_comment_id) {
             var ellike = "category-comment-like-count-" + category_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
-            var elunlike =
-                "category-comment-unlike-count-" + category_comment_id;
+            var elunlike = "category-comment-unlike-count-" + category_comment_id;
             document.getElementById(elunlike).innerHTML = data.unlikecount;
+        },
+        complete: function () {
+            ccom_like_unlike_is_processing = false;
         }
     });
 }
 
 function unlikeCategoryComment(category_comment_id) {
+    if (ccom_like_unlike_is_processing) return; // Prevent further clicks if a request is in progress
+    ccom_like_unlike_is_processing = true; // Set the flag to true
+
     let unlikeImage = $(`#unlike-com-image-${category_comment_id}`);
     unlikeImage.addClass('clicked');
-
     unlikeImage.one('animationend', function () {
         $(this).removeClass('clicked');
     });
+
     $.ajax({
         type: "POST",
         url: category_comment_like_route,
@@ -81,9 +92,11 @@ function unlikeCategoryComment(category_comment_id) {
             var ellike = "category-comment-like-count-" + category_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
-            var elunlike =
-                "category-comment-unlike-count-" + category_comment_id;
+            var elunlike = "category-comment-unlike-count-" + category_comment_id;
             document.getElementById(elunlike).innerHTML = data.unlikecount;
+        },
+        complete: function () {
+            ccom_like_unlike_is_processing = false;
         }
     });
 }

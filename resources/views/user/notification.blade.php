@@ -2,75 +2,39 @@
 
 
 @section('title')
-    پیام های {{ auth('user')->user()->name }}
+    اعلانات
 @endsection
 
 @section('style')
     <meta name="robots" content="noindex">
+
+    <link href="{{ asset('mixassets/css/user/notifs.min.css') . '?lm=' . filemtime('mixassets/css/user/notifs.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
 
-    <div class="row justify-content-center my-2">
-        <div class="col-12 col-md-10 text-center bg-wht radius-10" style="min-height: 450px">
-            <ol class="breadcrumb bg-wht">
-                <li class="breadcrumb-item"><a class="decor-none" href="{{ route('home') }}">بچرخ</a></li>
-                <li class="breadcrumb-item"><a class="decor-none" href="{{ route('user.dashboard.edit') }}">مدیریت
-                        حساب</a>
-                </li>
-                <li class="breadcrumb-item">اعلانات</li>
+    <div class="row justify-content-center bg-wht">
 
-            </ol>
-            <table class="table table-striped mb-5">
-                @if ($notifications->count() > 0)
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">پیام</th>
-                            <th scope="col">عملیات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($notifications as $key => $notification)
-                            <tr>
-                                <th scope="row">{{ $key + 1 }}</th>
-                                <td><a href="{{ $notification->data['route'] }}">{{ $notification->data['action'] }}</a>
-                                </td>
-                                <td>
-                                    <a data-toggle="modal" data-target="#delete-{{ $notification->id }}"><img
-                                            src="{{ asset('files/other/images/remove.png') }}"></a>
-                                </td>
-                            </tr>
-
-                            <!-- delete notification Modal -->
-                            <div class="modal fade" id="delete-{{ $notification->id }}" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">حذف پیام</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            آیا از حذف پیام اطمینان دارید؟
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">خیر
-                                            </button>
-                                            <a href="{{ route('notification.destroy', $notification->id) }}"
-                                                class="btn btn-danger">بله</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </tbody>
-                @else
-                    <p class="bg-wht p-4" style="border: 2px solid #e3e3e3">اعلانی برای نمایش وجود ندارد</p>
-                @endif
-            </table>
+        <div class="col-12 col-md-10 text-center" id="no-notif">
+            @if ($notifications->isEmpty())
+                <img src="{{ $ftp_path . 'files/other/images/notifis.gif' }}">
+                <span id="no-notif-title">اعلان های شما</span>
+                <span id="no-notif-desc">پاسخ های کاربران به سوال ها و نظرات شما اینجا به شما اطلاع داده میشود</span>
+            @else
+                <span id="notif-h">اعلانات شما</span>
+                <span id="notifs-desc">پاسخ های کاربران به سوال ها و نظرات شما اینجا به شما اطلاع داده میشود</span>
+                @foreach ($notifications as $key => $notification)
+                    <a class="notif-a" target="_blank" href="{{ $notification->route }}">
+                        <span class="notif-a-title">{{ $notification->msg }}</span>
+                        <span class="notif-a-body">{{ str_limit($notification->body, 45, '...') }}</span>
+                        <span class="notif-a-time">{{ jdate($notification->created_at)->ago() }}</span>
+                        @if ($notification->seen)
+                            <span class="notif-new">جدید</span>
+                        @endif
+                    </a>
+                @endforeach
+            @endif
         </div>
     </div>
 @endsection

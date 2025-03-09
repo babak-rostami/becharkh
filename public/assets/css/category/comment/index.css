@@ -326,3 +326,27 @@
 }
 
 /* end for pin questions */
+
+#nocoms-title {
+    display: block;
+    margin-top: 4px;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+#nocoms-decs {
+    font-size: 16px;
+    margin-top: 12px;
+    display: block;
+    color: #a2a2a2;
+}
+
+#nocoms-box {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    border: 3px solid #e9ecef;
+    border-radius: 8px;
+    padding: 21px 0;
+    font-size: 18px;
+}

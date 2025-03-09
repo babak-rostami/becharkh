@@ -1,12 +1,12 @@
 .hop-item {
     text-align: right;
-    display: inline-block;
-    background-color: #f7f7f7;
+    display: block;
     border: 1px solid #dee2e6;
     margin-bottom: 8px;
     padding: 8px;
     border-radius: 8px;
     text-decoration: none !important;
+    background-color: #fff;
 }
 
 .hop-item:hover {

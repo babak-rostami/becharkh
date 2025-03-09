@@ -28,7 +28,7 @@
                     {{ method_field('PUT') }}
                     <input type="hidden" name="category_id" id="category_id" value="{{ $comment->category_id }}">
                     <span>{{ $comment->parent->body }}</span>
-                    <textarea required class="form-control comment-input" id="cm-input" name="body"
+                    <textarea required class="form-control comment-input" style="min-height: 200px" id="cm-input" name="body"
                         placeholder="نظر خود را اینجا بنویسید...">{{ $comment->editor ?? $comment->body }}</textarea>
                     <input type="submit" class="btn btn-outline-primary bg-wht w-100 my-2" value="ارسال نظر">
                 </form>

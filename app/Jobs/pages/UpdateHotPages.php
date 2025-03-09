@@ -46,7 +46,7 @@ class UpdateHotPages implements ShouldQueue
             $category_comments = MongoCategoryComment::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')
                 ->where('items', '!=', null)
-                ->take(30)
+                ->take(50)
                 ->get();
             $processed_item_ids = [];
             foreach ($category_comments as $cc) {
@@ -64,33 +64,33 @@ class UpdateHotPages implements ShouldQueue
                     }
                 }
             }
-            $processed_blog_ids = [];
-            $blog_comments = MongoBlogComment::orderBy('created_at', 'desc')
-                ->whereNull('parent_id')
-                ->take(50)
-                ->get();
-            foreach ($blog_comments as $bc) {
-                $blog = MongoBlog::find($bc->blog_id);
-                if ($blog && !in_array($blog->id, $processed_blog_ids)) {
-                    $new_page = new stdClass();
-                    $new_page->title = $blog->title;
-                    $new_page->body = str_limit($bc->body, 100, '...');
-                    $blog_route = route('blog.show', [
-                        'category_slug' => $blog->category->slug,
-                        'slug' => $blog->slug,
-                        'random_id' => $blog->random_id
-                    ]);
-                    $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $blog_route);
-                    $new_page->image = $blog->image();
-                    $new_page->time = $bc->created_at->format('Y-m-d H:i:s');
-                    $hot_pages->add($new_page);
-                    $processed_blog_ids[] = $blog->id;
-                }
-            }
+            // $processed_blog_ids = [];
+            // $blog_comments = MongoBlogComment::orderBy('created_at', 'desc')
+            //     ->whereNull('parent_id')
+            //     ->take(20)
+            //     ->get();
+            // foreach ($blog_comments as $bc) {
+            //     $blog = MongoBlog::find($bc->blog_id);
+            //     if ($blog && !in_array($blog->id, $processed_blog_ids)) {
+            //         $new_page = new stdClass();
+            //         $new_page->title = $blog->title;
+            //         $new_page->body = str_limit($bc->body, 100, '...');
+            //         $blog_route = route('blog.show', [
+            //             'category_slug' => $blog->category->slug,
+            //             'slug' => $blog->slug,
+            //             'random_id' => $blog->random_id
+            //         ]);
+            //         $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $blog_route);
+            //         $new_page->image = $blog->image();
+            //         $new_page->time = $bc->created_at->format('Y-m-d H:i:s');
+            //         $hot_pages->add($new_page);
+            //         $processed_blog_ids[] = $blog->id;
+            //     }
+            // }
             $processed_question_ids = [];
             $question_commetns = MongoQuestionAnswer::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')
-                ->take(30)
+                ->take(50)
                 ->get();
             foreach ($question_commetns as $qc) {
                 $question = MongoQuestion::find($qc->question_id);
@@ -136,7 +136,7 @@ class UpdateHotPages implements ShouldQueue
             $hot_pages = $hot_pages->sortByDesc(function ($page) {
                 return $page->time;
             });
-            $hot_pages = $hot_pages->values()->take(50);
+            $hot_pages = $hot_pages->values()->take(85);
             return $hot_pages;
         });
     }

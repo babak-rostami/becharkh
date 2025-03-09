@@ -4,7 +4,7 @@
 
     <div class="col-12 d-sm-none">
 
-        <div class="row pt-3 pb-2" id="dropdown-add-bottom-menu">
+        {{-- <div class="row pt-3 pb-2" id="dropdown-add-bottom-menu">
             <div class="col-12 text-center">
                 <span id="bm-new-bt">جدید</span>
             </div>
@@ -30,8 +30,8 @@
                     </div>
                 </a>
             </div>
-        </div>
-        <div class="row pt-2 pb-4" id="user_dash_menu">
+        </div> --}}
+        {{-- <div class="row pt-2 pb-4" id="user_dash_menu">
             <div class="col-12 mb-2 text-right">
                 <img class="lazy-load c-bm-btn" id="ud-close-img"
                     data-src="{{ $ftp_path . 'files/other/images/x-16.webp' }}">
@@ -56,7 +56,7 @@
                     <span id="ud-name">کاربر مهمان</span>
                 @endif
 
-                <div class="">
+                <div>
                     <span id="ud-money-title">موجودی:</span>
                     @if ($user)
                         <span id="ud-money-amount" class="convert-m">{{ $user->money }}</span>
@@ -124,7 +124,7 @@
                     </div>
                 @endif
             </div>
-        </div>
+        </div> --}}
         <div class="row justify-content-center bottom-menu-box">
             <div class="col-2 text-center buttom-menu-item p-2 overflow-hidden" onclick="gtudash()" id="bm_open_dashbaord">
                 @if ($user)
@@ -149,20 +149,20 @@
             <div class="col-2 text-center buttom-menu-item p-2">
                 @if ($user)
                     @if (request()->is('favorite'))
-                        <a class="text-white text-decoration-none">
+                        <a class="text-white text-decoration-none d-block">
                             <img src="{{ $ftp_path . 'files/other/images/foryou-blue.png' }}">
                             <br>
                             <span class="active-btab-mobile">ذخیره</span>
                         </a>
                     @else
-                        <a href="{{ route('favorite.index') }}" class="text-white text-decoration-none">
+                        <a href="{{ route('favorite.index') }}" class="text-white text-decoration-none d-block">
                             <img src="{{ $ftp_path . 'files/other/images/foryou-gray.png' }}">
                             <br>
                             <span class="n-active-btab-mobile">ذخیره</span>
                         </a>
                     @endif
                 @else
-                    <a href="" class="c-bm-btn decor-none" data-toggle="modal" data-dismiss="modal"
+                    <a href="" class="c-bm-btn decor-none d-block" data-toggle="modal" data-dismiss="modal"
                         data-target="#login_user">
                         <img src="{{ $ftp_path . 'files/other/images/foryou-gray.png' }}">
                         <br>
@@ -170,8 +170,32 @@
                     </a>
                 @endif
             </div>
-            <div class="col-3 text-center buttom-menu-item p-3" id="dropdown-add-bottom">
-                <img id="bottom-menu-add-img" src="{{ $ftp_path . 'files/other/images/b-add-32.png' }}">
+            <div class="col-2 text-center buttom-menu-item p-2">
+                @if ($user)
+                    @if (strpos(request()->fullUrl(), 'notifications') !== false)
+                        <span class="text-white">
+                            <img src="{{ $ftp_path . 'files/other/images/notif-blue.png' }}">
+                            <br>
+                            <span class="active-btab-mobile">پیام ها</span>
+                        </span>
+                    @else
+                        <a href="{{ route('user.notifications') }}" class="text-white text-decoration-none d-block">
+                            <img src="{{ $ftp_path . 'files/other/images/notif-gray.png' }}">
+                            <br>
+                            <span class="n-active-btab-mobile">پیام ها</span>
+                            @if ($user->notif_count)
+                                <span id="bm-unotif-count">{{ $user->notif_count }}</span>
+                            @endif
+                        </a>
+                    @endif
+                @else
+                    <a href="" class="c-bm-btn decor-none d-block" data-toggle="modal" data-dismiss="modal"
+                        data-target="#login_user">
+                        <img src="{{ $ftp_path . 'files/other/images/notif-gray.png' }}">
+                        <br>
+                        <span class="n-active-btab-mobile">پیام ها</span>
+                    </a>
+                @endif
             </div>
 
             <div class="col-2 text-center buttom-menu-item p-2" onclick="openSearchModal()">
@@ -184,7 +208,7 @@
                 <br>
                 <span id="bm-more-txt" class="n-active-btab-mobile">بیشتر</span>
             </div>
-            <div class="col-2 text-center buttom-menu-item p-2">
+            <div class="col-3 text-center buttom-menu-item p-2">
                 @if (request()->is('/'))
                     <a class="text-white text-decoration-none">
                         <img src="{{ $ftp_path . 'files/other/images/home-blue.png' }}">
@@ -199,7 +223,7 @@
                     </a>
                 @endif
             </div>
-            <div class="col-2 text-center buttom-menu-item p-2">
+            <div class="col-3 text-center buttom-menu-item p-2">
                 @if (request()->is('ads') || request()->is('ads/*'))
                     <a class="text-white text-decoration-none">
                         <img src="{{ $ftp_path . 'files/other/images/shop-blue.png' }}">
@@ -214,7 +238,7 @@
                     </a>
                 @endif
             </div>
-            <div class="col-2 text-center buttom-menu-item p-2">
+            <div class="col-3 text-center buttom-menu-item p-2">
                 @if (strpos(request()->fullUrl(), 'forum') !== false && strpos(request()->fullUrl(), 's=1') !== false)
                     <a class="text-white text-decoration-none">
                         <img src="{{ $ftp_path . 'files/other/images/chat-blue.png' }}">
@@ -229,7 +253,7 @@
                     </a>
                 @endif
             </div>
-            <div class="col-2 text-center buttom-menu-item p-2">
+            <div class="col-3 text-center buttom-menu-item p-2">
                 @if (
                     (strpos(request()->fullUrl(), 'forum') !== false || strpos(request()->fullUrl(), 'question/create') !== false) &&
                         strpos(request()->fullUrl(), 's=1') === false)
@@ -243,21 +267,6 @@
                         <img src="{{ $ftp_path . 'files/other/images/group-gray.png' }}">
                         <br>
                         <span class="n-active-btab-mobile">انجمن</span>
-                    </a>
-                @endif
-            </div>
-            <div class="col-2 text-center buttom-menu-item p-2">
-                @if (request()->is('blogs/*') || request()->is('blogs') || request()->is('new-post/*') || request()->is('new-post'))
-                    <a class="text-white text-decoration-none">
-                        <img src="{{ $ftp_path . 'files/other/images/bm_blogs-b.webp' }}">
-                        <br>
-                        <span class="active-btab-mobile">مجله</span>
-                    </a>
-                @else
-                    <a href="{{ route('blog.index') }}" class="text-white text-decoration-none">
-                        <img src="{{ $ftp_path . 'files/other/images/bm_blogs.webp' }}">
-                        <br>
-                        <span class="n-active-btab-mobile">مجله</span>
                     </a>
                 @endif
             </div>

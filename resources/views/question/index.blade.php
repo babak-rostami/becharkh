@@ -52,6 +52,12 @@
 
         <div class="col-12 text-center">
 
+            @include('mainPart.mainPage.cat-slider', [
+                'page' => 'forum',
+                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
+                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
+            ])
+
             @if (isset($category))
                 @if (isset($item))
                     <img id="page-img" class="mb-3 mt-4" src="{{ asset($item->image()) }}" title="{{ $item->title }}"
@@ -97,8 +103,12 @@
 
             <div class="row mt-2 px-0">
                 <div class="col-12 text-center mt-2">
-                    <span id="dywt">سوال شما قبلا مطرح نشده؟</span>
-                    <a class="btn btn-outline-primary w-100 mt-2" rel="nofollow"
+                    <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
+                    <br>
+                    <img class="mt-3 lazy-load" data-src="{{ $ftp_path . 'files/other/images/darrow.gif' }}"
+                        alt="arrow down">
+                    <br>
+                    <a class="btn btn-primary mt-4" rel="nofollow"
                         href="{{ isset($category) ? $data->newQuestionUrl($category->slug) : route('question.create') }}">
                         سوال جدید +
                     </a>
@@ -131,12 +141,6 @@
 
 
             @include('mainPart.mainPage.breadc', ['page' => 'forum'])
-
-            @include('mainPart.mainPage.cat-slider', [
-                'page' => 'forum',
-                'suggetItems' => isset($suggetItems) ? $suggetItems : null,
-                'suggestCats' => isset($suggestCats) ? $suggestCats : null,
-            ])
 
             @if (isset($hot_pages))
                 <div class="row mt-4">

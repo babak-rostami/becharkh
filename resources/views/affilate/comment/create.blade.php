@@ -33,6 +33,8 @@
         const page = 'admin_create_product_comment';
         const editor_img_upload_route =
             "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'admin_create_product_comment']) }}";
+
+        const is_fuser_exist = "{{ route('admin.is.fuser.exist') }}";
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/affilate/comment-create.min.js') . '?lm=' . filemtime('mixassets/js/affilate/comment-create.min.js') }}">

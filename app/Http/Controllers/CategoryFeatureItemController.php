@@ -98,12 +98,18 @@ class CategoryFeatureItemController extends Controller
         }
 
         $item->status = (int)$request->status;
+
+
+        $similar_search = $request->title . ' ' . $request->title_en;
+        $item->similar_search = $similar_search;
+
         $item->save();
 
         $update_again = 0;
         $full_title = $item->withParentsTitle();
         if ($item->title != $full_title) {
             $item->full_title = $full_title;
+            $similar_search .= $full_title;
             $update_again = 1;
         }
         $parent_url = $this->getparentUrl($item);

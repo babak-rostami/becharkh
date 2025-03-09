@@ -59,7 +59,6 @@ class AdvertiseController extends Controller
         $meta_desc = null;
         $meta_desc_editor = null;
 
-        $is_follow = 0;
         //for filtet -- cat category and features for filter
         $category = MongoCategory::where('slug', $category_slug)->first();
         if (isset($category)) {
@@ -150,14 +149,14 @@ class AdvertiseController extends Controller
                         $meta_desc_editor = str_replace("*", $title, $category->desc_in_ads_editor);
                     }
                 }
-                if ($user) {
-                    $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                    if (isset($follow)) {
-                        $is_follow = 1;
-                    } else {
-                        $is_follow = 0;
-                    }
-                }
+                // if ($user) {
+                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+                //     if (isset($follow)) {
+                //         $is_follow = 1;
+                //     } else {
+                //         $is_follow = 0;
+                //     }
+                // }
                 $advertises->appends(request()->query());
             } else {
                 $cat_title = $category->full_title ?? $category->title;
@@ -225,7 +224,6 @@ class AdvertiseController extends Controller
 
             $compactVars = [
                 'hot_pages',
-                'is_follow',
                 'item',
                 'meta_title',
                 'meta_desc',
@@ -272,7 +270,7 @@ class AdvertiseController extends Controller
             $blog_page = route('blog.index');
             $isset_ads = 1;
 
-            return view('advertise.index', compact('is_follow', 'suggestCats', 'forum_page', 'blog_page', 'comment_page', 'data', 'isset_ads', 'advertises', 'title'));
+            return view('advertise.index', compact('suggestCats', 'forum_page', 'blog_page', 'comment_page', 'data', 'isset_ads', 'advertises', 'title'));
         }
     }
 
@@ -383,7 +381,7 @@ class AdvertiseController extends Controller
         if ($user->email_actived != 1) {
             return redirect()->route('user.dashboard.edit')->with('success', 'برای ثبت آگهی ایمیل خود را تایید کنید');
         }
-        $categories = MongoCategory::where('status', 1)->get();
+        $categories = MongoCategory::where('status', 1)->where('is_active', 1)->get();
         $categories = $categories->map(function ($category) {
             return [
                 'id' => $category->id,
@@ -533,7 +531,6 @@ class AdvertiseController extends Controller
 
         $items = $advertise->items;
         $item = null;
-        $is_follow = 0;
         $user = null;
         if (auth('user')->check()) {
             $user = auth('user')->user();
@@ -544,14 +541,14 @@ class AdvertiseController extends Controller
         }
         if ($item) {
             $tab_title = $item->full_title ?? $item->title;
-            if ($user) {
-                $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                if (isset($follow)) {
-                    $is_follow = 1;
-                } else {
-                    $is_follow = 0;
-                }
-            }
+            // if ($user) {
+            //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
+            //     if (isset($follow)) {
+            //         $is_follow = 1;
+            //     } else {
+            //         $is_follow = 0;
+            //     }
+            // }
         } else {
             $tab_title = $category->full_title ?? $category->title;
         }
@@ -613,7 +610,6 @@ class AdvertiseController extends Controller
         }
 
         $compactVars = [
-            'is_follow',
             'user',
             'category',
             'item',

@@ -51,7 +51,8 @@ mix.minify(
     [
         "public/js/rtable/create.js",
         "public/assets/js/pages/comment-box.js",
-        "public/assets/js/survey/create.js"
+        "public/assets/js/survey/create.js",
+        "public/assets/js/admin/check-fake-user.js"
     ],
     "public/mixassets/js/forum/admin-create.min.js"
 );
@@ -78,7 +79,8 @@ mix.minify(
     [
         "public/assets/js/category/comment-create.js",
         "public/assets/js/pages/comment-box.js",
-        "public/assets/js/survey/create.js"
+        "public/assets/js/survey/create.js",
+        "public/assets/js/admin/check-fake-user.js"
     ],
     "public/mixassets/js/category/comment-create.min.js"
 );
@@ -222,7 +224,8 @@ mix.minify(
 mix.minify(
     [
         "public/assets/js/affilate/comment-create.js",
-        "public/assets/js/pages/comment-box.js"
+        "public/assets/js/pages/comment-box.js",
+        "public/assets/js/admin/check-fake-user.js"
     ],
     "public/mixassets/js/affilate/comment-create.min.js"
 );
@@ -255,6 +258,11 @@ mix.minify(
 mix.minify(
     ["public/assets/css/dashboard-edit.css"],
     "public/mixassets/css/user/dashboard-edit.min.css"
+);
+
+mix.minify(
+    ["public/assets/css/user/notifs.css"],
+    "public/mixassets/css/user/notifs.min.css"
 );
 
 mix.minify(

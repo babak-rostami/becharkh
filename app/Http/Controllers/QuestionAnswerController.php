@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\MissionComplete;
 use App\Jobs\Question\ChangeHotAnswer;
 use App\Jobs\Question\SendEmailQuestionAnswer;
+use App\Jobs\SendUserNotification;
 use App\Mail\ReplyToCommentMail;
 use App\Models\Admin;
 use App\Models\MongoQuestion;
@@ -66,6 +67,8 @@ class QuestionAnswerController extends Controller
         }
         $answer->user_id = $user->id;
         $answer->save();
+
+        dispatch(new SendUserNotification('question_answer', $user, $answer))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
 
         if (!isset($request->parent_id)) {
             $editor_service->updateImageCommentId($editor_images, $answer->id);
@@ -133,6 +136,8 @@ class QuestionAnswerController extends Controller
         $answer->user_id = $user->id;
         $answer->save();
 
+        dispatch(new SendUserNotification('question_answer', $user, $answer))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+
         if (!isset($request->parent_id)) {
             $editor_service->updateImageCommentId($editor_images, $answer->id);
         }
@@ -194,6 +199,9 @@ class QuestionAnswerController extends Controller
             $question->answer_count -= 1;
             $question->update();
         }
+
+        app(UserNotificationController::class)->deleteNotification('question_answer', $answer->id);
+
         return back()->with('success', 'با موفقیت حذف شد');
     }
 

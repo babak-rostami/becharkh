@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-4 text-center">
                     <a class="mx-3 top-nav-link" href="{{ route('ads.index') }}">بازار</a>
-                    <a class="mx-3 top-nav-link" href="{{ route('blog.index') }}">مجله</a>
+                    {{-- <a class="mx-3 top-nav-link" href="{{ route('blog.index') }}">مجله</a> --}}
                     <a class="mx-3 top-nav-link" href="{{ route('question.index') }}">انجمن</a>
                     <a class="mx-3 top-nav-link" href="{{ route('question.index') }}?s=1">نظرات
                         کاربران</a>
@@ -121,16 +121,15 @@
                                     aria-hidden="true">×</span>
                                 <input id="main_search_input" class="form-control my-2 w-100" type="text"
                                     placeholder="جستجو کنید...">
-                                <img id="msearch-magicon" alt="search"
-                                    src="{{ $ftp_path . 'files/other/images/search-blue.png' }}">
+                                <img class="lazy-load" id="msearch-magicon" alt="search"
+                                    data-src="{{ $ftp_path . 'files/other/images/search-blue.png' }}">
+
                                 <div id="msearch-tabs">
                                     <span onclick="showMainSearchItemsResults(1)"
-                                        class="msearch-tab msearch-tab-active" id="msearch-tab-items">دسته
-                                        بندی</span>
+                                        class="msearch-tab msearch-tab-active" id="msearch-tab-items">صفحه
+                                        نظرات</span>
                                     <span class="msearch-tab" id="msearch-tab-questions"
-                                        onclick="showMainSearchForumResults(2)">انجمن</span>
-                                    <span class="msearch-tab" id="msearch-tab-blogs"
-                                        onclick="showMainSearchBlogResults(3)">پست ها</span>
+                                        onclick="showMainSearchForumResults(2)">مسائل و گفتگوها</span>
                                 </div>
                                 <div class="pt-2 pb-5" id="show-msearch-result"></div>
                                 <div class="p-4 text-center mt-2" id="show-msearch-loading">
@@ -143,6 +142,36 @@
                                         data-src="{{ $ftp_path . 'files/other/images/search.webp' }}">
                                     <span>جستجو کنید...</span>
                                 </div>
+                                <table id="search-hint-table">
+                                    <tr>
+                                        <th id="whtable">جستجوی غلط</th>
+                                        <th id="thtable">جستجوی دقیق</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            خودرو پژو 207
+                                        </td>
+                                        <td>
+                                            207
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            گوشی گلکسی a55 بخریم؟
+                                        </td>
+                                        <td>
+                                            a55
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            مزایا و معایب فیدلیتی مدل 1400
+                                        </td>
+                                        <td>
+                                            فیدلیتی
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>

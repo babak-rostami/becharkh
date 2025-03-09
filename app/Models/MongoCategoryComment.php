@@ -58,6 +58,11 @@ class MongoCategoryComment extends Model
         return $this->belongsTo(MongoCategoryComment::class, 'parent_id');
     }
 
+    public function parentReply()
+    {
+        return $this->belongsTo(MongoCategoryComment::class, 'reply_to_id');
+    }
+
     public function likes()
     {
         return $this->hasMany(MongoCategoryCommentLike::class, 'comment_id')->where('like_or_unlike', 1);

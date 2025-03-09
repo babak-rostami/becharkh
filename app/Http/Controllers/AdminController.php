@@ -19,6 +19,7 @@ use App\Models\PageError;
 use App\Models\Question;
 use App\Models\SiteCategory;
 use App\Models\User;
+use App\Models\UserNotification;
 use App\Models\UserSearch;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -40,9 +41,10 @@ class AdminController extends Controller
         $cun_count = ChangeUsername::count();
         $search_count = UserSearch::count();
         $site_errors_count = PageError::count();
+        $user_notifs_count = UserNotification::where('unread', 1)->count();
         return view(
             'admin.dashboard',
-            compact('cun_count', 'site_errors_count', 'search_count', 'blogs_count', 'user_count', 'ad_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
+            compact('user_notifs_count', 'cun_count', 'site_errors_count', 'search_count', 'blogs_count', 'user_count', 'ad_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
         );
     }
 

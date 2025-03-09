@@ -9,15 +9,15 @@ class AffilateService
     public function suggestForPages($category = null, $item = null)
     {
         if ($item) {
-            $affiliate = Affilate::where('items', $item->id)->take(20)->get()->shuffle()->first();
+            $affiliate = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get()->shuffle()->first();
         }
 
         if (!isset($affiliate) && $category) {
-            $affiliate = Affilate::where('categories', $category->id)->take(20)->get()->shuffle()->first();
+            $affiliate = Affilate::where('categories', $category->id)->where('status', 1)->take(20)->get()->shuffle()->first();
         }
 
         if (!isset($affiliate)) {
-            $affiliate = Affilate::where('just_this_page', 0)->take(20)->get()->shuffle()->first();
+            $affiliate = Affilate::where('just_this_page', 0)->where('status', 1)->take(20)->get()->shuffle()->first();
         }
 
         $affiliate->body = $this->modifyAffiliateBody($affiliate);
@@ -29,14 +29,14 @@ class AffilateService
     {
         $affiliates = collect();
         if ($item) {
-            $affiliates = Affilate::where('items', $item->id)->take(20)->get();
+            $affiliates = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get();
         }
         if ($affiliates->count() < 10 && $category) {
-            $cat_affilates = Affilate::where('categories', $category->id)->take(20)->get()->shuffle();
+            $cat_affilates = Affilate::where('categories', $category->id)->where('status', 1)->take(20)->get()->shuffle();
             $affiliates = $affiliates->merge($cat_affilates);
         }
         if ($affiliates->count() < 10) {
-            $cat_affilates = Affilate::where('just_this_page', 0)->take(20)->get()->shuffle();
+            $cat_affilates = Affilate::where('just_this_page', 0)->where('status', 1)->take(20)->get()->shuffle();
             $affiliates = $affiliates->merge($cat_affilates);
         }
         $affiliates = $affiliates->unique('id')->take(10);
@@ -66,7 +66,7 @@ class AffilateService
 
     public function suggestForQuestion($question_id, $category = null, $item = null)
     {
-        $affiliate = Affilate::where('questions', $question_id)->take(20)->get()->shuffle()->first();
+        $affiliate = Affilate::where('questions', $question_id)->where('status', 1)->take(20)->get()->shuffle()->first();
         if (isset($affiliate)) {
             $affiliate->body = $this->modifyAffiliateBody($affiliate);
         } else {

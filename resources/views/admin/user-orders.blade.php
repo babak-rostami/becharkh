@@ -29,7 +29,7 @@
                         @foreach ($orders as $key => $order)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $order->user->username }}</td>
+                                <td>{{ isset($order->user) ? $order->user->username : '' }}</td>
                                 <td>{{ $order->amount }} تومان</td>
                                 <td>{{ $order->status == 1 ? 'بله' : 'خیر' }}</td>
                                 <td>{{ jdate($order->created_at)->ago() }}</td>

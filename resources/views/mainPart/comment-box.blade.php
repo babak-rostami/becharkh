@@ -73,6 +73,13 @@
                 <input type="file" class="form-control" name="image">
             </div>
             <div class="form-group">
+                <select class="form-control" name="google_index">
+                    <option {{ $question->google_index == 1 ? 'selected' : '' }} value="1">ایندکس شود</option>
+                    <option {{ !isset($question->google_index) || $question->google_index == 0 ? 'selected' : '' }}
+                        value="0">ایندکس نشود</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>عنوان پرسش</label>
                 <input type="text" class="form-control required" oninput="countCharacters(this,20,60)" name="title"
                     id="title" placeholder="عنوان سوال مثلا : علت صدای تق تق زیر داشبورد پژو 206"
@@ -110,8 +117,9 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label>نام کاربری فیک</label>
-                        <input type="text" class="form-control" name="username" id="username"
+                        <input type="text" class="form-control" name="username" id="fake-username"
                             value="{{ old('username') }}">
+                        <span id="fake-user-exist"></span>
                     </div>
                 </div>
             </div>
@@ -160,15 +168,15 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label>نام فیک</label>
-                        <input type="text" class="form-control" name="name" id="name"
-                            value="{{ old('name') }}">
+                        <input type="text" class="form-control" name="name" value="{{ old('name') }}">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
                         <label>نام کاربری فیک</label>
-                        <input type="text" class="form-control" name="username" id="username"
+                        <input type="text" class="form-control" name="username" id="fake-username"
                             value="{{ old('username') }}">
+                        <span id="fake-user-exist"></span>
                     </div>
                 </div>
             </div>
@@ -312,6 +320,13 @@
                 <input type="text" class="form-control" name="page_link" id="page_link" value="{{ old('page_link') }}">
             </div>
             <div class="form-group">
+                <label>تایید شده؟</label>
+                <select class="form-control" name="status">
+                    <option value="1">بله</option>
+                    <option value="0">خیر</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>فقط در صفحه خودش نشون داده بشه؟</label>
                 <select class="form-control" name="just_this_page">
                     <option value="1">بله</option>
@@ -378,6 +393,13 @@
                     value="{{ $affilate->page_link }}">
             </div>
             <div class="form-group">
+                <label>تایید شده؟</label>
+                <select name="status">
+                    <option {{ $affilate->status == 1 ? 'selected' : '' }} value="1">بله</option>
+                    <option {{ $affilate->status == 0 ? 'selected' : '' }} value="0">خیر</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>فقط در صفحه خودش نشون داده بشه؟</label>
                 <select name="just_this_page">
                     <option {{ $affilate->just_this_page == 1 ? 'selected' : '' }} value="1">بله</option>
@@ -422,8 +444,9 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label>نام کاربری فیک</label>
-                        <input type="text" class="form-control" name="username" id="username"
+                        <input type="text" class="form-control" name="username" id="fake-username"
                             value="{{ old('username') }}">
+                        <span id="fake-user-exist"></span>
                     </div>
                 </div>
             </div>

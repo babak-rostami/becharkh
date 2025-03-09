@@ -1,4 +1,4 @@
-<div class="col-12 text-center">
+<div class="col-12 text-right text-md-center">
     @foreach ($hot_pages as $hot_page)
         <a class="hop-item" href="{{ $hot_page->url }}">
             @if (isset($hot_page->image))

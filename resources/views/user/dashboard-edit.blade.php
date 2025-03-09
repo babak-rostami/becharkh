@@ -86,7 +86,7 @@
                     سوال جدید</a>
             </div>
 
-            <div class="col-12 text-right mt-4 bg-gray pb-3">
+            <div class="col-12 text-right bg-gray py-3">
                 <div class="user-image-div">
                     <img class="user-image" id="user-image" src="{{ asset($user->image()) }}" alt="{{ $user->username }}"
                         title="{{ $user->username }}">
