@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoryFeatureItem;
-use App\Models\ItemImage;
 use App\Models\MongoItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -46,7 +44,7 @@ class ItemImageController extends Controller
             $baseFileName = $item->slug . time() . rand(100, 999);
             //main image
             $filename = $baseFileName . '.webp';
-            $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
+            $this->uploadAndResizeImage($cover, $path, $filename, 95, 0);
             //thum image
             $filename2 = $baseFileName . '2.webp';
             $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
@@ -81,7 +79,7 @@ class ItemImageController extends Controller
                 $change = 1;
             }
             //main image
-            $resizedImage = Image::make($cover)->encode('webp', 90);
+            $resizedImage = Image::make($cover)->encode('webp', 95);
             $disk->put($filename, (string) $resizedImage);
 
             //thum image

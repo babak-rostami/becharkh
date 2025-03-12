@@ -1,4 +1,4 @@
-$("#img-gal-modal").on("click", function(event) {
+$("#img-gal-modal").on("click", function (event) {
     if (
         $(event.target).attr("id") !== "gal-modal-img" &&
         $(event.target).attr("id") !== "gal-modal-prev" &&
@@ -15,6 +15,8 @@ function clickGalleryImg(imgId, forw) {
         img = $(`#${imgId}`);
     } else if (forw == "comment") {
         img = $(`#${imgId}`);
+    } else if (forw == "item-gallery") {
+        img = $(`#${imgId}`);
     }
     setNextAndPrev(forw, imgId);
     let modal_img = $("#gal-modal-img");
@@ -22,7 +24,7 @@ function clickGalleryImg(imgId, forw) {
         modal.css("display", "flex");
     }
     modal_img.attr("src", img.attr("src"));
-    $("#close-gal-img-modal").click(function() {
+    $("#close-gal-img-modal").click(function () {
         closeGalleryModal();
     });
 }
@@ -42,7 +44,7 @@ function setNextAndPrev(forw, imgId) {
         let prevImgSelector = `${baseImgId}-${prevImgNumber}`;
 
         if ($(`#${nextImgSelector}`).length > 0) {
-            nextBtn.off("click").on("click", function() {
+            nextBtn.off("click").on("click", function () {
                 clickGalleryImg(nextImgSelector, "affilate");
             });
             nextBtn.show();
@@ -51,7 +53,7 @@ function setNextAndPrev(forw, imgId) {
         }
 
         if ($(`#${prevImgSelector}`).length > 0) {
-            prevBtn.off("click").on("click", function() {
+            prevBtn.off("click").on("click", function () {
                 clickGalleryImg(prevImgSelector, "affilate");
             });
             prevBtn.show();
@@ -68,7 +70,7 @@ function setNextAndPrev(forw, imgId) {
         let prevImgSelector = `${prefix}${prevImgNumber}`;
 
         if ($(`#${nextImgSelector}`).length > 0) {
-            nextBtn.off("click").on("click", function() {
+            nextBtn.off("click").on("click", function () {
                 clickGalleryImg(nextImgSelector, "comment");
             });
             nextBtn.show();
@@ -76,8 +78,33 @@ function setNextAndPrev(forw, imgId) {
             nextBtn.hide();
         }
         if ($(`#${prevImgSelector}`).length > 0) {
-            prevBtn.off("click").on("click", function() {
+            prevBtn.off("click").on("click", function () {
                 clickGalleryImg(prevImgSelector, "comment");
+            });
+            prevBtn.show();
+        } else {
+            prevBtn.hide();
+        }
+    } else if (forw === "item-gallery") {
+        let imgNumber = parseInt(imgId.match(/-(\d+)$/)[1]);
+        let nextImgNumber = imgNumber + 1;
+        let prevImgNumber = imgNumber - 1;
+        let prefix = imgId.slice(0, imgId.lastIndexOf("-") + 1);
+
+        let nextImgSelector = `${prefix}${nextImgNumber}`;
+        let prevImgSelector = `${prefix}${prevImgNumber}`;
+
+        if ($(`#${nextImgSelector}`).length > 0) {
+            nextBtn.off("click").on("click", function () {
+                clickGalleryImg(nextImgSelector, "item-gallery");
+            });
+            nextBtn.show();
+        } else {
+            nextBtn.hide();
+        }
+        if ($(`#${prevImgSelector}`).length > 0) {
+            prevBtn.off("click").on("click", function () {
+                clickGalleryImg(prevImgSelector, "item-gallery");
             });
             prevBtn.show();
         } else {

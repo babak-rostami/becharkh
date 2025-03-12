@@ -1,0 +1,24 @@
+#item-gallery {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    #item-gallery {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    #item-gallery::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+[id^="item-img-"] {
+    height: 200px;
+    border-radius: 8px;
+    border: 1px solid #c1c8d1;
+    padding: 3px;
+    cursor: pointer;
+    margin-left: 4px;
+}

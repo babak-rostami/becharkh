@@ -23,26 +23,30 @@ class EditorImageController extends Controller
             $disk = Storage::disk('ftp');
             $file = $request->file('upload');
             $image_name = strtolower(str_random(12));
+            $filename =  time() . '-' . $image_name . '.webp';
+            $resizedImage = Image::make($file)->encode('webp', 95);
 
             if ($page == 'comment' || $page == 'admin_edit_comment' || $page == 'admin_create_comment') {
                 $image = new CategoryCommentEditorImage();
+                $path = 'comeditor/images/1/';
             } else if ($page == 'show_question' || $page == 'admin_edit_qanswer' || $page == 'admin_qanswers') {
                 $image = new QuestionAnswerEditorImage();
+                $path = 'answers/images/1/';
             } else if ($page == 'edit_question_admin' || $page == 'create_question_admin' || $page == 'edit_question' || $page == 'create_question') {
                 $image = new QuestionEditorImage();
+                $path = 'question/images/1/';
             } else if ($page == 'create_blog' || $page == 'edit_blog') {
                 $image = new BlogEditorImage();
+                $path = 'blog/images/1/';
             } else if ($page == 'create_affilate' || $page == 'edit_affilate') {
                 $image = new AffilateEditorImage();
+                $path = 'product/images/1/';
             } else if ($page == 'show_product' || $page == 'admin_create_product_comment' || $page == 'admin_edit_product_comment') {
                 $image = new ProductCommentEditorImage();
+                $path = 'productc/images/1/';
             }
 
-            $path = 'comeditor/images/1/';
-            $filename =  time() . '-' . $image_name . '.webp';
-            $resizedImage = Image::make($file)->encode('webp', 90);
             $disk->put($path . $filename, (string) $resizedImage);
-
             $url = $path . $filename;
             $image->path = $url;
             $image->comment_id = null;

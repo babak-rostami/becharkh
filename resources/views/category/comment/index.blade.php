@@ -117,9 +117,15 @@
 
 
             @if (isset($category))
-                @if (isset($item))
-                    <img id="page-img" class="mb-3 mt-4" src="{{ asset($item->image()) }}" title="{{ $item->title }}"
-                        alt="{{ $item->title }}">
+                @if (isset($item->images))
+                    <div id="item-gallery">
+                        @foreach ($item->images as $key => $img)
+                            <img id="item-img-{{ $key }}" class="my-3 lazy-load"
+                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
+                                data-src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
+                                alt="عکس {{ $item->full_title ?? $item->title }}">
+                        @endforeach
+                    </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" src="{{ asset($category->image()) }}"
                         title="{{ $category->title }}" alt="{{ $category->title }}">

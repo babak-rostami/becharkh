@@ -1,12 +1,12 @@
-@if (!isset($page) || (isset($page) && $page != 'advertise' && $page != 'show_product'))
-    {{-- <span id="affilb-box-title">پیشنهاد خرید </span>
+{{-- @if (!isset($page) || (isset($page) && $page != 'advertise' && $page != 'show_product'))
+    <span id="affilb-box-title">پیشنهاد خرید </span>
     <div id="affil-actions">
         <span class="btn btn-sm btn-outline-dark" href="" data-toggle="modal" data-dismiss="modal"
             data-target="#new-afp">پیشنهاد جدید</span>
         <span class="btn btn-sm btn-outline-primary"
             onclick="sharePage('{{ route('product.show', $affilate->slug) }}')">ذخیره کردن</span>
         @include('mainPart.mainPage.share-page')
-    </div> --}}
+    </div>
     <div class="modal fade" id="new-afp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-@endif
+@endif --}}
 @if (isset($affilate->video_id) && isset($page) && $page == 'show_product')
     <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
         src="{{ route('video.embedb.show', ['category_slug' => $affilate->video->category->slug, 'video_slug' => $affilate->video->slug, 'random_id' => $affilate->video->random_id]) }}"
