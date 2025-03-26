@@ -25,7 +25,8 @@
 
 #gal-modal-prev:hover,
 #gal-modal-next:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: #00b2ff;
+    color: #fff;
 }
 
 #img-gal-modal {

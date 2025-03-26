@@ -65,8 +65,7 @@
                         @foreach ($questions as $question)
                             <div class="bslider-item mt-2 bg-wht">
                                 <a draggable="false" id="{{ $question->id }}"
-                                    href="{{ route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]) }}"
-                                    class="w-100 decor-none q-box">
+                                    href="{{ route('question.show', $question->slug2) }}" class="w-100 decor-none q-box">
                                     @if ($question->getImage())
                                         <img draggable="false" class="lazy-load hop-img"
                                             data-src="{{ $question->image() }}" alt="{{ $question->title }}">

@@ -343,7 +343,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('site-errors', [PageErrorController::class, 'index'])->name('admin.page.errors');
     Route::get('destroy-site-error/{id}', [PageErrorController::class, 'delete'])->name('admin.destroy.page.error');
     Route::get('destroy-site-errors', [PageErrorController::class, 'deleteAll'])->name('admin.destroy.page.errors');
-    
+
     Route::get('is-fakeuser-exist', [UserController::class, 'isFakeuserExist'])->name('admin.is.fuser.exist');
 });
 
@@ -564,14 +564,14 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     });
 
     Route::get('forum/{category_slug?}', [QuestionController::class, 'index'])->name('question.index');
-    Route::get('forum/{category}/{slug}/{random?}', [QuestionController::class, 'show'])->name('question.show');
+    Route::get('forum/{category}/{slug?}/{random?}', [QuestionController::class, 'show'])->name('question.show');
 
     Route::get('question/{username}/{slug}', function ($slug) {
         $segments = explode('-', $slug);
         $lastSegment = array_pop($segments);
         $question = MongoQuestion::where('random_id', $lastSegment)->first();
         if (isset($question)) {
-            return redirect()->route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
+            return redirect()->route('question.show',  $question->slug2);
         } else {
             abort(404);
         }

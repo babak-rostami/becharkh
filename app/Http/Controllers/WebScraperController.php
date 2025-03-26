@@ -189,10 +189,13 @@ class WebScraperController extends Controller
                             //     $mobile_model->images = $images;
                             //     $mobile_model->save();
 
-                            //     if ($mobile_brand->slug == 'apple' && strpos($mobile_model_title, 'iPhone') !== false) {
-                            //         $mobile_model->similar_search = $this->generateIphoneSimilarSearch($mobile_model->title);
-                            //         $mobile_model->update();
-                            //     }
+                            // if ($mobile_brand->slug == 'apple' && strpos($mobile_model_title, 'iPhone') !== false) {
+                            //     $mobile_model->similar_search = $this->generateIphoneSimilarSearch($mobile_model->title);
+                            //     $mobile_model->update();
+                            // } else {
+                            //     $mobile_model->similar_search = $mobile_model->full_title;
+                            //     $mobile_model->update();
+                            // }
                             // }
                         }
                     });

@@ -199,7 +199,9 @@
             </div>
             <div class="form-group">
                 <label>نام کاربری</label>
-                <input type="text" class="form-control" name="username">
+                <input type="text" class="form-control" name="username" id="fake-username"
+                    value="{{ old('username') }}">
+                <span id="fake-user-exist"></span>
             </div>
         @break
 
@@ -523,10 +525,21 @@
     @else
         <textarea class="form-control comment-input" id="cm-input" name="body"
             placeholder="نظر خود را اینجا بنویسید..."></textarea>
+        <script>
+            $(document).ready(function() {
+                $('#cm-input').on('input', function() {
+                    // Reset the height to auto to calculate the new height
+                    $(this).css('height', 'auto');
+                    // Set the height to the scrollHeight to expand it to fit the content
+                    $(this).css('height', Math.max(this.scrollHeight, 100) +
+                        'px'); // Ensure min height of 100px
+                });
+            });
+        </script>
     @endif
 
     @if ($page == 'edit_question_admin' || $page == 'edit_question')
-        <button type="button" class="btn btn-outline-primary bg-wht w-100 my-2" onclick="editorQuestionUpdate()"
+        <button type="button" class="btn btn-primary w-100 my-2" onclick="editorQuestionUpdate()"
             id="comment-editor-btn">
             <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
             ویرایش سوال
@@ -534,32 +547,32 @@
     @elseif($page == 'create_question_admin' || $page == 'create_question')
         @include('survey.surbox')
         <div class="d-flex">
-            <button type="button" class="btn btn-outline-primary bg-wht my-2 flex-grow-1"
-                onclick="editorQuestionStore()" id="comment-editor-btn">
+            <button type="button" class="btn btn-primary my-2 flex-grow-1" onclick="editorQuestionStore()"
+                id="comment-editor-btn">
                 <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
                     alt="send">
                 ثبت سوال
             </button>
             <input type="hidden" id="has_survey" name="has_survey" value="0">
-            <button class="btn btn-light bg-wht my-2" id="add-survey-btn" onclick="addSurvey()" type="button">
-                <img data-src="{{ $ftp_path . 'files/other/images/test-22.png' }}" class="lazy-load" alt="survey">
-                نظرسنجی
+            <button class="btn btn-light my-2" id="add-survey-btn" onclick="addSurvey()" type="button">
+                <img data-src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" class="lazy-load"
+                    alt="survey">
             </button>
         </div>
     @elseif($page == 'create_blog')
-        <button type="button" class="btn btn-outline-primary bg-wht w-100 mb-2 mt-5" onclick="editorBlogStore()"
+        <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="editorBlogStore()"
             id="comment-editor-btn">
             <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
             انتشار مطلب
         </button>
     @elseif($page == 'edit_blog')
-        <button type="button" class="btn btn-outline-primary bg-wht w-100 mb-2 mt-5" onclick="editorBlogUpdate()"
+        <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="editorBlogUpdate()"
             id="comment-editor-btn">
             <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
             ویرایش مطلب
         </button>
     @elseif($page == 'create_affilate' || $page == 'edit_affilate')
-        <button type="button" class="btn btn-outline-primary bg-wht w-100 mb-2 mt-5" onclick="affilateStoreUpdate()"
+        <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="affilateStoreUpdate()"
             id="comment-editor-btn">
             <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
             ثبت افیلیت
@@ -570,11 +583,11 @@
                 $page == 'admin_create_comment' ||
                 $page == 'admin_edit_qanswer' ||
                 $page == 'admin_qanswers')
-            @if ($page == 'admin_create_comment' || $page == 'comment')
+            @if ($page == 'comment')
                 @include('survey.surbox')
                 <div class="d-flex">
-                    <button type="button" class="btn btn-outline-primary bg-wht my-2 flex-grow-1"
-                        onclick="editorCommentSend()" id="comment-editor-btn">
+                    <button type="button" class="btn btn-primary my-2 flex-grow-1" onclick="userCcommentSend()"
+                        id="comment-editor-btn">
                         <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
                             alt="send">
                         ارسال نظر
@@ -582,14 +595,29 @@
                     <input type="hidden" id="has_survey" name="has_survey" value="0">
                     <button class="btn btn-light bg-wht my-2" id="add-survey-btn" onclick="addSurvey()"
                         type="button">
-                        <img data-src="{{ $ftp_path . 'files/other/images/test-22.png' }}" class="lazy-load"
+                        <img data-src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" class="lazy-load"
                             alt="survey">
-                        نظرسنجی
+                    </button>
+                </div>
+            @elseif ($page == 'admin_create_comment')
+                @include('survey.surbox')
+                <div class="d-flex">
+                    <button type="button" class="btn btn-primary my-2 flex-grow-1" onclick="editorCommentSend()"
+                        id="comment-editor-btn">
+                        <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+                            alt="send">
+                        ارسال نظر
+                    </button>
+                    <input type="hidden" id="has_survey" name="has_survey" value="0">
+                    <button class="btn btn-light bg-wht my-2" id="add-survey-btn" onclick="addSurvey()"
+                        type="button">
+                        <img data-src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" class="lazy-load"
+                            alt="survey">
                     </button>
                 </div>
             @else
-                <button type="button" class="btn btn-outline-primary bg-wht my-2 w-100"
-                    onclick="editorCommentSend()" id="comment-editor-btn">
+                <button type="button" class="btn btn-primary my-2 w-100" onclick="editorCommentSend()"
+                    id="comment-editor-btn">
                     <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
                         alt="send">
                     ارسال نظر

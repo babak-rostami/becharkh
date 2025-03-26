@@ -131,7 +131,7 @@
                         <div class="row bg-gray my-3 p-2 shadow-sm radius-10">
                             <div class="col-12">
                                 <a class="text-decoration-none text-dark"
-                                    href="{{ route('question.show', ['category' => $ques->category->slug, 'slug' => $ques->slug, 'random' => $ques->random_id]) }}">{{ $ques->title }}</a>
+                                    href="{{ route('question.show', $ques->slug2) }}">{{ $ques->title }}</a>
                             </div>
                             <div class="col-6">
                                 <span style="color: #005cbf">{{ $ques->user->username }}</span>

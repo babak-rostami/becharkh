@@ -103,7 +103,7 @@ class MigrateToMongoController extends Controller
         // $this->testYoutube();
         // $this->videoThumb();
         // $this->emptyFilePathVideo();
-        // $this->createIndexes();
+        $this->createIndexes();
 
         // $this->followItems();
 
@@ -541,17 +541,7 @@ class MigrateToMongoController extends Controller
             ]);
         });
         MongoQuestion::raw(function ($collection) {
-            $collection->createIndex([
-                'category_id' => 1,
-                'slug' => 1,
-                'random_id' => 1
-            ]);
-        });
-        MongoQuestion::raw(function ($collection) {
-            $collection->createIndex(['title' => 1]);
-        });
-        MongoQuestion::raw(function ($collection) {
-            $collection->createIndex(['slug' => 1]);
+            $collection->createIndex(['slug2' => 1]);
         });
         MongoQuestion::raw(function ($collection) {
             $collection->createIndex(['user_id' => 1]);

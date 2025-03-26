@@ -135,9 +135,11 @@ class IndexController extends Controller
         if (!$value) {
             return;
         }
-        $user_search = new UserSearch();
-        $user_search->text = $value;
-        $user_search->save();
+        if (!auth('admin')->check()) {
+            $user_search = new UserSearch();
+            $user_search->text = $value;
+            $user_search->save();
+        }
 
         $value = Str::lower($value);
         $value = $this->convertPersianToEnglishNumerals($value);
@@ -181,7 +183,7 @@ class IndexController extends Controller
                 return [
                     'id' => $question->id,
                     'title' => $question->title,
-                    'url' => route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]),
+                    'url' => route('question.show', $question->slug2),
                 ];
             });
             return response()->json(['questions' => $questions], 200);
@@ -299,7 +301,7 @@ class IndexController extends Controller
         if ($questions->count() > 0) {
             echo '<ul>';
             foreach ($questions as $question) {
-                echo '<li class="my-2"> <a href="' . route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]) . '">' . $question->title . '</a></li>';
+                echo '<li class="my-2"> <a href="' . route('question.show', $question->slug2) . '">' . $question->title . '</a></li>';
             }
             echo '</ul>';
         } else {

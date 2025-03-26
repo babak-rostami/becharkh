@@ -396,7 +396,7 @@
                     @foreach ($questions as $ques)
                         <div class="col-12 p-2 shadow-sm mb-2 radius-10 sq-box text-right">
                             <a class="bold-font-title text-decoration-none text-dark"
-                                href="{{ route('question.show', ['category' => $ques->category->slug, 'slug' => $ques->slug, 'random' => $ques->random_id]) }}">
+                                href="{{ route('question.show', $ques->slug2) }}">
                                 <div>
                                     @if ($ques->getImage())
                                         <img class="lazy-load hop-img" data-src="{{ $ques->image() }}"

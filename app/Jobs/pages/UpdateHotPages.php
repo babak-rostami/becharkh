@@ -98,7 +98,7 @@ class UpdateHotPages implements ShouldQueue
                     $new_page = new stdClass();
                     $new_page->title = $question->title;
                     $new_page->body = str_limit($qc->body, 100, '...');
-                    $question_route = route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
+                    $question_route = route('question.show', $question->slug2);
                     $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $question_route);
                     if ($question->getImage()) {
                         $new_page->image = $question->image();

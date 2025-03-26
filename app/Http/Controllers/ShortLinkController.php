@@ -27,7 +27,7 @@ class ShortLinkController extends Controller
                 return redirect()->route('car.page', ['brand_slug' => $model->brand->slug, 'model_slug' => $model->slug]);
             } elseif ($shortlink->link_class == 'question') {
                 $question = Question::find($shortlink->link_id);
-                return redirect()->route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
+                return redirect()->route('question.show', $question->slug2);
             }
         } else {
             abort(404);

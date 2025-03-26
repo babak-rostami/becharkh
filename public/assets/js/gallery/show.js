@@ -23,7 +23,8 @@ function clickGalleryImg(imgId, forw) {
     if (modal.css("display") == "none") {
         modal.css("display", "flex");
     }
-    modal_img.attr("src", img.attr("src"));
+    let imgSrc = img.attr("src") ? img.attr("src") : img.data("src");
+    modal_img.attr("src", imgSrc);
     $("#close-gal-img-modal").click(function () {
         closeGalleryModal();
     });

@@ -91,6 +91,6 @@ class Question extends Model
 
     public function showRoute()
     {
-        return route('question.show', ['category' => $this->category->slug, 'slug' => $this->slug, 'random' => $this->random_id]);
+        return route('question.show', $this->slug2);
     }
 }

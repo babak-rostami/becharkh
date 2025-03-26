@@ -66,8 +66,7 @@
                                         href="{{ route('admin.question.edit', $question->id) }}">ویرایش</a>
                                     <a href="{{ route('admin.question.email', $question->id) }}" class="btn btn-dark">ارسال
                                         ایمیل</a>
-                                    <a target="_blank"
-                                        href="{{ route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]) }}"
+                                    <a target="_blank" href="{{ route('question.show', $question->slug2) }}"
                                         class="btn btn-secondary">مشاهده</a>
                                     <a class="btn btn-light"
                                         href="{{ route('question.answers.admin', $question->id) }}">نظرها</a>
@@ -93,8 +92,7 @@
                                                 <p>آیا از حذف پرسش اطمینان دارید؟</p>
 
                                                 <button type="submit" class="btn btn-danger">بله</button>
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">انصراف
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف
                                                 </button>
                                             </form>
                                         </div>

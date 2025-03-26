@@ -53,7 +53,7 @@ class UserNotificationController extends Controller
             $notif_text = $from_user->username . ' نظری برای شما در صفحه ';
             $question = $new_object->question;
             $notif_text = $notif_text . $question->title . ' ارسال کرد';
-            $notif_route = route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
+            $notif_route = route('question.show',  $question->slug2);
             if (isset($parent_comment) && $parent_comment->user_id != $from_user->id && (!isset($parent_comment_user->email_actived) || $parent_comment_user->email_actived != 0)) {
                 $notif_to_anw_user = new UserNotification();
                 $this->updateUserNotifs($parent_comment->user_id);

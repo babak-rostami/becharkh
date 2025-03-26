@@ -3,7 +3,7 @@
     @foreach ($questions as $question)
         <url>
             <loc>
-                {{ urldecode(route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id])) }}
+                {{ urldecode(route('question.show', $question->slug2)) }}
             </loc>
             <lastmod>{{ gmdate('Y-m-d\TH:i:s+00:00', strtotime($question->updated_at)) }}</lastmod>
             <changefreq>hourly</changefreq>

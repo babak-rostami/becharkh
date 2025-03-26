@@ -159,7 +159,8 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/assets/js/pages/comment-box.js"],
+    ["public/assets/js/pages/comment-box.js",
+        "public/assets/js/admin/check-fake-user.js"],
     "public/mixassets/js/forum/answers-admin.min.js"
 );
 

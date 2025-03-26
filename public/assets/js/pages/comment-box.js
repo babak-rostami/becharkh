@@ -5,7 +5,7 @@ let comment_editor2;
 setTimeout(() => {
     if (typeof page !== "undefined") {
         if (
-            page == "comment" ||
+            // page == "comment" ||
             page == "admin_edit_comment" ||
             page == "admin_create_comment" ||
             page == "admin_edit_qanswer" ||
@@ -214,7 +214,46 @@ function editorCommentSend() {
         }
     } else {
         clearTimeout(editorTimeoutId);
-        error_span.text("حداقل از یک پاراگراف استفاده کنید");
+        error_span.text("نظر خود را بتویسید...");
+    }
+    if (submit_form == 1) {
+        $("#add-survey-btn").hide();
+        btn.hide();
+        load_btn.show();
+        setTimeout(() => {
+            comment_form.submit();
+        }, 3000);
+    } else {
+        error_span.css("display", "block");
+        editorTimeoutId = setTimeout(() => {
+            error_span.text("");
+            error_span.hide();
+        }, 5000);
+    }
+}
+
+function userCcommentSend() {
+    let btn = $("#comment-editor-btn");
+    let load_btn = $("#comment-editor-load-btn");
+    let comment_form = $("#cm_form");
+    let submit_form = 0;
+    let editor_contents = $('#cm-input').val().trim();
+    let error_span = $("#comeditor-msg");
+
+    if (editor_contents !== "") {
+        if ($("#sur-box").length && $("#sur-box").is(":visible")) {
+            if (checkSurIsComplete()) {
+                submit_form = 1;
+            } else {
+                clearTimeout(editorTimeoutId);
+                error_span.text("بخش نظر سنجی را تکمیل کنید");
+            }
+        } else {
+            submit_form = 1;
+        }
+    } else {
+        clearTimeout(editorTimeoutId);
+        error_span.text("نظر خود را بتویسید...");
     }
     if (submit_form == 1) {
         $("#add-survey-btn").hide();
@@ -445,7 +484,7 @@ for (var i = 0; i < cedshows.length; i++) {
     }
 }
 
-$("#edImageModal").on("click", function(event) {
+$("#edImageModal").on("click", function (event) {
     if ($(event.target).attr("id") !== "ed-img") {
         closeEdModalImage();
     }
@@ -460,7 +499,7 @@ function clickEdImg(imgId) {
         modal.css("display", "flex");
     }
     modalImg.attr("src", img.attr("src"));
-    $("#close-ed-img").click(function() {
+    $("#close-ed-img").click(function () {
         closeEdModalImage();
     });
 }

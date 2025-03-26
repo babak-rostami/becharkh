@@ -78,7 +78,7 @@ class QuestionAnswerController extends Controller
         foreach ($admins as $admin) {
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
-                'route' => route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id])
+                'route' => route('question.show', $question->slug2)
             ]));
         }
 
@@ -208,7 +208,7 @@ class QuestionAnswerController extends Controller
     private function NE($fromUser, $toUser, $question)
     {
         if (isset($toUser) && (!isset($toUser->email_actived) || $toUser->email_actived != 0)) {
-            $route = route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
+            $route = route('question.show', $question->slug2);
             dispatch(new SendEmailQuestionAnswer($toUser->email, $question->title, $fromUser->username, $route))->onQueue('becharkhsite');
         }
     }

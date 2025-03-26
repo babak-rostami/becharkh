@@ -1,7 +1,6 @@
 @foreach ($hotQuestions as $hq)
     <div class="col-12 s-q-item text-right px-3 py-2 mb-3 radius-10">
-        <a @if ($hq->google_index == 0) rel="nofollow" @endif
-            href="{{ route('question.show', ['category' => $hq->category->slug, 'slug' => $hq->slug, 'random' => $hq->random_id]) }}"
+        <a @if ($hq->google_index == 0) rel="nofollow" @endif href="{{ route('question.show', $hq->slug2) }}"
             class="text-decoration-none text-dark">
             <div>
                 <img class="sug-q-img lazy-load" data-src="{{ asset($hq->user->thumb()) }}" alt="user image">

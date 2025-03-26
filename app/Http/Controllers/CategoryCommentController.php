@@ -96,7 +96,7 @@ class CategoryCommentController extends Controller
                         } else {
                             $fiuforp .= "---" . $f->id . "=" . $item->id;
                         }
-                        $tempComments = $category_comment_repository->getParentCommentsByItemId($category->id, $item->id, 100);
+                        $tempComments = $category_comment_repository->getParentCommentsByItemId($category->id, $item->id, 120);
                         if (count($comments) > 0) {
                             $comments = $comments->intersect($tempComments);
                         } else {
@@ -175,12 +175,12 @@ class CategoryCommentController extends Controller
                 $suggestCats = $suggests['cats'];
             }
 
-            $hasNextPage = count($comments) > 20 ? 1 : 0;
+            $hasNextPage = count($comments) > 40 ? 1 : 0;
             $lastComments = $comments->take(30);
             $firstComs = $lastComments->take(3);
             $topUnLikes = $lastComments->sortByDesc('unlike_count')->take(3);
             $topLikes = $lastComments->sortByDesc('like_count')->take(3);
-            $comments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($comments)->unique()->take(20);
+            $comments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($comments)->unique()->take(40);
 
             if (count($topUnLikes) > 0) {
                 $acceptedAnswer = $topUnLikes->first();
@@ -229,7 +229,7 @@ class CategoryCommentController extends Controller
                     $advertise_page = $item->withParentsAdvertiseUrl();
                 }
                 if (isset($item->pin_question_ids)) {
-                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug', 'random_id', 'category_id', 'image')
+                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug2', 'image')
                         ->whereIn('_id', $item->pin_question_ids)
                         ->get();
                 }
@@ -244,7 +244,7 @@ class CategoryCommentController extends Controller
                     $advertise_page = route('ads.index', $category->slug);
                 }
                 if (isset($category->pin_question_ids)) {
-                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug', 'random_id', 'category_id', 'image')
+                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug2', 'image')
                         ->whereIn('_id', $category->pin_question_ids)
                         ->get();
                 }
@@ -357,12 +357,11 @@ class CategoryCommentController extends Controller
         $allComments = collect();
         if ($category_id != 'null') {
             if ($query != 'null') {
-
                 foreach ($featuresInUrl as $f) {
                     $fea = explode("=", $f);
                     if (isset($fea[1])) {
                         $item_id = $fea[1];
-                        $comments = $category_comment_repository->getParentCommentsByItemId($category->id, $item_id, 100);
+                        $comments = $category_comment_repository->getParentCommentsByItemId($category->id, $item_id, 120);
                         if (count($allComments) > 0) {
                             $allComments = $allComments->intersect($comments);
                         } else {
@@ -691,12 +690,12 @@ class CategoryCommentController extends Controller
         }
         $comment = new MongoCategoryComment();
 
-        if (!isset($request->parent_id)) {
-            $editor_service = new CommentEditorService();
-            $editor_images = $editor_service->store('comment', $request->body, $comment);
-        } else {
-            $comment->body = $request->body;
-        }
+        // if (!isset($request->parent_id)) {
+        //     $editor_service = new CommentEditorService();
+        //     $editor_images = $editor_service->store('comment', $request->body, $comment);
+        // } else {
+        $comment->body = $request->body;
+        // }
 
         $user = auth('user')->user();
         $comment->category_id = $category->id;
@@ -729,9 +728,9 @@ class CategoryCommentController extends Controller
 
         $comment->save();
 
-        if (!isset($request->parent_id)) {
-            $editor_service->updateImageCommentId($editor_images, $comment->id);
-        }
+        // if (!isset($request->parent_id)) {
+        //     $editor_service->updateImageCommentId($editor_images, $comment->id);
+        // }
 
         $this->updateHotItems();
 

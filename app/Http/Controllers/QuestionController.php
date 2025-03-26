@@ -387,20 +387,17 @@ class QuestionController extends Controller
         }
     }
 
-    public function show(SuggestionService $suggestionService, $category, $slug, $random = null)
+    public function show(SuggestionService $suggestionService, $category, $slug = null, $random = null)
     {
-        $category = MongoCategory::where('slug', $category)->first();
-        if (!isset($category)) {
+        if (!isset($category) || !isset($slug) || !isset($random)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
-        if (!isset($random)) {
-            $question = MongoQuestion::where('category_id', $category->id)->where('slug', $slug)->first();
-            return redirect(route('question.show', ['category' => $category->slug, 'slug' => $question->slug, 'random' => $question->random_id]));
-        }
-        $question = MongoQuestion::where('category_id', $category->id)->where('slug', $slug)->where('random_id', $random)->with('user')->first();
+        $slug2 = $category . '/' . $slug . '/' . $random;
+        $question = MongoQuestion::where('slug2', $slug2)->with(['user', 'category'])->first();
         if (!isset($question)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
+        $category = $question->category;
 
         $items = $question->items;
         $item = null;
@@ -411,7 +408,7 @@ class QuestionController extends Controller
         if (isset($items) && count($items) > 0) {
             $item_id = $items[0];
             $item = MongoItem::find($item_id);
-            $questions = $this->getHotQuestions($category, $items[count($items) - 1], 15)->where('id', '!=', $question->id);
+            $questions = $this->getHotQuestions($category, $item->id, 15)->where('id', '!=', $question->id);
         } else {
             $questions = $this->getHotQuestions($category, null, 15)->where('id', '!=', $question->id);
         }
@@ -444,14 +441,13 @@ class QuestionController extends Controller
         $childFeature = null;
         $childItem = null;
 
-        $isLike = 0;
-        if ($user) {
-            $like = $question->likes->where('user_id', $user->id)->first();
-            if (isset($like)) {
-                $isLike = 1;
-            }
-        }
-
+        // $isLike = 0;
+        // if ($user) {
+        //     $like = $question->likes->where('user_id', $user->id)->first();
+        //     if (isset($like)) {
+        //         $isLike = 1;
+        //     }
+        // }
 
         $lastAnswers = MongoQuestionAnswer::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
         $firstComs = $lastAnswers->take(1);
@@ -509,7 +505,7 @@ class QuestionController extends Controller
             'answers',
             'acceptedAnswer',
             'questions',
-            'isLike',
+            // 'isLike',
             'user',
             'item',
             'category',
@@ -602,8 +598,8 @@ class QuestionController extends Controller
         $question->category_id = $category->id;
         $question->title = $request->title;
         $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
-        $question->slug = $slug;
-        $question->random_id = str_random(10);
+        $slug2 = $this->createQuestionSlug($category->slug, $slug);
+        $question->slug2 = $slug2;
 
         $editor_service = new CommentEditorService();
         $editor_images = $editor_service->store('create_question_admin', $request->body, $question);
@@ -638,6 +634,17 @@ class QuestionController extends Controller
         return redirect()->route('question.index.admin')->with('success', 'سوال شما با موفقیت در انجمن ثبت شد');
     }
 
+    private function createQuestionSlug($cat_slug, $slug, $random = 1)
+    {
+        $slug2 = $cat_slug . '/' . $slug . '/' . $random;
+        $is_exist = MongoQuestion::where('slug2', $slug2)->first();
+        if ($is_exist) {
+            return $this->createQuestionSlug($cat_slug, $slug, $random + 1);
+        } else {
+            return $slug2;
+        }
+    }
+
     public function store(Request $request)
     {
         $this->validate(
@@ -666,13 +673,14 @@ class QuestionController extends Controller
         }
         $question->title = $request->title;
         $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
-        $question->slug = $slug;
+        $slug2 = $this->createQuestionSlug($category->slug, $slug);
+        $question->slug2 = $slug2;
+
         $question->google_index = 0;
 
         $editor_service = new CommentEditorService();
         $editor_images = $editor_service->store('create_question', $request->body, $question);
 
-        $question->random_id = str_random(10);
         $question->user_id = $user->id;
 
         $addItemService = new AdditemsService();
@@ -707,7 +715,7 @@ class QuestionController extends Controller
         foreach ($admins as $admin) {
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' یک پرسش با عنوان ' . $request->title . ' منتشر کرد',
-                'route' => route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]),
+                'route' => route('question.show', $question->slug2),
             ]));
         }
 
@@ -1099,7 +1107,7 @@ class QuestionController extends Controller
                 'src' => asset($question->user->image()),
                 'title' => $question->title,
                 'body' => Str::limit($question->body, 100, '...'),
-                'url' => route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]),
+                'url' => route('question.show', $question->slug2),
             ],
             200
         );

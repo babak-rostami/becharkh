@@ -109,8 +109,10 @@
 
         const page = 'admin_qanswers';
 
-        var editor_img_upload_route =
+        const editor_img_upload_route =
             "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'admin_qanswers']) }}";
+
+        const is_fuser_exist = "{{ route('admin.is.fuser.exist') }}";
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/forum/answers-admin.min.js') . '?lm=' . filemtime('mixassets/js/forum/answers-admin.min.js') }}">

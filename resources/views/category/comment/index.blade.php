@@ -32,9 +32,9 @@
 
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
-    <script src="{{ $ftp_path . 'library/ckeditor/ckeditor.js' }}"></script>
+    {{-- <script src="{{ $ftp_path . 'library/ckeditor/ckeditor.js' }}"></script>
     <script src="{{ $ftp_path . 'library/ckeditor/ckfinder.js' }}"></script>
-    <script src="{{ $ftp_path . 'library/ckeditor/de.js' }}"></script>
+    <script src="{{ $ftp_path . 'library/ckeditor/de.js' }}"></script> --}}
 
     <link
         href="{{ asset('mixassets/css/category/comment/index.min.css') . '?lm=' . filemtime('mixassets/css/category/comment/index.min.css') }}"
@@ -208,18 +208,19 @@
                 <div class="row" id="pin-qs-box">
                     <div class="col-12 text-center">
                         @foreach ($pin_questions as $pin_question)
-                            <a class="hop-item"
-                                href="{{ route('question.show', ['category' => $pin_question->category->slug, 'slug' => $pin_question->slug, 'random' => $pin_question->random_id]) }}">
-                                @if ($pin_question->getImage())
-                                    <img class="lazy-load hop-img" data-src="{{ $pin_question->image() }}"
-                                        alt="{{ $pin_question->title }}">
-                                @else
-                                    <img class="lazy-load rcir-glow"
-                                        data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
-                                @endif
-                                <span class="hop-title">{{ $pin_question->title }}</span>
-                                <span class="hop-body">{{ $pin_question->body }}</span>
-                            </a>
+                            @if ($pin_question->slug2)
+                                <a class="hop-item" href="{{ route('question.show', $pin_question->slug2) }}">
+                                    @if ($pin_question->getImage())
+                                        <img class="lazy-load hop-img" data-src="{{ $pin_question->image() }}"
+                                            alt="{{ $pin_question->title }}">
+                                    @else
+                                        <img class="lazy-load rcir-glow"
+                                            data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
+                                    @endif
+                                    <span class="hop-title">{{ $pin_question->title }}</span>
+                                    <span class="hop-body">{{ $pin_question->body }}</span>
+                                </a>
+                            @endif
                         @endforeach
                     </div>
                 </div>

@@ -78,7 +78,7 @@ class QuestionEmailController extends Controller
     public function sendQuestionEmail(Request $request)
     {
         $question = MongoQuestion::where('_id', $request->question_id)
-            ->select(['title', 'body', 'items_title', 'slug', 'random_id', 'user_id', 'category_id'])
+            ->select(['title', 'body', 'items_title', 'slug2', 'user_id'])
             ->with(['user' => function ($query) {
                 $query->select(['name']);
             }])
@@ -97,7 +97,7 @@ class QuestionEmailController extends Controller
             return response()->json(['message' => 'حداقل یک کاربر انتخاب کنید'], 404);
         }
         $users = MongoUser::whereIn('_id', $new_user_ids)->select(['email', 'name'])->get();
-        $route = route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]);
+        $route = route('question.show', $question->slug2);
 
         $delay = 5;
         foreach ($users as $user) {

@@ -470,7 +470,7 @@
                                                     <td>{{ jdate($question->created_at)->ago() }}</td>
                                                     <td>
                                                         <a class="btn btn-outline-primary" target="_blank"
-                                                            href="{{ route('question.show', ['category' => $question->category->slug, 'slug' => $question->slug, 'random' => $question->random_id]) }}">
+                                                            href="{{ route('question.show', $question->slug2) }}">
                                                             <img src="{{ $ftp_path . 'files/other/images/eye.png' }}">
                                                             مشاهده
                                                         </a>
