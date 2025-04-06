@@ -214,7 +214,7 @@ function editorCommentSend() {
         }
     } else {
         clearTimeout(editorTimeoutId);
-        error_span.text("نظر خود را بتویسید...");
+        error_span.text("نظر خود را بنویسید...");
     }
     if (submit_form == 1) {
         $("#add-survey-btn").hide();
@@ -253,7 +253,7 @@ function userCcommentSend() {
         }
     } else {
         clearTimeout(editorTimeoutId);
-        error_span.text("نظر خود را بتویسید...");
+        error_span.text("نظر خود را بنویسید...");
     }
     if (submit_form == 1) {
         $("#add-survey-btn").hide();

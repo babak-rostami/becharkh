@@ -26,7 +26,7 @@
             <div class="row mb-4 mt-4 bg-wht radius-10 p-2">
                 @foreach ($answers as $key => $answer)
                     <div class="col-12" style="border-bottom: 1px solid #ddd;padding: 12px;">
-                        <p>{{ $answer->body }}</p>
+                        <p>{{ str_limit($answer->body) }}</p>
                         <a class="btn btn-danger" href="" data-toggle="modal"
                             data-target="#delete-{{ $answer->id }}">حذف</a>
                         <a class="btn btn-primary" href="" data-toggle="modal"

@@ -32,7 +32,8 @@
                         <tr>
                             <th>ردیف</th>
                             <th>عنوان سوال</th>
-                            <th>نمایش در گوگل</th>
+                            <th>وضعیت</th>
+                            <th>ایندکس</th>
                             <th>تعداد بازدید</th>
                             <th>زمان</th>
                             <th>عملیات</th>
@@ -43,12 +44,14 @@
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $question->title }}
+                                    <span class="badge badge-primary">{{ $question->answer_count ?? 0 }} نظر</span>
+                                </td>
+                                <td>
                                     @if ($question->status == 1)
                                         <span class="text-success">تایید شده</span>
                                     @else
                                         <span class="text-danger">تایید نشده</span>
                                     @endif
-                                    <span class="badge badge-primary">{{ $question->answer_count ?? 0 }} نظر</span>
                                 </td>
                                 <td>
                                     @if ($question->google_index == 1)

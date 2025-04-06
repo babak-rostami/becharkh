@@ -21,7 +21,7 @@
             @endif
         </div>
 
-        <div class="col-12 text-center">
+        <div class="col-12 text-center overflow-auto">
             <table class="table table-hover my-5">
                 <thead>
                     <tr>
@@ -38,7 +38,7 @@
                     @foreach ($notifs as $key => $notif)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td> {{ $notif->msg }}</td>
+                            <td><a href="{{ $notif->route }}"> {{ $notif->msg }}</a></td>
                             <td> {{ $notif->body }}</td>
                             <td> {{ $notif->user->username }}</td>
                             <td>

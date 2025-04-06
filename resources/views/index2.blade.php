@@ -43,7 +43,7 @@
     <link href="{{ asset('assets/style.css') . '?lm=' . filemtime('assets/style.css') }}" rel="stylesheet"
         type="text/css" />
 
-    <title>@yield('title') | بچرخ</title>
+    <title>@yield('title')</title>
     <link rel="icon" type="image/x-icon" href="{{ $ftp_path . 'files/other/images/logo1.png' }}" />
 
 

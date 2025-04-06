@@ -103,7 +103,7 @@ class MigrateToMongoController extends Controller
         // $this->testYoutube();
         // $this->videoThumb();
         // $this->emptyFilePathVideo();
-        $this->createIndexes();
+        // $this->createIndexes();
 
         // $this->followItems();
 

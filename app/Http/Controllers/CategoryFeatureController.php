@@ -122,6 +122,19 @@ class CategoryFeatureController extends Controller
         $feature->item_is_in_title_if_not_parent = (int)$request->item_is_in_title_if_not_parent;
         $feature->select_items_count = $request->select_items_count;
 
+        $unset_pititle = 0;
+        $unset_pidesc = 0;
+        if ($request->page_intro_title) {
+            $feature->page_intro_title = $request->page_intro_title;
+        } else {
+            $unset_pititle = 1;
+        }
+        if ($request->page_intro_desc) {
+            $feature->page_intro_desc = $request->page_intro_desc;
+        } else {
+            $unset_pidesc = 1;
+        }
+
         // Step 1: Store the old cat_ids and parent_id to detect changes later
         $oldCatIds = $feature->categories->pluck('id')->toArray();
         $oldParentId = $feature->parent_id;
@@ -148,6 +161,12 @@ class CategoryFeatureController extends Controller
         $feature->save();
         if ($unset_parent_id) {
             $feature->unset('parent_id');
+        }
+        if ($unset_pititle) {
+            $feature->unset('page_intro_title');
+        }
+        if ($unset_pidesc) {
+            $feature->unset('page_intro_desc');
         }
 
         // Step 3: Check for changes in cat_ids

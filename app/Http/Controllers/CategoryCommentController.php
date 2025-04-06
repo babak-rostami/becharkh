@@ -49,6 +49,9 @@ class CategoryCommentController extends Controller
         $meta_desc = null;
         $meta_desc_editor = null;
 
+        $page_intro_title = null;
+        $page_intro_desc = null;
+
         $hasComments = 1;
 
         if ($category_slug != null) {
@@ -144,6 +147,10 @@ class CategoryCommentController extends Controller
                     if ($category->desc_in_comment_editor) {
                         $meta_desc_editor = str_replace("*", $title, $category->desc_in_comment_editor);
                     }
+                }
+                if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
+                    $page_intro_title = str_replace("*", $title, $followFeature->page_intro_title);
+                    $page_intro_desc = str_replace("*", $title, $followFeature->page_intro_desc);
                 }
                 // if ($user) {
                 //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
@@ -260,6 +267,8 @@ class CategoryCommentController extends Controller
             $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
+                'page_intro_title',
+                'page_intro_desc',
                 'hot_pages',
                 'acceptedAnswer',
                 'hasComments',
@@ -475,6 +484,8 @@ class CategoryCommentController extends Controller
 
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
+            $parent_comment = MongoCategoryComment::find($request->parent_id);
+            $comment->category_id = $parent_comment->category_id;
             if (isset($request->reply_id)) {
                 $comment->reply_id = $request->reply_id;
             }

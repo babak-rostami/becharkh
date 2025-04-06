@@ -55,6 +55,9 @@ class QuestionController extends Controller
         $meta_desc = null;
         $meta_desc_editor = null;
 
+        $page_intro_title = null;
+        $page_intro_desc = null;
+
         if ($category_slug != null) {
             $feature_repository = new FeatureRepository();
             $category = MongoCategory::where('slug', $category_slug)->first();
@@ -143,6 +146,10 @@ class QuestionController extends Controller
                         $meta_desc_editor = str_replace("*", $title, $category->desc_in_rtable_editor);
                     }
                 }
+                if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
+                    $page_intro_title = str_replace("*", $title, $followFeature->page_intro_title);
+                    $page_intro_desc = str_replace("*", $title, $followFeature->page_intro_desc);
+                }
                 // if ($user) {
                 //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
                 //     if (isset($follow)) {
@@ -215,6 +222,8 @@ class QuestionController extends Controller
             $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
+                'page_intro_title',
+                'page_intro_desc',
                 'hot_pages',
                 'hotQuestions',
                 'item',
@@ -281,19 +290,19 @@ class QuestionController extends Controller
         $hotRelated = collect();
         if (isset($category)) {
             if ($item_id) {
-                $hotRelatedByItem = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->take($take)->get();
+                $hotRelatedByItem = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->where('status', 1)->take($take)->get();
                 $hotRelated = $hotRelated->merge($hotRelatedByItem);
             }
             if (count($hotRelated) < $take) {
-                $hotRelatedByCategory = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->take($take)->get();
+                $hotRelatedByCategory = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('status', 1)->take($take)->get();
                 $hotRelated = $hotRelated->merge($hotRelatedByCategory)->unique();
             }
             if (count($hotRelated) < $take) {
-                $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->take($take)->get();
+                $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->where('status', 1)->take($take)->get();
                 $hotRelated = $hotRelated->merge($hotRelatedByCreateAt)->unique();
             }
         } else {
-            $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->take($take)->get();
+            $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->where('status', 1)->take($take)->get();
             $hotRelated = $hotRelated->merge($hotRelatedByCreateAt)->unique();
         }
 
@@ -394,6 +403,9 @@ class QuestionController extends Controller
         }
         $slug2 = $category . '/' . $slug . '/' . $random;
         $question = MongoQuestion::where('slug2', $slug2)->with(['user', 'category'])->first();
+        if ($question->status != 1) {
+            return redirect()->route('home')->with('success', 'سوال بعد از تایید در انجمن نمایش داده میشود');
+        }
         if (!isset($question)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
@@ -440,6 +452,9 @@ class QuestionController extends Controller
 
         $childFeature = null;
         $childItem = null;
+
+        $page_intro_title = null;
+        $page_intro_desc = null;
 
         // $isLike = 0;
         // if ($user) {
@@ -495,11 +510,21 @@ class QuestionController extends Controller
         $affilate = $affilateService->suggestForQuestion($question->id, $category, $item);
 
         $features = $category->features();
+        if (isset($item)) {
+            $followFeature = $features->find($item->feature_id);
+            if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
+                $page_intro_title = str_replace("*", $tab_title, $followFeature->page_intro_title);
+                $page_intro_desc = str_replace("*", $tab_title, $followFeature->page_intro_desc);
+            }
+        }
+
         $currentQueryParams = [];
 
         $hot_pages = Cache::get('hot_pages');
 
         $compactVars = [
+            'page_intro_title',
+            'page_intro_desc',
             'hot_pages',
             'question',
             'answers',
@@ -697,11 +722,7 @@ class QuestionController extends Controller
             $question->items_title = $items_title;
         }
 
-        if ($changeStatus) {
-            $question->status = 0;
-        } else {
-            $question->status = 1;
-        }
+        $question->status = 0;
 
         $survey_service = new SurveyService();
         $survey_service->addSurveyTo($question, $request);

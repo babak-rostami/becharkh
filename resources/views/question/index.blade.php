@@ -107,21 +107,29 @@
 
             @include('category.rcats', ['page' => 'forum'])
 
-            <div class="row mt-2 px-0">
+            <div class="row my-4 px-0">
                 <div class="col-12 text-center mt-2">
                     <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
                     <br>
                     <img class="mt-3 lazy-load" data-src="{{ $ftp_path . 'files/other/images/darrow.gif' }}"
                         alt="arrow down">
                     <br>
-                    <a class="btn btn-primary mt-4" rel="nofollow"
+                    <a class="btn btn-lg btn-primary mt-4" rel="nofollow"
                         href="{{ isset($category) ? $data->newQuestionUrl($category->slug) : route('question.create') }}">
                         سوال جدید +
                     </a>
                 </div>
             </div>
+            @if (isset($page_intro_title) && isset($page_intro_desc))
+                <div id="page-g-div" class="text-center mt-3">
+                    <img class="lazy-load" id="page-g-img"
+                        data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
+                    <span id="page-g-title">{{ $page_intro_title }}</span>
+                    <span id="page-g">{{ $page_intro_desc }}</span>
+                </div>
+            @endif
 
-            <div class="row px-0 mt-4">
+            <div class="row px-0 mt-3">
                 @if ($questions->count() > 0)
                     @include('question.question-items', ['questions' => $questions])
                 @else

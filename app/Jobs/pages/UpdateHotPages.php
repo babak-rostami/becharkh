@@ -43,58 +43,53 @@ class UpdateHotPages implements ShouldQueue
         Cache::forget('hot_pages');
         Cache::rememberForever('hot_pages', function () {
             $hot_pages = collect();
+            //category comments take 30
             $category_comments = MongoCategoryComment::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')
                 ->where('items', '!=', null)
-                ->take(50)
+                ->take(150)
                 ->get();
             $processed_item_ids = [];
+            $fccom_count = 0;
             foreach ($category_comments as $cc) {
                 if (isset($cc->items_title) && !empty($cc->items_title)) {
                     $item = MongoItem::find($cc->items[0]);
                     if ($item && !in_array($item->id, $processed_item_ids)) {
                         $new_page = new stdClass();
                         $new_page->title = "نظرات در مورد " . $item->withParentsTitle();
-                        $new_page->body = $cc->body;
+                        $new_page->body = str_limit($cc->body, 100, '...');
                         $new_page->url = $item->withParentsCommentUrl();
                         $new_page->image = $item->image();
                         $new_page->time = $cc->created_at->format('Y-m-d H:i:s');
                         $hot_pages->add($new_page);
                         $processed_item_ids[] = $item->id;
+                        $fccom_count += 1;
+                        if ($fccom_count >= 30) {
+                            break;
+                        }
                     }
                 }
             }
-            // $processed_blog_ids = [];
-            // $blog_comments = MongoBlogComment::orderBy('created_at', 'desc')
-            //     ->whereNull('parent_id')
-            //     ->take(20)
-            //     ->get();
-            // foreach ($blog_comments as $bc) {
-            //     $blog = MongoBlog::find($bc->blog_id);
-            //     if ($blog && !in_array($blog->id, $processed_blog_ids)) {
-            //         $new_page = new stdClass();
-            //         $new_page->title = $blog->title;
-            //         $new_page->body = str_limit($bc->body, 100, '...');
-            //         $blog_route = route('blog.show', [
-            //             'category_slug' => $blog->category->slug,
-            //             'slug' => $blog->slug,
-            //             'random_id' => $blog->random_id
-            //         ]);
-            //         $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $blog_route);
-            //         $new_page->image = $blog->image();
-            //         $new_page->time = $bc->created_at->format('Y-m-d H:i:s');
-            //         $hot_pages->add($new_page);
-            //         $processed_blog_ids[] = $blog->id;
-            //     }
-            // }
+            //questions take 25
             $processed_question_ids = [];
             $question_commetns = MongoQuestionAnswer::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')
-                ->take(50)
+                ->take(250)
                 ->get();
-            foreach ($question_commetns as $qc) {
+            $unique_question_ids = [];
+            $filtered_qcomments = collect();
+            foreach ($question_commetns as $qcom) {
+                if (!in_array($qcom->question_id, $unique_question_ids)) {
+                    $unique_question_ids[] = $qcom->question_id;
+                    $filtered_qcomments->add($qcom);
+                }
+                if (count($filtered_qcomments) >= 25) {
+                    break;
+                }
+            }
+            foreach ($filtered_qcomments as $qc) {
                 $question = MongoQuestion::find($qc->question_id);
-                if ($question && !in_array($question->id, $processed_question_ids)) {
+                if ($question &&  $question->status == 1 && $question->google_index == 1 && !in_array($question->id, $processed_question_ids)) {
                     $new_page = new stdClass();
                     $new_page->title = $question->title;
                     $new_page->body = str_limit($qc->body, 100, '...');
@@ -114,6 +109,7 @@ class UpdateHotPages implements ShouldQueue
                     $processed_question_ids[] = $question->id;
                 }
             }
+            //products take 30
             $processed_product_ids = [];
             $product_commetns = ProductComment::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')

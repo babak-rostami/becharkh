@@ -33,7 +33,7 @@ class UserNotificationController extends Controller
                 $this->updateUserNotifs($parent_comment->user_id);
                 $notif->user_id = $parent_comment->user_id;
                 $notif->msg = $notif_text;
-                $notif->body = $new_object->body;
+                $notif->body = str_limit($new_object->body, 100, '...');
                 $notif->route = $notif_route;
                 $notif->unread = 1;
                 $notif->type = 'ccomment';
@@ -53,13 +53,19 @@ class UserNotificationController extends Controller
             $notif_text = $from_user->username . ' نظری برای شما در صفحه ';
             $question = $new_object->question;
             $notif_text = $notif_text . $question->title . ' ارسال کرد';
-            $notif_route = route('question.show',  $question->slug2);
+
+            $notid_r = route('question.show',  $question->slug2);
+            if (strpos($notid_r, "http://localhost") === 0) {
+                $notid_r = str_replace("http://localhost", "https://becharkh.com", $notid_r);
+            }
+            $notif_route = $notid_r;
+
             if (isset($parent_comment) && $parent_comment->user_id != $from_user->id && (!isset($parent_comment_user->email_actived) || $parent_comment_user->email_actived != 0)) {
                 $notif_to_anw_user = new UserNotification();
                 $this->updateUserNotifs($parent_comment->user_id);
                 $notif_to_anw_user->user_id = $parent_comment->user_id;
                 $notif_to_anw_user->msg = $notif_text;
-                $notif_to_anw_user->body = $new_object->body;
+                $notif_to_anw_user->body = str_limit($new_object->body, 100, '...');
                 $notif_to_anw_user->route = $notif_route;
                 $notif_to_anw_user->unread = 1;
                 $notif_to_anw_user->type = 'question_answer';
@@ -73,7 +79,7 @@ class UserNotificationController extends Controller
                     $this->updateUserNotifs($question_user->id);
                     $notif_to_q_user->user_id = $question_user->id;
                     $notif_to_q_user->msg = $notif_text;
-                    $notif_to_q_user->body = $new_object->body;
+                    $notif_to_q_user->body = str_limit($new_object->body, 100, '...');
                     $notif_to_q_user->route = $notif_route;
                     $notif_to_q_user->unread = 1;
                     $notif_to_q_user->type = 'question_answer';

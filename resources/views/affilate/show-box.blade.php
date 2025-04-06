@@ -46,8 +46,7 @@
     (isset($affilate->video_id) && !isset($page)) ||
         (isset($affilate->video_id) && isset($page) && $page != 'show_product'))
     @if ($affilate->google_index)
-        <a target="_blank" href="{{ route('product.show', $affilate->slug) }}"
-            id="product-vimg-div-{{ $affilate->id }}">
+        <a target="_blank" href="{{ route('product.show', $affilate->slug) }}" id="product-vimg-div-{{ $affilate->id }}">
             <span class="video-label">ویدیو</span>
             <img src="{{ $affilate->video->image() }}" alt="{{ $affilate->title }}">
         </a>
@@ -66,7 +65,7 @@
 @if (!isset($page) || (isset($page) && $page != 'show_product'))
     @if (isset($affilate->link) || isset($affilate->product_link))
         <button id="affilb-link-{{ $affilate->id }}" onclick="jsurl('{{ route('slink', $affilate->id) }}',1)">
-            <span class="font-600">مشاهده قیمت و مشخصات</span>
+            <span>مشاهده قیمت و مشخصات</span>
             <img class="lazy-load spb-arrow" data-src="{{ $ftp_path . 'files/other/images/next-light.png' }}"
                 alt="shop">
         </button>

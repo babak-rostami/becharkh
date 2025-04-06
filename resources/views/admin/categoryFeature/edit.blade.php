@@ -60,6 +60,20 @@
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
+                            <label>عنوان معرفی پیج</label>
+                            <input type="text" class="form-control" name="page_intro_title" id="page_intro_title"
+                                value="{{ $feature->page_intro_title }}">
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>معرفی پیج</label>
+                            <input type="text" class="form-control" name="page_intro_desc" id="page_intro_desc"
+                                value="{{ $feature->page_intro_desc }}">
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
                             <label for="parent_id">ویژگی بالایی</label>
                             <select class="form-control" name="parent_id" id="parent_id">
                                 <option value="">ندارد</option>

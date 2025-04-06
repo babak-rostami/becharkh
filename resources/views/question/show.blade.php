@@ -220,17 +220,28 @@
 
             {{-- پاسخ ها --}}
 
-            @if ($answers->isEmpty())
-                <div id="noans-box">
-                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}" alt="arrow top">
-                    <span id="noans-title">شروع گفتگو</span>
-                    <span id="noans-decs">نظر خود را بنویسید</span>
+            @if (isset($page_intro_title) && isset($page_intro_desc))
+                <div id="page-g-div" class="text-center mt-3">
+                    <img class="lazy-load" id="page-g-img"
+                        data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
+                    <span id="page-g-title">{{ $page_intro_title }}</span>
+                    <span id="page-g">{{ $page_intro_desc }}</span>
                 </div>
             @else
-                <div id="noans-box">
-                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}" alt="arrow top">
-                    <span id="noans-decs">نظر خود را اینجا بنویسید</span>
-                </div>
+                @if ($answers->isEmpty())
+                    <div id="noans-box">
+                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
+                            alt="arrow top">
+                        <span id="noans-title">شروع گفتگو</span>
+                        <span id="noans-decs">نظر خود را بنویسید</span>
+                    </div>
+                @else
+                    <div id="noans-box">
+                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
+                            alt="arrow top">
+                        <span id="noans-decs">نظر خود را اینجا بنویسید</span>
+                    </div>
+                @endif
             @endif
 
             @foreach ($answers as $key => $answer)
@@ -380,19 +391,22 @@
 
             @include('category.rcats')
 
+            <div class="row mx-0">
+                <div class="col-12 my-4 px-0 text-center">
+                    <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
+                    <br>
+                    <img class="mt-3 lazy-load" data-src="{{ $ftp_path . 'files/other/images/darrow.gif' }}"
+                        alt="arrow down">
+                    <br>
+                    <a class="btn btn-lg btn-primary mb-3 mt-4" href="{{ route('question.create') }}">
+                        سوال جدید +
+                    </a>
+
+                </div>
+            </div>
+
             @if ($questions->count() > 1)
                 <div class="row mx-0">
-                    <div class="col-12 my-4 px-0 text-center">
-                        <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
-                        <br>
-                        <img class="mt-3 lazy-load" data-src="{{ $ftp_path . 'files/other/images/darrow.gif' }}"
-                            alt="arrow down">
-                        <br>
-                        <a class="btn btn-primary mb-3 mt-4" href="{{ route('question.create') }}">
-                            سوال جدید +
-                        </a>
-                    </div>
-
                     @foreach ($questions as $ques)
                         <div class="col-12 p-2 shadow-sm mb-2 radius-10 sq-box text-right">
                             <a class="bold-font-title text-decoration-none text-dark"

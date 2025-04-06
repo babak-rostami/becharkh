@@ -183,25 +183,34 @@
                 </div>
             @endif
 
-            @if (isset($category))
-                <div class="row justify-content-center">
-                    <div class="col-12 text-center">
-                        @if ($hasComments == 0)
-                            <div id="nocoms-box">
-                                <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
-                                    alt="arrow top">
-                                <span id="nocoms-title">شروع گفتگو</span>
-                                <span id="nocoms-decs">نظر خود را بنویسید</span>
-                            </div>
-                        @else
-                            <div id="nocoms-box">
-                                <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
-                                    alt="arrow top">
-                                <span id="nocoms-decs">نظر خود را اینجا بنویسید</span>
-                            </div>
-                        @endif
-                    </div>
+            @if (isset($page_intro_title) && isset($page_intro_desc))
+                <div id="page-g-div" class="text-center mt-3">
+                    <img class="lazy-load" id="page-g-img"
+                        data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
+                    <span id="page-g-title">{{ $page_intro_title }}</span>
+                    <span id="page-g">{{ $page_intro_desc }}</span>
                 </div>
+            @else
+                @if (isset($category))
+                    <div class="row justify-content-center">
+                        <div class="col-12 text-center">
+                            @if ($hasComments == 0)
+                                <div id="nocoms-box">
+                                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
+                                        alt="arrow top">
+                                    <span id="nocoms-title">شروع گفتگو</span>
+                                    <span id="nocoms-decs">نظر خود را بنویسید</span>
+                                </div>
+                            @else
+                                <div id="nocoms-box">
+                                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
+                                        alt="arrow top">
+                                    <span id="nocoms-decs">نظر خود را اینجا بنویسید</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             @endif
 
             @if (isset($pin_questions))
