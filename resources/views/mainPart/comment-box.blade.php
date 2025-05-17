@@ -88,6 +88,20 @@
                 <span id="charCountMin-title" class="input-char-min"></span>
                 <span id="charCountMax-title" class="input-char-max"></span>
             </div>
+            <div class="form-group">
+                <label>عنوان پیشنهاد پیج</label>
+                <input type="text" class="form-control required" oninput="countCharacters(this,20,60)" name="sug_title"
+                    id="sug_title" value="{{ $question->sug_title }}">
+            </div>
+            <div class="form-group">
+                <label>فقط در صفحه خودش نشون داده بشه؟</label>
+                <select class="form-control" name="just_this_page">
+                    <option value="0" {{ $question->just_this_page == 0 ? 'selected' : '' }}>خیر</option>
+                    <option value="1"
+                        {{ !isset($question->just_this_page) || $question->just_this_page == 1 ? 'selected' : '' }}>بله
+                    </option>
+                </select>
+            </div>
         @break
 
         @case('edit_question')
@@ -522,17 +536,25 @@
     @elseif($page == 'admin_edit_product_comment')
         {{ method_field('PUT') }}
         <textarea class="form-control" id="cm-input" name="body">{{ $comment->editor }}</textarea>
+    @elseif(!isset($user) && $page == 'show_question')
+        <textarea class="form-control comment-input" id="qa-textarea" name="body"
+            placeholder="نظر خود را اینجا بنویسید..."></textarea>
+        <script>
+            $(document).ready(function() {
+                $('#qa-textarea').on('input', function() {
+                    $(this).css('height', 'auto');
+                    $(this).css('height', Math.max(this.scrollHeight, 100) + 'px');
+                });
+            });
+        </script>
     @else
         <textarea class="form-control comment-input" id="cm-input" name="body"
             placeholder="نظر خود را اینجا بنویسید..."></textarea>
         <script>
             $(document).ready(function() {
                 $('#cm-input').on('input', function() {
-                    // Reset the height to auto to calculate the new height
                     $(this).css('height', 'auto');
-                    // Set the height to the scrollHeight to expand it to fit the content
-                    $(this).css('height', Math.max(this.scrollHeight, 100) +
-                        'px'); // Ensure min height of 100px
+                    $(this).css('height', Math.max(this.scrollHeight, 100) + 'px');
                 });
             });
         </script>
@@ -624,17 +646,15 @@
                 </button>
             @endif
         @else
-            <a href="" class="btn btn-outline-primary bg-wht w-100 my-2" data-toggle="modal"
-                data-target="#login_user"
+            <button type="button" class="btn btn-outline-primary bg-wht w-100 my-2"
                 @if ($page == 'comment') onclick="setActionForAfterAuth('comment', 'cm_form')"
-            @elseif($page == 'show_question')
-            onclick="setActionForAfterAuth('answer', 'cm_form')"
-            @elseif($page == 'show_product')
-            onclick="setActionForAfterAuth('comment', 'cm_form')" @endif>
+                @elseif($page == 'show_question') onclick="setActionForAfterAuth('answer', 'cm_form')"
+                @elseif($page == 'show_product')
+                    data-toggle="modal" data-target="#login_user" onclick="setActionForAfterAuth('comment', 'cm_form')" @endif>
                 <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
                     alt="send">
                 ارسال نظر
-            </a>
+            </button>
         @endif
     @endif
     @if (

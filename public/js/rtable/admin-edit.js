@@ -1,5 +1,5 @@
 const form = document.getElementById(submit_form_id);
-form.addEventListener("keydown", function(event) {
+form.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
     }
@@ -58,20 +58,20 @@ function changeChildrens(item, fea_id) {
     var item_id = item.value;
     axios.get("/feature-children-item/" + fea_id + "/" + item_id).then(
         response => (
-            $.each(response.data.all_child, function(i, value) {
+            $.each(response.data.all_child, function (i, value) {
                 var id = "#" + value.slug;
                 $(id).empty();
                 $(id).append(
                     "<option value=" + null + ">انتخاب نشده است</option>"
                 );
             }),
-            $.each(response.data.child_items, function(i, value) {
+            $.each(response.data.child_items, function (i, value) {
                 $(response.data.child_slug).append(
                     "<option value=" +
-                        value.id +
-                        ">" +
-                        value.title +
-                        "</option>"
+                    value.id +
+                    ">" +
+                    value.title +
+                    "</option>"
                 );
             })
         )
@@ -199,7 +199,7 @@ function selectCatItemForSCFCE(category_id) {
             data: {
                 category_id: category_id
             },
-            success: function(data) {
+            success: function (data) {
                 cfeatures = data.cfeatures;
                 citems = data.citems;
                 feature_items = null;
@@ -491,7 +491,7 @@ function closeCreateNewItemBox(feature_id) {
     $(`#sfnores-${feature_id}`).show();
 }
 
-$(document).click(function(event) {
+$(document).click(function (event) {
     if (open_box != null) {
         if (!$(event.target).closest(open_box).length) {
             $(open_box).hide();
@@ -543,6 +543,7 @@ function selectItem(item_id) {
         $(`#sfbox-${feature.slug}`).hide();
         open_box = null;
     }, 50);
+
     if (feature.i_count == 1) {
         if (featureInput.length > 0) {
             if (featureInput.val() == item_id) {
@@ -600,6 +601,22 @@ function selectItem(item_id) {
     }
     if (feature.i_count == 1) {
         $(`#fselect-input-${feature.slug}`).text(item.title);
+        let f_children = featureChildrenForSCFCE(feature.id);
+        f_children.forEach(fchild => {
+            if (fchild.i_count == 1) {
+                $(`#fselect-input-${fchild.slug}`).text('انتخاب ' + fchild.title);
+            } else {
+                let chitemsValue = $(`#${fchild.slug}`).val();
+                if (chitemsValue) {
+                    let chitems = JSON.parse(chitemsValue);
+                    if (Array.isArray(chitems)) {
+                        chitems.forEach(item => {
+                            removeFeatureItem(fchild.id, item);
+                        });
+                    }
+                }
+            }
+        });
     } else {
         let itemspan = `<span onclick="removeFeatureItem('${feature.id}','${item.id}')" id="close-fitem-${feature.id}-${item.id}">${item.title} <img src="${remove_item_img}"></span>`;
         $(`#fselect-input-${feature.slug}`).append(itemspan);
@@ -703,36 +720,29 @@ function showFeatureItemsInput(feature_id) {
                     let pitem = findItemForSCFCE(pitem_id);
                     featureItemsForSCFCE(feature_id, parent_item_id).forEach(
                         i => {
-                            ilist += `<span class="sfitem-${feature_id} ${
-                                selected_items.includes(i.id)
+                            ilist += `<span class="sfitem-${feature_id} ${selected_items.includes(i.id)
                                     ? "item-selected"
                                     : ""
-                            }" data-entitle="${
-                                i.e_title
-                            }" onclick="selectItem('${i.id}')">${
-                                pitem.title
-                            } - ${i.title}</span>`;
+                                }" data-entitle="${i.e_title
+                                }" onclick="selectItem('${i.id}')">${pitem.title
+                                } - ${i.title}</span>`;
                         }
                     );
                 });
             } else {
                 parent_item_id = pfeatureInput;
                 featureItemsForSCFCE(feature_id, parent_item_id).forEach(i => {
-                    ilist += `<span class="sfitem-${feature_id} ${
-                        selected_items.includes(i.id) ? "item-selected" : ""
-                    }" data-entitle="${i.e_title}" onclick="selectItem('${
-                        i.id
-                    }')">${i.title}</span>`;
+                    ilist += `<span class="sfitem-${feature_id} ${selected_items.includes(i.id) ? "item-selected" : ""
+                        }" data-entitle="${i.e_title}" onclick="selectItem('${i.id
+                        }')">${i.title}</span>`;
                 });
             }
         }
     } else {
         featureItemsForSCFCE(feature_id, null).forEach(i => {
-            ilist += `<span class="sfitem-${feature_id} ${
-                selected_items.includes(i.id) ? "item-selected" : ""
-            }" data-entitle="${i.e_title}" onclick="selectItem('${i.id}')">${
-                i.title
-            }</span>`;
+            ilist += `<span class="sfitem-${feature_id} ${selected_items.includes(i.id) ? "item-selected" : ""
+                }" data-entitle="${i.e_title}" onclick="selectItem('${i.id}')">${i.title
+                }</span>`;
         });
     }
     return ilist;
@@ -786,7 +796,7 @@ function searchFItem(f_id) {
         );
     });
     // Show the filtered items
-    filteredItems.each(function() {
+    filteredItems.each(function () {
         $(this).show();
     });
 }

@@ -158,53 +158,6 @@
                         'object' => $question,
                     ])
 
-                    {{-- @if (auth('user')->check())
-                        <a href="" id="like-btn"
-                            class="btn {{ $isLike ? 'btn-outline-success' : 'btn-outline-danger' }} my-3">
-                            <span id="like-count-span">{{ $question->like_count ?? 0 }}</span>
-                            <span id="like-span">{{ $isLike ? 'لایک شده' : 'لایک' }}</span>
-                            <i class="bi bi-check-circle-fill"></i>
-                        </a>
-                    @else
-                        <a href="" data-toggle="modal" data-target="#login_user"
-                            onclick="setActionForAfterAuth(null,null)" class="btn btn-outline-danger my-3">
-                            <span>{{ $question->like_count ?? 0 }}</span>
-                            <span>لایک</span>
-                            <i class="bi bi-check-circle-fill"></i>
-                        </a>
-                    @endif --}}
-
-                    {{-- <div class="position-relative d-inline-block">
-                        <button type="button" class="btn share-span">
-                            اشتراک گذاری
-                            <img class="lazy-load" data-src="{{ asset('files/other/images/share.png') }}">
-                        </button>
-                        <div class="share-box hide-share">
-                            <div class="row">
-                                <div class="col text-center cur-p" onclick="sentPageToTelegram()">
-                                    <img class="lazy-load" data-src="{{ asset('files/other/images/telegram.png') }}">
-                                    <br>
-                                    <span>تلگرام</span>
-                                </div>
-                                <div class="col text-center cur-p" onclick="copyToClipboard()">
-                                    <img class="lazy-load" data-src="{{ asset('files/other/images/chain.png') }}">
-                                    <br>
-                                    <span>کپی لینک</span>
-                                </div>
-                                <div class="col text-center cur-p" onclick="sentPageToWhatsapp()">
-                                    <img class="lazy-load" data-src="{{ asset('files/other/images/whatsapp.png') }}">
-                                    <br>
-                                    <span>واتساپ</span>
-                                </div>
-                                <div class="col-12 mt-3 text-center">
-                                    <input class="form-control w-100" type="text" id="page-url-for-clipboard" readonly
-                                        value="{{ Request::url() }}">
-                                    <p id="copy-clipboard-done-span">آدرس صفحه کپی شد</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-
                 </div>
 
             </div>
@@ -244,150 +197,7 @@
                 @endif
             @endif
 
-            @foreach ($answers as $key => $answer)
-                @if ($key == 2)
-                    @if (isset($affilate))
-                        @include('affilate.show-box')
-                    @endif
-                @endif
-                <div class="row bg-wht align-items-center py-3 mx-0 mt-3 answer-box">
-                    <div class="col-12">
-                        @include('modals.userdash', [
-                            'dashuser' => $answer->user,
-                            'lazyload' => 1,
-                            'itemid' => $answer->id,
-                        ])
-
-                        @if (isset($answer->editor))
-                            <div class="cedshow">
-                                {!! $answer->editor !!}
-                            </div>
-                        @else
-                            <p class="ml-2 mt-4 font-18 textarea-preline">{{ $answer->body }}</p>
-                        @endif
-
-                        <a class="comment-reply-btn" href="" data-toggle="modal"
-                            data-target="#answer_to_answer-{{ $answer->id }}">پاسخ<img class="mr-1 lazy-load"
-                                data-src="{{ asset('files/other/images/reply.png') }}"></a>
-
-                        <span class="like-icon" onclick="like('{{ $answer->id }}')">
-                            <span
-                                id="like-answer-count-{{ $answer->id }}">{{ $answer->like_count ? $answer->like_count : 0 }}</span>
-                            <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
-                        </span>
-                        <span class="dislike-icon" onclick="unlike('{{ $answer->id }}')">
-                            <span
-                                id="unlike-answer-count-{{ $answer->id }}">{{ $answer->unlike_count ? $answer->unlike_count : 0 }}</span>
-                            <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
-                        </span>
-                    </div>
-                </div>
-                {{-- مودال ریپلای به پاسخ --}}
-                <div class="modal fade" id="answer_to_answer-{{ $answer->id }}" tabindex="-1" role="dialog"
-                    aria-labelledby="answer_to_answer_modal" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <div class="row p-2 radius-10">
-                                    <div class="col-12">
-                                        <form class="mt-2" action="{{ route('question.answer.store') }}" method="POST"
-                                            role="form" id="qa-form-{{ $answer->id }}">
-                                            @csrf
-
-                                            <input type="hidden" name="question_id" value="{{ $question->id }}">
-                                            <input type="hidden" name="parent_id" value="{{ $answer->id }}">
-                                            <textarea name="body" class="qa-form-ta" placeholder="نظر خود را بنویسید..."></textarea>
-
-
-                                            @if (auth('user')->check())
-                                                <button type="submit" class="btn btn-primary w-100">ارسال
-                                                    نظر</button>
-                                            @else
-                                                <button type="button" class="btn btn-primary w-100" data-toggle="modal"
-                                                    data-dismiss="modal" data-target="#login_user"
-                                                    onclick="setActionForAfterAuth('answer', 'qa-form-{{ $answer->id }}')">ارسال
-                                                    نظر</button>
-                                            @endif
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                @foreach ($answer->replies as $reply)
-                    <div class="row py-3 radius-10 mr-3 ml-0 mt-1 reply-box">
-                        <div class="col-12">
-                            @include('modals.userdash', [
-                                'dashuser' => $reply->user,
-                                'lazyload' => 1,
-                                'itemid' => $reply->id,
-                            ])
-
-                            <p class="ml-2 mt-4 font-18 textarea-preline">{{ $reply->body }}</p>
-
-                            <a class="comment-reply-btn" href="" data-toggle="modal"
-                                data-target="#answer_to_reply-{{ $reply->id }}">پاسخ<img class="mr-1 lazy-load"
-                                    data-src="{{ asset('files/other/images/reply.png') }}"></a>
-
-                            <span class="like-icon" onclick="like('{{ $reply->id }}')">
-                                <span
-                                    id="like-answer-count-{{ $reply->id }}">{{ $reply->like_count ? $reply->like_count : 0 }}</span>
-                                <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
-                            </span>
-                            <span class="dislike-icon" onclick="unlike('{{ $reply->id }}')">
-                                <span
-                                    id="unlike-answer-count-{{ $reply->id }}">{{ $reply->unlike_count ? $reply->unlike_count : 0 }}</span>
-                                <img class="lazy-load"
-                                    data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
-                            </span>
-                        </div>
-                        {{-- مودال ریپلای به پاسخ --}}
-                        <div class="modal fade" id="answer_to_reply-{{ $reply->id }}" tabindex="-1" role="dialog"
-                            aria-labelledby="answer_to_reply_modal" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        <div class="row p-2 radius-10">
-                                            <div class="col-12">
-                                                <form class="mt-2" action="{{ route('question.answer.store') }}"
-                                                    method="POST" role="form" id="qa-form-{{ $reply->id }}">
-                                                    @csrf
-
-                                                    <input type="hidden" name="question_id"
-                                                        value="{{ $question->id }}">
-                                                    <input type="hidden" name="parent_id"
-                                                        value="{{ $reply->parent_id }}">
-                                                    <input type="hidden" name="reply_id" value="{{ $reply->id }}">
-                                                    <textarea name="body" class="qa-form-ta" placeholder="نظر خود را بنویسید..."></textarea>
-
-                                                    @if (auth('user')->check())
-                                                        <button type="submit" class="btn btn-primary w-100">ارسال
-                                                            نظر</button>
-                                                    @else
-                                                        <button type="button" class="btn btn-primary w-100"
-                                                            data-toggle="modal" data-dismiss="modal"
-                                                            data-target="#login_user"
-                                                            onclick="setActionForAfterAuth('answer', 'qa-form-{{ $reply->id }}')">ارسال
-                                                            نظر</button>
-                                                    @endif
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @endforeach
-
-            @if ($answers->isEmpty() || count($answers) < 3)
-                @if (isset($affilate))
-                    @include('affilate.show-box')
-                @endif
-            @endif
+            @include('question.answers')
 
             @include('category.rcats')
 
@@ -424,7 +234,7 @@
                                         </span>
                                     @endif
                                 </div>
-                                <h2 class="sq-item-title">{{ $ques->title }}</h2>
+                                <h2 class="sq-item-title">{{ $ques->sug_title ?? $ques->title }}</h2>
                                 @if (isset($ques->answer))
                                     <span class="c-shortans">-{{ $ques->answer }}
                                     </span>
@@ -454,9 +264,7 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        const yplayer = new Plyr('#affilb-video');
         const page = 'show_question';
         const q_show_csrf = "{{ csrf_token() }}";
         const q_like_route = "{{ route('question.like') }}";
@@ -464,18 +272,20 @@
         const question_id = "{{ $question->id }}";
         var send_comment_after_login = 0;
 
-        const follow_item_route = '{{ route('follow.item') }}';
-
-        let editor_img_upload_route;
-        setTimeout(function() {
-            editor_img_upload_route =
-                "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'show_question']) }}";
-        }, 500);
+        const reply_df_route = '{{ route('question.answer.store.dref') }}';
 
         const route_surop_choose = "{{ route('surop.choose') }}";
 
-        let product_ids = {!! isset($affilate) ? json_encode([$affilate->id]) : '[]' !!};
+        let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
     </script>
+
+    @if ($user)
+        <script>
+            const
+                editor_img_upload_route =
+                "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'show_question']) }}";
+        </script>
+    @endif
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/forum/show.min.js') . '?lm=' . filemtime('mixassets/js/forum/show.min.js') }}">

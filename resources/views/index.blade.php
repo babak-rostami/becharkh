@@ -85,13 +85,20 @@
                         <a class="dropdown-toggle top-nav-link" href="#" id="navbarDropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             حساب کاربری
+                            @if ($user->notif_count)
+                                <span id="desk-unotif-count">{{ $user->notif_count }}</span>
+                            @endif
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <span class="dropdown-header">
                                 {{ $user->username }}</span>
                             <a class="dropdown-item top-nav-link" href="{{ route('user.dashboard.edit') }}">مدیریت
                                 حساب</a>
-                            <a class="dropdown-item top-nav-link" href="{{ route('user.messages') }}">پیام ها</a>
+                            <a class="dropdown-item top-nav-link" href="{{ route('user.notifications') }}">پیام ها
+                                @if ($user->notif_count)
+                                    <span id="desk-unotif-count-li">{{ $user->notif_count }}</span>
+                                @endif
+                            </a>
                             <a class="dropdown-item top-nav-link" href="{{ route('favorite.index') }}">انجمن های
                                 شما</a>
                             <div class="dropdown-divider"></div>

@@ -91,7 +91,7 @@ class UpdateHotPages implements ShouldQueue
                 $question = MongoQuestion::find($qc->question_id);
                 if ($question &&  $question->status == 1 && $question->google_index == 1 && !in_array($question->id, $processed_question_ids)) {
                     $new_page = new stdClass();
-                    $new_page->title = $question->title;
+                    $new_page->title = $question->sug_title ?? $question->title;
                     $new_page->body = str_limit($qc->body, 100, '...');
                     $question_route = route('question.show', $question->slug2);
                     $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $question_route);
@@ -101,7 +101,7 @@ class UpdateHotPages implements ShouldQueue
                         if (!$question->getItems()->isEmpty()) {
                             $new_page->image = $question->getItems()->last()->image();
                         } else {
-                            $new_page->image = $question->category()->image();
+                            $new_page->image = $question->category->image();
                         }
                     }
                     $new_page->time = $qc->created_at->format('Y-m-d H:i:s');

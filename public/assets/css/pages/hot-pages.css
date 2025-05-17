@@ -1,12 +1,10 @@
 .hop-item {
     text-align: right;
     display: block;
-    border: 1px solid #dee2e6;
-    margin-bottom: 8px;
-    padding: 8px;
-    border-radius: 8px;
     text-decoration: none !important;
     background-color: #fff;
+    border-radius: 8px;
+    padding: 4px;
 }
 
 .hop-item:hover {
@@ -15,18 +13,19 @@
 
 .hop-title {
     font-weight: 600;
-    color: #1c244f;
+    font-size: 18px;
+    color: #000;
     display: block;
 }
 
 .hop-body {
-    font-size: 14px;
+    font-size: 13px;
     color: #525252;
 }
 
 .hop-img {
     max-width: 100%;
-    max-height: 160px;
+    max-height: 220px;
     border-radius: 8px;
     margin-bottom: 8px;
 }

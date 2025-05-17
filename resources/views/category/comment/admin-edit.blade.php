@@ -27,7 +27,11 @@
                     @csrf
                     {{ method_field('PUT') }}
                     <input type="hidden" name="category_id" id="category_id" value="{{ $comment->category_id }}">
-                    <span>{{ $comment->parent->body }}</span>
+                    @if ($parent_url)
+                        <a target="_blank" href="{{ $parent_url }}">{{ $parent->body }}</a>
+                    @else
+                        <span>{{ $parent->body }}</span>
+                    @endif
                     <textarea required class="form-control comment-input" style="min-height: 200px" id="cm-input" name="body"
                         placeholder="نظر خود را اینجا بنویسید...">{{ $comment->editor ?? $comment->body }}</textarea>
                     <input type="submit" class="btn btn-outline-primary bg-wht w-100 my-2" value="ارسال نظر">
@@ -48,7 +52,7 @@
                     <textarea class="form-control" style="height: 150px" id="body" name="body">{{ $comment->body }}</textarea>
                 </div>
 
-                @if ($comment->parent_id == null)
+                @if ($parent_id == null)
                     @include('modals.create.select-category', ['categories' => $categories])
 
                     <div class="row">
@@ -56,7 +60,7 @@
                         </div>
                     </div>
                 @else
-                    <span>{{ $comment->parent->body }}</span>
+                    <span>{{ $parent->body }}</span>
                 @endif
 
                 <button type="submit" class="btn btn-success w-100">ثبت

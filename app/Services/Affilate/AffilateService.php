@@ -6,6 +6,34 @@ use App\Models\Affilate;
 
 class AffilateService
 {
+
+    public function suggestsForPages($category = null, $item = null, $take = null)
+    {
+        $affiliates = collect();
+        $aff_count = 0;
+        if ($item) {
+            $affiliates = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get()->shuffle()->take($take);
+            $aff_count = $affiliates->count();
+        }
+        // if ($aff_count < 3 && $category) {
+        //     $cat_affiliates = Affilate::where('categories', $category->id)->where('status', 1)->take(20)->get()->shuffle()->take($take - $aff_count);
+        //     $affiliates = $affiliates->merge($cat_affiliates)->unique();
+        //     $aff_count = $affiliates->count();
+        // }
+
+        if ($aff_count < 3) {
+            $other_affiliates = Affilate::where('just_this_page', 0)->where('status', 1)->take(20)->get()->shuffle()->take($take - $aff_count);
+            $affiliates = $affiliates->merge($other_affiliates)->unique();
+            $aff_count = $affiliates->count();
+        }
+
+        foreach ($affiliates as  $affiliate) {
+            $affiliate->body = $this->modifyAffiliateBody($affiliate);
+        }
+
+        return $affiliates;
+    }
+
     public function suggestForPages($category = null, $item = null)
     {
         if ($item) {
@@ -66,12 +94,16 @@ class AffilateService
 
     public function suggestForQuestion($question_id, $category = null, $item = null)
     {
-        $affiliate = Affilate::where('questions', $question_id)->where('status', 1)->take(20)->get()->shuffle()->first();
-        if (isset($affiliate)) {
+        $affiliates = Affilate::where('questions', $question_id)->where('status', 1)->take(3)->get()->shuffle();
+        foreach ($affiliates as $affiliate) {
             $affiliate->body = $this->modifyAffiliateBody($affiliate);
-        } else {
-            $affiliate = $this->suggestForPages($category, $item);
         }
-        return $affiliate;
+
+        $aff_count = $affiliates->count();
+        if ($aff_count < 3) {
+            $new_affiliates = $this->suggestsForPages($category, $item, 5);
+            $affiliates = $affiliates->merge($new_affiliates)->unique()->take(3);
+        }
+        return $affiliates;
     }
 }

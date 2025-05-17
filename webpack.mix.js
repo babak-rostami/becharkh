@@ -211,6 +211,20 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/suggestp/create.js"
+    ],
+    "public/mixassets/js/suggestp/create.min.js"
+);
+mix.minify(
+    [
+        "public/assets/js/suggestp/edit.js",
+        "public/assets/js/pages/forum/sasf-edit.js"
+    ],
+    "public/mixassets/js/suggestp/edit.min.js"
+);
+
+mix.minify(
+    [
         "public/assets/js/affilate/show.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/bslider/index.js",
@@ -247,6 +261,13 @@ mix.minify(
         "public/assets/css/pages/forum/sasf-edit.css",
     ],
     "public/mixassets/css/affilate/edit.min.css"
+);
+mix.minify(
+    [
+        "public/assets/css/suggestp/edit.css",
+        "public/assets/css/pages/forum/sasf-edit.css",
+    ],
+    "public/mixassets/css/suggestp/edit.min.css"
 );
 
 mix.minify(

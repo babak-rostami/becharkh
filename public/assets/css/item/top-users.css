@@ -68,15 +68,19 @@
     font-size: 13px;
     font-weight: 500;
 }
-
-#online-users-span {
-    font-weight: 500;
-    font-size: 15px;
-    display: inline-block;
-    margin-left: 4px;
-}
 .ousers-img {
     width: 20px;
+}
+#online-users-span {
+    position: fixed;
+    bottom: 76px;
+    right: 12px;
+    z-index: 10;
+    background-color: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 18px;
+    border: 1px solid #dee2e6;
+    font-weight: 600;
 }
 #online-users-icon {
     animation: online-user-glow 1.5s infinite;

@@ -50,6 +50,4 @@
 @endsection
 
 @section('script')
-    <script type="text/javascript" src="{{ asset('assets/js/home.js') . '?lm=' . filemtime('assets/js/home.js') }}">
-    </script>
 @endsection

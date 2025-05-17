@@ -32,6 +32,7 @@
                         <tr>
                             <th>ردیف</th>
                             <th>عنوان سوال</th>
+                            <th>فقط صفحه خودش؟</th>
                             <th>وضعیت</th>
                             <th>ایندکس</th>
                             <th>تعداد بازدید</th>
@@ -46,6 +47,7 @@
                                 <td>{{ $question->title }}
                                     <span class="badge badge-primary">{{ $question->answer_count ?? 0 }} نظر</span>
                                 </td>
+                                <td>{{ $question->just_this_page }}</td>
                                 <td>
                                     @if ($question->status == 1)
                                         <span class="text-success">تایید شده</span>

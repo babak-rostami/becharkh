@@ -10,6 +10,7 @@ use App\Models\Admin;
 use App\Models\CategoryCommentEditorImage;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
+use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
@@ -63,7 +64,6 @@ class CategoryCommentController extends Controller
             }
 
             app(SiteCategoryController::class)->redirectIfPageNotExist($request, $category, 'comments');
-
 
             $categoryFeatures = $feature_repository->getFeaturesByCategoryIdForForum($category->id);
             $featuresInUrl = $data->getFeaturesInUrl($request);
@@ -152,14 +152,6 @@ class CategoryCommentController extends Controller
                     $page_intro_title = str_replace("*", $title, $followFeature->page_intro_title);
                     $page_intro_desc = str_replace("*", $title, $followFeature->page_intro_desc);
                 }
-                // if ($user) {
-                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                //     if (isset($follow)) {
-                //         $is_follow = 1;
-                //     } else {
-                //         $is_follow = 0;
-                //     }
-                // }
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if ($category->title_in_comment) {
@@ -225,6 +217,8 @@ class CategoryCommentController extends Controller
                 $hasComments = 0;
             }
 
+            $pin_questions = collect();
+
             if (isset($item)) {
                 if ($category->has_forums) {
                     $forum_page = $item->withParentsForumUrl();
@@ -236,9 +230,10 @@ class CategoryCommentController extends Controller
                     $advertise_page = $item->withParentsAdvertiseUrl();
                 }
                 if (isset($item->pin_question_ids)) {
-                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug2', 'image')
+                    $pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
                         ->whereIn('_id', $item->pin_question_ids)
-                        ->get();
+                        ->get()
+                        ->shuffle();
                 }
             } else {
                 if ($category->has_forums) {
@@ -250,14 +245,17 @@ class CategoryCommentController extends Controller
                 if ($category->has_ads) {
                     $advertise_page = route('ads.index', $category->slug);
                 }
-                if (isset($category->pin_question_ids)) {
-                    $pin_questions = MongoQuestion::select('_id', 'title', 'slug2', 'image')
-                        ->whereIn('_id', $category->pin_question_ids)
-                        ->get();
-                }
+            }
+            if ($pin_questions->count() < 3) {
+                $other_pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
+                    ->where('just_this_page', 0)
+                    ->take(20)
+                    ->get();
+                $other_pin_questions = $other_pin_questions->shuffle();
+                $pin_questions = $pin_questions->merge($other_pin_questions)->unique('_id')->take(3);
             }
             $affilateService = new AffilateService();
-            $affilate = $affilateService->suggestForPages($category, $item);
+            $affilates = $affilateService->suggestsForPages($category, $item, 3);
 
             // $features = $category->features();
             $currentQueryParams = $request->query();
@@ -286,11 +284,8 @@ class CategoryCommentController extends Controller
             if (isset($pin_questions) && !$pin_questions->isEmpty()) {
                 $compactVars[] = 'pin_questions';
             }
-            // if (isset($features)) {
-            //     $compactVars[] = 'features';
-            // }
-            if (isset($affilate)) {
-                $compactVars[] = 'affilate';
+            if (isset($affilates)) {
+                $compactVars[] = 'affilates';
             }
             if (isset($forum_page)) {
                 $compactVars[] = 'forum_page';
@@ -598,12 +593,18 @@ class CategoryCommentController extends Controller
             })->values();
             return view('category.comment.admin-edit', compact('comment', 'category', 'categories', 'cfeatures', 'citems', 'commentFeatueItems'));
         } else {
-            $category = $comment->parent->category;
+            $parent = $comment->parent;
+            $category = $parent->category;
             $categories = null;
             $citems = null;
             $cfeatures = null;
             $commentFeatueItems = null;
-            return view('category.comment.admin-edit', compact('comment', 'category', 'categories', 'citems', 'cfeatures', 'commentFeatueItems'));
+            $parent_item = $parent->getItems();
+            $parent_url = null;
+            if ($parent_item->isNotEmpty()) {
+                $parent_url = $parent->getItems()->last()->withParentsCommentUrl();
+            }
+            return view('category.comment.admin-edit', compact('parent_url', 'parent', 'comment', 'category', 'categories', 'citems', 'cfeatures', 'commentFeatueItems'));
         }
     }
 
@@ -679,6 +680,10 @@ class CategoryCommentController extends Controller
         }
         if (isset($comment->parent_id) || isset($comment->reply_to_id)) {
             app(UserNotificationController::class)->deleteNotification('ccomment', $comment->id);
+        }
+        $likes = MongoCategoryCommentLike::where('comment_id', $comment->id)->get();
+        foreach ($likes as $like) {
+            $like->delete();
         }
         $comment->delete();
         return back()->with('success', 'با موفقیت حذف شد');
@@ -769,6 +774,75 @@ class CategoryCommentController extends Controller
         }
 
         return back()->with('success', 'نظر شما با موفقیت ثبت شد');
+    }
+
+    public function storeWithoutRefresh(Request $request)
+    {
+        if (!isset($request->category_id) || !isset($request->body) || !isset($request->parent_id)) {
+            return response()->json(['error' => 'خطایی رخ داد'], 404);
+        }
+        if ($request->body == '') {
+            return response()->json(['error' => 'دیدگاه خود را بنویسید.'], 404);
+        }
+        if (!auth('user')->check()) {
+            return response()->json(['error' => 'وارد حساب کاربری خود شوید.'], 401);
+        }
+
+        $category = MongoCategory::find($request->category_id);
+        $parent = MongoCategoryComment::find($request->parent_id);
+        if (!isset($category)) {
+            return response()->json(['error' => 'دسته بندی وجود ندارد.'], 404);
+        }
+        if (!isset($parent)) {
+            return response()->json(['error' => 'این نظر حذف شده است.'], 404);
+        }
+        if (isset($request->reply_to_id)) {
+            $reply = MongoCategoryComment::find($request->reply_to_id);
+            if (!isset($reply)) {
+                return response()->json(['error' => 'این نظر حذف شده است.'], 404);
+            }
+        }
+
+        $user = auth('user')->user();
+        $comment = new MongoCategoryComment();
+        $comment->body = $request->body;
+        $comment->category_id = $category->id;
+        $comment->user_id = $user->id;
+
+        $comment->parent_id = $request->parent_id;
+        if (isset($request->reply_to_id)) {
+            $comment->reply_id = $request->reply_to_id;
+        }
+
+        $comment->save();
+
+        $this->updateHotItems();
+
+        $admin = Admin::first();
+        if (isset($comment->parent_id)) {
+            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_to_id, $user))->onQueue('becharkhsite');
+            $commentPage = route('question.index', $category->slug) . "?s=1";
+            $this->sendUserNotification('ccomment', $user, $comment);
+            $admin->notify(new SiteEvent([
+                'action' => $user->username . ' یک ریپلای ارسال کرد',
+                'route' => $commentPage,
+            ]));
+        }
+
+        return response()->json([
+            'success' => 'نظر شما با موفقیت ثبت شد',
+            'comment' => [
+                'id' => $comment->id,
+                'body' => $request->body,
+                'username' => $user->username,
+                'user_image' => $user->thumb(),
+                'like_count' => 0,
+                'unlike_count' => 0,
+                'category_id' => $request->category_id,
+                'parent_id' => $request->parent_id,
+                'reply_to_id' => $request->reply_to_id,
+            ]
+        ], 201);
     }
 
     private function sendUserNotification($forr, $from_user, $new_object)

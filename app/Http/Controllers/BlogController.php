@@ -474,19 +474,19 @@ class BlogController extends Controller
         $hotRelated = collect();
         if (isset($category)) {
             if (isset($item_id)) {
-                $hotRelatedByItem = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->take(5)->get();
+                $hotRelatedByItem = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->where('status', 1)->take(5)->get();
                 $hotRelated = $hotRelated->merge($hotRelatedByItem);
             }
             if (count($hotRelated) < 5) {
-                $hotRelatedByCategory = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->take(5)->get();
+                $hotRelatedByCategory = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('status', 1)->take(5)->get();
                 $hotRelated = $hotRelated->merge($hotRelatedByCategory)->unique();
             }
             if (count($hotRelated) < 5) {
-                $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->take(5)->get();
+                $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->where('status', 1)->take(5)->get();
                 $hotRelated = $hotRelated->merge($hotRelatedByCreateAt)->unique();
             }
         } else {
-            $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->take(5)->get();
+            $hotRelatedByCreateAt = MongoQuestion::orderBy('created_at', 'desc')->where('status', 1)->take(5)->get();
             $hotRelated = $hotRelated->merge($hotRelatedByCreateAt)->unique();
         }
 

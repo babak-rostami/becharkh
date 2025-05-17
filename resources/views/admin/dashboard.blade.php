@@ -2,7 +2,7 @@
 
 
 @section('title')
-    داشبورد {{ auth('admin')->user()->name }}
+    داشبورد ادمین
 @endsection
 
 

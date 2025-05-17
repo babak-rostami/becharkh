@@ -33,36 +33,11 @@
 <body>
 
     @php
-        if (request()->is('admin/advertise/reports') or request()->is('admin/comment/reports')) {
-            $menu_report = true;
-        } else {
-            $menu_report = false;
-        }
-
-        if (request()->is('admin/question/categories') or request()->is('admin/questions')) {
-            $question_menu = true;
-        } else {
-            $question_menu = false;
-        }
-
         if (request()->is('admin/blogs') or request()->is('admin/blog/categories')) {
             $blog_menu = true;
         } else {
             $blog_menu = false;
         }
-
-        if (
-            request()->is('admin/advertise/all') or
-            request()->is('admin/comments') or
-            request()->is('admin/advertise/packages') or
-            request()->is('admin/advertise/reports') or
-            request()->is('admin/comment/reports')
-        ) {
-            $adver_menu = true;
-        } else {
-            $adver_menu = false;
-        }
-
     @endphp
 
     <!-- BEGIN LOADER -->
@@ -139,9 +114,7 @@
 
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">ادمین
-                                        {{ auth('admin')->user()->name }}</a></li>
-                                {{--                            <li class="breadcrumb-item active" aria-current="page"><span>فروش ها</span></li> --}}
+                                <li class="breadcrumb-item"><a href="javascript:void(0);"></a></li>
                             </ol>
                         </nav>
 
@@ -270,11 +243,6 @@
 
                 </div>
 
-            </div>
-            <div class="footer-wrapper">
-                <div class="footer-section f-section-1">
-                    <p class=""> © کپی رایت</p>
-                </div>
             </div>
         </div>
         <!--  END CONTENT AREA  -->

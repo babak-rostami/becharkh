@@ -14,7 +14,7 @@
                 <img class="lazy-load hop-img" data-src="{{ $question->image() }}" alt="{{ $question->title }}">
             @endif
 
-            <h2 class="q-item-title my-2">{{ $question->title }}</h2>
+            <h2 class="q-item-title my-2">{{ $question->sug_title ?? $question->title }}</h2>
 
             @if ($question->answer)
                 <span class="c-shortans">-{{ $question->answer }}

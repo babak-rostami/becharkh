@@ -1053,3 +1053,20 @@ header {
 #thtable {
     color: #086a1e;
 }
+
+#desk-unotif-count-li {
+    background-color: #17a2b8;
+    color: #fff;
+    border-radius: 8px;
+    padding: 0 4px;
+}
+
+#desk-unotif-count {
+    position: absolute;
+    top: 21px;
+    left: 95px;
+    background-color: #17a2b8;
+    color: #fff;
+    border-radius: 8px;
+    padding: 1px 3px;
+}

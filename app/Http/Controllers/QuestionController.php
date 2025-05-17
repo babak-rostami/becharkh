@@ -403,11 +403,11 @@ class QuestionController extends Controller
         }
         $slug2 = $category . '/' . $slug . '/' . $random;
         $question = MongoQuestion::where('slug2', $slug2)->with(['user', 'category'])->first();
-        if ($question->status != 1) {
-            return redirect()->route('home')->with('success', 'سوال بعد از تایید در انجمن نمایش داده میشود');
-        }
         if (!isset($question)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
+        }
+        if ($question->status != 1) {
+            return redirect()->route('home')->with('success', 'سوال بعد از تایید در انجمن نمایش داده میشود');
         }
         $category = $question->category;
 
@@ -424,57 +424,9 @@ class QuestionController extends Controller
         } else {
             $questions = $this->getHotQuestions($category, null, 15)->where('id', '!=', $question->id);
         }
-        $questions->each(function ($hq) {
-            $hq->load('user');
-        });
-        if (isset($item_id)) {
-            $item = MongoItem::find($item_id);
-            if (isset($item)) {
-                $tab_title = $item->full_title ?? $item->title;
-                // if ($user) {
-                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                //     if (isset($follow)) {
-                //         $is_follow = 1;
-                //     } else {
-                //         $is_follow = 0;
-                //     }
-                // }
-            }
-        } else {
-            $tab_title = $category->full_title ?? $category->title;
-        }
-        $suggests = $suggestionService->suggest($category, $item);
-        if (isset($suggests['items'])) {
-            $suggetItems = $suggests['items'];
-        } else {
-            $suggestCats = $suggests['cats'];
-        }
-
-        $childFeature = null;
-        $childItem = null;
-
-        $page_intro_title = null;
-        $page_intro_desc = null;
-
-        // $isLike = 0;
-        // if ($user) {
-        //     $like = $question->likes->where('user_id', $user->id)->first();
-        //     if (isset($like)) {
-        //         $isLike = 1;
-        //     }
-        // }
-
-        $lastAnswers = MongoQuestionAnswer::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
-        $firstComs = $lastAnswers->take(1);
-        $topLikes = $lastAnswers->sortByDesc('like_count')->take(3);
-        $acceptedAnswer = $topLikes->first();
-        $answers = $firstComs->merge($topLikes)->merge($lastAnswers)->unique();
-
-        if (!isset($_COOKIE['page_seen'])) {
-            $question->seen_count += 1;
-            $question->update();
-        }
+        $features = $category->features();
         if (isset($item)) {
+            $tab_title = $item->full_title ?? $item->title;
             if ($category->has_comments) {
                 $comment_page = $item->withParentsCommentUrl();
             }
@@ -487,7 +439,13 @@ class QuestionController extends Controller
             if ($category->has_ads) {
                 $advertise_page = $item->withParentsAdvertiseUrl();
             }
+            $followFeature = $features->find($item->feature_id);
+            if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
+                $page_intro_title = str_replace("*", $tab_title, $followFeature->page_intro_title);
+                $page_intro_desc = str_replace("*", $tab_title, $followFeature->page_intro_desc);
+            }
         } else {
+            $tab_title = $category->full_title ?? $category->title;
             if ($category->has_comments) {
                 $comment_page = route('question.index', $category->slug) . '?s=1';
             }
@@ -501,22 +459,46 @@ class QuestionController extends Controller
                 $advertise_page = route('ads.index', $category->slug);
             }
         }
+        $pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
+            ->where('just_this_page', 0)
+            ->take(20)
+            ->get();
+        $pin_questions = $pin_questions->where('id', '!=', $question->id)->shuffle()->take(3);
+        $pinQuestionIds = $pin_questions->pluck('_id');
+        $questions = $questions->whereNotIn('_id', $pinQuestionIds);
+        $questions->each(function ($hq) {
+            $hq->load('user');
+        });
+        $suggests = $suggestionService->suggest($category, $item);
+        if (isset($suggests['items'])) {
+            $suggetItems = $suggests['items'];
+        } else {
+            $suggestCats = $suggests['cats'];
+        }
+
+        $childFeature = null;
+        $childItem = null;
+
+        $page_intro_title = null;
+        $page_intro_desc = null;
+
+        $lastAnswers = MongoQuestionAnswer::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
+        $firstComs = $lastAnswers->take(1);
+        $topLikes = $lastAnswers->sortByDesc('like_count')->take(3);
+        $acceptedAnswer = $topLikes->first();
+        $answers = $firstComs->merge($topLikes)->merge($lastAnswers)->unique();
+
+        if (!isset($_COOKIE['page_seen'])) {
+            $question->seen_count += 1;
+            $question->update();
+        }
 
         if ($question->editor) {
             $question->editor = preg_replace('/<img(.*?)src=\"(.*?)\"/', '<img$1class="lazy-load" data-src="$2"', $question->editor);
         }
 
         $affilateService = new AffilateService();
-        $affilate = $affilateService->suggestForQuestion($question->id, $category, $item);
-
-        $features = $category->features();
-        if (isset($item)) {
-            $followFeature = $features->find($item->feature_id);
-            if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
-                $page_intro_title = str_replace("*", $tab_title, $followFeature->page_intro_title);
-                $page_intro_desc = str_replace("*", $tab_title, $followFeature->page_intro_desc);
-            }
-        }
+        $affilates = $affilateService->suggestForQuestion($question->id, $category, $item);
 
         $currentQueryParams = [];
 
@@ -530,18 +512,20 @@ class QuestionController extends Controller
             'answers',
             'acceptedAnswer',
             'questions',
-            // 'isLike',
             'user',
             'item',
             'category',
             'tab_title',
             'currentQueryParams',
         ];
+        if (isset($pin_questions) && !$pin_questions->isEmpty()) {
+            $compactVars[] = 'pin_questions';
+        }
         if (isset($features)) {
             $compactVars[] = 'features';
         }
-        if (isset($affilate)) {
-            $compactVars[] = 'affilate';
+        if (isset($affilates)) {
+            $compactVars[] = 'affilates';
         }
         if (isset($forum_page)) {
             $compactVars[] = 'forum_page';
@@ -936,6 +920,19 @@ class QuestionController extends Controller
         $question->google_index = $request->google_index;
         $question->title = $request->title;
 
+        $unset_sug_title = 0;
+        $unset_just_this_page = 0;
+        if (isset($request->sug_title)) {
+            $question->sug_title = $request->sug_title;
+        } else {
+            $unset_sug_title = 1;
+        }
+        if ($request->just_this_page == 0) {
+            $question->just_this_page = (int) $request->just_this_page;
+        } else {
+            $unset_just_this_page = 1;
+        }
+
         $editor_service = new CommentEditorService();
         $editor_service->update('edit_question_admin', $request->body, $question);
 
@@ -969,8 +966,13 @@ class QuestionController extends Controller
 
         if ($request->hasFile('image')) {
             $cover = $request->file('image');
-            $basefilename = $category->slug . rand(1000, 9999) . time();
             $path = 'question/images/' . $category->slug . '/';
+            if ($question->getImage()) {
+                $image_name = explode($path, $question->getImage())[1];
+                $basefilename = explode('.webp', $image_name)[0];
+            } else {
+                $basefilename = $category->slug . rand(1000, 9999) . time();
+            }
             //main image
             $filename = $basefilename . '.webp';
             $question->image = $path . $filename;
@@ -981,6 +983,13 @@ class QuestionController extends Controller
         }
 
         $question->update();
+
+        if ($unset_sug_title) {
+            $question->unset('sug_title');
+        }
+        if ($unset_just_this_page) {
+            $question->unset('just_this_page');
+        }
 
         $this->updatePinQuestion($question, $request);
 
@@ -1074,7 +1083,6 @@ class QuestionController extends Controller
             'title.required' => 'عنوان سوال را بنویسید',
         ]);
 
-        $question->status = 1;
         $question->title = $request->title;
 
         $editor_service = new CommentEditorService();
@@ -1096,13 +1104,23 @@ class QuestionController extends Controller
             $question->items_title = $items_title;
         }
 
-        if ($changeStatus) {
-            $question->status = 0;
-        } else {
-            $question->status = 1;
+        if ($question->status == 1) {
+            if ($changeStatus) {
+                $question->status = 0;
+            } else {
+                $question->status = 1;
+            }
         }
 
         $question->update();
+
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            $admin->notify(new SiteEvent([
+                'action' => $user->username . ' پرسش با عنوان ' . $question->title . ' را ویرایش کرد',
+                'route' => route('question.show', $question->slug2),
+            ]));
+        }
 
         return redirect()->route('user.dashboard.edit', 'forum')->with('success', 'تغییرات ثبت شد');
     }

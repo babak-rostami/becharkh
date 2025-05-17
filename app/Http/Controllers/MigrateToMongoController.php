@@ -496,7 +496,13 @@ class MigrateToMongoController extends Controller
                 'items' => 1
             ]);
         });
-
+        //////////////////////category comment likes
+        MongoCategoryCommentLike::raw(function ($collection) {
+            $collection->createIndex([
+                'comment_id' => 1,
+                'ip' => 1
+            ]);
+        });
         //////////////////////features
         MongoFeature::raw(function ($collection) {
             $collection->createIndex(['category_id' => 1]);
@@ -532,6 +538,13 @@ class MigrateToMongoController extends Controller
                 'user_id' => 1
             ]);
         });
+        //////////////////////question answer likes
+        MongoQuestionAnswerLike::raw(function ($collection) {
+            $collection->createIndex([
+                'answer_id' => 1,
+                'ip' => 1
+            ]);
+        });
         //////////////////////questions
         MongoQuestion::raw(function ($collection) {
             $collection->createIndex([
@@ -539,6 +552,9 @@ class MigrateToMongoController extends Controller
                 'category_id' => 1,
                 'items' => 1
             ]);
+        });
+        MongoQuestion::raw(function ($collection) {
+            $collection->createIndex(['just_this_page' => 1]);
         });
         MongoQuestion::raw(function ($collection) {
             $collection->createIndex(['slug2' => 1]);

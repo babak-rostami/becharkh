@@ -73,6 +73,9 @@
                                                 <label>email actived</label>
                                                 <input class="form-control" type="text" name="email_actived"
                                                     value="{{ $user->email_actived ?? '' }}">
+                                                <label>is fake?</label>
+                                                <input class="form-control" type="text" name="is_fake"
+                                                    value="{{ $user->is_fake ?? '' }}">
                                                 <label>image</label>
                                                 <input class="form-control" type="file" name="image">
                                                 <label>body</label>

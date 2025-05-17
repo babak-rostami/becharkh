@@ -11,19 +11,17 @@
                     <input type="hidden" name="parent_id" id="ccom-rep-parent-id">
                     <input type="hidden" name="reply_to_id" id="ccom-rep-replyto-id">
 
-                    <div class="form-group">
+                    <div class="form-group text-right">
                         <textarea required class="form-control comment-modal-input" id="ccom-rep-input" name="body"
                             placeholder="دیدگاه خود را بنویسید..."></textarea>
                     </div>
 
                     @if (isset($user))
-                        <button type="button" class="btn btn-outline-primary w-100"
-                            onclick="sendCommentBtnAction(this,'ccom-rep-input','ccom-rep-form')">ثبت
-                            نظر</button>
+                        <button type="button" class="btn btn-outline-primary w-100" id="ccom-rep-send-btn"
+                            onclick="sendCommentBtnAction()">ثبت نظر</button>
                     @else
-                        <button type="button" class="btn btn-outline-primary w-100" data-dismiss="modal"
-                            data-toggle="modal" data-target="#login_user"
-                            onclick="setActionForAfterAuth('comment', 'ccom-rep-form')">ثبت نظر
+                        <button type="button" class="btn btn-outline-primary w-100"
+                            onclick="setActionForAfterAuth('reply', 'ccom-rep-form')">ثبت نظر
                         </button>
                     @endif
                 </form>

@@ -55,6 +55,7 @@ use App\Http\Controllers\RaceController;
 use App\Http\Controllers\ShortLinkController;
 use App\Http\Controllers\SiteCategoryController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\SuggestPageController;
 use App\Http\Controllers\SuggestProductController;
 use App\Http\Controllers\SurveyOptionController;
 use App\Http\Controllers\UserAdvertisePackageController;
@@ -469,13 +470,14 @@ Route::middleware(['user'])->group(function () {
 
     Route::post('blog-ckeditor-upload/{id?}', [BlogController::class, 'updateCkeditor'])->name('blog.ckeditor.upload');
 
-
     Route::post('/editor/upload-image', [BlogController::class, 'EditorUploadImage'])->name('editor-upload');
 
     Route::post('question-answer', [QuestionAnswerController::class, 'store'])->name('question.answer.store');
+    Route::post('question-answer-store-dref', [QuestionAnswerController::class, 'storeWithoutRefresh'])->name('question.answer.store.dref');
 
     //ctegory comment
     Route::post('cat-comment-store', [CategoryCommentController::class, 'store'])->name('category.comment.store');
+    Route::post('cat-comment-store-dref', [CategoryCommentController::class, 'storeWithoutRefresh'])->name('category.comment.store.dref');
 
     //advertise comment
     Route::post('ad-comment/store', [AdvertiseCommentController::class, 'store'])->name('advertise.comment.store');
@@ -503,6 +505,8 @@ Route::middleware(['user'])->group(function () {
 
     Route::post('product-comment-store', [ProductCommentController::class, 'store'])->name('product.comment.store');
 });
+
+Route::get('suggest-page-show', [SuggestPageController::class, 'show'])->name('suggestp.show');
 
 Route::post('comment-editor-img/{page}', [EditorImageController::class, 'upload'])->name('comment.editor.img.uplaod');
 

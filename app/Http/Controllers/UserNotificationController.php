@@ -19,7 +19,7 @@ class UserNotificationController extends Controller
                 $parent_comment = $new_object->parent;
             }
             $parent_comment_user = $parent_comment->user;
-            if ($parent_comment->user_id != $from_user->id && (!isset($parent_comment_user->email_actived) || $parent_comment_user->email_actived != 0)) {
+            if ($parent_comment->user_id != $from_user->id && (!isset($parent_comment_user->is_fake) || $parent_comment_user->is_fake != 1)) {
                 $notif_text = $from_user->username . ' نظری برای شما در صفحه ';
                 if (isset($parent_comment->items)) {
                     $item = MongoItem::find($parent_comment->items[0]);
@@ -60,7 +60,7 @@ class UserNotificationController extends Controller
             }
             $notif_route = $notid_r;
 
-            if (isset($parent_comment) && $parent_comment->user_id != $from_user->id && (!isset($parent_comment_user->email_actived) || $parent_comment_user->email_actived != 0)) {
+            if (isset($parent_comment) && $parent_comment->user_id != $from_user->id && (!isset($parent_comment_user->is_fake) || $parent_comment_user->is_fake != 1)) {
                 $notif_to_anw_user = new UserNotification();
                 $this->updateUserNotifs($parent_comment->user_id);
                 $notif_to_anw_user->user_id = $parent_comment->user_id;
@@ -74,7 +74,7 @@ class UserNotificationController extends Controller
             }
             $question_user = $question->user;
             if ($question_user->id != $from_user->id) {
-                if ((!isset($question_user->email_actived) || $question_user->email_actived != 0) && (!isset($parent_comment) || (isset($parent_comment) && $parent_comment->user_id != $question_user->id))) {
+                if ((!isset($question_user->is_fake) || $question_user->is_fake != 1) && (!isset($parent_comment) || (isset($parent_comment) && $parent_comment->user_id != $question_user->id))) {
                     $notif_to_q_user = new UserNotification();
                     $this->updateUserNotifs($question_user->id);
                     $notif_to_q_user->user_id = $question_user->id;

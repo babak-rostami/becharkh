@@ -44,7 +44,7 @@ class ItemImageController extends Controller
             $baseFileName = $item->slug . time() . rand(100, 999);
             //main image
             $filename = $baseFileName . '.webp';
-            $this->uploadAndResizeImage($cover, $path, $filename, 95, 0);
+            $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
             //thum image
             $filename2 = $baseFileName . '2.webp';
             $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);

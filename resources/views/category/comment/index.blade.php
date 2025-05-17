@@ -213,36 +213,7 @@
                 @endif
             @endif
 
-            @if (isset($pin_questions))
-                <div class="row" id="pin-qs-box">
-                    <div class="col-12 text-center">
-                        @foreach ($pin_questions as $pin_question)
-                            @if ($pin_question->slug2)
-                                <a class="hop-item" href="{{ route('question.show', $pin_question->slug2) }}">
-                                    @if ($pin_question->getImage())
-                                        <img class="lazy-load hop-img" data-src="{{ $pin_question->image() }}"
-                                            alt="{{ $pin_question->title }}">
-                                    @else
-                                        <img class="lazy-load rcir-glow"
-                                            data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
-                                    @endif
-                                    <span class="hop-title">{{ $pin_question->title }}</span>
-                                    <span class="hop-body">{{ $pin_question->body }}</span>
-                                </a>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
             @if ($hasComments == 0)
-                <div class="row justify-content-center">
-                    @if (isset($affilate))
-                        <div class="col-12 text-right py-2 px-0">
-                            @include('affilate.show-box')
-                        </div>
-                    @endif
-                </div>
                 @include('question.comment-items', [
                     'firstItems' => 1,
                     'comments' => $comments,
@@ -282,13 +253,11 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    {{-- <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> --}}
     <script>
-        // send comment after auth
+        // const yplayer = new Plyr('#affilb-video');
         send_comment_after_login = 0;
-        //end send comment after auth        
         const page = 'comment';
-        const yplayer = new Plyr('#affilb-video');
         const index_route = "{{ route('question.index') }}";
         const is_rtable_page = 0;
 
@@ -307,7 +276,9 @@
 
         const route_surop_choose = "{{ route('surop.choose') }}";
 
-        let product_ids = {!! isset($affilate) ? json_encode([$affilate->id]) : '[]' !!};
+        const reply_df_route = "{{ route('category.comment.store.dref') }}";
+
+        let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
 
         //for fifil
         // const fifil_load_items_route = "{{ route('fifil.load.items') }}";

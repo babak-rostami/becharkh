@@ -125,30 +125,36 @@
     word-wrap: break-word;
 }
 
-.answer-box h2 {
+.answer-box h2,
+.question-editor h2 {
     font-size: 22px;
     font-weight: 700;
     color: #002a57;
 }
 
-.answer-box h3 {
+.answer-box h3,
+.question-editor h3 {
     font-size: 18px;
     font-weight: 700;
     color: #6d000a;
 }
 
-.answer-box h4 {
+.answer-box h4,
+.question-editor h4 {
     font-size: 17px;
     font-weight: 700;
     color: #373737;
 }
 
-.answer-box .table {
+.answer-box .table,
+.question-editor .table {
     overflow: auto;
 }
 
 .answer-box ul,
-.answer-box ol {
+.answer-box ol,
+.question-editor ul,
+.question-editor ol {
     padding-inline-start: 24px;
 }
 
@@ -183,13 +189,60 @@
 .dislike-icon img {
     width: 18px;
 }
+
+@keyframes ulcomoveDown {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+.unlike-ans-image {
+    display: inline-block;
+    transition: transform 0.6s ease;
+}
+.unlike-ans-image.clicked {
+    animation: ulcomoveDown 0.6s ease;
+}
+
+@keyframes lcomoveDown {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+.like-ans-image {
+    display: inline-block;
+    transition: transform 0.6s ease;
+}
+.like-ans-image.clicked {
+    animation: lcomoveDown 0.6s ease;
+}
+
 .comment-reply-btn {
     text-decoration: none !important;
     border: 1px solid #cae4ff;
     background-color: #fafffb;
     font-weight: 500;
     border-radius: 12px;
-    padding: 2px 16px;
+    padding: 4px 10px;
+    font-size: 14px;
+    outline: 0 !important;
+    color: #007bff;
+    line-height: normal;
+}
+
+#qa-textarea {
+    min-height: 100px;
 }
 
 .c-shortans {
@@ -213,7 +266,7 @@
 }
 
 .question-editor img {
-    width: 100%;
+    max-width: 100%;
 }
 
 .rcir-glow {

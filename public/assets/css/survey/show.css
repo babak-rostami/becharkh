@@ -1,5 +1,6 @@
 .suropshow {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
     cursor: pointer;
     background-color: #f1f1f1;
     color: #003e81;

@@ -173,6 +173,7 @@ class UserController extends Controller
             $user->email = $username . strtolower(Str::random(10)) . "@gmail.com";
             $user->password = bcrypt(strtolower(Str::random(16)));
             $user->email_actived = 0;
+            $user->is_fake = 1;
             $user->save();
             return $user->id;
         }
@@ -353,6 +354,13 @@ class UserController extends Controller
         if (isset($request->email_actived)) {
             $user->email_actived = $request->email_actived;
         }
+        if (isset($request->is_fake)) {
+            $user->is_fake = $request->is_fake;
+        } else {
+            if ($user->is_fake == 1) {
+                $unset_is_fake = 1;
+            }
+        }
         if (isset($request->body)) {
             $user->body = $request->body;
         }
@@ -378,8 +386,11 @@ class UserController extends Controller
             $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
         }
 
-
         $user->update();
+
+        if (isset($unset_is_fake)) {
+            $user->unset('is_fake');
+        }
 
         return back()->with('success', 'تغییرات ذخیره شد');
     }

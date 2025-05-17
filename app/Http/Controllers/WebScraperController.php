@@ -49,7 +49,7 @@ class WebScraperController extends Controller
     {
         set_time_limit(3600);
 
-        dd('done');
+        // dd('done');
 
         $disk = Storage::disk('ftp');
         $client = HttpClient::create();

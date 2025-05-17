@@ -6,7 +6,7 @@
     @endphp
     <span onclick="chooseSurOp('{{ $object->id }}', 1)" class="suropshow">
         <span>{{ $object->surop1 }}</span>
-        <span class="float-left" id="suropshow-{{ $object->id }}-1">{{ $surop1_number }}
+        <span class="mr-auto" id="suropshow-{{ $object->id }}-1">{{ $surop1_number }}
             ({{ $surop1_percent }}%)</span>
     </span>
 @endif
@@ -19,7 +19,7 @@
     @endphp
     <span onclick="chooseSurOp('{{ $object->id }}', 2)" class="suropshow">
         <span>{{ $object->surop2 }}</span>
-        <span class="float-left" id="suropshow-{{ $object->id }}-2">{{ $surop2_number }}
+        <span class="mr-auto" id="suropshow-{{ $object->id }}-2">{{ $surop2_number }}
             ({{ $surop2_percent }}%)</span>
     </span>
 @endif
@@ -32,7 +32,7 @@
     @endphp
     <span onclick="chooseSurOp('{{ $object->id }}', 3)" class="suropshow">
         <span>{{ $object->surop3 }}</span>
-        <span class="float-left" id="suropshow-{{ $object->id }}-3">{{ $surop3_number }}
+        <span class="mr-auto" id="suropshow-{{ $object->id }}-3">{{ $surop3_number }}
             ({{ $surop3_percent }}%)</span>
     </span>
 @endif
@@ -45,7 +45,7 @@
     @endphp
     <span onclick="chooseSurOp('{{ $object->id }}', 4)" class="suropshow">
         <span>{{ $object->surop4 }}</span>
-        <span class="float-left" id="suropshow-{{ $object->id }}-4">{{ $surop4_number }}
+        <span class="mr-auto" id="suropshow-{{ $object->id }}-4">{{ $surop4_number }}
             ({{ $surop4_percent }}%)</span>
     </span>
 @endif

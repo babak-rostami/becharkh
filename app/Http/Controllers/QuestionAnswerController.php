@@ -10,6 +10,7 @@ use App\Mail\ReplyToCommentMail;
 use App\Models\Admin;
 use App\Models\MongoQuestion;
 use App\Models\MongoQuestionAnswer;
+use App\Models\MongoQuestionAnswerLike;
 use App\Models\MongoUser;
 use App\Models\QuestionAnswerEditorImage;
 use App\Notifications\SiteEvent;
@@ -90,6 +91,91 @@ class QuestionAnswerController extends Controller
         // }
 
         return back()->with('success', 'پاسخ شما با موفقیت ثبت شد');
+    }
+
+    public function storeWithoutRefresh(Request $request)
+    {
+        if (!isset($request->question_id) || !isset($request->body) || !isset($request->parent_id)) {
+            return response()->json(['error' => 'خطایی رخ داد'], 404);
+        }
+        if ($request->body == '') {
+            return response()->json(['error' => 'دیدگاه خود را بنویسید.'], 404);
+        }
+        if (!auth('user')->check()) {
+            return response()->json(['error' => 'وارد حساب کاربری خود شوید.'], 401);
+        }
+
+        $question = MongoQuestion::find($request->question_id);
+        if (!isset($question)) {
+            return response()->json(['error' => 'سوال پیدا نشد.'], 404);
+        }
+        $answer = new MongoQuestionAnswer();
+        $questionUser = $question->user;
+
+        $user = auth('user')->user();
+        $answer->question_id = $request->question_id;
+        if (isset($request->parent_id)) {
+            $answer->parent_id = $request->parent_id;
+            if (isset($request->reply_id)) {
+                $answer->reply_id = $request->reply_id;
+            }
+            $reply = MongoQuestionAnswer::find($request->parent_id);
+            if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
+                $this->NE($user, $reply->user, $question);
+            }
+            $answer->body = $request->body;
+        } else {
+            if ($user != $questionUser) {
+                $this->NE($user, $questionUser, $question);
+            }
+
+            $answer_count = $question->answer_count ?? 0;
+            $answer_count += 1;
+            $question->answer_count = $answer_count;
+            $question->update();
+
+            $editor_service = new CommentEditorService();
+            $editor_images = $editor_service->store('show_question', $request->body, $answer);
+        }
+        $answer->user_id = $user->id;
+        $answer->save();
+
+        dispatch(new SendUserNotification('question_answer', $user, $answer))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+
+        if (!isset($request->parent_id)) {
+            $editor_service->updateImageCommentId($editor_images, $answer->id);
+        }
+
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            $admin->notify(new SiteEvent([
+                'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
+                'route' => route('question.show', $question->slug2)
+            ]));
+        }
+
+        return response()->json([
+            'success' => 'نظر شما با موفقیت ثبت شد',
+            'comment' => [
+                'id' => $answer->id,
+                'body' => $request->body,
+                'username' => $user->username,
+                'user_image' => $user->thumb(),
+                'like_count' => 0,
+                'unlike_count' => 0,
+                'question_id' => $request->question_id,
+                'parent_id' => $request->parent_id,
+                'reply_id' => $request->reply_id,
+            ]
+        ], 201);
+    }
+
+    private function NE($fromUser, $toUser, $question)
+    {
+        if (isset($toUser) && (!isset($toUser->email_actived) || $toUser->email_actived != 0)) {
+            $route = route('question.show', $question->slug2);
+            dispatch(new SendEmailQuestionAnswer($toUser->email, $question->title, $fromUser->username, $route))->onQueue('becharkhsite');
+        }
     }
 
     public function storeAdmin(Request $request)
@@ -194,6 +280,10 @@ class QuestionAnswerController extends Controller
                 $ci->delete();
             }
         }
+        $likes = MongoQuestionAnswerLike::where('answer_id', $answer->id)->get();
+        foreach ($likes as $like) {
+            $like->delete();
+        }
         $answer->delete();
         if ($question->answer_count > 0) {
             $question->answer_count -= 1;
@@ -203,13 +293,5 @@ class QuestionAnswerController extends Controller
         app(UserNotificationController::class)->deleteNotification('question_answer', $answer->id);
 
         return back()->with('success', 'با موفقیت حذف شد');
-    }
-
-    private function NE($fromUser, $toUser, $question)
-    {
-        if (isset($toUser) && (!isset($toUser->email_actived) || $toUser->email_actived != 0)) {
-            $route = route('question.show', $question->slug2);
-            dispatch(new SendEmailQuestionAnswer($toUser->email, $question->title, $fromUser->username, $route))->onQueue('becharkhsite');
-        }
     }
 }

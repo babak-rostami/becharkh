@@ -24,7 +24,7 @@ class EditorImageController extends Controller
             $file = $request->file('upload');
             $image_name = strtolower(str_random(12));
             $filename =  time() . '-' . $image_name . '.webp';
-            $resizedImage = Image::make($file)->encode('webp', 95);
+            $resizedImage = Image::make($file)->encode('webp', 90);
 
             if ($page == 'comment' || $page == 'admin_edit_comment' || $page == 'admin_create_comment') {
                 $image = new CategoryCommentEditorImage();
