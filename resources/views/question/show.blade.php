@@ -116,13 +116,19 @@
 
             <div class="row">
                 <div class="col-12 text-center">
-                    @if ($question->getImage())
-                        <img id="pquestion-title" src="{{ $question->image() }}" alt="{{ $question->title }}"
-                            title="{{ $question->title }}">
+                    @if ($video)
+                        <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
+                            src="{{ route('video.embedb.show', $video->slug2) }}" style="border:none;" width="100%"
+                            height="292px" allowfullscreen></iframe>
                     @else
-                        @if (isset($item))
-                            <img id="pquestion-title" src="{{ $item->image() }}" alt="{{ $question->title }}"
+                        @if ($question->getImage())
+                            <img id="pquestion-img" src="{{ $question->image() }}" alt="{{ $question->title }}"
                                 title="{{ $question->title }}">
+                        @else
+                            @if (isset($item))
+                                <img id="pquestion-img" src="{{ $item->image() }}" alt="{{ $question->title }}"
+                                    title="{{ $question->title }}">
+                            @endif
                         @endif
                     @endif
                 </div>

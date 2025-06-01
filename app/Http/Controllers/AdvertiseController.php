@@ -202,6 +202,12 @@ class AdvertiseController extends Controller
                 if ($tab_category->has_blogs) {
                     $blog_page = $item->withParentsBlogUrl();
                 }
+                if (isset($item->videos)) {
+                    $ivids = MongoVideo::find($item->videos)->shuffle()->first();
+                    if (isset($ivids)) {
+                        $item_video = $ivids;
+                    }
+                }
             } else {
                 if ($category->has_comments) {
                     $comment_page = route('question.index', $category->slug) . '?s=1';
@@ -236,6 +242,9 @@ class AdvertiseController extends Controller
                 'currentQueryParams',
                 'selected_items',
             ];
+            if (isset($item_video)) {
+                $compactVars[] = 'item_video';
+            }
             if (isset($features)) {
                 $compactVars[] = 'features';
             }

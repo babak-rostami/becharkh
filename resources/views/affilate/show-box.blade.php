@@ -36,9 +36,8 @@
         </div>
     </div>
 @endif --}}
-@if (isset($affilate->video_id) && isset($page) && $page == 'show_product')
-    <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
-        src="{{ route('video.embedb.show', ['category_slug' => $affilate->video->category->slug, 'video_slug' => $affilate->video->slug, 'random_id' => $affilate->video->random_id]) }}"
+@if (isset($video) && isset($page) && $page == 'show_product')
+    <iframe class="shadow-sm p-0 m-0 mt-3 radius-10" src="{{ route('video.embedb.show', $video->slug2) }}"
         style="border:none;" width="100%" height="292px" allowfullscreen></iframe>
 @endif
 

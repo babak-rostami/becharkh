@@ -1,5 +1,5 @@
-var sasf_typingTimer;
-var sasf_doneTypingInterval = 1000;
+let sasf_typingTimer;
+let sasf_doneTypingInterval = 1000;
 
 $("#sasf_cisearch_input").on("keyup", function () {
     clearTimeout(sasf_typingTimer);
@@ -50,26 +50,30 @@ function sasfSearchForInput() {
             }
         }
     });
-    $.ajax({
-        method: "get",
-        url: "/main-search/2/" + sasf_cisearch_input,
-        success: function (data) {
-            if (sasf_cisearch_for == 1) {
-                sasf_cisearch_questions = data.questions;
-                sasfShowMainSearchForumResults();
+    if ($("#questions").length) {
+        $.ajax({
+            method: "get",
+            url: "/main-search/2/" + sasf_cisearch_input,
+            success: function (data) {
+                if (sasf_cisearch_for == 1) {
+                    sasf_cisearch_questions = data.questions;
+                    sasfShowMainSearchForumResults();
+                }
             }
-        }
-    });
-    $.ajax({
-        method: "get",
-        url: "/main-search/4/" + sasf_cisearch_input,
-        success: function (data) {
-            if (sasf_cisearch_for == 1) {
-                sasf_cisearch_videos = data.videos;
-                sasfShowMainSearchVideoResults();
+        });
+    }
+    if ($("#videos").length) {
+        $.ajax({
+            method: "get",
+            url: "/main-search/4/" + sasf_cisearch_input,
+            success: function (data) {
+                if (sasf_cisearch_for == 1) {
+                    sasf_cisearch_videos = data.videos;
+                    sasfShowMainSearchVideoResults();
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function sasfShowMainSearchVideoResults() {
@@ -238,8 +242,6 @@ function sasfRemoveItem(item_id, item_title) {
     if (index !== -1) {
         sasf_items.splice(index, 1);
         $("#sasf-items").val(sasf_items.join(","));
-        console.log($("#sasf-items").val());
-
         $(`#sasf-selected-items span`)
             .filter(function () {
                 return $(this).text() === item_title;

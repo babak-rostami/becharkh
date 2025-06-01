@@ -56,5 +56,6 @@
     <script>
         sasf_categories = {!! json_encode(isset($sasf_categoryIds) ? explode(',', $sasf_categoryIds) : []) !!};
         sasf_items = {!! json_encode(isset($sasf_itemIds) ? explode(',', $sasf_itemIds) : []) !!};
+        sasf_video = {!! json_encode(isset($videoId) ? explode(',', $videoId) : []) !!};
     </script>
 @endsection

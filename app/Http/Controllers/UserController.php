@@ -549,6 +549,13 @@ class UserController extends Controller
     public function changeUserNameReqs(Request $request)
     {
         $reqs = ChangeUsername::with('user')->get();
+        foreach ($reqs as $req) {
+            if (MongoUser::where('username', $req->username)->first()) {
+                $req->exist = 1;
+            } else {
+                $req->exist = 0;
+            }
+        }
         return view('user.change-username-reqs', compact('reqs'));
     }
     public function DestroyChunReqs(Request $request)

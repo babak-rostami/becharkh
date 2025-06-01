@@ -9,6 +9,7 @@ use App\Models\Affilate;
 use App\Models\CategoryFeatureItem;
 use App\Models\MongoCategory;
 use App\Models\MongoItem;
+use App\Models\MongoQuestion;
 use App\Models\MongoUser;
 use App\Models\MongoVideo;
 use App\Models\SiteCategory;
@@ -30,20 +31,20 @@ use Throwable;
 class VideoController extends Controller
 {
 
-    public function show($category_slug, $video_slug, $random_id)
+    public function show($category_slug, $video_slug = null, $random_id = null)
     {
-        $category = MongoCategory::where('slug', $category_slug)->first();
-        if (!isset($category)) {
+        if (!isset($category_slug) || !isset($video_slug) || !isset($random_id)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
-        if ($category->status == 0) {
-            return back()->with('success', 'در انتظار تایید دسته بندی');
-        }
-        $video = MongoVideo::where('category_id', $category->id)->where('random_id', $random_id)->where('slug', $video_slug)->first();
+        $slug2 = $category_slug . '/' . $video_slug . '/' . $random_id;
+        $video = MongoVideo::where('slug2', $slug2)->first();
         if (!isset($video)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
-
+        $category = $video->category;
+        if (!isset($category)) {
+            return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
+        }
         if (isset($video->youtube_link)) {
             return redirect(route('question.index') . '?s=1');
         }
@@ -61,6 +62,10 @@ class VideoController extends Controller
         if (isset($video->affilate_id)) {
             $affilate = Affilate::find($video->affilate_id);
             $compactVars[] = 'affilate';
+        }
+        if (isset($video->question_id)) {
+            $question = MongoQuestion::find($video->question_id);
+            $compactVars[] = 'question';
         }
         return view('video.show', compact(...$compactVars));
     }
@@ -109,7 +114,7 @@ class VideoController extends Controller
                 return [
                     'id' => $video->id,
                     'title' => Str::limit($video->title, 45, '...'),
-                    'slug' => $video->slug,
+                    'slug' => $video->slug2,
                     'random_id' => $video->random_id,
                     'category_slug' => $video->category->slug,
                     'image' => $video->thumb(),
@@ -139,14 +144,13 @@ class VideoController extends Controller
         return view('video.embed', compact('video', 'videos', 'user', 'comments', 'commentsCount'));
     }
 
-    public function showEmbedb($category_slug, $video_slug, $random_id)
+    public function showEmbedb($category_slug, $video_slug = null, $random_id = null)
     {
-        $cat = MongoCategory::where('slug', $category_slug)->first();
-        // $randomVideos = MongoVideo::random(2);
-        if (!isset($cat)) {
+        if (!isset($category_slug) || !isset($video_slug) || !isset($random_id)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
-        $video = MongoVideo::where('category_id', $cat->id)->where('random_id', $random_id)->where('slug', $video_slug)->first();
+        $slug2 = $category_slug . '/' . $video_slug . '/' . $random_id;
+        $video = MongoVideo::where('slug2', $slug2)->first();
         if (!isset($video)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
@@ -350,11 +354,12 @@ class VideoController extends Controller
         $video->title = $request->title;
         $video->description = $request->description;
 
-        if ($video->slug == null) {
+        if (!isset($video->slug2) || $video->slug2 == null) {
             $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
-            $video->slug = $slug;
+            $slug2 = $this->createVideoSlug($category->slug, $slug);
+            $video->slug2 = $slug2;
         } else {
-            $slug = $video->slug;
+            $slug = $video->slug2;
         }
 
         $videoImageUser = $user;
@@ -536,7 +541,7 @@ class VideoController extends Controller
         foreach ($admins as $admin) {
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' ویدیو ' . $video->title . ' را منتشر کرد',
-                'route' => route('video.show', ['category_slug' => $category->slug, 'video_slug' => $video->slug, 'random_id' => $video->random_id])
+                'route' => route('video.show', $video->slug2)
             ]));
         }
         $cookieName = 'videos_count';
@@ -583,15 +588,15 @@ class VideoController extends Controller
 
         $video->status = 1;
         $video->title = $request->title;
-        $video->pr_link = $request->pr_link;
         $video->description = $request->description;
         $video->google_index = 1;
 
-        if ($video->slug == null) {
+        if (!isset($video->slug2) || $video->slug2 == null) {
             $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
-            $video->slug = $slug;
+            $slug2 = $this->createVideoSlug($category->slug, $slug);
+            $video->slug2 = $slug2;
         } else {
-            $slug = $video->slug;
+            $slug = $video->slug2;
         }
 
         if ($request->hasFile('image')) {
@@ -612,7 +617,7 @@ class VideoController extends Controller
 
             //main image
             $filename = $baseFilename . '.webp';
-            $this->uploadAndResizeImage($cover, $path, $filename, 100, 0);
+            $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
             //thum image
             $filename2 = $baseFilename . '2.webp';
             $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
@@ -620,144 +625,146 @@ class VideoController extends Controller
             $video->image = $path . $filename;
         }
 
-        $changeStatus = 0;
+        // $changeStatus = 0;
+        // if ($category->status) {
+        //     $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
+        //     $citems = MongoItem::where('category_id', $category->id)->get();
 
-        if ($category->status) {
-            $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
-            $citems = MongoItem::where('category_id', $category->id)->get();
+        //     $items = [];
+        //     $items_title = [];
+        //     $last_items = $video->items ?? [];
 
-            $items = [];
-            $items_title = [];
-            $last_items = $video->items ?? [];
+        //     $cfeatures = $cfeatures->where('parent_id', null);
+        //     while (count($cfeatures) > 0) {
+        //         foreach ($cfeatures as $key => $fea) {
+        //             //new items for this fea
+        //             $new_i_inp_name = $fea->id . '-';
+        //             $nfiInputs = collect($request->all())->filter(function ($value, $key) use ($new_i_inp_name) {
+        //                 return Str::startsWith($key, $new_i_inp_name);
+        //             });
+        //             if ($fea->select_items_count == 1) {
+        //                 $newItemAdded = 0;
+        //                 // if new item added handle it here
+        //                 if (isset($nfiInputs)) {
+        //                     foreach ($nfiInputs as $nfi) {
+        //                         $nifid = explode('-', $nfi)[1];
+        //                         $nifTitle = explode('-', $nfi)[0];
+        //                         if ($request[$fea->slug] == $nifid) {
+        //                             $newItem = new MongoItem();
+        //                             $newItem->title = $nifTitle;
+        //                             $newItem->feature_id = $fea->id;
+        //                             $newItem->slug = $nifTitle . rand(100000, 999999);
+        //                             $newItem->status = 0;
+        //                             $newItem->save();
+        //                             $changeStatus = 1;
 
-            $cfeatures = $cfeatures->where('parent_id', null);
-            while (count($cfeatures) > 0) {
-                foreach ($cfeatures as $key => $fea) {
-                    //new items for this fea
-                    $new_i_inp_name = $fea->id . '-';
-                    $nfiInputs = collect($request->all())->filter(function ($value, $key) use ($new_i_inp_name) {
-                        return Str::startsWith($key, $new_i_inp_name);
-                    });
-                    if ($fea->select_items_count == 1) {
-                        $newItemAdded = 0;
-                        // if new item added handle it here
-                        if (isset($nfiInputs)) {
-                            foreach ($nfiInputs as $nfi) {
-                                $nifid = explode('-', $nfi)[1];
-                                $nifTitle = explode('-', $nfi)[0];
-                                if ($request[$fea->slug] == $nifid) {
-                                    $newItem = new MongoItem();
-                                    $newItem->title = $nifTitle;
-                                    $newItem->feature_id = $fea->id;
-                                    $newItem->slug = $nifTitle . rand(100000, 999999);
-                                    $newItem->status = 0;
-                                    $newItem->save();
-                                    $changeStatus = 1;
+        //                             $items[] = $newItem->id;
 
-                                    $items[] = $newItem->id;
+        //                             $newItemAdded = 1;
+        //                         }
+        //                     }
+        //                 }
+        //                 if ($newItemAdded == 0) {
+        //                     $it = $citems->where('id', $request[$fea->slug])->first();
+        //                     if (!in_array($request[$fea->slug], $last_items)) {
+        //                         if (isset($it)) {
+        //                             $iparent = $it->parent_id ?? null;
+        //                             $addItem = 0;
+        //                             if ($iparent != null) {
+        //                                 if (in_array($iparent, $items)) {
+        //                                     $addItem = 1;
+        //                                 }
+        //                             } else {
+        //                                 $addItem = 1;
+        //                             }
+        //                             if ($addItem) {
+        //                                 $items[] = $it->id;
+        //                                 $items_title[] = $it->full_title ?? $it->title;
+        //                             }
+        //                         }
+        //                     } else {
+        //                         $items[] = $it->id;
+        //                         $items_title[] = $it->full_title ?? $it->title;
+        //                     }
+        //                 }
+        //             } else {
+        //                 $fisArray = $request[$fea->slug];
+        //                 if ($fisArray) {
+        //                     $fisArrays = json_decode("[$fisArray]")[0];
+        //                     if (count($fisArrays) > $fea->select_items_count) {
+        //                         break;
+        //                     }
 
-                                    $newItemAdded = 1;
-                                }
-                            }
-                        }
-                        if ($newItemAdded == 0) {
-                            $it = $citems->where('id', $request[$fea->slug])->first();
-                            if (!in_array($request[$fea->slug], $last_items)) {
-                                if (isset($it)) {
-                                    $iparent = $it->parent_id ?? null;
-                                    $addItem = 0;
-                                    if ($iparent != null) {
-                                        if (in_array($iparent, $items)) {
-                                            $addItem = 1;
-                                        }
-                                    } else {
-                                        $addItem = 1;
-                                    }
-                                    if ($addItem) {
-                                        $items[] = $it->id;
-                                        $items_title[] = $it->full_title ?? $it->title;
-                                    }
-                                }
-                            } else {
-                                $items[] = $it->id;
-                                $items_title[] = $it->full_title ?? $it->title;
-                            }
-                        }
-                    } else {
-                        $fisArray = $request[$fea->slug];
-                        if ($fisArray) {
-                            $fisArrays = json_decode("[$fisArray]")[0];
-                            if (count($fisArrays) > $fea->select_items_count) {
-                                break;
-                            }
+        //                     if (isset($nfiInputs)) {
+        //                         foreach ($nfiInputs as $nfi) {
+        //                             $nifid = explode('-', $nfi)[1];
+        //                             $nifTitle = explode('-', $nfi)[0];
+        //                             $nikey = array_search($nifid, $fisArrays);
+        //                             if ($nikey !== false) {
+        //                                 $newItem = new MongoItem();
+        //                                 $newItem->title = $nifTitle;
+        //                                 $newItem->feature_id = $fea->id;
+        //                                 $newItem->slug = $nifTitle . rand(100000, 999999);
+        //                                 $newItem->status = 0;
+        //                                 $newItem->save();
+        //                                 $changeStatus = 1;
 
-                            if (isset($nfiInputs)) {
-                                foreach ($nfiInputs as $nfi) {
-                                    $nifid = explode('-', $nfi)[1];
-                                    $nifTitle = explode('-', $nfi)[0];
-                                    $nikey = array_search($nifid, $fisArrays);
-                                    if ($nikey !== false) {
-                                        $newItem = new MongoItem();
-                                        $newItem->title = $nifTitle;
-                                        $newItem->feature_id = $fea->id;
-                                        $newItem->slug = $nifTitle . rand(100000, 999999);
-                                        $newItem->status = 0;
-                                        $newItem->save();
-                                        $changeStatus = 1;
+        //                                 $items[] = $newItem->id;
+        //                             }
+        //                         }
+        //                     }
 
-                                        $items[] = $newItem->id;
-                                    }
-                                }
-                            }
+        //                     foreach ($fisArrays as $fi_id) {
+        //                         $it = $citems->where('id', $fi_id)->first();
+        //                         if (!in_array($fi_id, $last_items)) {
+        //                             if (isset($it)) {
+        //                                 $iparent = $it->parent_id ?? null;
+        //                                 $addItem = 0;
+        //                                 if ($iparent != null) {
+        //                                     if (in_array($iparent, $items)) {
+        //                                         $addItem = 1;
+        //                                     }
+        //                                 } else {
+        //                                     $addItem = 1;
+        //                                 }
+        //                                 if ($addItem) {
+        //                                     $items[] = $it->id;
+        //                                     $items_title[] = $it->full_title ?? $it->title;
+        //                                 }
+        //                             }
+        //                         } else {
+        //                             $items[] = $it->id;
+        //                             $items_title[] = $it->full_title ?? $it->title;
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             //now do it for children features
+        //             $cfeatures->forget($key);
+        //             $fchildren = $fea->children;
+        //             if (count($fchildren) > 0) {
+        //                 foreach ($fchildren as $key => $chf) {
+        //                     $cfeatures->add($chf);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // if (count($items) > 0) {
+        //     $video->items = $items;
+        // }
+        // if (count($items_title) > 0) {
+        //     $video->items_title = $items_title;
+        // }
+        // if ($changeStatus) {
+        //     if ($video->status == 1) {
+        //         $video->status = 0;
+        //     }
+        // }
 
-                            foreach ($fisArrays as $fi_id) {
-                                $it = $citems->where('id', $fi_id)->first();
-                                if (!in_array($fi_id, $last_items)) {
-                                    if (isset($it)) {
-                                        $iparent = $it->parent_id ?? null;
-                                        $addItem = 0;
-                                        if ($iparent != null) {
-                                            if (in_array($iparent, $items)) {
-                                                $addItem = 1;
-                                            }
-                                        } else {
-                                            $addItem = 1;
-                                        }
-                                        if ($addItem) {
-                                            $items[] = $it->id;
-                                            $items_title[] = $it->full_title ?? $it->title;
-                                        }
-                                    }
-                                } else {
-                                    $items[] = $it->id;
-                                    $items_title[] = $it->full_title ?? $it->title;
-                                }
-                            }
-                        }
-                    }
-                    //now do it for children features
-                    $cfeatures->forget($key);
-                    $fchildren = $fea->children;
-                    if (count($fchildren) > 0) {
-                        foreach ($fchildren as $key => $chf) {
-                            $cfeatures->add($chf);
-                        }
-                    }
-                }
-            }
-        }
-
+        $items = array_filter(explode(',', $request->items));
         if (count($items) > 0) {
             $video->items = $items;
-        }
-        if (count($items_title) > 0) {
-            $video->items_title = $items_title;
-        }
-
-        if ($changeStatus) {
-            if ($video->status == 1) {
-                $video->status = 0;
-            }
         }
 
         $video->update();
@@ -779,7 +786,6 @@ class VideoController extends Controller
             $video = MongoVideo::find($request->video_id);
         } else {
             $video = new MongoVideo();
-            $video->random_id = str_random(10);
             $video->status = 0;
             $video->category_id = $category->id;
         }
@@ -804,8 +810,6 @@ class VideoController extends Controller
             $video->save();
         }
 
-        // dispatch(new DecreaseVideoSize($video))->onQueue('becharkhsite');
-
         return response()->json([
             'video_id' => $video->id,
         ]);
@@ -814,17 +818,8 @@ class VideoController extends Controller
     public function editAdmin($id)
     {
         $video = MongoVideo::find($id);
-        $categories = Cache::rememberForever('categories', function () {
-            return MongoCategory::where('status', 1)->get();
-        });
+        $categories = MongoCategory::where('status', 1)->get();
         $category = $categories->find($video->category_id);
-        $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
-        $allItems = MongoItem::where('status', 1)->get();
-        $videoFeatueItems = $video->getItems();
-        $citems = collect();
-        foreach ($cfeatures as $ffr) {
-            $citems = $citems->merge($allItems->where('feature_id', $ffr->id));
-        }
         $categories = $categories->map(function ($category) {
             return [
                 'id' => $category->id,
@@ -833,33 +828,27 @@ class VideoController extends Controller
                 'p_id' => $category->parent_id
             ];
         });
-        $cfeatures = $cfeatures->map(function ($f) {
-            return [
-                'id' => $f->id,
-                'p_id' => $f->parent_id,
-                'title' => $f->title,
-                'slug' => $f->slug,
-                'i_count' => $f->select_items_count
-            ];
-        });
-        $citems = $citems->map(function ($i) {
-            return [
-                'id' => $i->id,
-                'f_id' => $i->feature_id,
-                'p_id' => $i->parent_id,
-                'title' => $i->title,
-                'e_title' => $i->title_en,
-                'slug' => $i->slug,
-            ];
-        });
-        $videoFeatueItems = $videoFeatueItems->map(function ($fi) {
-            return [
-                'f_id' => $fi->feature_id,
-                'i_id' => $fi->id,
-            ];
-        })->values();
 
-        return view('video.admin.edit', compact('categories', 'video', 'category', 'cfeatures', 'citems', 'videoFeatueItems'));
+        $compactVars = [
+            'categories',
+            'video',
+            'category'
+        ];
+
+        if (isset($video->items)) {
+            $items = $video->items;
+            $itemIds = implode(',', $items);
+            $itemSelects = MongoItem::whereIn('_id', $items)
+                ->select('title')
+                ->get()
+                ->sortBy(function ($item) use ($items) {
+                    return array_search($item->_id, $items);
+                });
+            $compactVars[] = 'itemIds';
+            $compactVars[] = 'itemSelects';
+        }
+
+        return view('video.admin.edit', compact(...$compactVars));
     }
 
     public function updateAdmin(Request $request)
@@ -892,9 +881,9 @@ class VideoController extends Controller
 
         $video->category_id = $category->id;
         $video->title = $request->title;
-        $video->pr_link = $request->pr_link;
         $video->description = $request->description;
         $video->google_index = 1;
+        $video->show_in_item = (int)$request->show_in_item;
 
         if ($request->hasFile('image')) {
             $cover = $request->file('image');
@@ -945,155 +934,218 @@ class VideoController extends Controller
             }
         }
 
-        $changeStatus = 0;
+        // $changeStatus = 0;
+        // if ($category->status) {
+        //     $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
+        //     $allItems = MongoItem::where('status', 1)->get();
+        //     $citems = collect();
+        //     foreach ($cfeatures as $ffr) {
+        //         $citems = $citems->merge($allItems->where('feature_id', $ffr->id));
+        //     }
 
-        if ($category->status) {
-            $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
-            $allItems = MongoItem::where('status', 1)->get();
-            $citems = collect();
-            foreach ($cfeatures as $ffr) {
-                $citems = $citems->merge($allItems->where('feature_id', $ffr->id));
-            }
+        //     $items = [];
+        //     $items_title = [];
+        //     $last_items = $video->items ?? [];
 
-            $items = [];
-            $items_title = [];
-            $last_items = $video->items ?? [];
+        //     $cfeatures = $cfeatures->where('parent_id', null);
+        //     while (count($cfeatures) > 0) {
+        //         foreach ($cfeatures as $key => $fea) {
+        //             //new items for this fea
+        //             $new_i_inp_name = $fea->id . '-';
+        //             $nfiInputs = collect($request->all())->filter(function ($value, $key) use ($new_i_inp_name) {
+        //                 return Str::startsWith($key, $new_i_inp_name);
+        //             });
+        //             if ($fea->select_items_count == 1) {
+        //                 $newItemAdded = 0;
+        //                 // if new item added handle it here
+        //                 if (isset($nfiInputs)) {
+        //                     foreach ($nfiInputs as $nfi) {
+        //                         $nifid = explode('-', $nfi)[1];
+        //                         $nifTitle = explode('-', $nfi)[0];
+        //                         if ($request[$fea->slug] == $nifid) {
+        //                             $newItem = new MongoItem();
+        //                             $newItem->title = $nifTitle;
+        //                             $newItem->feature_id = $fea->id;
+        //                             $newItem->slug = $nifTitle . rand(100000, 999999);
+        //                             $newItem->status = 0;
+        //                             $newItem->save();
+        //                             $changeStatus = 1;
 
-            $cfeatures = $cfeatures->where('parent_id', null);
-            while (count($cfeatures) > 0) {
-                foreach ($cfeatures as $key => $fea) {
-                    //new items for this fea
-                    $new_i_inp_name = $fea->id . '-';
-                    $nfiInputs = collect($request->all())->filter(function ($value, $key) use ($new_i_inp_name) {
-                        return Str::startsWith($key, $new_i_inp_name);
-                    });
-                    if ($fea->select_items_count == 1) {
-                        $newItemAdded = 0;
-                        // if new item added handle it here
-                        if (isset($nfiInputs)) {
-                            foreach ($nfiInputs as $nfi) {
-                                $nifid = explode('-', $nfi)[1];
-                                $nifTitle = explode('-', $nfi)[0];
-                                if ($request[$fea->slug] == $nifid) {
-                                    $newItem = new MongoItem();
-                                    $newItem->title = $nifTitle;
-                                    $newItem->feature_id = $fea->id;
-                                    $newItem->slug = $nifTitle . rand(100000, 999999);
-                                    $newItem->status = 0;
-                                    $newItem->save();
-                                    $changeStatus = 1;
+        //                             $items[] = $newItem->id;
 
-                                    $items[] = $newItem->id;
+        //                             $newItemAdded = 1;
+        //                         }
+        //                     }
+        //                 }
+        //                 if ($newItemAdded == 0) {
+        //                     $it = $citems->where('id', $request[$fea->slug])->first();
+        //                     if (!in_array($request[$fea->slug], $last_items)) {
+        //                         if (isset($it)) {
+        //                             $iparent = $it->parent_id ?? null;
+        //                             $addItem = 0;
+        //                             if ($iparent != null) {
+        //                                 if (in_array($iparent, $items)) {
+        //                                     $addItem = 1;
+        //                                 }
+        //                             } else {
+        //                                 $addItem = 1;
+        //                             }
+        //                             if ($addItem) {
+        //                                 $items[] = $it->id;
+        //                                 $items_title[] = $it->full_title ?? $it->title;
+        //                             }
+        //                         }
+        //                     } else {
+        //                         $items[] = $it->id;
+        //                         $items_title[] = $it->full_title ?? $it->title;
+        //                     }
+        //                 }
+        //             } else {
+        //                 $fisArray = $request[$fea->slug];
+        //                 if ($fisArray) {
+        //                     $fisArrays = json_decode("[$fisArray]")[0];
+        //                     if (count($fisArrays) > $fea->select_items_count) {
+        //                         break;
+        //                     }
 
-                                    $newItemAdded = 1;
-                                }
-                            }
-                        }
-                        if ($newItemAdded == 0) {
-                            $it = $citems->where('id', $request[$fea->slug])->first();
-                            if (!in_array($request[$fea->slug], $last_items)) {
-                                if (isset($it)) {
-                                    $iparent = $it->parent_id ?? null;
-                                    $addItem = 0;
-                                    if ($iparent != null) {
-                                        if (in_array($iparent, $items)) {
-                                            $addItem = 1;
-                                        }
-                                    } else {
-                                        $addItem = 1;
-                                    }
-                                    if ($addItem) {
-                                        $items[] = $it->id;
-                                        $items_title[] = $it->full_title ?? $it->title;
-                                    }
-                                }
-                            } else {
-                                $items[] = $it->id;
-                                $items_title[] = $it->full_title ?? $it->title;
-                            }
-                        }
-                    } else {
-                        $fisArray = $request[$fea->slug];
-                        if ($fisArray) {
-                            $fisArrays = json_decode("[$fisArray]")[0];
-                            if (count($fisArrays) > $fea->select_items_count) {
-                                break;
-                            }
+        //                     if (isset($nfiInputs)) {
+        //                         foreach ($nfiInputs as $nfi) {
+        //                             $nifid = explode('-', $nfi)[1];
+        //                             $nifTitle = explode('-', $nfi)[0];
+        //                             $nikey = array_search($nifid, $fisArrays);
+        //                             if ($nikey !== false) {
+        //                                 $newItem = new MongoItem();
+        //                                 $newItem->title = $nifTitle;
+        //                                 $newItem->feature_id = $fea->id;
+        //                                 $newItem->slug = $nifTitle . rand(100000, 999999);
+        //                                 $newItem->status = 0;
+        //                                 $newItem->save();
+        //                                 $changeStatus = 1;
 
-                            if (isset($nfiInputs)) {
-                                foreach ($nfiInputs as $nfi) {
-                                    $nifid = explode('-', $nfi)[1];
-                                    $nifTitle = explode('-', $nfi)[0];
-                                    $nikey = array_search($nifid, $fisArrays);
-                                    if ($nikey !== false) {
-                                        $newItem = new MongoItem();
-                                        $newItem->title = $nifTitle;
-                                        $newItem->feature_id = $fea->id;
-                                        $newItem->slug = $nifTitle . rand(100000, 999999);
-                                        $newItem->status = 0;
-                                        $newItem->save();
-                                        $changeStatus = 1;
+        //                                 $items[] = $newItem->id;
+        //                             }
+        //                         }
+        //                     }
 
-                                        $items[] = $newItem->id;
-                                    }
-                                }
-                            }
+        //                     foreach ($fisArrays as $fi_id) {
+        //                         $it = $citems->where('id', $fi_id)->first();
+        //                         if (!in_array($fi_id, $last_items)) {
+        //                             if (isset($it)) {
+        //                                 $iparent = $it->parent_id ?? null;
+        //                                 $addItem = 0;
+        //                                 if ($iparent != null) {
+        //                                     if (in_array($iparent, $items)) {
+        //                                         $addItem = 1;
+        //                                     }
+        //                                 } else {
+        //                                     $addItem = 1;
+        //                                 }
+        //                                 if ($addItem) {
+        //                                     $items[] = $it->id;
+        //                                     $items_title[] = $it->full_title ?? $it->title;
+        //                                 }
+        //                             }
+        //                         } else {
+        //                             $items[] = $it->id;
+        //                             $items_title[] = $it->full_title ?? $it->title;
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             //now do it for children features
+        //             $cfeatures->forget($key);
+        //             $fchildren = $fea->children;
+        //             if (count($fchildren) > 0) {
+        //                 foreach ($fchildren as $key => $chf) {
+        //                     $cfeatures->add($chf);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // if (count($items) > 0) {
+        //     $video->items = $items;
+        // }
+        // if (count($items_title) > 0) {
+        //     $video->items_title = $items_title;
+        // }
+        // if ($changeStatus) {
+        //     if ($video->status == 1) {
+        //         $video->status = 0;
+        //     } elseif ($video->status == 3) {
+        //         $video->status = 2;
+        //     }
+        // }
 
-                            foreach ($fisArrays as $fi_id) {
-                                $it = $citems->where('id', $fi_id)->first();
-                                if (!in_array($fi_id, $last_items)) {
-                                    if (isset($it)) {
-                                        $iparent = $it->parent_id ?? null;
-                                        $addItem = 0;
-                                        if ($iparent != null) {
-                                            if (in_array($iparent, $items)) {
-                                                $addItem = 1;
-                                            }
-                                        } else {
-                                            $addItem = 1;
-                                        }
-                                        if ($addItem) {
-                                            $items[] = $it->id;
-                                            $items_title[] = $it->full_title ?? $it->title;
-                                        }
-                                    }
-                                } else {
-                                    $items[] = $it->id;
-                                    $items_title[] = $it->full_title ?? $it->title;
-                                }
-                            }
-                        }
-                    }
-                    //now do it for children features
-                    $cfeatures->forget($key);
-                    $fchildren = $fea->children;
-                    if (count($fchildren) > 0) {
-                        foreach ($fchildren as $key => $chf) {
-                            $cfeatures->add($chf);
-                        }
-                    }
-                }
-            }
-        }
-
+        $last_items2 = $video->items ?? [];
+        $items = array_filter(explode(',', $request->items));
+        $deleted_items = array_diff($last_items2, $items);
+        $unset_items = 0;
         if (count($items) > 0) {
             $video->items = $items;
-        }
-        if (count($items_title) > 0) {
-            $video->items_title = $items_title;
-        }
-
-        if ($changeStatus) {
-            if ($video->status == 1) {
-                $video->status = 0;
-            } elseif ($video->status == 3) {
-                $video->status = 2;
-            }
+        } else {
+            $unset_items = 1;
         }
 
         $video->update();
 
+        if ($unset_items) {
+            $video->unset('items');
+        }
+
+        if (count($items) > 0) {
+            $items_model = MongoItem::find($items);
+            foreach ($items_model as $itm) {
+                if ($request->show_in_item == 1) {
+                    $i_vids = $itm->videos ?? [];
+                    if (!in_array($video->id, $i_vids)) {
+                        $i_vids[] = $video->id;
+                        $itm->videos = $i_vids;
+                        $itm->update();
+                    }
+                } else {
+                    $i_vids = $itm->videos ?? [];
+                    if (($key = array_search($video->id, $i_vids)) !== false) {
+                        unset($i_vids[$key]);
+                        $itm->videos = array_values($i_vids);
+                        $itm->update();
+                    }
+                    if (empty($i_vids)) {
+                        $itm->unset('videos');
+                    }
+                }
+            }
+        }
+        $d_items_model = MongoItem::find($deleted_items);
+        foreach ($d_items_model as $di) {
+            $di_vids = $di->videos ?? [];
+            if (($key = array_search($video->id, $di_vids)) !== false) {
+                unset($di_vids[$key]);
+                $di->videos = array_values($di_vids);
+                $di->update();
+            }
+            if (empty($di_vids)) {
+                $di->unset('videos');
+            }
+        }
+
+
+        if ($video->compress != 1 && $request->compress == 1) {
+            dispatch(new DecreaseVideoSize($video))->onQueue('becharkhsite');
+        }
+
         return redirect()->route('admin.video.index')->with('success', 'ویدیو با موفقیت ویرایش شد');
+    }
+
+    private function createVideoSlug($cat_slug, $slug, $random = 1)
+    {
+        $slug2 = $cat_slug . '/' . $slug . '/' . $random;
+        $is_exist = MongoVideo::where('slug2', $slug2)->first();
+        if ($is_exist) {
+            return $this->createVideoSlug($cat_slug, $slug, $random + 1);
+        } else {
+            return $slug2;
+        }
     }
 
     function moveFtpFile($oldPath, $newFullPath)

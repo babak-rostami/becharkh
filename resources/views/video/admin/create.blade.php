@@ -8,7 +8,7 @@
 @section('style')
     <meta name="robots" content="noindex">
 
-    <link href="{{ asset('assets/css/video/create-edit.css') . '?lm=' . filemtime('assets/css/video/create-edit.css') }}"
+    <link href="{{ asset('mixassets/css/video/create.min.css') . '?lm=' . filemtime('mixassets/css/video/create.min.css') }}"
         rel="stylesheet" type="text/css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.1.0/resumable.min.js"></script>
 @endsection
@@ -69,14 +69,22 @@
 
         <input type="hidden" id="category_id" name="category_id">
 
-
-
         <div class="row bg-wht justify-content-center">
             <div class="col-12 col-md-10 text-right mt-2">
                 @include('modals.create.select-category', ['categories' => $categories])
             </div>
 
-            <div class="col-12 col-md-10 mb-4 text-right" id="features-box">
+            <div class="col-12 col-md-10 text-right mt-2">
+                @include('mainPart.form.search-and-select-for-create', [
+                    'has_cats' => 0,
+                    'category_input_name' => 'categories',
+                    'has_items' => 1,
+                    'item_input_name' => 'items',
+                    'has_questions' => 0,
+                    'question_input_name' => 'questions',
+                    'has_videos' => 0,
+                    'video_input_name' => 'video',
+                ])
             </div>
 
             <div class="col-12 col-md-4 text-center mt-3">
@@ -101,10 +109,6 @@
                     <span id="title-error"></span>
                     <span id="charCountMin-title" class="input-char-min"></span>
                     <span id="charCountMax-title" class="input-char-max"></span>
-                </div>
-                <div class="form-group">
-                    <label>لینک محصول</label>
-                    <input value="{{ old('pr_link') }}" type="text" class="form-control" id="pr_link" name="pr_link">
                 </div>
 
                 <div class="form-group">
@@ -146,19 +150,12 @@
         const next_cat_img = "{{ asset('files/other/images/next.png') }}";
         const back_cat_img = "{{ asset('files/other/images/back.png') }}";
         const all_cat_img = "{{ asset('files/other/images/all-cat.webp') }}";
-        const get_cat_fis_route = "{{ route('api.get.cat.fis') }}";
-        //end for select category modal
-        //for select features modal
-        const remove_item_img = "{{ asset('files/other/images/g-close.webp') }}";
-        const add_new_item_img = "{{ asset('files/other/images/b-add.png') }}";
         var cat_selected = null;
-        var citems = null;
-        var cfeatures = null;
         var feature_items = null;
-        //end for select features modal
+        //end for select category modal
     </script>
 
     <script type="text/javascript"
-        src="{{ asset('assets/js/video/admin/create.js') . '?lm=' . filemtime('assets/js/video/admin/create.js') }}">
+        src="{{ asset('mixassets/js/video/create.min.js') . '?lm=' . filemtime('mixassets/js/video/create.min.js') }}">
     </script>
 @endsection

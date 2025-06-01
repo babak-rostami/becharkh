@@ -335,19 +335,19 @@ function selectCatItemForSCFCE(category_id) {
         $("#category_id").val(c.id);
         $("#modcat-select-input").text(c.title);
         cat_selected = category_id;
-        $.ajax({
-            url: get_cat_fis_route,
-            method: "GET",
-            data: {
-                category_id: category_id
-            },
-            success: function(data) {
-                cfeatures = data.cfeatures;
-                citems = data.citems;
-                feature_items = null;
-                showChildrenFeaturesBoxs();
-            }
-        });
+        // $.ajax({
+        //     url: get_cat_fis_route,
+        //     method: "GET",
+        //     data: {
+        //         category_id: category_id
+        //     },
+        //     success: function(data) {
+        //         cfeatures = data.cfeatures;
+        //         citems = data.citems;
+        //         feature_items = null;
+        //         showChildrenFeaturesBoxs();
+        //     }
+        // });
     }
 }
 

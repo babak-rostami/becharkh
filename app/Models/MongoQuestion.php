@@ -102,16 +102,22 @@ class MongoQuestion extends Model
     }
 
 
-    public function video()
+    public function videoPath()
     {
-        $bv = $this->videos ?? null;
-        if ($bv == null) {
-            return null;
+        $videoPath = $this->video_path;
+        if (isset($videoPath)) {
+            $path = "https://dl.becharkh.com/user_files/";
+            return $path . $videoPath;
         } else {
-            $video = MongoVideo::find($bv);
-            return $video;
+            return null;
         }
     }
+
+    public function video()
+    {
+        return $this->belongsTo(MongoVideo::class, 'video_id');
+    }
+
     public function nacVideo()
     {
         return $this->belongsTo(MongoVideo::class, 'nac_videos');

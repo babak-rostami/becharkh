@@ -43,7 +43,7 @@
                                 src="{{ asset('files/other/images/profile.png') }}" @endif>{{ $comment->name }}
                 </div>
             @endif
-            {{-- <span class="ml-1">({{ jdate($comment->created_at)->ago() }})</span> --}}
+            <span class="cm-box-time">{{ jdate($comment->created_at)->ago() }}</span>
             @if (isset($comment->images))
                 <div class="text-center">
                     <img onclick="clickCommentImg('{{ $comment->id }}')" id="c-img-{{ $comment->id }}"
@@ -124,7 +124,7 @@
                 @endif
             </span>
 
-            @if (!isset($item) || $hasComments == 0)
+            @if ((!isset($item) || $hasComments == 0) && $firstItems == 1)
                 <hr>
                 @if (isset($comment->items_title))
                     @foreach ($comment->items_title as $title)
@@ -147,6 +147,7 @@
                         @if ($firstItems == 1) data-src="{{ asset('files/other/images/profile.png') }}"@else
                                 src="{{ asset('files/other/images/profile.png') }}" @endif>{{ $reply->name }}
                 @endif
+                <span class="cm-box-time">{{ jdate($reply->created_at)->ago() }}</span>
                 <p class="textarea-preline mt-2">{{ $reply->body }}</p>
                 <button type="button" class="comment-reply-btn"
                     onclick="openCCommentModal('replyto','{{ $comment->category_id }}','{{ $comment->id }}','{{ $reply->id }}')">پاسخ<img

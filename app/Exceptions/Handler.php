@@ -50,15 +50,17 @@ class Handler extends ExceptionHandler
             $statusCode = $exception->getResponse()->getStatusCode();
         }
 
-        $page_error = new PageError();
-        $page_error->url = request()->fullUrl();
-        $page_error->method = request()->method();
-        $page_error->message = $exception->getMessage();
-        $page_error->stack_trace = $exception->getTraceAsString();
-        $page_error->status_code = $statusCode;
-        $page_error->ip_address = request()->ip();
-        $page_error->user_agent =  request()->header('User-Agent');;
-        $page_error->save();
+        if ($statusCode !== 404 && $statusCode !== 429 && $statusCode !== 405) {
+            $page_error = new PageError();
+            $page_error->url = request()->fullUrl();
+            $page_error->method = request()->method();
+            $page_error->message = $exception->getMessage();
+            $page_error->stack_trace = $exception->getTraceAsString();
+            $page_error->status_code = $statusCode;
+            $page_error->ip_address = request()->ip();
+            $page_error->user_agent =  request()->header('User-Agent');;
+            $page_error->save();
+        }
 
         parent::report($exception);
     }

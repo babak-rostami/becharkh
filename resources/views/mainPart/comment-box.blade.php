@@ -358,23 +358,16 @@
                 </select>
             </div>
 
-            <input type="hidden" name="categories" id="categories" />
-            <input type="hidden" name="items" id="items" />
-            <input type="hidden" name="questions" id="questions" />
-            <div id="selected-categories"></div>
-            <div id="selected-items"></div>
-            <div id="selected-questions"></div>
-
-            <input id="cisearch_input" class="form-control my-2 w-100" type="text" placeholder="جستجو کنید...">
-            <div class="pt-2 pb-5" id="show-cisearch-result"></div>
-            <div class="p-4 text-center mt-2" id="show-cisearch-loading">
-                <img class="mt-2 lazy-load" data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
-                <span>در حال جستجو</span>
-            </div>
-            <div class="p-4 text-center mt-2" id="show-cisearch-empty">
-                <img class="mt-2 lazy-load" data-src="{{ $ftp_path . 'files/other/images/search.webp' }}">
-                <span>جستجو کنید...</span>
-            </div>
+            @include('mainPart.form.search-and-select-for-create', [
+                'has_cats' => 1,
+                'category_input_name' => 'categories',
+                'has_items' => 1,
+                'item_input_name' => 'items',
+                'has_questions' => 1,
+                'question_input_name' => 'questions',
+                'has_videos' => 0,
+                'video_input_name' => 'video',
+            ])
         @break
 
         @case('edit_affilate')
@@ -488,6 +481,9 @@
             'item_input_name' => 'pin_item_ids',
             'sasfItemIds' => $sasf_itemIds ?? null,
             'sasfItemSelects' => $sasf_itemSelects ?? null,
+            'video_input_name' => 'video',
+            'sasfVideoId' => $videoId ?? null,
+            'sasfVideoSelect' => $videoSelect ?? null,
         ])
 
         @include('modals.create.select-category', ['categories' => $categories])

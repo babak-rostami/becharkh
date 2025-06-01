@@ -70,9 +70,8 @@
                 <p class="mt-4">{{ $blog->short_description }}</p>
 
                 @if ($blogVideo)
-                    <iframe class="mb-3"
-                        src="{{ route('video.embedb.show', ['category_slug' => $blogVideo->category->slug, 'video_slug' => $blogVideo->slug, 'random_id' => $blogVideo->random_id]) }}"
-                        style="border:none;" width="100%" height="300px" allowfullscreen></iframe>
+                    <iframe class="mb-3" src="{{ route('video.embedb.show', $blogVideo->slug2) }}" style="border:none;"
+                        width="100%" height="300px" allowfullscreen></iframe>
                 @else
                     <img id="blog-img" class="radius-10 mb-3" alt="{{ $blog->title }}" title="{{ $blog->title }}"
                         src="{{ asset($blog->image()) }}">

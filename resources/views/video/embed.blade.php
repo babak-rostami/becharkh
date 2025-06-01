@@ -5,8 +5,7 @@
     <title>{{ $video->title }}</title>
     <meta name="title" content="{{ $video->title }}">
     <meta name="description" content="{{ $video->description }}">
-    <link rel="canonical"
-        href="{{ route('video.show', ['category_slug' => $video->category->slug, 'video_slug' => $video->slug, 'random_id' => $video->random_id]) }}" />
+    <link rel="canonical" href="{{ route('video.show', $video->slug2) }}" />
 
     @if ($video->google_index == 1)
         <meta name="robots" content="index, follow">
@@ -25,7 +24,8 @@
             object-fit: scale-down;
             border-radius: 8px;
         }
-        body{
+
+        body {
             overflow: hidden;
         }
     </style>

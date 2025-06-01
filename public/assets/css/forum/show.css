@@ -7,8 +7,8 @@
     border: 1px solid #e1e1e1;
 }
 
-#pquestion-title {
-    max-height: 164px;
+#pquestion-img {
+    max-height: 220px;
     object-fit: contain;
     border-radius: 10px;
 }

@@ -15,7 +15,7 @@
                         @endif
 
                         <a id="s-video-url" class="decor-none" @if (!$hv->google_index) rel="nofollow" @endif
-                            href="{{ route('video.show', ['category_slug' => $hv->category->slug, 'video_slug' => $hv->slug, 'random_id' => $hv->random_id]) }}">
+                            href="{{ route('video.show', $hv->slug2) }}">
                             <span id="s-video-title">{{ $hv->title }}</span>
                         </a>
                         @if (isset($hv->pr_link))
@@ -39,7 +39,7 @@
                     <div class="bslider-item video-slider-item radius-10">
                         <a id="slidera-{{ $hv->id }}" class="decor-none d-block" draggable="false"
                             @if (!$hv->google_index) rel="nofollow" @endif
-                            href="{{ route('video.show', ['category_slug' => $hv->category->slug, 'video_slug' => $hv->slug, 'random_id' => $hv->random_id]) }}">
+                            href="{{ route('video.show', $hv->slug2) }}">
                             <img draggable="false" class="s-videos-img lazy-load" data-src="{{ $hv->thumb() }}"
                                 alt="{{ $hv->title }}">
                             <span class="s-videos-title">{{ Str::limit($hv->title, 50) }}</span>

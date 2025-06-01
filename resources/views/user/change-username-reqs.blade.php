@@ -28,6 +28,7 @@
                         <th>ردیف</th>
                         <th>کاربر</th>
                         <th>نام کاربری جدید</th>
+                        <th>وجود داره؟</th>
                         <th>توضیحات</th>
                         <th>#</th>
                     </tr>
@@ -40,6 +41,7 @@
                                 <a href="{{ route('user.dashboard', $req->user->username) }}">{{ $req->user->username }}</a>
                             </td>
                             <td> {{ $req->username }}</td>
+                            <td>{{ $req->exist == 1 ? 'اره' : 'نه' }}</td>
                             <td>{{ $req->body }}</td>
                             <td>
                                 <a class="btn btn-danger" data-toggle="modal" data-dismiss="modal"

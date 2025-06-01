@@ -44,7 +44,6 @@
         }
     </script>
 @endsection
-{{-- "duration": "PT1M54S", --}}
 
 
 @section('content')
@@ -66,24 +65,15 @@
                 @endif
 
                 <h1 id="page-title">
-                    @if (isset($affilate))
-                        <a href="{{ route('product.show', $affilate->slug) }}">
-                            {{ $video->title }}
-                        </a>
-                    @else
-                        {{ $video->title }}
-                    @endif
+                    {{ $video->title }}
                 </h1>
 
                 <p id="video-desc">{{ $video->description }}</p>
 
                 @if (isset($affilate))
-                    {{-- <a id="affilb-link" rel="nofollow" target="_blank" class="text-decoration-none d-inline-block mb-4"
-                        href="{{ route('slink', $affilate->id) }}">
-                        <span class="font-600">مشاهده و خرید محصول</span>
-                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}"
-                            alt="shop">
-                    </a> --}}
+                    <a class="btn btn-dark w-100 mb-2" href="{{ route('product.show', $affilate->slug) }}">
+                        مشاهده محصول و نظرات
+                    </a>
                     @if (isset($affilate->link) || isset($affilate->product_link))
                         <button id="affilb-link-{{ $affilate->id }}" class="product-aflink"
                             onclick="jsurl('{{ route('slink', $affilate->id) }}',1)">
@@ -92,6 +82,10 @@
                                 alt="shop">
                         </button>
                     @endif
+                @elseif(isset($question))
+                    <a class="btn btn-dark w-100 mb-2" href="{{ route('question.show', $question->slug2) }}">
+                        مشاهده مطلب و نظرات
+                    </a>
                 @elseif(isset($video->pr_link))
                     <button id="affilb-link-{{ $video->id }}" class="product-aflink"
                         onclick="jsurl('{{ $video->pr_link }}',1)">
@@ -141,7 +135,7 @@
                         <div class="col-12 col-sm-6 related-post-hover mb-3">
                             <a class="text-decoration-none related-post-a"
                                 @if (!$v->google_index) rel="nofollow" @endif
-                                href="{{ route('video.show', ['category_slug' => $v->category->slug, 'video_slug' => $v->slug, 'random_id' => $v->random_id]) }}">
+                                href="{{ route('video.show', $v->slug2) }}">
                                 <div class="row">
                                     <div class="col-auto mx-1">
                                         <img class="s-blog-img lazy-load" data-src="{{ asset($v->thumb()) }}">

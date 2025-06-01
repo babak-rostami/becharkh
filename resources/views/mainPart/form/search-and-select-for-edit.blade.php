@@ -20,7 +20,8 @@
     </div>
 @endif
 @if (isset($question_input_name))
-    <input type="hidden" name="{{ $question_input_name }}" id="sasf-questions" value="{{ $sasfQuestionIds ?? null }}" />
+    <input type="hidden" name="{{ $question_input_name }}" id="sasf-questions"
+        value="{{ $sasfQuestionIds ?? null }}" />
     <div id="sasf-selected-questions">
         @if (isset($sasfQuestionSelects))
             @foreach ($sasfQuestionSelects as $qs)

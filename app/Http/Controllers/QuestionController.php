@@ -9,6 +9,7 @@ use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoQuestionAnswer;
+use App\Models\MongoVideo;
 use App\Models\Question;
 use App\Models\QuestionAnswerEditorImage;
 use App\Models\QuestionCategory;
@@ -201,6 +202,12 @@ class QuestionController extends Controller
                 if ($category->has_ads) {
                     $advertise_page = $item->withParentsAdvertiseUrl();
                 }
+                if (isset($item->videos)) {
+                    $ivids = MongoVideo::find($item->videos)->shuffle()->first();
+                    if (isset($ivids)) {
+                        $item_video = $ivids;
+                    }
+                }
             } else {
                 if ($category->has_comments) {
                     $comment_page = route('question.index', $category->slug) . '?s=1';
@@ -240,6 +247,9 @@ class QuestionController extends Controller
             // if (isset($features)) {
             //     $compactVars[] = 'features';
             // }
+            if (isset($item_video)) {
+                $compactVars[] = 'item_video';
+            }
             if (isset($affilate)) {
                 $compactVars[] = 'affilate';
             }
@@ -504,7 +514,14 @@ class QuestionController extends Controller
 
         $hot_pages = Cache::get('hot_pages');
 
+        if ($question->video) {
+            $video = $question->video;
+        } else {
+            $video = null;
+        }
+
         $compactVars = [
+            'video',
             'page_intro_title',
             'page_intro_desc',
             'hot_pages',
@@ -908,6 +925,12 @@ class QuestionController extends Controller
             $compactVars[] = 'sasf_itemIds';
             $compactVars[] = 'sasf_itemSelects';
         }
+        if (isset($question->video_id)) {
+            $videoSelect = MongoVideo::select('title')->find($question->video_id);
+            $videoId = $videoSelect->id;
+            $compactVars[] = 'videoId';
+            $compactVars[] = 'videoSelect';
+        }
 
         return view('question.admin.edit', compact(...$compactVars));
     }
@@ -920,6 +943,7 @@ class QuestionController extends Controller
         $question->google_index = $request->google_index;
         $question->title = $request->title;
 
+        $unset_vid = 0;
         $unset_sug_title = 0;
         $unset_just_this_page = 0;
         if (isset($request->sug_title)) {
@@ -957,7 +981,17 @@ class QuestionController extends Controller
                 $question->items_title = $items_title;
             }
         }
-
+        if (isset($request->video)) {
+            if ($question->video_id != $request->video) {
+                $video = MongoVideo::find($request->video);
+                $question->video_id = $video->id;
+                $question->video_path = $video->video_path;
+                $video->question_id = $question->id;
+                $video->update();
+            }
+        } else {
+            $unset_vid = 1;
+        }
         if ($changeStatus) {
             $question->status = 0;
         } else {
@@ -989,6 +1023,14 @@ class QuestionController extends Controller
         }
         if ($unset_just_this_page) {
             $question->unset('just_this_page');
+        }
+        if ($unset_vid) {
+            if (isset($question->video_id)) {
+                $video = MongoVideo::find($question->video_id);
+                $video->unset('question_id');
+            }
+            $question->unset('video_id');
+            $question->unset('video_path');
         }
 
         $this->updatePinQuestion($question, $request);

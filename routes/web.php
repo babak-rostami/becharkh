@@ -581,8 +581,8 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
         }
     });
 
-    Route::get('video/{category_slug}/{video_slug}/{random_id}', [VideoController::class, 'show'])->name('video.show');
-    Route::get('video/embed-b/{category_slug}/{video_slug}/{random_id}', [VideoController::class, 'showEmbedb'])->name('video.embedb.show');
+    Route::get('video/{category_slug}/{video_slug?}/{random_id?}', [VideoController::class, 'show'])->name('video.show');
+    Route::get('video/embed-b/{category_slug}/{video_slug?}/{random_id?}', [VideoController::class, 'showEmbedb'])->name('video.embedb.show');
     // Route::get('video/embed/{category_slug}/{video_slug}/{random_id}', [VideoController::class, 'showEmbed'])->name('video.embed.show');
 
     Route::get('shl/{short_link}', [ShortLinkController::class, 'show'])->name('shortlink.show');

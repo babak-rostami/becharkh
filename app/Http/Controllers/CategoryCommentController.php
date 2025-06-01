@@ -14,6 +14,7 @@ use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
+use App\Models\MongoVideo;
 use App\Models\RtablePageData;
 use App\Models\SurveyOption;
 use App\Notifications\SiteEvent;
@@ -235,6 +236,12 @@ class CategoryCommentController extends Controller
                         ->get()
                         ->shuffle();
                 }
+                if (isset($item->videos)) {
+                    $ivids = MongoVideo::find($item->videos)->shuffle()->first();
+                    if (isset($ivids)) {
+                        $item_video = $ivids;
+                    }
+                }
             } else {
                 if ($category->has_forums) {
                     $forum_page = route('question.index', $category->slug);
@@ -257,7 +264,6 @@ class CategoryCommentController extends Controller
             $affilateService = new AffilateService();
             $affilates = $affilateService->suggestsForPages($category, $item, 3);
 
-            // $features = $category->features();
             $currentQueryParams = $request->query();
 
             $comments = $this->sendCommentRefferIdToTop($request, $comments);
@@ -281,11 +287,14 @@ class CategoryCommentController extends Controller
                 'currentQueryParams',
                 'selected_items',
             ];
-            if (isset($pin_questions) && !$pin_questions->isEmpty()) {
-                $compactVars[] = 'pin_questions';
+            if (isset($item_video)) {
+                $compactVars[] = 'item_video';
             }
             if (isset($affilates)) {
                 $compactVars[] = 'affilates';
+            }
+            if (isset($pin_questions) && !$pin_questions->isEmpty()) {
+                $compactVars[] = 'pin_questions';
             }
             if (isset($forum_page)) {
                 $compactVars[] = 'forum_page';

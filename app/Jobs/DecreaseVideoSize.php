@@ -53,6 +53,7 @@ class DecreaseVideoSize implements ShouldQueue
 
         $lastPath = $video->video_path;
         $video->video_path = $newFilePathAndName;
+        $video->compress = 1;
         $video->update();
         $disk->delete($lastPath);
     }

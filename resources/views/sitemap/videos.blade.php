@@ -3,7 +3,7 @@
     @foreach ($videos as $video)
         <url>
             <loc>
-                {{ route('video.show', ['category_slug' => $video->category->slug, 'video_slug' => $video->slug, 'random_id' => $video->random_id]) }}
+                {{ route('video.show',  $video->slug2) }}
             </loc>
             <video:video>
                 <video:thumbnail_loc>{{ asset($video->image()) }}</video:thumbnail_loc>

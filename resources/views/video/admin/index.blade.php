@@ -55,9 +55,9 @@
                                 </td>
                                 <td>
                                     <a class="btn btn-warning" href="{{ route('admin.edit.video', $video->id) }}">ویرایش</a>
-                                    @if (isset($video->slug))
+                                    @if (isset($video->slug2))
                                         <a class="btn btn-primary"
-                                            href="{{ route('video.show', ['category_slug' => $video->category->slug, 'video_slug' => $video->slug, 'random_id' => $video->random_id]) }}">مشاهده</a>
+                                            href="{{ route('video.show', $video->slug2) }}">مشاهده</a>
                                     @endif
                                     <a class="btn btn-danger" href="" data-toggle="modal"
                                         data-target="#delete-{{ $video->id }}">حذف</a>

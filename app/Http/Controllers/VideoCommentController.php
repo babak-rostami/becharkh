@@ -86,7 +86,7 @@ class VideoCommentController extends Controller
         foreach ($admins as $admin) {
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' نظری در ویدیو ' . $video->title . ' ارسال کرد',
-                'route' => route('video.show', ['category_slug' => $video->category->slug, 'video_slug' => $video->slug, 'random_id' => $video->random_id]),
+                'route' => route('video.show', $video->slug2),
             ]));
         }
 
@@ -98,10 +98,10 @@ class VideoCommentController extends Controller
     private function NE($fromUser, $toUser, $video)
     {
         if (isset($toUser)) {
-            Mail::to($toUser->email)->send(new ReplyToCommentMail($video->title, $fromUser->username, route('video.show', ['category_slug' => $video->category->slug, 'video_slug' => $video->slug, 'random_id' => $video->random_id])));
+            Mail::to($toUser->email)->send(new ReplyToCommentMail($video->title, $fromUser->username, route('video.show',  $video->slug2)));
             //     $toUser->notify(new UserNotif([
             //         'action' => ' یک نظر جدید از ' . $fromUser->username . ' دریافت کرده اید ',
-            //         'route' => route('video.show', ['category_slug' => $video->category->slug, 'video_slug' => $video->slug, 'random_id' => $video->random_id]),
+            //         'route' => route('video.show',  $video->slug2),
             //         'userImage' => asset($fromUser->thumb()),
             //         'pageImage' => asset($video->thumb()),
             //         'pageType' => 'video',

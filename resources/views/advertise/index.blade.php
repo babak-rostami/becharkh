@@ -26,7 +26,7 @@
     @endif
 
     <meta name="robots" content="index, follow">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    {{-- <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" /> --}}
 @endsection
 
 @section('content')
@@ -53,18 +53,25 @@
             ])
 
             @if (isset($category))
-                @if (isset($item->images))
-                    <div id="item-gallery">
-                        @foreach ($item->images as $key => $img)
-                            <img id="item-img-{{ $key }}" class="my-3 lazy-load"
-                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
-                                data-src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
-                                alt="عکس {{ $item->full_title ?? $item->title }}">
-                        @endforeach
-                    </div>
+                @if (isset($item_video))
+                    <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
+                        src="{{ route('video.embedb.show', $item_video->slug2) }}" style="border:none;" width="100%"
+                        height="292px" allowfullscreen></iframe>
                 @else
-                    <img id="page-img" class="mb-3 mt-4" src="{{ asset($category->image()) }}"
-                        title="{{ $category->title }}" alt="{{ $category->title }}">
+                    @if (isset($item->images))
+                        <div id="item-gallery">
+                            @foreach ($item->images as $key => $img)
+                                <img id="item-img-{{ $key }}" class="my-3 lazy-load"
+                                    onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
+                                    data-src="{{ asset($item->image($key)) }}"
+                                    title="{{ $item->full_title ?? $item->title }}"
+                                    alt="عکس {{ $item->full_title ?? $item->title }}">
+                            @endforeach
+                        </div>
+                    @else
+                        <img id="page-img" class="mb-3 mt-4" src="{{ asset($category->image()) }}"
+                            title="{{ $category->title }}" alt="{{ $category->title }}">
+                    @endif
                 @endif
             @else
                 <img id="page-img" class="mb-3 mt-4" src="{{ $ftp_path . 'files/other/images/shop.jpg' }}"
@@ -210,12 +217,12 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    {{-- <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> --}}
     <script>
-        var page = 'advertise';
-        const yplayer = new Plyr('#affilb-video');
+        let page = 'advertise';
+        // const yplayer = new Plyr('#affilb-video');
         const index_route = "{{ route('ads.index') }}";
-        var csrf_t = "{{ csrf_token() }}";
+        let csrf_t = "{{ csrf_token() }}";
         let follow_item_route = "{{ route('follow.item') }}";
         let let_me_know_route = "{{ route('let.me.know') }}";
 

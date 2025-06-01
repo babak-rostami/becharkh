@@ -252,13 +252,13 @@
                 </div>
             </div>
 
-            <div class="row">
+            {{-- <div class="row">
                 @if (isset($item) && isset($item->crl_price_url))
                     @include('item.price-box', [
                         'item' => $item,
                     ])
                 @endif
-            </div>
+            </div> --}}
         </div>
 
 

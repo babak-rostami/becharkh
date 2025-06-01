@@ -5,11 +5,11 @@
                 @if ($key == 0)
                     <div class="col-12 text-right mb-3">
                         <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
-                            src="{{ route('video.embedb.show', ['category_slug' => $hv->category->slug, 'video_slug' => $hv->slug, 'random_id' => $hv->random_id]) }}"
-                            style="border:none;" width="100%" height="292px" allowfullscreen></iframe>
+                            src="{{ route('video.embedb.show', $hv->slug2) }}" style="border:none;" width="100%"
+                            height="292px" allowfullscreen></iframe>
 
                         <a id="s-video-url" class="decor-none" @if (!$hv->google_index) rel="nofollow" @endif
-                            href="{{ route('video.show', ['category_slug' => $hv->category->slug, 'video_slug' => $hv->slug, 'random_id' => $hv->random_id]) }}">
+                            href="{{ route('video.show', $hv->slug2) }}">
                             <span id="s-video-title">{{ $hv->title }}</span>
                         </a>
                         <?php $hva = $hv->advertise(); ?>
@@ -84,7 +84,7 @@
                     @if ($key > 0)
                         <div class="swiper-slide radius-10">
                             <a class="decor-none" @if (!$hv->google_index) rel="nofollow" @endif
-                                href="{{ route('video.show', ['category_slug' => $hv->category->slug, 'video_slug' => $hv->slug, 'random_id' => $hv->random_id]) }}">
+                                href="{{ route('video.show', $hv->slug2) }}">
                                 <img class="s-videos-img lazy-load" data-src="{{ $hv->thumb() }}"
                                     alt="{{ $hv->title }}">
                                 <span class="sug-video-vid-span">ویدیو</span>

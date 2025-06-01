@@ -169,7 +169,14 @@ class AffilateController extends Controller
 
         $affilates = $affilates->values();
 
+        if ($product->video) {
+            $video = $product->video;
+        } else {
+            $video = null;
+        }
+
         $compactVars = [
+            'video',
             'user',
             'product',
             'page',
@@ -432,6 +439,10 @@ class AffilateController extends Controller
             $affilate->unset('questions');
         }
         if ($unset_vid) {
+            if (isset($affilate->video_id)) {
+                $video = MongoVideo::find($affilate->video_id);
+                $video->unset('question_id');
+            }
             $affilate->unset('video_id');
             $affilate->unset('video_path');
         }
