@@ -26,12 +26,12 @@ class EditorImageController extends Controller
             $filename =  time() . '-' . $image_name . '.webp';
             $resizedImage = Image::make($file)->encode('webp', 90);
 
-            if ($page == 'comment' || $page == 'admin_edit_comment' || $page == 'admin_create_comment') {
+            if (
+                $page == 'comment' || $page == 'admin_edit_comment' || $page == 'admin_create_comment'
+                || $page == 'show_question' || $page == 'admin_edit_qanswer' || $page == 'admin_qanswers'
+            ) {
                 $image = new CategoryCommentEditorImage();
                 $path = 'comeditor/images/1/';
-            } else if ($page == 'show_question' || $page == 'admin_edit_qanswer' || $page == 'admin_qanswers') {
-                $image = new QuestionAnswerEditorImage();
-                $path = 'answers/images/1/';
             } else if ($page == 'edit_question_admin' || $page == 'create_question_admin' || $page == 'edit_question' || $page == 'create_question') {
                 $image = new QuestionEditorImage();
                 $path = 'question/images/1/';

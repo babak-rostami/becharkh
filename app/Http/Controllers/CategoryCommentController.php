@@ -6,6 +6,7 @@ use App\Jobs\Item\ChangeItemPageCount;
 use App\Jobs\pages\UpdateHotPages;
 use App\Jobs\SendEmailCategoryComment;
 use App\Jobs\SendUserNotification;
+use App\Jobs\User\UpdateUserFollowItem;
 use App\Models\Admin;
 use App\Models\CategoryCommentEditorImage;
 use App\Models\MongoCategory;
@@ -541,6 +542,10 @@ class CategoryCommentController extends Controller
             $this->sendUserNotification('ccomment', $user, $comment);
         }
 
+        if (isset($comment->items)) {
+            dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+        }
+
         return redirect()->route('admin.category.comment.index')->with('success', 'نظر با موفقیت ثبت شد');
     }
 
@@ -753,10 +758,6 @@ class CategoryCommentController extends Controller
 
         $comment->save();
 
-        // if (!isset($request->parent_id)) {
-        //     $editor_service->updateImageCommentId($editor_images, $comment->id);
-        // }
-
         $this->updateHotItems();
 
         $admin = Admin::first();
@@ -780,6 +781,10 @@ class CategoryCommentController extends Controller
                 'action' => $user->username . ' نظری در صفحه ' . $commentPageTitle . ' ارسال کرد',
                 'route' => $commentPage,
             ]));
+        }
+
+        if (isset($comment->items)) {
+            dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
         }
 
         return back()->with('success', 'نظر شما با موفقیت ثبت شد');

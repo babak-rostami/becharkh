@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\Question\ChangeHotAnswer;
+use App\Models\MongoCategoryComment;
+use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoQuestionAnswer;
 use App\Models\MongoQuestionAnswerLike;
 use App\Models\QuestionAnswer;
@@ -15,7 +17,7 @@ class QuestionAnswerLikeController extends Controller
 
     public function store(Request $request)
     {
-        $questionAnswer = MongoQuestionAnswer::find($request->question_answer_id);
+        $questionAnswer = MongoCategoryComment::find($request->question_answer_id);
         $like_count = $questionAnswer->like_count ?? 0;
         $unlike_count = $questionAnswer->unlike_count ?? 0;
         if (!$questionAnswer) {
@@ -60,7 +62,7 @@ class QuestionAnswerLikeController extends Controller
 
     private function addLikeOrUnlike($request, $status)
     {
-        $like = MongoQuestionAnswerLike::where('answer_id', $request->question_answer_id)->where('ip', $request->ip())->first();
+        $like = MongoCategoryCommentLike::where('comment_id', $request->question_answer_id)->where('ip', $request->ip())->first();
         if (isset($like)) {
             if ($like->like_or_unlike == $status) {
                 $like->delete();
@@ -71,8 +73,8 @@ class QuestionAnswerLikeController extends Controller
                 return 2;
             }
         } else {
-            $like = new MongoQuestionAnswerLike();
-            $like->answer_id = $request->question_answer_id;
+            $like = new MongoCategoryCommentLike();
+            $like->comment_id = $request->question_answer_id;
             $like->ip = $request->ip();
             $like->like_or_unlike = $status;
             $like->save();

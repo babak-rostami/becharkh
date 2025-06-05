@@ -6,8 +6,11 @@ use App\Jobs\MissionComplete;
 use App\Jobs\Question\ChangeHotAnswer;
 use App\Jobs\Question\SendEmailQuestionAnswer;
 use App\Jobs\SendUserNotification;
+use App\Jobs\User\UpdateUserFollowItem;
 use App\Mail\ReplyToCommentMail;
 use App\Models\Admin;
+use App\Models\MongoCategoryComment;
+use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoQuestion;
 use App\Models\MongoQuestionAnswer;
 use App\Models\MongoQuestionAnswerLike;
@@ -34,7 +37,8 @@ class QuestionAnswerController extends Controller
             abort(403);
         }
 
-        $answer = new MongoQuestionAnswer();
+        // $answer = new MongoCategoryComment();
+        $answer = new MongoCategoryComment();
         $question = MongoQuestion::find($request->question_id);
         $questionUser = $question->user;
 
@@ -46,7 +50,7 @@ class QuestionAnswerController extends Controller
             if (isset($request->reply_id)) {
                 $answer->reply_id = $request->reply_id;
             }
-            $reply = MongoQuestionAnswer::find($request->parent_id);
+            $reply = MongoCategoryComment::find($request->parent_id);
             //NE to reply user if reply user is not $user
             if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
                 $this->NE($user, $reply->user, $question);
@@ -83,12 +87,9 @@ class QuestionAnswerController extends Controller
             ]));
         }
 
-        //mission complete
-        // MissionComplete::dispatchSync($user, 1);
-
-        // if (!$question->featureValuesHasItem->isEmpty()) {
-        //     $user->getPoint(3, $question->category_id, $question->featureValuesHasItem->last()->item_id);
-        // }
+        if (isset($question->items)) {
+            dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+        }
 
         return back()->with('success', 'پاسخ شما با موفقیت ثبت شد');
     }
@@ -109,7 +110,7 @@ class QuestionAnswerController extends Controller
         if (!isset($question)) {
             return response()->json(['error' => 'سوال پیدا نشد.'], 404);
         }
-        $answer = new MongoQuestionAnswer();
+        $answer = new MongoCategoryComment();
         $questionUser = $question->user;
 
         $user = auth('user')->user();
@@ -119,7 +120,7 @@ class QuestionAnswerController extends Controller
             if (isset($request->reply_id)) {
                 $answer->reply_id = $request->reply_id;
             }
-            $reply = MongoQuestionAnswer::find($request->parent_id);
+            $reply = MongoCategoryComment::find($request->parent_id);
             if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
                 $this->NE($user, $reply->user, $question);
             }
@@ -186,7 +187,7 @@ class QuestionAnswerController extends Controller
             'body.required' => 'پاسخ خود را وارد کنید'
         ]);
 
-        $answer = new MongoQuestionAnswer();
+        $answer = new MongoCategoryComment();
         $question = MongoQuestion::find($request->question_id);
         $questionUser = $question->user;
 
@@ -199,7 +200,7 @@ class QuestionAnswerController extends Controller
             if (isset($request->reply_id)) {
                 $answer->reply_id = $request->reply_id;
             }
-            $reply = MongoQuestionAnswer::find($request->parent_id);
+            $reply = MongoCategoryComment::find($request->parent_id);
             //NE to reply user if reply user is not $user
             if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
                 $this->NE($user, $reply->user, $question);
@@ -236,19 +237,23 @@ class QuestionAnswerController extends Controller
             }
         }
 
+        if (isset($question->items)) {
+            dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+        }
+
         return back()->with('success', 'پاسخ با موفقیت ثبت شد');
     }
 
     public function questionAnswersAdmin($question_id)
     {
         $question = MongoQuestion::find($question_id);
-        $answers = MongoQuestionAnswer::where('question_id', $question_id)->orderBy('created_at', 'desc')->get();
+        $answers = MongoCategoryComment::where('question_id', $question_id)->orderBy('created_at', 'desc')->get();
         return view('question.admin.answers', compact('answers', 'question'));
     }
 
     public function questionAnswerEditAdmin($answer_id)
     {
-        $answer = MongoQuestionAnswer::find($answer_id);
+        $answer = MongoCategoryComment::find($answer_id);
         $editor_service = new CommentEditorService();
         $editor_service->changeTempEditorLazyImg($answer);
         return view('question.admin.answer_edit', compact('answer'));
@@ -256,7 +261,7 @@ class QuestionAnswerController extends Controller
 
     public function questionAnswerUpdateAdmin(Request $request, $answer_id)
     {
-        $answer = MongoQuestionAnswer::find($answer_id);
+        $answer = MongoCategoryComment::find($answer_id);
         if (isset($answer->parent_id)) {
             $answer->body = $request->body;
         } else {
@@ -270,7 +275,7 @@ class QuestionAnswerController extends Controller
 
     public function questionAnswerDestroyAdmin($answer_id)
     {
-        $answer = MongoQuestionAnswer::find($answer_id);
+        $answer = MongoCategoryComment::find($answer_id);
         $question = $answer->question;
         $answer_images = QuestionAnswerEditorImage::where('comment_id', $answer_id)->get();
         if (!$answer_images->isEmpty()) {
@@ -280,7 +285,7 @@ class QuestionAnswerController extends Controller
                 $ci->delete();
             }
         }
-        $likes = MongoQuestionAnswerLike::where('answer_id', $answer->id)->get();
+        $likes = MongoCategoryCommentLike::where('comment_id', $answer->id)->get();
         foreach ($likes as $like) {
             $like->delete();
         }

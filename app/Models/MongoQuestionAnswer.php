@@ -25,7 +25,7 @@ class MongoQuestionAnswer extends Model
 
     public function replies()
     {
-        return $this->hasMany(MongoQuestionAnswer::class, 'parent_id');
+        return $this->hasMany(MongoCategoryComment::class, 'parent_id');
     }
 
     public function question()
@@ -35,11 +35,11 @@ class MongoQuestionAnswer extends Model
 
     public function parent()
     {
-        return $this->belongsTo(MongoQuestionAnswer::class, 'parent_id');
+        return $this->belongsTo(MongoCategoryComment::class, 'parent_id');
     }
 
     public function parentReply()
     {
-        return $this->belongsTo(MongoQuestionAnswer::class, 'reply_id');
+        return $this->belongsTo(MongoCategoryComment::class, 'reply_id');
     }
 }

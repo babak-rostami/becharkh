@@ -11,6 +11,7 @@ use App\Models\Blog;
 use App\Models\BlogComment;
 use App\Models\BlogVideo2;
 use App\Models\CategoryComment;
+use App\Models\CategoryCommentEditorImage;
 use App\Models\CategoryFeature;
 use App\Models\CategoryFeatureItem;
 use App\Models\Chat;
@@ -43,6 +44,7 @@ use App\Models\Ostan;
 use App\Models\ProductComment;
 use App\Models\Question;
 use App\Models\QuestionAnswer;
+use App\Models\QuestionAnswerEditorImage;
 use App\Models\Shahr;
 use App\Models\SiteCategory;
 use App\Models\User;
@@ -125,7 +127,106 @@ class MigrateToMongoController extends Controller
 
         // $this->updateItemPriority();
 
+        // $this->updateUserFollowItem();
+
+        // $this->convertAnswerToCcomment();
+
         dd("done");
+    }
+
+    private function convertAnswerToCcomment()
+    {
+        // $qca = MongoCategoryComment::where('question_id', '!=', null)->get();
+        // foreach ($qca as $qa) {
+        //     foreach ($qa->likes as $like) {
+        //         $like->delete();
+        //     }
+        //     foreach ($qa->unlikes as $unlike) {
+        //         $unlike->delete();
+        //     }
+        //     $qa->delete();
+        // }
+        $answers = MongoQuestionAnswer::all();
+        foreach ($answers as $answer) {
+            $ccomment = new MongoCategoryComment();
+            if (isset($answer->body)) {
+                $ccomment->body = $answer->body;
+            }
+            if (isset($answer->editor)) {
+                $ccomment->editor = $answer->editor;
+            }
+            $ccomment->question_id = $answer->question_id;
+            $ccomment->user_id = $answer->user_id;
+            if (isset($answer->parent_id)) {
+                $ccomment->parent_id = $answer->parent_id;
+            }
+            if (isset($answer->reply_id)) {
+                $ccomment->reply_id = $answer->reply_id;
+            }
+            if (isset($answer->like_count)) {
+                $ccomment->like_count = $answer->like_count;
+            }
+            if (isset($answer->unlike_count)) {
+                $ccomment->unlike_count = $answer->unlike_count;
+            }
+            $ccomment->created_at = $answer->created_at;
+            $ccomment->updated_at = $answer->updated_at;
+            $ccomment->save();
+
+            $likes = MongoQuestionAnswerLike::where('answer_id', $answer->id)->get();
+            foreach ($likes as $like) {
+                $new_like = new MongoCategoryCommentLike();
+                $new_like->comment_id = $ccomment->id;
+                $new_like->ip = $like->ip;
+                $new_like->like_or_unlike = $like->like_or_unlike;
+                $new_like->save();
+            }
+
+            $editor_images = QuestionAnswerEditorImage::where('comment_id', $answer->id)->get();
+            foreach ($editor_images as $ei) {
+                $new_ed = new CategoryCommentEditorImage();
+                $new_ed->path = $ei->path;
+                $new_ed->comment_id = $answer->id;
+                $new_ed->save();
+            }
+        }
+    }
+
+    private function updateUserFollowItem()
+    {
+        $comments = MongoCategoryComment::orderBy('created_at', 'desc')
+            ->where('items', '!=', null)
+            ->where('user_id', '!=', null)
+            ->get();
+        foreach ($comments as $cm) {
+            $items = $cm->items ?? [];
+            if (!empty($items)) {
+                $item_id = $items[0];
+                if (!MongoFollowItem::where('user_id', $cm->user_id)->where('item_id', $item_id)->exists()) {
+                    $ufi = new MongoFollowItem();
+                    $ufi->user_id = $cm->user_id;
+                    $ufi->item_id = $item_id;
+                    $ufi->save();
+                }
+            }
+        }
+        $answers = MongoCategoryComment::where('parent_id', null)->get();
+        foreach ($answers as $ans) {
+            $question = $ans->question;
+            if (!$question) {
+                return;
+            }
+            $items = $question->items ?? [];
+            if (!empty($items)) {
+                $item_id = $items[0];
+                if (!MongoFollowItem::where('user_id', $ans->user_id)->where('item_id', $item_id)->exists()) {
+                    $ufi = new MongoFollowItem();
+                    $ufi->user_id = $ans->user_id;
+                    $ufi->item_id = $item_id;
+                    $ufi->save();
+                }
+            }
+        }
     }
 
     private function generateIphoneSimilarSearch($model)
@@ -524,12 +625,15 @@ class MigrateToMongoController extends Controller
             ]);
         });
         //////////////////////question answers
-        MongoQuestionAnswer::raw(function ($collection) {
+        MongoCategoryComment::raw(function ($collection) {
             $collection->createIndex([
+                'created_at' => -1,
+                'parent_id' => 1,
                 'question_id' => 1,
-                'reply_to_id' => 1,
-                'created_at' => -1
             ]);
+        });
+        MongoCategoryComment::raw(function ($collection) {
+            $collection->createIndex(['question_id' => 1]);
         });
         //////////////////////question likes
         MongoQuestionLike::raw(function ($collection) {
@@ -539,9 +643,9 @@ class MigrateToMongoController extends Controller
             ]);
         });
         //////////////////////question answer likes
-        MongoQuestionAnswerLike::raw(function ($collection) {
+        MongoCategoryCommentLike::raw(function ($collection) {
             $collection->createIndex([
-                'answer_id' => 1,
+                'comment_id' => 1,
                 'ip' => 1
             ]);
         });
@@ -1369,12 +1473,12 @@ class MigrateToMongoController extends Controller
                 $user_id = $u->id;
             }
             $qId = MongoQuestion::where('last_id', $answer->question_id)->first();
-            $newAnswer = new MongoQuestionAnswer();
+            $newAnswer = new MongoCategoryComment();
             $newAnswer->last_id = $answer->id;
             $newAnswer->question_id = $qId->id;
             $newAnswer->user_id = $user_id;
             if ($answer->reply_to_id) {
-                $reply = MongoQuestionAnswer::where('last_id', $answer->reply_to_id)->first();
+                $reply = MongoCategoryComment::where('last_id', $answer->reply_to_id)->first();
                 if (isset($reply)) {
                     $newAnswer->reply_to_id = $reply->id;
                 }
@@ -1392,8 +1496,8 @@ class MigrateToMongoController extends Controller
             $newAnswer->updated_at = $answer->updated_at;
             $newAnswer->save();
             foreach ($answer->lukes as $clu) {
-                $lu = new MongoQuestionAnswerLike();
-                $lu->answer_id = $newAnswer->id;
+                $lu = new MongoCategoryCommentLike();
+                $lu->comment_id = $newAnswer->id;
                 if ($clu->ip) {
                     $lu->ip = $clu->ip;
                 }

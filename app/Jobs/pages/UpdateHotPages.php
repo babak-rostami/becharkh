@@ -72,8 +72,9 @@ class UpdateHotPages implements ShouldQueue
             }
             //questions take 25
             $processed_question_ids = [];
-            $question_commetns = MongoQuestionAnswer::orderBy('created_at', 'desc')
+            $question_commetns = MongoCategoryComment::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')
+                ->where('question_id', '!=', null)
                 ->take(250)
                 ->get();
             $unique_question_ids = [];

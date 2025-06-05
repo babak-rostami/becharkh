@@ -5,9 +5,7 @@ namespace App\Services\Comment;
 use App\Models\AffilateEditorImage;
 use App\Models\BlogEditorImage;
 use App\Models\CategoryCommentEditorImage;
-use App\Models\CommentEditorImage;
 use App\Models\ProductCommentEditorImage;
-use App\Models\QuestionAnswerEditorImage;
 use App\Models\QuestionEditorImage;
 use DOMDocument;
 use Illuminate\Support\Facades\Storage;
@@ -55,10 +53,11 @@ class CommentEditorService
             }
         }
         $images = collect();
-        if ($page == 'comment' || $page == 'admin_edit_comment' || $page == 'admin_create_comment') {
+        if (
+            $page == 'comment' || $page == 'admin_edit_comment' || $page == 'admin_create_comment'
+            || $page == 'show_question' || $page == 'admin_edit_qanswer' || $page == "admin_qanswers"
+        ) {
             $images = CategoryCommentEditorImage::where('comment_id', null)->whereIn('path', $imagePaths)->get();
-        } elseif ($page == 'show_question' || $page == 'admin_edit_qanswer' || $page == "admin_qanswers") {
-            $images = QuestionAnswerEditorImage::where('comment_id', null)->whereIn('path', $imagePaths)->get();
         } elseif ($page == 'create_question_admin' || $page == 'create_question') {
             $images = QuestionEditorImage::where('comment_id', null)->whereIn('path', $imagePaths)->get();
         } elseif ($page == 'create_blog') {
@@ -116,7 +115,10 @@ class CommentEditorService
             $image_src = $imageTag->getAttribute('src');
             if (isset(explode('https://dl.becharkh.com/user_files/', $image_src)[1])) {
                 $image_full_path = explode('https://dl.becharkh.com/user_files/', $image_src)[1];
-                if ($page == 'comment' || $page == 'admin_edit_comment') {
+                if (
+                    $page == 'comment' || $page == 'admin_edit_comment'
+                    || $page == 'show_question' || $page == 'admin_edit_qanswer' || $page == 'admin_qanswers'
+                ) {
                     $image = CategoryCommentEditorImage::where('comment_id', null)->where('path', $image_full_path)->first();
                     if ($image) {
                         $image->comment_id = $commentObject->id;
@@ -124,17 +126,6 @@ class CommentEditorService
                         $newCommentImages->add($image);
                     }
                     $oldImage = CategoryCommentEditorImage::where('comment_id', $commentObject->id)->where('path', $image_full_path)->first();
-                    if ($oldImage) {
-                        $newCommentImages->add($oldImage);
-                    }
-                } elseif ($page == 'show_question' || $page == 'admin_edit_qanswer' || $page == 'admin_qanswers') {
-                    $image = QuestionAnswerEditorImage::where('comment_id', null)->where('path', $image_full_path)->first();
-                    if ($image) {
-                        $image->comment_id = $commentObject->id;
-                        $image->update();
-                        $newCommentImages->add($image);
-                    }
-                    $oldImage = QuestionAnswerEditorImage::where('comment_id', $commentObject->id)->where('path', $image_full_path)->first();
                     if ($oldImage) {
                         $newCommentImages->add($oldImage);
                     }
@@ -185,14 +176,11 @@ class CommentEditorService
                 }
             }
         }
-        if ($page == 'comment' || $page == 'admin_edit_comment') {
+        if (
+            $page == 'comment' || $page == 'admin_edit_comment'
+            || $page == 'show_question' || $page == 'admin_edit_qanswer' || $page == 'admin_qanswers'
+        ) {
             $deletedImages = CategoryCommentEditorImage::where('comment_id', $commentObject->id)
-                ->whereNotIn('_id', $newCommentImages->pluck('id'))->get();
-            foreach ($deletedImages as  $dimage) {
-                $dimage->delete();
-            }
-        } elseif ($page == 'show_question' || $page == 'admin_edit_qanswer' || $page == 'admin_qanswers') {
-            $deletedImages = QuestionAnswerEditorImage::where('comment_id', $commentObject->id)
                 ->whereNotIn('_id', $newCommentImages->pluck('id'))->get();
             foreach ($deletedImages as  $dimage) {
                 $dimage->delete();

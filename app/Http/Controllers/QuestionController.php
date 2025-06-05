@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\Item\ChangeItemPageCount;
 use App\Models\Admin;
 use App\Models\MongoCategory;
+use App\Models\MongoCategoryComment;
 use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
@@ -492,7 +493,7 @@ class QuestionController extends Controller
         $page_intro_title = null;
         $page_intro_desc = null;
 
-        $lastAnswers = MongoQuestionAnswer::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
+        $lastAnswers = MongoCategoryComment::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
         $firstComs = $lastAnswers->take(1);
         $topLikes = $lastAnswers->sortByDesc('like_count')->take(3);
         $acceptedAnswer = $topLikes->first();

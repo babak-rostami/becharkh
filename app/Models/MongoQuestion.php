@@ -85,7 +85,7 @@ class MongoQuestion extends Model
 
     public function answers()
     {
-        return $this->hasMany(MongoQuestionAnswer::class, 'question_id')->whereNull('parent_id');
+        return $this->hasMany(MongoCategoryComment::class, 'question_id')->whereNull('parent_id');
     }
 
     public function likes()

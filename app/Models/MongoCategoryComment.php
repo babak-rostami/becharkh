@@ -53,6 +53,11 @@ class MongoCategoryComment extends Model
         return $this->hasMany(MongoCategoryComment::class, 'parent_id', '_id')->with('user');
     }
 
+    public function question()
+    {
+        return $this->belongsTo(MongoQuestion::class, 'question_id');
+    }
+
     public function parent()
     {
         return $this->belongsTo(MongoCategoryComment::class, 'parent_id');
@@ -60,7 +65,7 @@ class MongoCategoryComment extends Model
 
     public function parentReply()
     {
-        return $this->belongsTo(MongoCategoryComment::class, 'reply_to_id');
+        return $this->belongsTo(MongoCategoryComment::class, 'reply_id');
     }
 
     public function likes()

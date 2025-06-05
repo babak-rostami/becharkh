@@ -13,7 +13,7 @@ class UserNotificationController extends Controller
     {
         if ($forr == 'ccomment') {
             $notif = new UserNotification();
-            if (isset($new_object->reply_to_id)) {
+            if (isset($new_object->reply_id)) {
                 $parent_comment = $new_object->parentReply;
             } else {
                 $parent_comment = $new_object->parent;
