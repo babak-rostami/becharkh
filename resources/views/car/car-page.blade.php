@@ -325,7 +325,7 @@
 
                                             <input type="hidden" name="model_id" value="{{ $model->id }}">
                                             <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                                            <input type="hidden" name="reply_to_id" value="{{ $reply->id }}">
+                                            <input type="hidden" name="reply_id" value="{{ $reply->id }}">
                                             <input type="hidden" name="trim_id" value="{{ request()->trims }}">
                                             <input type="hidden" name="year_id" value="{{ request()->years }}">
 

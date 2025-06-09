@@ -3,6 +3,11 @@
     padding-right: 2px;
 }
 
+.cm-box-time {
+    float: left;
+    font-size: 11px;
+}
+
 .sq-box {
     border: 1px solid #e1e1e1;
 }
@@ -118,11 +123,23 @@
     display: none;
 }
 
+.rep-name {
+    font-size: 14px;
+    background-color: #fff;
+    padding: 0 4px;
+    border-radius: 8px;
+    border: 1px solid #dfdfdf;
+}
+
 .answer-box {
-    border: 2px solid #dee2e6;
-    background-color: #f9f9f9;
+    border: 1px solid #dee2e6;
+    background-color: #fdfdfd;
     line-height: 32px;
     word-wrap: break-word;
+    border-radius: 8px;
+}
+.answer-box p {
+    font-size: 18px;
 }
 
 .answer-box h2,

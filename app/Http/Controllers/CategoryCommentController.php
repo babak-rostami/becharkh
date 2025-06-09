@@ -492,7 +492,11 @@ class CategoryCommentController extends Controller
             $parent_comment = MongoCategoryComment::find($request->parent_id);
             $comment->category_id = $parent_comment->category_id;
             if (isset($request->reply_id)) {
-                $comment->reply_id = $request->reply_id;
+                $reply_comment = MongoCategoryComment::find($request->reply_id);
+                if (isset($reply_comment)) {
+                    $comment->reply_id = $request->reply_id;
+                    $comment->reply_name = $reply_comment->user->username;
+                }
             }
             $comment->body = $request->body;
         } else {
@@ -538,7 +542,7 @@ class CategoryCommentController extends Controller
 
         if (isset($comment->parent_id)) {
             $user = MongoUser::find($user_id);
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_to_id, $user))->onQueue('becharkhsite');
+            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite');
             $this->sendUserNotification('ccomment', $user, $comment);
         }
 
@@ -556,9 +560,17 @@ class CategoryCommentController extends Controller
             $editor_service = new CommentEditorService();
             $editor_service->changeTempEditorLazyImg($comment);
             $categories = MongoCategory::where('status', 1)->get();
-            $category = $categories->find($comment->category_id);
-            $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
-            $citems = MongoItem::where('category_id', $category->id)->where('status', 1)->get();
+
+            $category = null;
+            $cfeatures = collect();
+            $citems = collect();
+            if (isset($comment->category_id)) {
+                $category = $categories->find($comment->category_id);
+                if ($category) {
+                    $cfeatures = $category->features()->where('is_in_filter_rtable', 1);
+                    $citems = MongoItem::where('category_id', $category->id)->where('status', 1)->get();
+                }
+            }
 
             //for fix order object items
             $commentFeatueItems = $comment->getItems();
@@ -605,10 +617,34 @@ class CategoryCommentController extends Controller
                     'i_id' => $fi->id,
                 ];
             })->values();
-            return view('category.comment.admin-edit', compact('comment', 'category', 'categories', 'cfeatures', 'citems', 'commentFeatueItems'));
+
+            $compactVars = [
+                'comment',
+                'category',
+                'categories',
+                'cfeatures',
+                'citems',
+                'commentFeatueItems'
+            ];
+
+            if (isset($comment->question_id)) {
+                $question_ids = []; // Initialize the array
+                $question_ids[] = $comment->question_id;
+                $questionIds = $comment->question_id;
+                $questionSelects = MongoQuestion::whereIn('_id', $question_ids)->select('title')->get();
+                $compactVars[] = 'questionIds';
+                $compactVars[] = 'questionSelects';
+            }
+
+
+            return view('category.comment.admin-edit', compact(...$compactVars));
         } else {
             $parent = $comment->parent;
-            $category = $parent->category;
+            if (isset($parent->category_id)) {
+                $category = $parent->category;
+            } else {
+                $category = null;
+            }
             $categories = null;
             $citems = null;
             $cfeatures = null;
@@ -633,39 +669,48 @@ class CategoryCommentController extends Controller
         $comment = MongoCategoryComment::find($comment_id);
 
         if (!isset($comment->parent_id)) {
-            if (isset($request->category_id)) {
-                if ($comment->category_id != $request->category_id) {
-                    $comment->category_id = $request->category_id;
+            if ($request->remove_from_ccom != 1) {
+                if (isset($request->category_id)) {
+                    if ($comment->category_id != $request->category_id) {
+                        $comment->category_id = $request->category_id;
+                    }
+                    $category = MongoCategory::find($request->category_id);
+                    $addItemService = new AdditemsService();
+                    $last_items = $comment->items ?? [];
+                    $add_item_result = $addItemService->addForUpdate($category, $last_items, $request);
+                    $items = $add_item_result['items'];
+                    $items_title = $add_item_result['items_title'];
+                    if (count($items) > 0) {
+                        $comment->items = $items;
+                    }
+                    if (count($items_title) > 0) {
+                        $comment->items_title = $items_title;
+                    }
                 }
-            }
-            $category = MongoCategory::find($request->category_id);
-
-            $addItemService = new AdditemsService();
-            $last_items = $comment->items ?? [];
-            $add_item_result = $addItemService->addForUpdate($category, $last_items, $request);
-            $items = $add_item_result['items'];
-            $items_title = $add_item_result['items_title'];
-            $changeStatus = $add_item_result['changeStatus'];
-
-            if (count($items) > 0) {
-                $comment->items = $items;
-            }
-            if (count($items_title) > 0) {
-                $comment->items_title = $items_title;
-            }
-
-            if ($changeStatus) {
-                $comment->status = 0;
-            } else {
-                $comment->status = 1;
             }
             $editor_service = new CommentEditorService();
             $editor_service->update('admin_edit_comment', $request->body, $comment);
+
+            $questions = array_filter(explode(',', $request->questions));
+            $unset_ques = 0;
+            if (count($questions) > 0) {
+                $comment->question_id = $questions[0];
+            } else {
+                $unset_ques = 1;
+            }
         } else {
             $comment->body = $request->body;
         }
-
         $comment->update();
+
+        if ($request->remove_from_ccom == 1) {
+            $comment->unset('category_id');
+            $comment->unset('items');
+            $comment->unset('items_title');
+        }
+        if (isset($unset_ques) && $unset_ques == 1) {
+            $comment->unset('question_id');
+        }
 
         $this->updateHotItems();
 
@@ -692,7 +737,7 @@ class CategoryCommentController extends Controller
         if (isset($comment->items) && count($comment->items) > 0) {
             dispatch(new ChangeItemPageCount($comment->items, 'comment', 0))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
         }
-        if (isset($comment->parent_id) || isset($comment->reply_to_id)) {
+        if (isset($comment->parent_id) || isset($comment->reply_id)) {
             app(UserNotificationController::class)->deleteNotification('ccomment', $comment->id);
         }
         $likes = MongoCategoryCommentLike::where('comment_id', $comment->id)->get();
@@ -734,8 +779,12 @@ class CategoryCommentController extends Controller
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
             //if comment was reply to reply
-            if (isset($request->reply_to_id)) {
-                $comment->reply_id = $request->reply_to_id;
+            if (isset($request->reply_id)) {
+                $reply_comment = MongoCategoryComment::find($request->reply_id);
+                if (isset($reply_comment)) {
+                    $comment->reply_id = $request->reply_id;
+                    $comment->reply_name = $reply_comment->user->username;
+                }
             }
         }
         if (isset($request->item_id)) {
@@ -762,7 +811,7 @@ class CategoryCommentController extends Controller
 
         $admin = Admin::first();
         if (isset($comment->parent_id)) {
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_to_id, $user))->onQueue('becharkhsite');
+            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite');
             $commentPage = route('question.index', $category->slug) . "?s=1";
             $this->sendUserNotification('ccomment', $user, $comment);
             $admin->notify(new SiteEvent([
@@ -810,22 +859,21 @@ class CategoryCommentController extends Controller
         if (!isset($parent)) {
             return response()->json(['error' => 'این نظر حذف شده است.'], 404);
         }
-        if (isset($request->reply_to_id)) {
-            $reply = MongoCategoryComment::find($request->reply_to_id);
-            if (!isset($reply)) {
-                return response()->json(['error' => 'این نظر حذف شده است.'], 404);
-            }
-        }
 
-        $user = auth('user')->user();
         $comment = new MongoCategoryComment();
+        $user = auth('user')->user();
         $comment->body = $request->body;
         $comment->category_id = $category->id;
         $comment->user_id = $user->id;
-
         $comment->parent_id = $request->parent_id;
-        if (isset($request->reply_to_id)) {
-            $comment->reply_id = $request->reply_to_id;
+        if (isset($request->reply_id)) {
+            $reply = MongoCategoryComment::find($request->reply_id);
+            if (isset($reply)) {
+                $comment->reply_id = $request->reply_id;
+                $comment->reply_name = $reply->user->username;
+            } else {
+                return response()->json(['error' => 'این نظر حذف شده است.'], 404);
+            }
         }
 
         $comment->save();
@@ -834,7 +882,7 @@ class CategoryCommentController extends Controller
 
         $admin = Admin::first();
         if (isset($comment->parent_id)) {
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_to_id, $user))->onQueue('becharkhsite');
+            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite');
             $commentPage = route('question.index', $category->slug) . "?s=1";
             $this->sendUserNotification('ccomment', $user, $comment);
             $admin->notify(new SiteEvent([
@@ -854,7 +902,8 @@ class CategoryCommentController extends Controller
                 'unlike_count' => 0,
                 'category_id' => $request->category_id,
                 'parent_id' => $request->parent_id,
-                'reply_to_id' => $request->reply_to_id,
+                'reply_id' => $request->reply_id,
+                'reply_name' => $comment->reply_name,
             ]
         ], 201);
     }

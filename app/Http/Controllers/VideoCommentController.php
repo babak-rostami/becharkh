@@ -41,9 +41,9 @@ class VideoCommentController extends Controller
             $parentComment = MongoVideoComment::find($request->parent_id);
             $pCUser = $parentComment->user;
             //if comment was reply to reply
-            if (isset($request->reply_to_id)) {
-                $comment->reply_to_id = $request->reply_to_id;
-                $replyComment = MongoVideoComment::find($request->reply_to_id);
+            if (isset($request->reply_id)) {
+                $comment->reply_id = $request->reply_id;
+                $replyComment = MongoVideoComment::find($request->reply_id);
                 $rUser = $replyComment->user;
                 //send NE to replyUser if reply user is not $user
                 if (isset($rUser) && $user != $rUser) {

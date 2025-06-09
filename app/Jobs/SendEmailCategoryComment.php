@@ -20,7 +20,7 @@ class SendEmailCategoryComment implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $comment_parent_id;
-    private $reply_to_id;
+    private $reply_id;
     private $user;
 
     /**
@@ -28,10 +28,10 @@ class SendEmailCategoryComment implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($comment_parent_id, $reply_to_id = null, $user)
+    public function __construct($comment_parent_id, $reply_id = null, $user)
     {
         $this->comment_parent_id = $comment_parent_id;
-        $this->reply_to_id = $reply_to_id;
+        $this->reply_id = $reply_id;
         $this->user = $user;
     }
 
@@ -63,8 +63,8 @@ class SendEmailCategoryComment implements ShouldQueue
         if ($commentPage == null || $commentPageTitle == null) {
             return;
         }
-        if ($this->reply_to_id != null) {
-            $replyComment = MongoCategoryComment::find($this->reply_to_id);
+        if ($this->reply_id != null) {
+            $replyComment = MongoCategoryComment::find($this->reply_id);
             $rUser = $replyComment->user;
             if (isset($rUser) && (!isset($rUser->email_actived) || $rUser->email_actived != 0) && $this->user != $rUser) {
                 Mail::to($rUser->email)->send(new ReplyToCommentMail($commentPageTitle, $this->user->username, $commentPage));

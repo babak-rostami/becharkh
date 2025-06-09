@@ -171,6 +171,20 @@
                     <div class="col-12 mb-4 text-right" id="features-box">
                     </div>
                 </div>
+                @if (isset($comment->question_id) && isset($comment->category_id))
+                    <div class="form-group">
+                        <label>از صفحه نظرات حذف شود</label>
+                        <select class="form-control" name="remove_from_ccom">
+                            <option value="0">نه</option>
+                            <option value="1">آره</option>
+                        </select>
+                    </div>
+                @endif
+                @include('mainPart.form.search-and-select-for-edit', [
+                    'question_input_name' => 'questions',
+                    'sasfQuestionIds' => $questionIds ?? null,
+                    'sasfQuestionSelects' => $questionSelects ?? null,
+                ])
             @else
                 <span>{{ $comment->parent->body }}</span>
             @endif

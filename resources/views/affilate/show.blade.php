@@ -177,7 +177,7 @@
 
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                 <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                                                <input type="hidden" name="reply_to_id" value="{{ $reply->id }}">
+                                                <input type="hidden" name="reply_id" value="{{ $reply->id }}">
 
                                                 <div class="row p-3">
                                                     <div class="col-1 px-0 text-center">

@@ -37,6 +37,7 @@ function sasfSearchForInput() {
     $("#sasf-show-cisearch-empty").hide();
     $("#sasf-show-cisearch-loading").show();
 
+
     $.ajax({
         method: "get",
         url: "/main-search/" + sasf_cisearch_for + "/" + sasf_cisearch_input,
@@ -50,7 +51,7 @@ function sasfSearchForInput() {
             }
         }
     });
-    if ($("#questions").length) {
+    if ($("#sasf-questions").length) {
         $.ajax({
             method: "get",
             url: "/main-search/2/" + sasf_cisearch_input,
@@ -62,7 +63,7 @@ function sasfSearchForInput() {
             }
         });
     }
-    if ($("#videos").length) {
+    if ($("#sasf-video").length) {
         $.ajax({
             method: "get",
             url: "/main-search/4/" + sasf_cisearch_input,

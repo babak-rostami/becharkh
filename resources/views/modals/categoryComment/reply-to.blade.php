@@ -10,7 +10,7 @@
 
                     <input type="hidden" name="category_id" value="{{ $comment->category_id }}">
                     <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                    <input type="hidden" name="reply_to_id" value="{{ $reply->id }}">
+                    <input type="hidden" name="reply_id" value="{{ $reply->id }}">
 
                     <div class="form-group">
                         <textarea required class="form-control comment-modal-input" id="rep2-input-{{ $reply->id }}" name="body"

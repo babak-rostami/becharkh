@@ -39,9 +39,9 @@ class BlogCommentController extends Controller
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
             //if comment was reply to reply
-            if (isset($request->reply_to_id)) {
-                $comment->reply_to_id = $request->reply_to_id;
-                $replyComment = MongoBlogComment::find($request->reply_to_id);
+            if (isset($request->reply_id)) {
+                $comment->reply_id = $request->reply_id;
+                $replyComment = MongoBlogComment::find($request->reply_id);
                 $rUser = $replyComment->user;
                 //send NE to replyUser if reply user is not $user
                 if (isset($rUser) && $user != $rUser) {

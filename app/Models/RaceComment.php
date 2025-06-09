@@ -16,7 +16,7 @@ class RaceComment extends Model
 
     public function replyto()
     {
-        return $this->belongsTo(RaceComment::class, 'reply_to_id');
+        return $this->belongsTo(RaceComment::class, 'reply_id');
     }
 
     public function race()

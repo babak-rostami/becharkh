@@ -17,7 +17,7 @@ class CarModelComment extends Model
 
     public function replyto()
     {
-        return $this->belongsTo(CarModelComment::class, 'reply_to_id');
+        return $this->belongsTo(CarModelComment::class, 'reply_id');
     }
 
     public function model()

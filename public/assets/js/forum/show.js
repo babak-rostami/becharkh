@@ -176,12 +176,12 @@ function unlike(question_answer_id) {
 const catSlider = document.getElementById("cat-slider");
 createSlider(catSlider, "cat-slider-item");
 
-function openAnsReplyModal(forr, question_id, parent_id, reply_to_id = null) {
+function openAnsReplyModal(forr, question_id, parent_id, reply_id = null) {
     $("#qa-reply-modal").modal("show");
     $("#qa-rep-question-id").val(question_id);
     $("#qa-rep-parent-id").val(parent_id);
     if (forr == 'replyToRep') {
-        $("#qa-rep-replyto-id").val(reply_to_id);
+        $("#qa-rep-replyto-id").val(reply_id);
     } else {
         $("#qa-rep-replyto-id").val('');
     }

@@ -47,14 +47,23 @@ class QuestionAnswerController extends Controller
         $answer->question_id = $request->question_id;
         if (isset($request->parent_id)) {
             $answer->parent_id = $request->parent_id;
+
             if (isset($request->reply_id)) {
-                $answer->reply_id = $request->reply_id;
+                $reply = MongoCategoryComment::find($request->reply_id);
+                if (isset($reply)) {
+                    $answer->reply_id = $request->reply_id;
+                    $reply_user = $reply->user;
+                    if (isset($reply_user)) {
+                        $answer->reply_name = $reply_user->username;
+                        if ($reply_user != $user && $reply_user != $questionUser) {
+                            $this->NE($user, $reply_user, $question);
+                        }
+                    }
+                } else {
+                    return response()->json(['error' => 'این نظر حذف شده است.'], 404);
+                }
             }
-            $reply = MongoCategoryComment::find($request->parent_id);
-            //NE to reply user if reply user is not $user
-            if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
-                $this->NE($user, $reply->user, $question);
-            }
+
             $answer->body = $request->body;
         } else {
             //NE to question user if Questionuser is not $user
@@ -117,13 +126,23 @@ class QuestionAnswerController extends Controller
         $answer->question_id = $request->question_id;
         if (isset($request->parent_id)) {
             $answer->parent_id = $request->parent_id;
+
             if (isset($request->reply_id)) {
-                $answer->reply_id = $request->reply_id;
+                $reply = MongoCategoryComment::find($request->reply_id);
+                if (isset($reply)) {
+                    $answer->reply_id = $request->reply_id;
+                    $reply_user = $reply->user;
+                    if (isset($reply_user)) {
+                        $answer->reply_name = $reply_user->username;
+                        if ($reply_user != $user && $reply_user != $questionUser) {
+                            $this->NE($user, $reply_user, $question);
+                        }
+                    }
+                } else {
+                    return response()->json(['error' => 'این نظر حذف شده است.'], 404);
+                }
             }
-            $reply = MongoCategoryComment::find($request->parent_id);
-            if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
-                $this->NE($user, $reply->user, $question);
-            }
+
             $answer->body = $request->body;
         } else {
             if ($user != $questionUser) {
@@ -167,6 +186,7 @@ class QuestionAnswerController extends Controller
                 'question_id' => $request->question_id,
                 'parent_id' => $request->parent_id,
                 'reply_id' => $request->reply_id,
+                'reply_name' => $answer->reply_name
             ]
         ], 201);
     }
@@ -197,14 +217,23 @@ class QuestionAnswerController extends Controller
         $answer->question_id = $request->question_id;
         if (isset($request->parent_id)) {
             $answer->parent_id = $request->parent_id;
+
             if (isset($request->reply_id)) {
-                $answer->reply_id = $request->reply_id;
+                $reply = MongoCategoryComment::find($request->reply_id);
+                if (isset($reply)) {
+                    $answer->reply_id = $request->reply_id;
+                    $reply_user = $reply->user;
+                    if (isset($reply_user)) {
+                        $answer->reply_name = $reply_user->username;
+                        if ($reply_user != $user && $reply_user != $questionUser) {
+                            $this->NE($user, $reply_user, $question);
+                        }
+                    }
+                } else {
+                    return response()->json(['error' => 'این نظر حذف شده است.'], 404);
+                }
             }
-            $reply = MongoCategoryComment::find($request->parent_id);
-            //NE to reply user if reply user is not $user
-            if (isset($reply->user) && $reply->user != $user && $reply->user != $questionUser) {
-                $this->NE($user, $reply->user, $question);
-            }
+
             $answer->body = $request->body;
         } else {
             //NE to question user if Questionuser is not $user

@@ -46,6 +46,9 @@ class UpdateUserFollowItem implements ShouldQueue
 
         if ($object_type == 'ccomment') {
             $comment = MongoCategoryComment::find($object_id);
+            if (!isset($comment)) {
+                return;
+            }
             $items = $comment->items ?? [];
             $user_id = $comment->user_id;
         } elseif ($object_type == 'question_answer') {

@@ -21,7 +21,7 @@ class VideoComment extends Model
 
     public function replyto()
     {
-        return $this->belongsTo(VideoComment::class, 'reply_to_id');
+        return $this->belongsTo(VideoComment::class, 'reply_id');
     }
 
     public function video()

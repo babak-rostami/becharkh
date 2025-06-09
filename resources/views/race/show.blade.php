@@ -156,7 +156,7 @@
 
                                             <input type="hidden" name="race_id" value="{{$race->id}}">
                                             <input type="hidden" name="parent_id" value="{{$comment->id}}">
-                                            <input type="hidden" name="reply_to_id" value="{{$reply->id}}">
+                                            <input type="hidden" name="reply_id" value="{{$reply->id}}">
 
                                             <div class="form-group">
                             <textarea required class="form-control" style="width: 100%; height: 150px; resize: none"

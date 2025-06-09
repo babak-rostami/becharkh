@@ -80,7 +80,8 @@ mix.minify(
         "public/assets/js/category/comment-create.js",
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/survey/create.js",
-        "public/assets/js/admin/check-fake-user.js"
+        "public/assets/js/admin/check-fake-user.js",
+        "public/assets/js/pages/forum/sasf-edit.js"
     ],
     "public/mixassets/js/category/comment-create.min.js"
 );
@@ -406,7 +407,8 @@ mix.minify(
     [
         "public/assets/css/category/comment-create.css",
         "public/assets/css/pages/comment-box.css",
-        "public/assets/css/survey/create.css"
+        "public/assets/css/survey/create.css",
+        "public/assets/css/pages/forum/sasf-edit.css"
     ],
     "public/mixassets/css/category/comment-create.min.css"
 );

@@ -9,7 +9,7 @@
 
                     <input type="hidden" name="category_id" id="ccom-rep-category-id">
                     <input type="hidden" name="parent_id" id="ccom-rep-parent-id">
-                    <input type="hidden" name="reply_to_id" id="ccom-rep-replyto-id">
+                    <input type="hidden" name="reply_id" id="ccom-rep-replyto-id">
 
                     <div class="form-group text-right">
                         <textarea required class="form-control comment-modal-input" id="ccom-rep-input" name="body"

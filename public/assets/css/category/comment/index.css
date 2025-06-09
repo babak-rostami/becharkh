@@ -4,7 +4,13 @@
     line-height: 34px;
     word-wrap: break-word;
 }
-
+.rep-name {
+    font-size: 14px;
+    background-color: #fff;
+    padding: 0 4px;
+    border-radius: 8px;
+    border: 1px solid #dfdfdf;
+}
 .cm-box-time {
     float: left;
     font-size: 11px;

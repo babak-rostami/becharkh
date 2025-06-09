@@ -36,9 +36,9 @@ class RaceCommentController extends Controller
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
 
-            if (isset($request->reply_to_id)) {
-                $comment->reply_to_id = $request->reply_to_id;
-                $reply = RaceComment::find($request->reply_to_id);
+            if (isset($request->reply_id)) {
+                $comment->reply_id = $request->reply_id;
+                $reply = RaceComment::find($request->reply_id);
                 Mail::to($reply->email)->send(new ReplyToCommentMail($race->title, $request->name, route('race.show', $race->slug)));
             } else {
                 $reply = RaceComment::find($request->parent_id);

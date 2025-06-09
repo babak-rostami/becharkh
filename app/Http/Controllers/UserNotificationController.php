@@ -18,15 +18,22 @@ class UserNotificationController extends Controller
             } else {
                 $parent_comment = $new_object->parent;
             }
+            $main_parent = $new_object->parent;
             $parent_comment_user = $parent_comment->user;
             if ($parent_comment->user_id != $from_user->id && (!isset($parent_comment_user->is_fake) || $parent_comment_user->is_fake != 1)) {
                 $notif_text = $from_user->username . ' نظری برای شما در صفحه ';
-                if (isset($parent_comment->items)) {
-                    $item = MongoItem::find($parent_comment->items[0]);
+                if (isset($main_parent->items)) {
+                    $item = MongoItem::find($main_parent->items[0]);
+                    if (!isset($item)) {
+                        return;
+                    }
                     $notif_text = $notif_text . $item->withParentsTitle() . ' ارسال کرد';
                     $notif_route = $item->withParentsCommentUrl();
                 } else {
-                    $category = MongoCategory::find($parent_comment->category_id);
+                    $category = MongoCategory::find($main_parent->category_id);
+                    if (!isset($category)) {
+                        return;
+                    }
                     $notif_text = $notif_text . $category->title . ' ارسال کرد';
                     $notif_route = route('question.index', $category->slug) . "?s=1";
                 }

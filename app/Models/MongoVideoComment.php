@@ -11,7 +11,7 @@ class MongoVideoComment extends Model
 
     protected $fillable = [
         'parent_id',
-        'reply_to_id',
+        'reply_id',
         'video_id',
         'user_id',
         'body',

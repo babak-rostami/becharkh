@@ -32,7 +32,7 @@
                 'lazyload' => 1,
                 'itemid' => $answer->id,
             ])
-
+            <span class="cm-box-time">{{ jdate($answer->created_at)->ago() }}</span>
             @if (isset($answer->editor))
                 <div class="cedshow">
                     {!! $answer->editor !!}
@@ -47,8 +47,7 @@
             </button>
 
             <span class="like-icon" onclick="like('{{ $answer->id }}')">
-                <span
-                    id="like-ans-count-{{ $answer->id }}">{{ $answer->like_count ? $answer->like_count : 0 }}</span>
+                <span id="like-ans-count-{{ $answer->id }}">{{ $answer->like_count ? $answer->like_count : 0 }}</span>
                 <img class="lazy-load like-ans-image" id="like-ans-image-{{ $answer->id }}"
                     data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
             </span>
@@ -68,6 +67,10 @@
                     'lazyload' => 1,
                     'itemid' => $reply->id,
                 ])
+                @if (isset($reply->reply_name))
+                    <span class="rep-name">پاسخ به {{ $reply->reply_name }}</span>
+                @endif
+                <span class="cm-box-time">{{ jdate($reply->created_at)->ago() }}</span>
                 <p class="mt-4 font-18 textarea-preline">{{ $reply->body }}</p>
                 <button type="button" class="comment-reply-btn"
                     onclick="openAnsReplyModal('replyToRep','{{ $question->id }}','{{ $answer->id }}','{{ $reply->id }}')">پاسخ<img

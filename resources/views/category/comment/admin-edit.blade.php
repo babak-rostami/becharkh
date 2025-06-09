@@ -88,7 +88,7 @@
         //for select features modal
         const remove_item_img = "{{ asset('files/other/images/g-close.webp') }}";
         const add_new_item_img = "{{ asset('files/other/images/b-add.png') }}";
-        var cat_selected = "{{ $category->id }}";
+        var cat_selected = "{{ $category->id ?? null }}";
         var citems = @json($citems);
         var cfeatures = @json($cfeatures);
         var feature_items = @json($commentFeatueItems);
@@ -99,5 +99,8 @@
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/category/comment-create.min.js') . '?lm=' . filemtime('mixassets/js/category/comment-create.min.js') }}">
+    </script>
+    <script>
+        sasf_questions = {!! json_encode(isset($questionIds) ? explode(',', $questionIds) : []) !!};
     </script>
 @endsection

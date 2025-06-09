@@ -138,7 +138,7 @@ function sendCommentBtnAction() {
     let reply_data = {
         category_id: categoryId,
         parent_id: parentId,
-        reply_to_id: replyToId,
+        reply_id: replyToId,
         body: commentBody,
         _token: csrf_t
     };
@@ -196,8 +196,8 @@ function addHtmlOnSuccess(comment) {
             </span>
         </div>
     `;
-    if (comment.reply_to_id) {
-        $('#reply-box-' + comment.reply_to_id).after(newReplyHtml);
+    if (comment.reply_id) {
+        $('#reply-box-' + comment.reply_id).after(newReplyHtml);
     } else {
         $('#comment-box-' + comment.parent_id).after(newReplyHtml);
     }
@@ -389,12 +389,12 @@ function shcomNewUrl(commentId) {
     return currentUrl.toString();
 }
 
-function openCCommentModal(forr, category_id, parent_id, reply_to_id = null) {
+function openCCommentModal(forr, category_id, parent_id, reply_id = null) {
     $("#ccomReplyModal").modal("show");
     $("#ccom-rep-category-id").val(category_id);
     $("#ccom-rep-parent-id").val(parent_id);
     if (forr == 'replyto') {
-        $("#ccom-rep-replyto-id").val(reply_to_id);
+        $("#ccom-rep-replyto-id").val(reply_id);
     } else {
         $("#ccom-rep-replyto-id").val('');
     }

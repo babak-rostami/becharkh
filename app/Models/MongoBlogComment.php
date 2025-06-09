@@ -11,7 +11,7 @@ class MongoBlogComment extends Model
 
     protected $fillable = [
         'parent_id',
-        'reply_to_id',
+        'reply_id',
         'blog_id',
         'user_id',
         'body',

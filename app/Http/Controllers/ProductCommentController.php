@@ -104,8 +104,8 @@ class ProductCommentController extends Controller
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
             //if comment was reply to reply
-            if (isset($request->reply_to_id)) {
-                $comment->reply_id = $request->reply_to_id;
+            if (isset($request->reply_id)) {
+                $comment->reply_id = $request->reply_id;
             }
         } else {
             $comment_count = $product->comment_count ?? 0;
@@ -187,8 +187,8 @@ class ProductCommentController extends Controller
             $parentComment = ProductComment::find($request->parent_id);
             $pCUser = $parentComment->user;
             //if comment was reply to reply
-            if (isset($request->reply_to_id)) {
-                $replyComment = ProductComment::find($request->reply_to_id);
+            if (isset($request->reply_id)) {
+                $replyComment = ProductComment::find($request->reply_id);
                 $rUser = $replyComment->user;
                 //send NE to replyUser if reply user is not $user
                 if (isset($rUser) && $user != $rUser) {

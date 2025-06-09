@@ -136,16 +136,21 @@ class MigrateToMongoController extends Controller
 
     private function convertAnswerToCcomment()
     {
-        // $qca = MongoCategoryComment::where('question_id', '!=', null)->get();
-        // foreach ($qca as $qa) {
-        //     foreach ($qa->likes as $like) {
-        //         $like->delete();
-        //     }
-        //     foreach ($qa->unlikes as $unlike) {
-        //         $unlike->delete();
-        //     }
-        //     $qa->delete();
-        // }
+        $qca = MongoCategoryComment::where('question_id', '!=', null)->where('newq', '!=', 1)->get();
+        foreach ($qca as $qa) {
+            foreach ($qa->likes as $like) {
+                $like->delete();
+            }
+            foreach ($qa->unlikes as $unlike) {
+                $unlike->delete();
+            }
+            $edimgs = CategoryCommentEditorImage::where('comment_id', $qa->id)->get();
+            foreach ($edimgs as $eimg) {
+                $eimg->delete();
+            }
+            $qa->delete();
+        }
+
         $answers = MongoQuestionAnswer::all();
         foreach ($answers as $answer) {
             $ccomment = new MongoCategoryComment();
@@ -155,14 +160,11 @@ class MigrateToMongoController extends Controller
             if (isset($answer->editor)) {
                 $ccomment->editor = $answer->editor;
             }
+            if (isset($answer->parent_id)) {
+                $ccomment->last_parent_id = $answer->parent_id;
+            }
             $ccomment->question_id = $answer->question_id;
             $ccomment->user_id = $answer->user_id;
-            if (isset($answer->parent_id)) {
-                $ccomment->parent_id = $answer->parent_id;
-            }
-            if (isset($answer->reply_id)) {
-                $ccomment->reply_id = $answer->reply_id;
-            }
             if (isset($answer->like_count)) {
                 $ccomment->like_count = $answer->like_count;
             }
@@ -171,6 +173,7 @@ class MigrateToMongoController extends Controller
             }
             $ccomment->created_at = $answer->created_at;
             $ccomment->updated_at = $answer->updated_at;
+            $ccomment->last_id = $answer->id;
             $ccomment->save();
 
             $likes = MongoQuestionAnswerLike::where('answer_id', $answer->id)->get();
@@ -186,8 +189,18 @@ class MigrateToMongoController extends Controller
             foreach ($editor_images as $ei) {
                 $new_ed = new CategoryCommentEditorImage();
                 $new_ed->path = $ei->path;
-                $new_ed->comment_id = $answer->id;
+                $new_ed->comment_id = $ccomment->id;
                 $new_ed->save();
+            }
+        }
+
+        // update parent_id
+        $new_replies = MongoCategoryComment::where('last_parent_id', '!=', null)->get();
+        foreach ($new_replies as $reply) {
+            $new_parent = MongoCategoryComment::where('last_id', $reply->last_parent_id)->first();
+            if (isset($new_parent)) {
+                $reply->parent_id = $new_parent->id;
+                $reply->update();
             }
         }
     }
@@ -1279,9 +1292,9 @@ class MigrateToMongoController extends Controller
                 $pc = MongoBlogComment::where('last_id', $comment->parent_id)->first();
                 $newComment->parent_id = $pc->id;
             }
-            if ($comment->reply_to_id) {
-                $pr = MongoBlogComment::where('last_id', $comment->reply_to_id)->first();
-                $newComment->reply_to_id = $pr->id;
+            if ($comment->reply_id) {
+                $pr = MongoBlogComment::where('last_id', $comment->reply_id)->first();
+                $newComment->reply_id = $pr->id;
             }
             $likeCount = count($comment->likes);
             if ($likeCount > 0) {
@@ -1374,10 +1387,10 @@ class MigrateToMongoController extends Controller
                         $newComment->parent_id = $pc->id;
                     }
                 }
-                if ($comment->reply_to_id) {
-                    $pr = MongoVideoComment::where('last_id', $comment->reply_to_id)->first();
+                if ($comment->reply_id) {
+                    $pr = MongoVideoComment::where('last_id', $comment->reply_id)->first();
                     if (isset($pr)) {
-                        $newComment->reply_to_id = $pr->id;
+                        $newComment->reply_id = $pr->id;
                     }
                 }
                 $newComment->body = $comment->body;
@@ -1477,10 +1490,10 @@ class MigrateToMongoController extends Controller
             $newAnswer->last_id = $answer->id;
             $newAnswer->question_id = $qId->id;
             $newAnswer->user_id = $user_id;
-            if ($answer->reply_to_id) {
-                $reply = MongoCategoryComment::where('last_id', $answer->reply_to_id)->first();
+            if ($answer->reply_id) {
+                $reply = MongoCategoryComment::where('last_id', $answer->reply_id)->first();
                 if (isset($reply)) {
-                    $newAnswer->reply_to_id = $reply->id;
+                    $newAnswer->reply_id = $reply->id;
                 }
             }
             $newAnswer->body = $answer->body;

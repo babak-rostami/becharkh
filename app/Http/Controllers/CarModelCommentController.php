@@ -43,7 +43,7 @@ class CarModelCommentController extends Controller
         }
 
 
-        if (!isset($request->parent_id) && !isset($request->reply_to_id)) {
+        if (!isset($request->parent_id) && !isset($request->reply_id)) {
             $comment->car_topic_category = $request->car_topic_category;
         }
 
@@ -52,10 +52,10 @@ class CarModelCommentController extends Controller
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
 
-            if (isset($request->reply_to_id)) {
+            if (isset($request->reply_id)) {
                 $name = auth('user')->check() ? auth('user')->user()->name : $request->name;
-                $comment->reply_to_id = $request->reply_to_id;
-                $reply = CarModelComment::find($request->reply_to_id);
+                $comment->reply_id = $request->reply_id;
+                $reply = CarModelComment::find($request->reply_id);
                 Mail::to($reply->email())->send(new ReplyToCommentMail($model->brand->title . ' ' . $model->title, $name, route('car.page', ['brand_slug' => $model->brand->slug, 'model_slug' => $model->slug])));
             } else {
                 $name = auth('user')->check() ? auth('user')->user()->name : $request->name;

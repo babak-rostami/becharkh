@@ -41,6 +41,14 @@
                                             href="{{ route('question.index', $comment->category->slug) }}?s=1">
                                             {{ $comment->category->title }}</a>
                                     @endif
+                                    @if (isset($comment->question_id))
+                                        @if (isset($comment->parent_id))
+                                            <span class="badge badge-dark">ریپلای سوال</span>
+                                        @endif
+                                        <a class="badge badge-light" rel="nofollow"
+                                            href="{{ route('question.show', $comment->question->slug2) }}">
+                                            {{ $comment->question->title }}</a>
+                                    @endif
                                     @foreach ($comment->getItems() as $i)
                                         <a class="badge badge-light" rel="nofollow"
                                             href="{{ $i->withParentsCommentUrl() }}">{{ $i->full_title ?? $i->title }}</a>

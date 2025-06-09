@@ -36,6 +36,6 @@ class AdvertiseComment extends Model
 
     public function replyto()
     {
-        return $this->belongsTo(AdvertiseComment::class, 'reply_to_id');
+        return $this->belongsTo(AdvertiseComment::class, 'reply_id');
     }
 }

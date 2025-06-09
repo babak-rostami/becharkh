@@ -47,6 +47,7 @@ class UpdateHotPages implements ShouldQueue
             $category_comments = MongoCategoryComment::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')
                 ->where('items', '!=', null)
+                ->whereNull('question_id')
                 ->take(150)
                 ->get();
             $processed_item_ids = [];

@@ -30,19 +30,11 @@
         @endif
         <div class="col-12 px-3 pb-3 pt-2 radius-10 mt-4 shadow-sm comment-box text-right"
             id="comment-box-{{ $comment->id }}">
-            @if (isset($comment->user))
-                @include('modals.userdash', [
-                    'dashuser' => $comment->user,
-                    'lazyload' => $firstItems,
-                    'itemid' => $comment->id,
-                ])
-            @else
-                <div>
-                    <img class="comment-profile-style rounded-circle mr-2 @if ($firstItems == 1) lazy-load @endif"
-                        @if ($firstItems == 1) data-src="{{ asset('files/other/images/profile.png') }}"@else
-                                src="{{ asset('files/other/images/profile.png') }}" @endif>{{ $comment->name }}
-                </div>
-            @endif
+            @include('modals.userdash', [
+                'dashuser' => $comment->user,
+                'lazyload' => $firstItems,
+                'itemid' => $comment->id,
+            ])
             <span class="cm-box-time">{{ jdate($comment->created_at)->ago() }}</span>
             @if (isset($comment->images))
                 <div class="text-center">
@@ -136,16 +128,13 @@
         @foreach ($comment->replies as $reply)
             <div class="col-12 px-3 py-2 mr-2 radius-10 mt-1 comment-box text-right reply-div"
                 id="reply-box-{{ $reply->id }}">
-                @if (isset($reply->user))
-                    @include('modals.userdash', [
-                        'dashuser' => $reply->user,
-                        'lazyload' => $firstItems,
-                        'itemid' => $reply->id,
-                    ])
-                @else
-                    <img class="comment-profile-style rounded-circle mr-2 @if ($firstItems == 1) lazy-load @endif"
-                        @if ($firstItems == 1) data-src="{{ asset('files/other/images/profile.png') }}"@else
-                                src="{{ asset('files/other/images/profile.png') }}" @endif>{{ $reply->name }}
+                @include('modals.userdash', [
+                    'dashuser' => $reply->user,
+                    'lazyload' => $firstItems,
+                    'itemid' => $reply->id,
+                ])
+                @if (isset($reply->reply_name))
+                    <span class="rep-name">پاسخ به {{ $reply->reply_name }}</span>
                 @endif
                 <span class="cm-box-time">{{ jdate($reply->created_at)->ago() }}</span>
                 <p class="textarea-preline mt-2">{{ $reply->body }}</p>

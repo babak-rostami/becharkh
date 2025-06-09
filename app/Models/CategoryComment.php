@@ -90,6 +90,6 @@ class CategoryComment extends Model
 
     public function replyto()
     {
-        return $this->belongsTo(CategoryComment::class, 'reply_to_id');
+        return $this->belongsTo(CategoryComment::class, 'reply_id');
     }
 }

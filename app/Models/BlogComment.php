@@ -30,7 +30,7 @@ class BlogComment extends Model
 
     public function replyto()
     {
-        return $this->belongsTo(BlogComment::class, 'reply_to_id');
+        return $this->belongsTo(BlogComment::class, 'reply_id');
     }
 
     public function blog()
