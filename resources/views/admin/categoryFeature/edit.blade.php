@@ -68,8 +68,7 @@
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
                             <label>معرفی پیج</label>
-                            <input type="text" class="form-control" name="page_intro_desc" id="page_intro_desc"
-                                value="{{ $feature->page_intro_desc }}">
+                            <textarea name="page_intro_desc" id="page_intro_desc" class="form-control" rows="10">{{ $feature->page_intro_desc }}</textarea>
                         </div>
                     </div>
                     <div class="col-12 col-sm-6">

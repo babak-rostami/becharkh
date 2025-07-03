@@ -101,13 +101,6 @@ function unlikeCategoryComment(category_comment_id) {
     });
 }
 
-/* for bslider */
-const catSlider = document.getElementById("cat-slider");
-createSlider(catSlider, "cat-slider-item");
-// const videoSlider = document.getElementById("video-slider");
-// createSlider(videoSlider, "video-slider-item");
-/* end for bslider */
-
 let show_reply_dref_error;
 function sendCommentBtnAction() {
     let commentInput = $('#ccom-rep-input');
@@ -399,3 +392,12 @@ function openCCommentModal(forr, category_id, parent_id, reply_id = null) {
         $("#ccom-rep-replyto-id").val('');
     }
 }
+
+/* for bslider */
+const catSlider = document.getElementById("cat-slider");
+createSlider(catSlider, "cat-slider-item");
+const ircatSlider = document.getElementById("ircat-slider");
+createSlider(catSlider, "ircat-slider-item");
+// const videoSlider = document.getElementById("video-slider");
+// createSlider(videoSlider, "video-slider-item");
+/* end for bslider */

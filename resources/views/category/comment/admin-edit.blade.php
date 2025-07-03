@@ -80,14 +80,14 @@
         //for select category modal
         const categories = @json($categories);
         var cat_children = [];
-        const next_cat_img = "{{ asset('files/other/images/next.png') }}";
-        const back_cat_img = "{{ asset('files/other/images/back.png') }}";
-        const all_cat_img = "{{ asset('files/other/images/all-cat.webp') }}";
+        const next_cat_img = "{{ $ftp_path . 'files/other/images/next.png' }}";
+        const back_cat_img = "{{ $ftp_path . 'files/other/images/back.png' }}";
+        const all_cat_img = "{{ $ftp_path . 'files/other/images/all-cat.webp' }}";
         const get_cat_fis_route = "{{ route('api.get.cat.fis') }}";
         //end for select category modal
         //for select features modal
-        const remove_item_img = "{{ asset('files/other/images/g-close.webp') }}";
-        const add_new_item_img = "{{ asset('files/other/images/b-add.png') }}";
+        const remove_item_img = "{{ $ftp_path . 'files/other/images/g-close.webp' }}";
+        const add_new_item_img = "{{ $ftp_path . 'files/other/images/b-add.png' }}";
         var cat_selected = "{{ $category->id ?? null }}";
         var citems = @json($citems);
         var cfeatures = @json($cfeatures);

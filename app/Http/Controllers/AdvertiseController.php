@@ -160,15 +160,23 @@ class AdvertiseController extends Controller
                 $advertises->appends(request()->query());
             } else {
                 $cat_title = $category->full_title ?? $category->title;
-                if ($category->title_in_ads) {
-                    $meta_title = str_replace("*", $cat_title, $category->title_in_ads);
+                if (isset($category->title_in_ads_noi)) {
+                    $meta_title = str_replace("*", $cat_title, $category->title_in_ads_noi);
                 } else {
-                    $meta_title = "آگهی های " . $cat_title;
+                    if ($category->title_in_ads) {
+                        $meta_title = str_replace("*", $cat_title, $category->title_in_ads);
+                    } else {
+                        $meta_title = "آگهی های " . $cat_title;
+                    }
                 }
-                if ($category->desc_in_ads) {
-                    $meta_desc = str_replace("*", $cat_title, $category->desc_in_ads);
+                if ($category->desc_in_ads_noi) {
+                    $meta_desc = str_replace("*", $cat_title, $category->desc_in_ads_noi);
                 } else {
-                    $meta_desc = "آکهی های با موضوع " . $cat_title;
+                    if ($category->desc_in_ads) {
+                        $meta_desc = str_replace("*", $cat_title, $category->desc_in_ads);
+                    } else {
+                        $meta_desc = "آکهی های با موضوع " . $cat_title;
+                    }
                 }
 
                 $advertises = $advertise_repository->getAdvertiseByCategoryIdByPaginate($category->id, 20);

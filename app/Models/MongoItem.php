@@ -145,10 +145,14 @@ class MongoItem extends Model
         return null;
     }
 
-    public function withParentsAdvertiseUrl()
+    public function withParentsAdvertiseUrl($category_slug = null)
     {
         $forum_url = $this->withParentsForumUrl();
         if ($forum_url != null) {
+            if (isset($category_slug)) {
+                $item_cat = $this->category;
+                $forum_url = preg_replace('/' . preg_quote($item_cat->slug, '/') . '/', $category_slug, $forum_url, 1);
+            }
             return str_replace('forum', 'ads', $forum_url);
         }
         return null;

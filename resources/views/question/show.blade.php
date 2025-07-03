@@ -207,7 +207,7 @@
 
             @include('category.rcats')
 
-            <div class="row mx-0">
+            {{-- <div class="row mx-0">
                 <div class="col-12 my-4 px-0 text-center">
                     <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
                     <br>
@@ -219,7 +219,7 @@
                     </a>
 
                 </div>
-            </div>
+            </div> --}}
 
             @if ($questions->count() > 1)
                 <div class="row mx-0">

@@ -107,7 +107,7 @@
                     @endif
                 </div>
 
-                @if (isset($category) && $category->has_ads)
+                {{-- @if (isset($category) && $category->has_ads)
                     <button id="new-a-btn" class="btn btn-lg btn-primary"
                         onclick="jsurl('{{ $category->newAdvertiseUrl($category->slug) }}',1)">
                         آگهی جدید +
@@ -116,7 +116,7 @@
                     <button id="new-a-btn" class="btn btn-lg btn-primary" onclick="jsurl('{{ route('new.ad') }}',1)">
                         آگهی جدید +
                     </button>
-                @endif
+                @endif --}}
 
                 <div class="col-12 mt-4">
 
@@ -136,7 +136,7 @@
                         </div>
                     @endif --}}
                     <div class="row">
-                        <div class="col-12 text-center">
+                        {{-- <div class="col-12 text-center">
                             <span id="dywt">آگهی خود را ثبت نکرده اید؟</span>
                             @if (isset($category) && $category->has_ads)
                                 <button class="btn btn-outline-primary mb-4 mt-2 w-100" id="adsSection"
@@ -149,7 +149,7 @@
                                     ثبت آگهی جدید +
                                 </button>
                             @endif
-                        </div>
+                        </div> --}}
                         @if (!$advertises->isEmpty())
                             @foreach ($advertises as $key => $advertise)
                                 <div class="col-12 shadow-sm bg-wht text-right ad-box"><a class="decor-none" rel="nofollow"

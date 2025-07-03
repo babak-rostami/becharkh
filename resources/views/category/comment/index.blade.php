@@ -159,18 +159,27 @@
                 'is_follow' => isset($is_follow) ? $is_follow : null,
             ])
 
-            @if (isset($category))
-                <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
-                <p class="textarea-preline text-right mt-2">{{ $meta_desc }}</p>
+            @if (isset($page_intro_title) && isset($page_intro_desc))
+                <div id="page-g-div" class="text-center my-3">
+                    <img class="lazy-load" id="page-g-img"
+                        data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
+                    <span id="page-g-title">{{ $page_intro_title }}</span>
+                    <span id="page-g">{{ $page_intro_desc }}</span>
+                </div>
             @else
-                <h1 class="mt-4 text-right" id="page-title">نظرات کاربران</h1>
-                <p class="text-right mt-2">از تجربیات شخصی ، پیشنهادات و نظرات درباره مسائل روزمره خود بنویسید.
-                </p>
+                <div id="page-title-box">
+                    @if (isset($category))
+                        <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
+                        <p class="textarea-preline text-right mt-2">{{ $meta_desc }}</p>
+                    @else
+                        <h1 class="mt-4 text-right" id="page-title">نظرات کاربران</h1>
+                        <p class="text-right mt-2">از تجربیات شخصی ، پیشنهادات و نظرات درباره مسائل روزمره خود بنویسید.
+                        </p>
+                    @endif
+                </div>
             @endif
 
-            <div class="row">
-                @include('item.top-users')
-            </div>
+            @include('item.top-users')
 
             @include('mainPart.mainPage.page-btns', ['page' => 'comment'])
 
@@ -189,14 +198,7 @@
                 </div>
             @endif
 
-            @if (isset($page_intro_title) && isset($page_intro_desc))
-                <div id="page-g-div" class="text-center mt-3">
-                    <img class="lazy-load" id="page-g-img"
-                        data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
-                    <span id="page-g-title">{{ $page_intro_title }}</span>
-                    <span id="page-g">{{ $page_intro_desc }}</span>
-                </div>
-            @else
+            {{-- @if (!isset($page_intro_title) || !isset($page_intro_desc))
                 @if (isset($category))
                     <div class="row justify-content-center">
                         <div class="col-12 text-center">
@@ -217,6 +219,39 @@
                         </div>
                     </div>
                 @endif
+            @endif --}}
+
+            @if (isset($ircats))
+                <div class="col-12 text-center mt-4">
+                    <span id="itempr-div-title">فروشگاه {{ $item->full_title ?? $item->title }}</span>
+                    <span>محصولات تایید شده برای مالکین {{ $item->full_title ?? $item->title }}</span>
+                    <div class="bslider mt-2" id="ircat-slider">
+                        @foreach ($ircats as $ircat)
+                            <div class="bslider-item ircat-slider-item">
+                                <a class="suggest-item" id="slidera-{{ $ircat->id }}" draggable="false"
+                                    href="{{ $item->withParentsAdvertiseUrl($ircat->slug) }}">
+                                    <img class="ircat-slider-item-img" draggable="false" src="{{ $ircat->thumb() }}">
+                                    <span>
+                                        {{ $ircat->full_title ?? $ircat->title }}
+                                    </span>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if (isset($page_intro_title) && isset($page_intro_desc))
+                <div id="page-title-box">
+                    @if (isset($category))
+                        <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
+                        <p class="textarea-preline text-right mt-2">{{ $meta_desc }}</p>
+                    @else
+                        <h1 class="mt-4 text-right" id="page-title">نظرات کاربران</h1>
+                        <p class="text-right mt-2">از تجربیات شخصی ، پیشنهادات و نظرات درباره مسائل روزمره خود بنویسید.
+                        </p>
+                    @endif
+                </div>
             @endif
 
             @if ($hasComments == 0)
@@ -226,7 +261,8 @@
                 ])
             @else
                 @include('question.comment-items', ['firstItems' => 1, 'comments' => $comments])
-                <button class="btn btn-lg btn-dark w-100 mt-4" onclick="loadMorePosts()" id="load-more-com-btn">نمایش نظرات
+                <button class="btn btn-lg btn-dark w-100 mt-4" onclick="loadMorePosts()" id="load-more-com-btn">نمایش
+                    نظرات
                     بیشتر ...</button>
                 <div id="loadMore">
                     <span>در حال بارگیری نظرات بیشتر</span>
@@ -271,14 +307,14 @@
         let nextPageUrl = '{{ isset($nextPageUrl) ? $nextPageUrl : null }}';
         let category_comment_like_route = '{{ route('category.comment.like') }}';
         let dontLoadMore = 0;
-        let follow_item_route = '{{ route('follow.item') }}';
+        // let follow_item_route = '{{ route('follow.item') }}';
         var loadingGif = '<img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">';
 
-        let editor_img_upload_route;
-        setTimeout(function() {
-            editor_img_upload_route =
-                "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'comment']) }}";
-        }, 500);
+        // let editor_img_upload_route;
+        // setTimeout(function() {
+        //     editor_img_upload_route =
+        //         "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'comment']) }}";
+        // }, 500);
 
         const route_surop_choose = "{{ route('surop.choose') }}";
 

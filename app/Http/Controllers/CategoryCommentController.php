@@ -231,6 +231,12 @@ class CategoryCommentController extends Controller
                 if ($category->has_ads) {
                     $advertise_page = $item->withParentsAdvertiseUrl();
                 }
+                if (isset($item->has_rcats)) {
+                    $ircats = MongoCategory::select('_id', 'title', 'slug', 'image')
+                        ->whereIn('_id', $item->has_rcats)
+                        ->get()
+                        ->shuffle();
+                }
                 if (isset($item->pin_question_ids)) {
                     $pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
                         ->whereIn('_id', $item->pin_question_ids)
@@ -288,6 +294,9 @@ class CategoryCommentController extends Controller
                 'currentQueryParams',
                 'selected_items',
             ];
+            if (isset($ircats)) {
+                $compactVars[] = 'ircats';
+            }
             if (isset($item_video)) {
                 $compactVars[] = 'item_video';
             }

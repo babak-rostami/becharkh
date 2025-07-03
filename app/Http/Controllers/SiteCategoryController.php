@@ -29,12 +29,38 @@ class SiteCategoryController extends Controller
     public function indexAdmin($id = null)
     {
         if (isset($id)) {
+
             $selectedCat = MongoCategory::find($id);
             $allCats = MongoCategory::where('_id', '!=', $selectedCat->id)->get();
             $categories = $selectedCat->children;
             $children_cat_ids = $selectedCat->allChildren()->pluck('id')->toArray();
             $parent_cats = $allCats->whereNotIn('_id', $children_cat_ids)->where('_id', '!=', $selectedCat->id);
-            return view('admin.siteCategory.index', compact('categories', 'allCats', 'parent_cats', 'selectedCat'));
+            $compactVars = [
+                'categories',
+                'allCats',
+                'parent_cats',
+                'selectedCat'
+            ];
+            if (isset($selectedCat->related_cats)) {
+                $categories = $selectedCat->related_cats;
+                $categoryIds = implode(',', $categories);
+                $categorySelects = MongoCategory::whereIn('_id', $categories)->select('title')->get();
+                $compactVars[] = 'categoryIds';
+                $compactVars[] = 'categorySelects';
+            }
+            if (isset($selectedCat->has_items)) {
+                $items = $selectedCat->has_items;
+                $itemIds = implode(',', $items);
+                $itemSelects = MongoItem::whereIn('_id', $items)
+                    ->select('title')
+                    ->get()
+                    ->sortBy(function ($item) use ($items) {
+                        return array_search($item->_id, $items);
+                    });
+                $compactVars[] = 'itemIds';
+                $compactVars[] = 'itemSelects';
+            }
+            return view('admin.siteCategory.index', compact(...$compactVars));
         } else {
             $categories = MongoCategory::where('parent_id', null)->get();
             $allCats = $categories;
@@ -149,15 +175,6 @@ class SiteCategoryController extends Controller
         $category->has_blogs = (int)$request->has_blogs;
         $category->is_cat_in_title = (int)$request->is_cat_in_title;
 
-        $unset_related_cats = 0;
-        if (isset($request->related_cats)) {
-            $category->related_cats = explode(',', $request->related_cats);
-        } else {
-            if (isset($category->related_cats)) {
-                $unset_related_cats = 1;
-            }
-        }
-
         if ($request->cost_description) {
             $category->cost_description = $request->cost_description;
         }
@@ -185,8 +202,14 @@ class SiteCategoryController extends Controller
         if ($request->title_in_ads) {
             $category->title_in_ads = $request->title_in_ads;
         }
+        if ($request->title_in_ads_noi) {
+            $category->title_in_ads_noi = $request->title_in_ads_noi;
+        }
         if ($request->desc_in_ads) {
             $category->desc_in_ads = $request->desc_in_ads;
+        }
+        if ($request->desc_in_ads_noi) {
+            $category->desc_in_ads_noi = $request->desc_in_ads_noi;
         }
         if ($request->desc_in_ads_editor) {
             $category->desc_in_ads_editor = $request->desc_in_ads_editor;
@@ -219,13 +242,64 @@ class SiteCategoryController extends Controller
             $disk->put($path . $filename2, (string) $resizedImage2);
         }
 
-        $category->update();
-
-        if ($unset_related_cats) {
-            $category->unset('related_cats');
+        $categories = array_filter(explode(',', $request->categories));
+        $items = array_filter(explode(',', $request->items));
+        $unset_cats = 0;
+        $unset_items = 0;
+        if (count($categories) > 0) {
+            $category->related_cats = $categories;
+        } else {
+            $unset_cats = 1;
+        }
+        if (count($items) > 0) {
+            $category->has_items = $items;
+        } else {
+            $unset_items = 1;
         }
 
+        $category->update();
+
+        if ($unset_cats) {
+            $category->unset('related_cats');
+        }
+        if ($unset_items) {
+            $category->unset('has_items');
+        }
+
+        $this->updateItemsHRCats($items, $category);
+
         return back()->with('success', 'تغییرات ثبت شد');
+    }
+
+    private function updateItemsHRCats($items, $category)
+    {
+        $allItemIds = collect($items)->merge(
+            MongoItem::where('has_rcats', $category->_id)->pluck('_id')->toArray()
+        )->unique();
+        foreach ($allItemIds as $itemId) {
+            $item = MongoItem::find($itemId);
+            if (!$item) {
+                continue;
+            }
+            $hasRcats = $item->has_rcats ?? [];
+            // چک کنیم که این آیتم جزو آیتم‌های انتخاب‌شده هست یا خیر
+            if (in_array($itemId, $items)) {
+                // باید این دسته‌بندی را اضافه کنیم اگر نبود
+                if (!in_array($category->_id, $hasRcats)) {
+                    $hasRcats[] = $category->_id;
+                }
+            } else {
+                // این آیتم دیگر نباید این دسته‌بندی را داشته باشد
+                $hasRcats = array_values(array_diff($hasRcats, [$category->_id]));
+            }
+
+            if (empty($hasRcats)) {
+                $item->unset('has_rcats');
+            } else {
+                $item->has_rcats = $hasRcats;
+                $item->save();
+            }
+        }
     }
 
     public function destroy($id)

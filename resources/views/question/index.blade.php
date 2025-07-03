@@ -114,7 +114,7 @@
 
             @include('category.rcats', ['page' => 'forum'])
 
-            <div class="row my-4 px-0">
+            {{-- <div class="row my-4 px-0">
                 <div class="col-12 text-center mt-2">
                     <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
                     <br>
@@ -126,7 +126,7 @@
                         سوال جدید +
                     </a>
                 </div>
-            </div>
+            </div> --}}
             @if (isset($page_intro_title) && isset($page_intro_desc))
                 <div id="page-g-div" class="text-center mt-3">
                     <img class="lazy-load" id="page-g-img"

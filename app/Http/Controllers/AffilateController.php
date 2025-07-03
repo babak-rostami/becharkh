@@ -250,18 +250,19 @@ class AffilateController extends Controller
         $questions = array_filter(explode(',', $request->questions));
 
         if (count($categories) > 0) {
-            $cat_ids = [];
-            foreach ($categories as $category_id) {
-                $cat_ids[] = $category_id;
-                $category = MongoCategory::find($category_id);
-                $cat_children = $category->allChildren();
-                foreach ($cat_children as $child) {
-                    $cat_ids[] = $child->id;
-                }
-            }
-            $cat_ids = array_unique($cat_ids);
-            $cat_ids = array_values($cat_ids);
-            $affilate->categories = $cat_ids;
+            // $cat_ids = [];
+            // foreach ($categories as $category_id) {
+            //     $cat_ids[] = $category_id;
+            //     $category = MongoCategory::find($category_id);
+            //     $cat_children = $category->allChildren();
+            //     foreach ($cat_children as $child) {
+            //         $cat_ids[] = $child->id;
+            //     }
+            // }
+            // $cat_ids = array_unique($cat_ids);
+            // $cat_ids = array_values($cat_ids);
+            // $affilate->categories = $cat_ids;
+            $affilate->categories = $categories;
         }
 
         if (count($items) > 0) {
@@ -389,18 +390,19 @@ class AffilateController extends Controller
         $unset_ques = 0;
         $unset_vid = 0;
         if (count($categories) > 0) {
-            $cat_ids = [];
-            foreach ($categories as $category_id) {
-                $cat_ids[] = $category_id;
-                $category = MongoCategory::find($category_id);
-                $cat_children = $category->allChildren();
-                foreach ($cat_children as $child) {
-                    $cat_ids[] = $child->id;
-                }
-            }
-            $cat_ids = array_unique($cat_ids);
-            $cat_ids = array_values($cat_ids);
-            $affilate->categories = $cat_ids;
+            // $cat_ids = [];
+            // foreach ($categories as $category_id) {
+            //     $cat_ids[] = $category_id;
+            //     $category = MongoCategory::find($category_id);
+            //     $cat_children = $category->allChildren();
+            //     foreach ($cat_children as $child) {
+            //         $cat_ids[] = $child->id;
+            //     }
+            // }
+            // $cat_ids = array_unique($cat_ids);
+            // $cat_ids = array_values($cat_ids);
+            // $affilate->categories = $cat_ids;
+            $affilate->categories = $categories;
         } else {
             $unset_cats = 1;
         }

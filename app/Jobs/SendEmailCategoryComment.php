@@ -57,6 +57,9 @@ class SendEmailCategoryComment implements ShouldQueue
             }
         } else {
             $category = $parentComment->category;
+            if (!isset($category)) {
+                return;
+            }
             $commentPage = route('question.index', $category->slug) . "?s=1";
             $commentPageTitle = $category->full_title ?? $category->title;
         }

@@ -176,6 +176,7 @@
     font-size: 18px;
     color: #495057;
     display: block;
+    white-space: pre-line;
 }
 
 @keyframes page-g-anim {

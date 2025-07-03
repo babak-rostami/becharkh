@@ -224,7 +224,7 @@ class QuestionController extends Controller
             $affilateService = new AffilateService();
             $affilate = $affilateService->suggestForPages($category, $item);
 
-            // $features = $category->features();
+            $features = $category->features();
             $currentQueryParams = $request->query();
 
             $hot_pages = Cache::get('hot_pages');
@@ -405,6 +405,12 @@ class QuestionController extends Controller
         } else {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
+    }
+
+    public function showShortLink($id)
+    {
+        $question = MongoQuestion::find($id);
+        return redirect()->route('question.show', $question->slug2);
     }
 
     public function show(SuggestionService $suggestionService, $category, $slug = null, $random = null)

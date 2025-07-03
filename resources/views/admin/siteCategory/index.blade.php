@@ -5,6 +5,10 @@
 @endsection
 
 @section('style')
+    <link
+        href="{{ asset('mixassets/css/category/admin/edit.min.css') . '?lm=' . filemtime('mixassets/css/category/admin/edit.min.css') }}"
+        rel="stylesheet" type="text/css" />
+
     <script src="{{ asset('library/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('library/ckeditor/ckfinder.js') }}"></script>
     <script src="{{ asset('library/ckeditor/de.js') }}"></script>
@@ -156,41 +160,14 @@
                     </div>
 
                     <div class="col-12">
-                        <div class="form-group">
-                            <label>دسته بندی های مرتبط</label>
-                            <div id="rcats">
-                                @php
-                                    $oldCategories = isset($selectedCat->related_cats)
-                                        ? $selectedCat->relatedCategories()->pluck('id')->toArray()
-                                        : [];
-                                @endphp
-                                @foreach ($oldCategories as $oldCategoryId)
-                                    @php
-                                        $category = $allCats->firstWhere('id', $oldCategoryId);
-                                    @endphp
-                                    @if ($category)
-                                        <span class="badge badge-dark" data-id="{{ $category->id }}"
-                                            style="cursor: pointer; margin-right: 10px;"
-                                            onclick="removeCategory('{{ $category->id }}', this)">
-                                            {{ $category->title }}
-                                        </span>
-                                    @endif
-                                @endforeach
-                            </div>
-                            <input type="hidden" name="related_cats" id="related_cats"
-                                value="{{ implode(',', $oldCategories) }}">
-                            <select class="form-control" id="categorySelect" onchange="selectCategory(this)">
-                                <option value="" disabled {{ $oldCategories ? '' : 'selected' }}>انتخاب دسته بندی
-                                </option>
-                                @foreach ($allCats as $cat)
-                                    @if (!in_array($cat->id, $oldCategories ?? []))
-                                        <option id="{{ $cat->id }}" value="{{ $cat->id }}">
-                                            {{ $cat->title }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
+                        @include('mainPart.form.search-and-select-for-edit', [
+                            'category_input_name' => 'categories',
+                            'sasfCategoryIds' => $categoryIds ?? null,
+                            'sasfCategorySelects' => $categorySelects ?? null,
+                            'item_input_name' => 'items',
+                            'sasfItemIds' => $itemIds ?? null,
+                            'sasfItemSelects' => $itemSelects ?? null,
+                        ])
                     </div>
 
                     <div class="col-12 col-sm-6">
@@ -305,11 +282,20 @@
                             <input type="text" class="form-control" name="title_in_ads" id="title_in_ads"
                                 value="{{ $selectedCat->title_in_ads }}">
                         </div>
+                        <div class="form-group">
+                            <label for="title_in_ads_noi">متا تایتل آگهی ها اگه آیتم نداشت</label>
+                            <input type="text" class="form-control" name="title_in_ads_noi" id="title_in_ads_noi"
+                                value="{{ $selectedCat->title_in_ads_noi }}">
+                        </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
                             <label for="desc_in_ads">متا دسکریپشن آگهی ها</label>
                             <textarea class="form-control" name="desc_in_ads" id="desc_in_ads">{{ $selectedCat->desc_in_ads }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="desc_in_ads_noi">متا دسکریپشن آگهی ها اگه آیتم نداشت</label>
+                            <textarea class="form-control" name="desc_in_ads_noi" id="desc_in_ads_noi">{{ $selectedCat->desc_in_ads_noi }}</textarea>
                         </div>
                         <div class="form-group">
                             <label>دسکریپشن آگهی ادیتور</label>
@@ -329,45 +315,11 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/category/admin/edit.min.js') . '?lm=' . filemtime('mixassets/js/category/admin/edit.min.js') }}">
+    </script>
     <script>
-        function selectCategory(selectElement) {
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
-            if (!selectedOption.value) return;
-            const categoryTitle = selectedOption.textContent;
-            const id = selectedOption.value;
-            const categoriesInput = document.getElementById('related_cats');
-            categoriesInput.value += (categoriesInput.value ? ',' : '') + id;
-            const span = document.createElement('span');
-            span.textContent = categoryTitle;
-            span.setAttribute('data-id', id);
-            span.classList.add('badge', 'badge-dark');
-            span.style.cursor = 'pointer';
-            span.style.marginRight = '10px';
-            span.onclick = function() {
-                removeCategory(id, span);
-            };
-            document.getElementById('rcats').appendChild(span);
-            selectedOption.remove();
-            selectElement.selectedIndex = 0;
-        }
-
-        function removeCategory(id, span) {
-            span.remove();
-            const categoriesInput = document.getElementById('related_cats');
-            const ids = categoriesInput.value.split(',').filter(catId => catId !== id);
-            categoriesInput.value = ids.join(',');
-            const select = document.getElementById('categorySelect');
-            const option = document.createElement('option');
-            option.id = id;
-            option.value = id;
-            option.textContent = span.textContent;
-            select.appendChild(option);
-        }
-        const editors = document.querySelectorAll('.ckeditor');
-        editors.forEach(editor => {
-            ClassicEditor.create(editor, {
-                language: "fa",
-            });
-        });
+        sasf_categories = {!! json_encode(isset($categoryIds) ? explode(',', $categoryIds) : []) !!};
+        sasf_items = {!! json_encode(isset($itemIds) ? explode(',', $itemIds) : []) !!};
     </script>
 @endsection

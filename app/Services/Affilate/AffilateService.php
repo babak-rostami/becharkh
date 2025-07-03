@@ -13,6 +13,11 @@ class AffilateService
         $aff_count = 0;
         if ($item) {
             $affiliates = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get()->shuffle()->take($take);
+            if (isset($category)) {
+                $affiliates = $affiliates->filter(function ($affiliate) use ($category) {
+                    return !isset($affiliate->categories) || in_array($category->id, $affiliate->categories);
+                });
+            }
             $aff_count = $affiliates->count();
         }
         // if ($aff_count < 3 && $category) {

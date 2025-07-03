@@ -7,11 +7,11 @@
 <div class="row mx-0" id="commentsBox">
     @foreach ($comments as $count => $comment)
         @if ($firstItems == 1)
-            @if ($count == 0 || $count == 5 || $count == 10)
+            @if ($count == 5 || $count == 9 || $count == 14)
                 @if (isset($pin_questions) && $pin_questions->slice($pqnum, 1)->first() != null)
                     <div class="col-12 text-right py-2 px-0 mt-4">
                         @include('question.hot-question-item', [
-                            'pin_question' => $pin_questions->slice($affnum, 1)->first(),
+                            'pin_question' => $pin_questions->slice($pqnum, 1)->first(),
                         ])
                         @php $pqnum += 1 @endphp
                     </div>

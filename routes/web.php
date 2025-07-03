@@ -569,6 +569,7 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
 
     Route::get('forum/{category_slug?}', [QuestionController::class, 'index'])->name('question.index');
     Route::get('forum/{category}/{slug?}/{random?}', [QuestionController::class, 'show'])->name('question.show');
+    Route::get('forum-sh/{id}', [QuestionController::class, 'showShortLink'])->name('question.show.shl');
 
     Route::get('question/{username}/{slug}', function ($slug) {
         $segments = explode('-', $slug);
