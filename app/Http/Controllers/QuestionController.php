@@ -946,8 +946,8 @@ class QuestionController extends Controller
     {
         $question = MongoQuestion::find($question_id);
 
-        $question->status = 1;
-        $question->google_index = $request->google_index;
+        $question->google_index = (int) $request->google_index;
+        $question->status = (int) $request->status;
         $question->title = $request->title;
 
         $unset_vid = 0;
@@ -999,11 +999,11 @@ class QuestionController extends Controller
         } else {
             $unset_vid = 1;
         }
-        if ($changeStatus) {
-            $question->status = 0;
-        } else {
-            $question->status = 1;
-        }
+        // if ($changeStatus) {
+        //     $question->status = 0;
+        // } else {
+        //     $question->status = 1;
+        // }
 
         if ($request->hasFile('image')) {
             $cover = $request->file('image');

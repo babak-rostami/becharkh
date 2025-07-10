@@ -32,7 +32,7 @@
             @case('advertise')
                 @foreach ($suggetItems as $suggetItem)
                     <div class="bslider-item cat-slider-item">
-                        @if (isset($category) && $suggetItem->category_id != $category->id)
+                        {{-- @if (isset($category) && $suggetItem->category_id != $category->id)
                             <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                                 href="{{ str_replace($suggetItem->category->slug, $category->slug, $suggetItem->withParentsAdvertiseUrl()) }}">
                                 <img draggable="false" src="{{ $suggetItem->thumb() }}">
@@ -40,15 +40,15 @@
                                     {{ $suggetItem->full_title ?? $suggetItem->title }}
                                 </span>
                             </a>
-                        @else
-                            <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
-                                href="{{ $suggetItem->withParentsAdvertiseUrl() }}">
-                                <img draggable="false" src="{{ $suggetItem->thumb() }}">
-                                <span>
-                                    {{ $suggetItem->full_title ?? $suggetItem->title }}
-                                </span>
-                            </a>
-                        @endif
+                        @else --}}
+                        <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
+                            href="{{ $suggetItem->withParentsAdvertiseUrl() }}">
+                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <span>
+                                {{ $suggetItem->full_title ?? $suggetItem->title }}
+                            </span>
+                        </a>
+                        {{-- @endif --}}
                     </div>
                 @endforeach
             @break

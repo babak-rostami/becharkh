@@ -97,7 +97,7 @@
 
             <div class="row mx-1 justify-content-center">
 
-                <div class="col-12 text-right">
+                <div class="col-12 text-right" id="page-title-box">
                     @if (isset($category))
                         <h1 class="mt-4" id="page-title">{{ $meta_title }}</h1>
                         <p class="textarea-preline">{{ $meta_desc }}</p>
@@ -118,9 +118,9 @@
                     </button>
                 @endif --}}
 
-                <div class="col-12 mt-4">
+                <div class="col-12">
 
-                    @include('category.rcats', ['page' => 'advertise'])
+                    {{-- @include('category.rcats', ['page' => 'advertise']) --}}
 
                     {{-- @if ($advertises->isEmpty() && isset($category) && isset($item) && !isset($suggestCats))
                         <div id="let-me-know">

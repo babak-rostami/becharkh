@@ -11,12 +11,26 @@ class AffilateService
     {
         $affiliates = collect();
         $aff_count = 0;
+
         if ($item) {
-            $affiliates = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get()->shuffle()->take($take);
+            $affiliates = Affilate::where('items', $item->id)
+                ->where('status', 1)
+                ->take(20)
+                ->get()
+                ->shuffle()
+                ->take($take);
+
             if (isset($category)) {
-                $affiliates = $affiliates->filter(function ($affiliate) use ($category) {
-                    return !isset($affiliate->categories) || in_array($category->id, $affiliate->categories);
+                $partitioned = $affiliates->partition(function ($affiliate) use ($category) {
+                    return isset($affiliate->categories) && in_array($category->id, $affiliate->categories);
                 });
+                $allowed = $partitioned[0];
+                $disallowed = $partitioned[1];
+                if ($disallowed->count() > 1) {
+                    $keepOne = $disallowed->random(1);
+                    $disallowed = $keepOne;
+                }
+                $affiliates = $disallowed->merge($allowed);
             }
             $aff_count = $affiliates->count();
         }
@@ -63,10 +77,11 @@ class AffilateService
         $affiliates = collect();
         if ($item) {
             $affiliates = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get();
-        }
-        if ($affiliates->count() < 10 && $category) {
-            $cat_affilates = Affilate::where('categories', $category->id)->where('status', 1)->take(20)->get()->shuffle();
-            $affiliates = $affiliates->merge($cat_affilates);
+            if ($category) {
+                $affiliates = $affiliates->sortByDesc(function ($affiliate) use ($category) {
+                    return in_array($category->id, (array)$affiliate->categories) ? 1 : 0;
+                })->values();
+            }
         }
         if ($affiliates->count() < 10) {
             $cat_affilates = Affilate::where('just_this_page', 0)->where('status', 1)->take(20)->get()->shuffle();

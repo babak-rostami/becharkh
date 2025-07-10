@@ -224,7 +224,6 @@
             @if (isset($ircats))
                 <div class="col-12 text-center mt-4">
                     <span id="itempr-div-title">فروشگاه {{ $item->full_title ?? $item->title }}</span>
-                    <span>محصولات تایید شده برای مالکین {{ $item->full_title ?? $item->title }}</span>
                     <div class="bslider mt-2" id="ircat-slider">
                         @foreach ($ircats as $ircat)
                             <div class="bslider-item ircat-slider-item">
@@ -253,6 +252,8 @@
                     @endif
                 </div>
             @endif
+
+            @include('mainPart.mainPage.add-to-home')
 
             @if ($hasComments == 0)
                 @include('question.comment-items', [

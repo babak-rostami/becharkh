@@ -148,3 +148,7 @@
     animation: rotate-pl-star 5s linear infinite;
     margin-right: 4px;
 }
+
+#online-users-span {
+    bottom: 120px !important;
+}

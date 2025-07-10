@@ -80,6 +80,13 @@
                 </select>
             </div>
             <div class="form-group">
+                <select class="form-control" name="status">
+                    <option {{ $question->status == 1 ? 'selected' : '' }} value="1">تایید شده</option>
+                    <option {{ !isset($question->status) || $question->status == 0 ? 'selected' : '' }} value="0">تایید
+                        نشده</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>عنوان پرسش</label>
                 <input type="text" class="form-control required" oninput="countCharacters(this,20,60)" name="title"
                     id="title" placeholder="عنوان سوال مثلا : علت صدای تق تق زیر داشبورد پژو 206"
@@ -371,6 +378,13 @@
                     <option value="0">ایندکس نشود</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label>تصویر لینک شود؟</label>
+                <select class="form-control" name="img_is_link">
+                    <option value="0">نه</option>
+                    <option value="1">آره</option>
+                </select>
+            </div>
 
             @include('mainPart.form.search-and-select-for-create', [
                 'has_cats' => 1,
@@ -435,6 +449,14 @@
                 <select class="form-control" name="google_index">
                     <option {{ $affilate->google_index == 1 ? 'selected' : '' }} value="1">ایندکس شود</option>
                     <option {{ $affilate->google_index == 0 ? 'selected' : '' }} value="0">ایندکس نشود</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>تصویر لینک شود؟</label>
+                <select class="form-control" name="img_is_link">
+                    <option {{ $affilate->img_is_link == 1 ? 'selected' : '' }} value="1">آره</option>
+                    <option {{ $affilate->img_is_link == 0 || !isset($affilate->img_is_link) ? 'selected' : '' }}
+                        value="0">نه</option>
                 </select>
             </div>
 

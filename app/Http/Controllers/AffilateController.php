@@ -234,6 +234,7 @@ class AffilateController extends Controller
         $affilate->page_link = $request->page_link;
         $affilate->just_this_page = (int)$request->just_this_page;
         $affilate->google_index = (int)$request->google_index;
+        $affilate->img_is_link = (int)$request->img_is_link;
         $affilate->status = (int)$request->status;
 
         $editor_service = new CommentEditorService();
@@ -355,6 +356,7 @@ class AffilateController extends Controller
         $affilate->page_link = $request->page_link;
         $affilate->just_this_page = (int) $request->just_this_page;
         $affilate->google_index = (int)$request->google_index;
+        $affilate->img_is_link = (int)$request->img_is_link;
         $affilate->status = (int)$request->status;
 
         $unset_link = 0;

@@ -71,7 +71,8 @@ mix.minify(
         "public/assets/js/gallery/show.js",
         "public/assets/js/affilate/show-box.js",
         // "public/assets/js/pages/fifilter.js",
-        "public/assets/js/pages/share-page.js"
+        "public/assets/js/pages/share-page.js",
+        "public/assets/js/pages/add-to-home.js",
     ],
     "public/mixassets/js/category/comment/index.min.js"
 );
@@ -412,6 +413,7 @@ mix.minify(
         "public/assets/css/category/rcats.css",
         // "public/assets/css/pages/fifilter.css",
         "public/assets/css/pages/share-page.css",
+        "public/assets/css/pages/add-to-home.css",
         "public/assets/css/category/comment/uprof.css",
     ],
     "public/mixassets/css/category/comment/index.min.css"

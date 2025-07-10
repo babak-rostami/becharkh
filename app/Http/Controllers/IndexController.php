@@ -146,10 +146,10 @@ class IndexController extends Controller
 
         if ($type == 1) {
             $item_ids = MongoItem::elSearch($value);
-            $items = MongoItem::whereIn('_id', $item_ids)->with('category')->get();
+            $items = MongoItem::whereIn('_id', $item_ids)->where('status', 1)->with('category')->get();
 
             $cat_ids = MongoCategory::elSearch($value);
-            $categories = MongoCategory::whereIn('_id', $cat_ids)->where('is_active', 1)->get();
+            $categories = MongoCategory::whereIn('_id', $cat_ids)->where('status', 1)->where('is_active', 1)->get();
 
             $items = $items->map(function ($item) {
                 return [
@@ -178,7 +178,7 @@ class IndexController extends Controller
             return response()->json(['items' => $items, 'categories' => $categories], 200);
         } elseif ($type == 2) {
             $question_ids = MongoQuestion::elSearch($value);
-            $questions = MongoQuestion::whereIn('_id', $question_ids)->get();
+            $questions = MongoQuestion::whereIn('_id', $question_ids)->where('status', 1)->get();
             $questions = $questions->map(function ($question) {
                 return [
                     'id' => $question->id,
@@ -189,7 +189,7 @@ class IndexController extends Controller
             return response()->json(['questions' => $questions], 200);
         } elseif ($type == 3) {
             $blog_ids = MongoBlog::elSearch($value);
-            $blogs = MongoBlog::whereIn('_id', $blog_ids)->get();
+            $blogs = MongoBlog::whereIn('_id', $blog_ids)->where('status', 1)->get();
             $blogs = $blogs->map(function ($blog) {
                 return [
                     'id' => $blog->id,
@@ -200,7 +200,7 @@ class IndexController extends Controller
             });
             return response()->json(['blogs' => $blogs], 200);
         } elseif ($type == 4) {
-            $videos = MongoVideo::where('title', 'like', '%' . $value . '%')->take(6)->get();
+            $videos = MongoVideo::where('title', 'like', '%' . $value . '%')->where('status', 1)->take(6)->get();
             $videos = $videos->map(function ($video) {
                 return [
                     'id' => $video->id,

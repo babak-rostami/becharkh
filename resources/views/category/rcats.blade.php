@@ -17,8 +17,8 @@
 @if (isset($category) && isset($item) && $item->category_id != $category->id)
     <div id="rcats">
         <div id="rcats-list">
-            <a href="{{ urlForSuggest('advertise', $item->category, $category, $features, $currentQueryParams) }}"
-                class="rcat">
+            {{-- <a href="{{ urlForSuggest('advertise', $item->category, $category, $features, $currentQueryParams) }}" --}}
+            <a href="{{ $item->withParentsCommentUrl() }}" class="rcat">
                 <img src="{{ $item->thumb() }}">
                 <span>{{ $item->full_title ?? $item->title }}</span>
             </a>
