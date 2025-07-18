@@ -1,4 +1,4 @@
-<a class="btn btn-outline-info mt-4 w-100" id="aths-btn" href="" data-toggle="modal" data-dismiss="modal"
+<a class="btn btn-light mt-4 w-100" id="aths-btn" href="" data-toggle="modal" data-dismiss="modal"
     data-target="#add-to-home-screen-help">
     ذخیره انجمن روی موبایل
     <img class="mr-1 w-24" id="aths-btn-icon" src="{{ $ftp_path . 'files/other/images/telegram.png' }}">
@@ -13,8 +13,8 @@
                         <span id="aths-title">ذخیره انجمن روی موبایل</span>
 
                         <div class="btn-group mb-3" role="group">
-                            <button id="btn-android" class="btn btn-lg btn-primary ml-1">آموزش اندروید</button>
-                            <button id="btn-iphone" class="btn btn-lg btn-outline-primary mr-1">آموزش آیفون</button>
+                            <button id="btn-android" class="btn btn-primary ml-1">آموزش اندروید</button>
+                            <button id="btn-iphone" class="btn btn-outline-primary mr-1">آموزش آیفون</button>
                         </div>
 
                         <div id="android-instructions" class="mt-4">

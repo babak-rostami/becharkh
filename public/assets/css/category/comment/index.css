@@ -459,3 +459,15 @@
     max-height: 75px !important;
 }
 /* end for itempr */
+
+#cat-abt-title {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-size: 21px;
+    font-weight: 600;
+}
+
+#cat-abt-desc {
+    height: 2em;
+}

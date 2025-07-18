@@ -111,27 +111,29 @@
 }
 
 .product-aflink {
-    background-color: rgb(105, 108, 231) !important;
+    background-color: #28a745 !important;
     color: #fff !important;
     padding: 12px 0 !important;
     font-size: 16px;
     font-weight: 700;
     position: fixed;
-    bottom: 12px;
     left: 0;
     right: 0;
+    bottom: 6px;
+    width: 65% !important;
     margin: 0 auto;
     z-index: 1;
-    max-width: 650px;
 }
-
+/* 
 [id^="affilb-body-"] {
     border: 1px solid #f1f1f1 !important;
-}
+    } */
 
 @media only screen and (max-width: 576px) {
     .product-aflink {
-        bottom: 65px;
+        padding: 14px 0 !important;
+        width: 90% !important;
+        bottom: 0;
     }
 }
 
@@ -145,10 +147,22 @@
 }
 
 .bp-star {
-    animation: rotate-pl-star 5s linear infinite;
+    animation: prsmoveLB 1s ease-in-out infinite;
     margin-right: 4px;
 }
 
+.bottom-menu-box {
+    bottom: -130px !important;
+}
+
 #online-users-span {
-    bottom: 120px !important;
+    right: auto !important;
+    left: 28px;
+    bottom: 62px !important;
+}
+
+#pcmbox-ask {
+    display: block;
+    margin-bottom: 15px;
+    color: #343a40;
 }

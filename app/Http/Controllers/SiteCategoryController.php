@@ -231,6 +231,7 @@ class SiteCategoryController extends Controller
 
             //org image
             $filename = $baseFilename . '.webp';
+            $category->image = $path . $filename;
             $resizedImage = Image::make($file)->encode('webp', 90);
             $disk->put($path . $filename, (string) $resizedImage);
 
@@ -240,6 +241,30 @@ class SiteCategoryController extends Controller
                 $constraint->aspectRatio();
             })->encode('webp', 90);
             $disk->put($path . $filename2, (string) $resizedImage2);
+        }
+
+        if ($request->hasFile('cat_anim')) {
+            $disk = Storage::disk('ftp');
+            $anim_file = $request->file('cat_anim');
+
+            $anim_path = 'catImage/anim/';
+
+            if ($category->getAnim() !== null) {
+                $anim_image = $category->getAnim();
+                $anim_imagename = explode($anim_path, $anim_image)[1];
+                $anim_baseFilename = explode('.gif', $anim_imagename)[0];
+            } else {
+                $anim_baseFilename = $category->slug . time();
+            }
+
+            //org image
+            $anim_filename = $anim_baseFilename . '.gif';
+            $category->anim = $anim_path . $anim_filename;
+
+            $disk->put(
+                $anim_path . $anim_filename,
+                fopen($anim_file->getRealPath(), 'r')
+            );
         }
 
         $categories = array_filter(explode(',', $request->categories));

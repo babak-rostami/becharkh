@@ -26,7 +26,6 @@
     display: block;
     word-wrap: break-word;
     text-align: right;
-    /* border: 3px solid #00ffff; */
 }
 
 [id^="affilb-body-"] ol,
@@ -39,7 +38,7 @@
     font-weight: 700;
     display: block;
     word-wrap: break-word;
-    color: #10478f;
+    color: #000;
 }
 
 [id^="affilb-route-"] {
@@ -47,34 +46,34 @@
     font-weight: 700;
     display: block;
     word-wrap: break-word;
-    color: #10478f;
+    color: #000;
 }
 
 [id^="affilb-link-"] {
-    background-color: #ffa51e; /* Initial background color */
-    border-radius: 12px;
-    color: #002157;
-    font-size: 20px;
+    background-color: #e9ecef; /* Initial background color */
+    border-radius: 8px;
+    color: #212529;
+    font-size: 18px;
     font-weight: 600;
-    padding: 10px !important;
+    padding: 8px 0;
     width: 100%;
     text-align: center;
     text-wrap: nowrap;
     border: none !important;
     outline: 0 !important;
-    animation: aflink-back-change 5s infinite; /* Animation for background color change */
+    animation: aflink-back-change 5s infinite;
 }
 
 /* Keyframe animation for background color change */
 @keyframes aflink-back-change {
     0% {
-        background-color: #ffa51e; /* Initial background color */
+        background-color: #e9ecef; /* Initial background color */
     }
     50% {
-        background-color: #ffd049; /* Second change */
+        background-color: #d6eaff; /* Second change */
     }
     100% {
-        background-color: #ffa51e; /* Back to initial background color */
+        background-color: #e9ecef; /* Back to initial background color */
     }
 }
 
@@ -115,7 +114,7 @@
 [id^="affil-gallery-"] figure img,
 [id^="affil-gallery-"] img,
 #product-vimg-div img {
-    max-height: 300px;
+    max-height: 200px;
     border-radius: 8px;
     margin-left: 12px;
     cursor: pointer;

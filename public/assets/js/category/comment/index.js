@@ -393,6 +393,35 @@ function openCCommentModal(forr, category_id, parent_id, reply_id = null) {
     }
 }
 
+if (cat_tips.length > 0) {
+    const titleEl = document.getElementById("cat-abt-title");
+    const descEl = document.getElementById("cat-abt-desc");
+
+    let index = 0;
+
+    async function typeDesc(text) {
+        descEl.textContent = "";
+        for (let char of text) {
+            descEl.textContent += char;
+            await new Promise(resolve => setTimeout(resolve, 80));
+        }
+    }
+
+    async function loopContent() {
+        while (true) {
+            const item = cat_tips[index];
+            titleEl.textContent = item.title;
+            descEl.textContent = "";
+            await new Promise(resolve => setTimeout(resolve, 400));
+            await typeDesc(item.desc);
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            index = (index + 1) % cat_tips.length;
+        }
+    }
+
+    loopContent();
+}
+
 /* for bslider */
 const catSlider = document.getElementById("cat-slider");
 createSlider(catSlider, "cat-slider-item");

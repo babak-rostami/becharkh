@@ -146,6 +146,12 @@
                             <input type="file" class="form-control" name="image" id="image">
                         </div>
                     </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="cat_anim">انیمیشن</label>
+                            <input type="file" class="form-control" name="cat_anim" id="cat_anim">
+                        </div>
+                    </div>
                     <div class="col-12">
                         <div class="form-group">
                             <label for="date_number">دسته بندی بالایی</label>

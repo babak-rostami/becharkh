@@ -131,7 +131,57 @@ class MigrateToMongoController extends Controller
 
         // $this->convertAnswerToCcomment();
 
+        // $this->addCategoryQuestions();
+
         dd("done");
+    }
+    private function addCategoryQuestions()
+    {
+        $data = [
+            [
+                'title' => 'ارزش خرید داره؟',
+                'desc' => 'توی این رنج قیمتی به نظرتون ارزش خرید داره؟'
+            ],
+            [
+                'title' => 'چیزایی که تجربه کردین',
+                'desc' => 'تجربه ای داشتین که ممکنه به درد بقیه هم بخوره؟'
+            ],
+            [
+                'title' => 'مشکلی پیش اومده؟',
+                'desc' => 'بپرس، شاید برای بقیه هم پیش اومده باشه و کمکت کنن'
+            ],
+            [
+                'title' => 'خدمات پس از فروش',
+                'desc' => 'قطعات راحت پیدا میشه؟ نمایندگی خدماتش خوبه؟'
+            ],
+            [
+                'title' => 'هزینه نگهداری',
+                'desc' => 'هزینه نگهداری و تعمیراتش چطوره؟'
+            ],
+            [
+                'title' => 'عملکرد موتور',
+                'desc' => 'شتاب و کشش موتور راضی‌کننده‌ست؟'
+            ],
+            [
+                'title' => 'مصرف سوخت',
+                'desc' => 'مصرف سوخت توی شهر و جاده چطوره؟'
+            ],
+            [
+                'title' => 'داخل کابین',
+                'desc' => 'صندلی‌ها راحتن؟ فضا برای سرنشین‌ها خوبه؟'
+            ],
+            [
+                'title' => 'مقایسه با رقبا',
+                'desc' => 'اگه برگردی عقب، باز همینو برمی‌داری؟'
+            ]
+        ];
+
+        $category = MongoCategory::where('slug', 'car')->first();
+
+        if ($category) {
+            $category->tips = $data;
+            $category->update();
+        }
     }
 
     private function convertAnswerToCcomment()

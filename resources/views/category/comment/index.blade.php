@@ -152,32 +152,44 @@
 
     <div class="row bg-wht justify-content-center" id="forum-line-height">
         <div class="col-12 col-md-10">
-            @include('mainPart.mainPage.pages-tabs', [
+            {{-- @include('mainPart.mainPage.pages-tabs', [
                 'page' => 'comment',
                 'item' => isset($item) ? $item : null,
                 'user' => isset($user) ? $user : null,
                 'is_follow' => isset($is_follow) ? $is_follow : null,
-            ])
+            ]) --}}
 
-            @if (isset($page_intro_title) && isset($page_intro_desc))
+            {{-- @if (isset($page_intro_title) && isset($page_intro_desc))
                 <div id="page-g-div" class="text-center my-3">
                     <img class="lazy-load" id="page-g-img"
                         data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
                     <span id="page-g-title">{{ $page_intro_title }}</span>
                     <span id="page-g">{{ $page_intro_desc }}</span>
                 </div>
-            @else
-                <div id="page-title-box">
-                    @if (isset($category))
-                        <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
-                        <p class="textarea-preline text-right mt-2">{{ $meta_desc }}</p>
-                    @else
-                        <h1 class="mt-4 text-right" id="page-title">نظرات کاربران</h1>
-                        <p class="text-right mt-2">از تجربیات شخصی ، پیشنهادات و نظرات درباره مسائل روزمره خود بنویسید.
-                        </p>
-                    @endif
+            @else --}}
+            <div class="mt-2" id="page-title-box">
+                @if (isset($category))
+                    <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
+                    <p class="textarea-preline text-right mt-2">{{ $meta_desc }}</p>
+                @else
+                    <h1 class="mt-4 text-right" id="page-title">نظرات کاربران</h1>
+                    <p class="text-right mt-2">از تجربیات شخصی ، پیشنهادات و نظرات درباره مسائل روزمره خود بنویسید.
+                    </p>
+                @endif
+            </div>
+            @if (isset($category) && $category->getAnim())
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <img src="{{ $category->anim() }}">
+                        @if (!empty($category->tips) && is_array($category->tips))
+                            <span id="cat-abt-title"></span>
+                            <p id="cat-abt-desc"></p>
+                        @endif
+                    </div>
                 </div>
             @endif
+
+            {{-- @endif --}}
 
             @include('item.top-users')
 
@@ -240,7 +252,7 @@
                 </div>
             @endif
 
-            @if (isset($page_intro_title) && isset($page_intro_desc))
+            {{-- @if (isset($page_intro_title) && isset($page_intro_desc))
                 <div id="page-title-box">
                     @if (isset($category))
                         <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
@@ -251,7 +263,7 @@
                         </p>
                     @endif
                 </div>
-            @endif
+            @endif --}}
 
             @include('mainPart.mainPage.add-to-home')
 
@@ -322,6 +334,8 @@
         const reply_df_route = "{{ route('category.comment.store.dref') }}";
 
         let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
+
+        const cat_tips = @json($category->tips ?? []);
 
         //for fifil
         // const fifil_load_items_route = "{{ route('fifil.load.items') }}";

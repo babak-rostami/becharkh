@@ -58,7 +58,7 @@
 @endif
 
 <div id="affilb-body-{{ $affilate->id }}"
-    class="shadow-sm px-2 py-3 radius-10 {{ isset($page) && $page == 'advertise' ? 'my-4' : 'my-2' }} {{ $affilate->img_is_link == 1 ? 'img-is-link' : '' }}">
+    class="px-2 py-1 radius-10 {{ isset($page) && $page == 'advertise' ? 'my-4' : 'my-2' }} {{ $affilate->img_is_link == 1 ? 'img-is-link' : '' }}">
     {!! $affilate->body !!}</div>
 
 @if (!isset($page) || (isset($page) && $page != 'show_product'))

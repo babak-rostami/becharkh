@@ -29,15 +29,15 @@
 
     <div class="row justify-content-center bg-wht">
 
-        <div class="col-12 text-center mb-3">
-            @if (isset($category))
+        @if (isset($category))
+            <div class="col-12 text-center mb-3">
                 @include('mainPart.mainPage.cat-slider', [
                     'page' => 'show_product',
                     'suggetItems' => isset($suggetItems) ? $suggetItems : null,
                     'suggestCats' => isset($suggestCats) ? $suggestCats : null,
                 ])
-            @endif
-        </div>
+            </div>
+        @endif
 
         <div class="col-12 col-md-8 bg-wht radius-10 mt-2 text-right shadow-sm px-3">
             <main>
@@ -51,7 +51,7 @@
 
                 @include('affilate.show-box', ['affilate' => $product])
 
-                <h1 id="page-title" class="mt-4 font-weight-bold text-center">{{ $product->title }}</h1>
+                <h1 id="page-title" class="font-weight-bold">{{ $product->title }}</h1>
 
                 <div class="bg-wht radius-10 py-3 product-post-content px-2">
                     {!! $product->body2 !!}
@@ -61,7 +61,7 @@
                     <button id="affilb-link-{{ $product->id }}" class="product-aflink"
                         onclick="jsurl('{{ route('slink', $product->id) }}',1)">
                         <span>مشاهده قیمت و ثبت سفارش</span>
-                        <img class="bp-star" src="{{ $ftp_path . 'files/other/images/star-28.png' }}" alt="shop">
+                        <img class="spb-arrow" src="{{ $ftp_path . 'files/other/images/next-light.png' }}">
                     </button>
                 @endif
 
@@ -75,7 +75,7 @@
 
                 <div class="row align-items-center justify-content-center">
                     <div class="col-12 text-right">
-                        <h3 class="text-center">نظر شما چیه؟</h3>
+                        <span id="pcmbox-ask">دیدگاه خود را درباره این کالا بنویسید</span>
                         @include('mainPart.comment-box', ['page' => 'show_product'])
                     </div>
                 </div>

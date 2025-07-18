@@ -124,9 +124,6 @@ class AffilateController extends Controller
             if ($category->has_ads) {
                 $advertise_page = $item->withParentsAdvertiseUrl();
             }
-            if ($category->has_ads) {
-                $advertise_page = $item->withParentsAdvertiseUrl();
-            }
             // if ($user) {
             //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
             //     if (isset($follow)) {

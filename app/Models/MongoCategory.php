@@ -28,7 +28,8 @@ class MongoCategory extends Model
         static::created(function ($model) {
             $elasticsearch = new Elasticsearch();
             $elasticsearch->createDocument(static::$elasticIndexName, $model->id, [
-                'similar_search' => $model->similar_search
+                'similar_search' => $model->similar_search,
+                'title' => $model->title
             ]);
         });
 
@@ -37,7 +38,8 @@ class MongoCategory extends Model
             if (array_intersect(['similar_search'], array_keys($dirtyAttributes))) {
                 $elasticsearch = new Elasticsearch();
                 $elasticsearch->updateDocument(static::$elasticIndexName, $model->id, [
-                    'similar_search' => $model->similar_search
+                    'similar_search' => $model->similar_search,
+                    'title' => $model->title
                 ]);
             }
         });
@@ -168,7 +170,7 @@ class MongoCategory extends Model
 
     public function getImage()
     {
-        return $this->attributes['image'];
+        return $this->attributes['image'] ?? null;
     }
 
     public function image()
@@ -177,6 +179,22 @@ class MongoCategory extends Model
         if (isset($image)) {
             $path = "https://dl.becharkh.com/user_files/";
             return $path . $image;
+        } else {
+            return 'https://dl.becharkh.com/user_files/files/other/images/default.jpg';
+        }
+    }
+
+    public function getAnim()
+    {
+        return $this->attributes['anim'] ?? null;
+    }
+
+    public function anim()
+    {
+        $anim = $this->attributes['anim'];
+        if (isset($anim)) {
+            $path = "https://dl.becharkh.com/user_files/";
+            return $path . $anim;
         } else {
             return 'https://dl.becharkh.com/user_files/files/other/images/default.jpg';
         }

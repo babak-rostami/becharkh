@@ -24,7 +24,7 @@ $(document).ready(function () {
                 });
                 galleryDiv.append($(this));
             });
-            $(`#affilb-route-${productId}`).after(galleryDiv);
+            $(`#affilb-route-${productId}`).before(galleryDiv);
             $(`#affilb-body-${productId}`).append(
                 $(`#affilb-link-${productId}`)
             );
