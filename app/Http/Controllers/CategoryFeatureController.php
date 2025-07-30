@@ -86,7 +86,9 @@ class CategoryFeatureController extends Controller
             $category->update();
         }
 
-        return redirect()->route('category.features.admin')->with('success', 'ویژگی با موفقیت ایجاد شد');
+        $this->assignLevels();
+
+        return back()->with('success', 'ویژگی با موفقیت ایجاد شد');
     }
 
     public function edit($feature_id)
@@ -212,7 +214,41 @@ class CategoryFeatureController extends Controller
             }
         }
 
-        return redirect()->route('category.features.admin')->with('success', 'ویژگی با موفق آپدیت شد');
+        $this->assignLevels();
+
+        return back()->with('success', 'ویژگی با موفق آپدیت شد');
+    }
+
+    private function assignLevels()
+    {
+        // تمام ویژگی‌ها رو یکجا بگیر و با id ایندکس کن برای دسترسی سریع
+        $features = MongoFeature::all()->keyBy('_id');
+
+        $levels = [];
+
+        // تابع بازگشتی برای پیدا کردن سطح هر ویژگی
+        $getLevel = function ($feature) use (&$getLevel, &$features, &$levels) {
+            if (isset($levels[$feature->_id])) {
+                return $levels[$feature->_id];
+            }
+
+            if (!$feature->parent_id || !isset($features[$feature->parent_id])) {
+                $levels[$feature->_id] = 1;
+            } else {
+                $parent = $features[$feature->parent_id];
+                $levels[$feature->_id] = $getLevel($parent) + 1;
+            }
+
+            return $levels[$feature->_id];
+        };
+
+        foreach ($features as $feature) {
+            $level = $getLevel($feature);
+            if ($feature->level !== $level) {
+                $feature->level = $level;
+                $feature->update();
+            }
+        }
     }
 
     public function fifilLoadItems(Request $request)

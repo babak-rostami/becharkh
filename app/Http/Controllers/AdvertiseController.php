@@ -210,12 +210,12 @@ class AdvertiseController extends Controller
                 if ($tab_category->has_blogs) {
                     $blog_page = $item->withParentsBlogUrl();
                 }
-                if (isset($item->videos)) {
-                    $ivids = MongoVideo::find($item->videos)->shuffle()->first();
-                    if (isset($ivids)) {
-                        $item_video = $ivids;
-                    }
-                }
+                // if (isset($item->videos)) {
+                //     $ivids = MongoVideo::find($item->videos)->shuffle()->first();
+                //     if (isset($ivids)) {
+                //         $item_video = $ivids;
+                //     }
+                // }
             } else {
                 if ($category->has_comments) {
                     $comment_page = route('question.index', $category->slug) . '?s=1';
@@ -250,9 +250,9 @@ class AdvertiseController extends Controller
                 'currentQueryParams',
                 'selected_items',
             ];
-            if (isset($item_video)) {
-                $compactVars[] = 'item_video';
-            }
+            // if (isset($item_video)) {
+            //     $compactVars[] = 'item_video';
+            // }
             if (isset($features)) {
                 $compactVars[] = 'features';
             }
@@ -535,7 +535,9 @@ class AdvertiseController extends Controller
     public function show(Request $request, $category_slug, $slug, $random, SuggestionService $suggestionService)
     {
         $category = MongoCategory::where('slug', $category_slug)->first();
-
+        if (!isset($category)) {
+            return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است');
+        }
         $advertise = MongoAdvertise::where('category_id', $category->id)->where('slug', $slug)->where('random_id', $random)->first();
         if (!isset($advertise)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');

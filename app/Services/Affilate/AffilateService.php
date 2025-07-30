@@ -53,6 +53,57 @@ class AffilateService
         return $affiliates;
     }
 
+    public function suggestsForPagesApi($category_id = null, $item_id = null, $take = null)
+    {
+        $affiliates = collect();
+        $aff_count = 0;
+
+        if ($item_id) {
+            $affiliates = Affilate::where('items', $item_id)
+                ->where('status', 1)
+                ->select(['id', 'title', 'slug', 'link', 'image', 'body', 'video_id'])
+                ->take(20)
+                ->with(['video' => function ($query) {
+                    $query->select(['id', 'image']);
+                }])
+                ->get()
+                ->shuffle()
+                ->take($take);
+
+            if (isset($category_id)) {
+                $partitioned = $affiliates->partition(function ($affiliate) use ($category_id) {
+                    return isset($affiliate->categories) && in_array($category_id, $affiliate->categories);
+                });
+                $allowed = $partitioned[0];
+                $disallowed = $partitioned[1];
+                if ($disallowed->count() > 1) {
+                    $keepOne = $disallowed->random(1);
+                    $disallowed = $keepOne;
+                }
+                $affiliates = $disallowed->merge($allowed);
+            }
+            $aff_count = $affiliates->count();
+        }
+        if ($aff_count < 3) {
+            $other_affiliates = Affilate::where('just_this_page', 0)
+                ->where('status', 1)
+                ->select(['id', 'title', 'slug', 'link', 'image', 'body', 'video_id'])
+                ->take(20)
+                ->with(['video' => function ($query) {
+                    $query->select(['id', 'image']);
+                }])
+                ->get()->shuffle()->take($take - $aff_count);
+            $affiliates = $affiliates->merge($other_affiliates)->unique();
+            $aff_count = $affiliates->count();
+        }
+
+        foreach ($affiliates as  $affiliate) {
+            $affiliate->body = $this->modifyAffiliateBody($affiliate);
+        }
+
+        return $affiliates;
+    }
+
     public function suggestForPages($category = null, $item = null)
     {
         if ($item) {

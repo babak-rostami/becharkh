@@ -14,14 +14,13 @@
     <div class="row justify-content-center">
         <div class="col-12 text-center mt-4">
 
+            @if (session('success'))
+                <p class="alert alert-success text-center">{{ session('success') }}</p>
+            @endif
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                @foreach ($errors->all() as $error)
+                    <p class="alert alert-danger text-center">{{ $error }}</p>
+                @endforeach
             @endif
 
             <form action="{{ route('category.feature.update.admin', $feature->id) }}" enctype="multipart/form-data"

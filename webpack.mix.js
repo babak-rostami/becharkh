@@ -205,6 +205,13 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/js/tag/edit.js",
+        "public/assets/js/pages/forum/sasf-edit.js"
+    ],
+    "public/mixassets/js/tag/edit.min.js"
+);
+mix.minify(
+    [
         "public/assets/js/category/admin/edit.js",
         "public/assets/js/pages/forum/sasf-edit.js"
     ],
@@ -294,6 +301,13 @@ mix.minify(
         "public/assets/css/pages/forum/sasf-edit.css",
     ],
     "public/mixassets/css/affilate/edit.min.css"
+);
+mix.minify(
+    [
+        "public/assets/css/tag/edit.css",
+        "public/assets/css/pages/forum/sasf-edit.css",
+    ],
+    "public/mixassets/css/tag/edit.min.css"
 );
 mix.minify(
     [

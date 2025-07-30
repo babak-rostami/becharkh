@@ -203,12 +203,12 @@ class QuestionController extends Controller
                 if ($category->has_ads) {
                     $advertise_page = $item->withParentsAdvertiseUrl();
                 }
-                if (isset($item->videos)) {
-                    $ivids = MongoVideo::find($item->videos)->shuffle()->first();
-                    if (isset($ivids)) {
-                        $item_video = $ivids;
-                    }
-                }
+                // if (isset($item->videos)) {
+                //     $ivids = MongoVideo::find($item->videos)->shuffle()->first();
+                //     if (isset($ivids)) {
+                //         $item_video = $ivids;
+                //     }
+                // }
             } else {
                 if ($category->has_comments) {
                     $comment_page = route('question.index', $category->slug) . '?s=1';
@@ -248,9 +248,9 @@ class QuestionController extends Controller
             // if (isset($features)) {
             //     $compactVars[] = 'features';
             // }
-            if (isset($item_video)) {
-                $compactVars[] = 'item_video';
-            }
+            // if (isset($item_video)) {
+            //     $compactVars[] = 'item_video';
+            // }
             if (isset($affilate)) {
                 $compactVars[] = 'affilate';
             }

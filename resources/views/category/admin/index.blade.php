@@ -27,9 +27,8 @@
                 @endforeach
             @endif
 
-
-            <a class="btn btn-dark" href="{{ route('category.features.admin') }}">مدیریت ویژگی ها</a>
             <button onclick="openCreateCat()" class="btn btn-primary">ایجاد دسته جدید</button>
+            <a class="btn btn-dark" href="{{ route('item.tags.admin') }}">تگ ها</a>
         </div>
 
         <div class="col-12 text-right mt-4">

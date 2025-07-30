@@ -27,6 +27,18 @@ class CategoryCommentRepository implements CategoryCommentRepositoryInterface
             ->get();
     }
 
+    public function getParentCommentsByTagId($categoryId, $itemId, $tagId, $limit)
+    {
+        return MongoCategoryComment::orderBy('created_at', 'desc')
+            ->whereNull('parent_id')
+            ->where('category_id', $categoryId)
+            ->where('items', $itemId)
+            ->where('tags', $tagId)
+            ->take($limit)
+            ->with('user')
+            ->get();
+    }
+
     public function getParentCommentsByCategoryId($categoryId, $limit)
     {
         return MongoCategoryComment::orderBy('created_at', 'desc')

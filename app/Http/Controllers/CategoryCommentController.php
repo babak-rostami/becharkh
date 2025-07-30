@@ -48,6 +48,11 @@ class CategoryCommentController extends Controller
             $user = auth('user')->user();
         }
 
+        $is_admin = null;
+        if (auth('admin')->check()) {
+            $is_admin = 1;
+        }
+
         $meta_title = null;
         $meta_desc = null;
         $meta_desc_editor = null;
@@ -58,8 +63,6 @@ class CategoryCommentController extends Controller
         $hasComments = 1;
 
         if ($category_slug != null) {
-            $feature_repository = new FeatureRepository();
-
             $category = MongoCategory::where('slug', $category_slug)->first();
             if (!isset($category)) {
                 return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
@@ -67,137 +70,44 @@ class CategoryCommentController extends Controller
 
             app(SiteCategoryController::class)->redirectIfPageNotExist($request, $category, 'comments');
 
-            $categoryFeatures = $feature_repository->getFeaturesByCategoryIdForForum($category->id);
-            $featuresInUrl = $data->getFeaturesInUrl($request);
-            foreach ($featuresInUrl as $fiu) {
-                $fs = explode('=', $fiu)[0];
-                $f = $categoryFeatures->where('slug', $fs)->first();
-                if (isset($f)) {
-                    $selectedFeatures->add($f);
+            $categoryFeatures = $category->features()->where('is_in_filter_rtable', 1);
+            $childFeature = $categoryFeatures->sortByDesc('level')->first();
+            $featuresInUrl = collect($data->getFeaturesInUrl($request))
+                ->map(function ($fiu) {
+                    return explode('=', $fiu)[0];
+                });
+            if ($featuresInUrl->isNotEmpty()) {
+                $featuresBySlug = $categoryFeatures->keyBy('slug');
+                // گرفتن ویژگی هایی که در ادرس صفحه هستن
+                $featuresIsInUrl = $featuresInUrl
+                    ->map(fn($slug) => $featuresBySlug->get($slug))
+                    ->filter();
+
+                if ($featuresIsInUrl->isNotEmpty()) {
+                    if (!$featuresInUrl->contains($childFeature->slug)) {
+                        $childFeature = $featuresIsInUrl->sortByDesc('level')->first();
+                    }
                 }
             }
-            $fiu_parentIds = $selectedFeatures->filter->parent_id->pluck('parent_id');
-            $fiu_Ids = $selectedFeatures->filter->id->pluck('id');
-            $childFeaturesInUrl = $categoryFeatures->whereIn('id', $fiu_Ids)->whereNotIn('id', $fiu_parentIds);
 
-            $fiuforp = null;
             $comments = collect();
 
-            $selected_items = collect();
-            foreach ($selectedFeatures as $sf) {
-                if (isset($sf)) {
-                    $sitem = MongoItem::where('feature_id', $sf->id)->where('slug', $request[$sf->slug])->first();
-                    if (isset($sitem)) {
-                        $selected_items->add($sitem);
-                    }
-                }
-            }
-            foreach ($childFeaturesInUrl as $f) {
-                if (isset($f)) {
-                    $item = $selected_items->where('feature_id', $f->id)->where('slug', $request[$f->slug])->first();
-                    if (isset($item)) {
-                        if ($fiuforp == null) {
-                            $fiuforp = $f->id . "=" . $item->id;
-                        } else {
-                            $fiuforp .= "---" . $f->id . "=" . $item->id;
-                        }
-                        $tempComments = $category_comment_repository->getParentCommentsByItemId($category->id, $item->id, 120);
-                        if (count($comments) > 0) {
-                            $comments = $comments->intersect($tempComments);
-                        } else {
-                            $comments = $tempComments;
-                        }
-                        //follow button
-                        if ($f->has_follow) {
-                            $followFeature = $f;
-                        }
-                    }
+            if (isset($childFeature)) {
+                $item = MongoItem::where('feature_id', $childFeature->id)->where('slug', $request[$childFeature->slug])->first();
+                if ($childFeature->has_follow) {
+                    $followFeature = $childFeature;
                 }
             }
 
-            if (isset($followFeature) && isset($item)) {
-                if ($followFeature->item_is_in_title) {
-                    if ($category->is_cat_in_title == 1) {
-                        $ctitle = $category->full_title ?? $category->title;
-                        $ctitle .=  " ";
-                    } else {
-                        $ctitle = "";
-                    }
-                    $title = $ctitle . ($followFeature->is_feature_in_title == 1 ? ' ' . $followFeature->title : '')  . ($item->full_title  ?? $item->title);
-                }
-                if (isset($item->title_in_comment)) {
-                    $meta_title = str_replace("*", $title, $item->title_in_comment);
-                } else {
-                    if ($category->title_in_comment) {
-                        $meta_title = str_replace("*", $title, $category->title_in_comment);
-                    } else {
-                        $meta_title = "نظرات کاربران درباره " . $title;
-                    }
-                }
-                if (isset($item->desc_in_comment)) {
-                    $meta_desc = str_replace("*", $title, $item->desc_in_comment);
-                } else {
-                    if ($category->desc_in_comment) {
-                        $meta_desc = str_replace("*", $title, $category->desc_in_comment);
-                    } else {
-                        $meta_desc = "بحث و گفتگو با موضوع  " . $title;
-                    }
-                }
-                if (isset($item->desc_in_comment_editor)) {
-                    $meta_desc_editor = str_replace("*", $title, $item->desc_in_comment_editor);
-                } else {
-                    if ($category->desc_in_comment_editor) {
-                        $meta_desc_editor = str_replace("*", $title, $category->desc_in_comment_editor);
-                    }
-                }
-                if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
-                    $page_intro_title = str_replace("*", $title, $followFeature->page_intro_title);
-                    $page_intro_desc = str_replace("*", $title, $followFeature->page_intro_desc);
-                }
-            } else {
-                $cat_title = $category->full_title ?? $category->title;
-                if ($category->title_in_comment) {
-                    $meta_title = str_replace("*", $cat_title, $category->title_in_comment);
-                } else {
-                    $meta_title = "نظرات کاربران درباره " . $cat_title;
-                }
-                if ($category->desc_in_comment) {
-                    $meta_desc = str_replace("*", $cat_title, $category->desc_in_comment);
-                } else {
-                    $meta_desc = "بحث و گفتگو با موضوع  " . $cat_title;
-                }
-                $comments = $category_comment_repository->getParentCommentsByCategoryId($category->id, 50);
-            }
-
-            $suggests = $suggestionService->suggest($category, $item);
-            if (isset($suggests['items'])) {
-                $suggetItems = $suggests['items'];
-            } else {
-                $suggestCats = $suggests['cats'];
-            }
-
+            $comments = app(IndexController::class)->getMainComments($category->id, isset($item) ? $item->id : 'null', 'null');
             $hasNextPage = count($comments) > 40 ? 1 : 0;
-            $lastComments = $comments->take(30);
-            $firstComs = $lastComments->take(3);
-            $topUnLikes = $lastComments->sortByDesc('unlike_count')->take(3);
-            $topLikes = $lastComments->sortByDesc('like_count')->take(3);
-            $comments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($comments)->unique()->take(40);
 
-            if (count($topUnLikes) > 0) {
-                $acceptedAnswer = $topUnLikes->first();
-            } else {
-                if (count($topLikes) > 0) {
-                    $acceptedAnswer = $topLikes->first();
-                } else {
-                    $acceptedAnswer = $comments->first();
-                }
-            }
+            $get_top_comments_data = app(IndexController::class)->selectTopComments($comments, 1);
+            $comments = $get_top_comments_data['comments'];
+            $acceptedAnswer = $get_top_comments_data['acceptedAnswer'];
+
             if ($hasNextPage) {
-                if (isset($fiuforp)) {
-                    $nextPageUrl = route('api.get.comments.page', ['query' => $fiuforp, 'category_id' => $category->id, 'page' => 2, 'lastId' => $comments->last()->id, 'cri' => $request->cri]);
-                } else {
-                    $nextPageUrl = route('api.get.comments.page', ['query' => 'null', 'category_id' => $category->id, 'page' => 2, 'lastId' => $comments->last()->id, 'cri' => $request->cri]);
-                }
+                $nextPageUrl = app(IndexController::class)->getCommentsNextPageUrl($comments, isset($category) ? $category->id : 'null', isset($item) ? $item->id : 'null', 'null', 1, $request->cri);
             } else {
                 $nextPageUrl = null;
             }
@@ -205,32 +115,28 @@ class CategoryCommentController extends Controller
             if ($comments->isEmpty()) {
                 $comments = MongoCategoryComment::orderBy('created_at', 'desc')
                     ->whereNull('parent_id')
-                    ->where('category_id', $category->id)
                     ->take(20)
                     ->with('user')
                     ->get();
-                if ($comments->isEmpty()) {
-                    $comments = MongoCategoryComment::orderBy('created_at', 'desc')
-                        ->whereNull('parent_id')
-                        ->take(20)
-                        ->with('user')
-                        ->get();
-                }
                 $hasComments = 0;
             }
 
             $pin_questions = collect();
 
-            if (isset($item)) {
-                if ($category->has_forums) {
-                    $forum_page = $item->withParentsForumUrl();
-                }
-                if ($category->has_blogs) {
-                    $blog_page = $item->withParentsBlogUrl();
-                }
-                if ($category->has_ads) {
-                    $advertise_page = $item->withParentsAdvertiseUrl();
-                }
+            if (isset($followFeature) && isset($item)) {
+                $metaData = app(IndexController::class)->generateMetaDataForItem($item, $category, $followFeature);
+                $title = $metaData['title'] ?? null;
+                $meta_title = $metaData['meta_title'] ?? null;
+                $meta_desc = $metaData['meta_desc'] ?? null;
+                $meta_desc_editor = $metaData['meta_desc_editor'] ?? null;
+                $page_intro_title = $metaData['page_intro_title'] ?? null;
+                $page_intro_desc = $metaData['page_intro_desc'] ?? null;
+
+                $pageLinksData = app(IndexController::class)->generatePageLinksForItem($category, $item);
+                $forum_page = $pageLinksData['forum_page'] ?? null;
+                $blog_page = $pageLinksData['blog_page'] ?? null;
+                $advertise_page = $pageLinksData['advertise_page'] ?? null;
+
                 if (isset($item->has_rcats)) {
                     $ircats = MongoCategory::select('_id', 'title', 'slug', 'image')
                         ->whereIn('_id', $item->has_rcats)
@@ -243,23 +149,31 @@ class CategoryCommentController extends Controller
                         ->get()
                         ->shuffle();
                 }
-                if (isset($item->videos)) {
-                    $ivids = MongoVideo::find($item->videos)->shuffle()->first();
-                    if (isset($ivids)) {
-                        $item_video = $ivids;
-                    }
-                }
+                // if (isset($item->videos)) {
+                //     $ivids = MongoVideo::find($item->videos)->shuffle()->first();
+                //     if (isset($ivids)) {
+                //         $item_video = $ivids;
+                //     }
+                // }
             } else {
-                if ($category->has_forums) {
-                    $forum_page = route('question.index', $category->slug);
-                }
-                if ($category->has_blogs) {
-                    $blog_page = route('blog.index', $category->slug);
-                }
-                if ($category->has_ads) {
-                    $advertise_page = route('ads.index', $category->slug);
-                }
+                $metaData = app(IndexController::class)->generateMetaDataForCat($category);
+                $title = $metaData['title'] ?? null;
+                $meta_title = $metaData['meta_title'] ?? null;
+                $meta_desc = $metaData['meta_desc'] ?? null;
+
+                $pageLinksData = app(IndexController::class)->generatePageLinksForCat($category, $item);
+                $forum_page = $pageLinksData['forum_page'] ?? null;
+                $blog_page = $pageLinksData['blog_page'] ?? null;
+                $advertise_page = $pageLinksData['advertise_page'] ?? null;
             }
+
+            $suggests = $suggestionService->suggest($category, $item);
+            if (isset($suggests['items'])) {
+                $suggetItems = $suggests['items'];
+            } else {
+                $suggestCats = $suggests['cats'];
+            }
+
             if ($pin_questions->count() < 3) {
                 $other_pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
                     ->where('just_this_page', 0)
@@ -278,6 +192,7 @@ class CategoryCommentController extends Controller
             $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
+                'is_admin',
                 'page_intro_title',
                 'page_intro_desc',
                 'hot_pages',
@@ -291,15 +206,14 @@ class CategoryCommentController extends Controller
                 'comments',
                 'category',
                 'title',
-                'currentQueryParams',
-                'selected_items',
+                'currentQueryParams'
             ];
             if (isset($ircats)) {
                 $compactVars[] = 'ircats';
             }
-            if (isset($item_video)) {
-                $compactVars[] = 'item_video';
-            }
+            // if (isset($item_video)) {
+            //     $compactVars[] = 'item_video';
+            // }
             if (isset($affilates)) {
                 $compactVars[] = 'affilates';
             }
@@ -325,16 +239,18 @@ class CategoryCommentController extends Controller
             $suggests = $suggestionService->suggest();
             $suggestCats = $suggests['cats'];
 
-            // $hotVideos = MongoVideo::random(15, ['pr_link' => 'notnull']);
-
-            $comments = $category_comment_repository->getParentComments(100);
+            $comments = MongoCategoryComment::orderBy('created_at', 'desc')
+                ->whereNull('parent_id')
+                ->take(100)
+                ->with('user')
+                ->get();
             $lastComments = $comments->take(30);
             $firstComs = $lastComments->take(3);
             $topUnLikes = $lastComments->sortByDesc('unlike_count')->take(3);
             $topLikes = $lastComments->sortByDesc('like_count')->take(3);
             $comments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($comments)->unique()->take(20);
 
-            $nextPageUrl = route('api.get.comments.page', ['query' => 'null', 'category_id' => 'null', 'page' => 2, 'lastId' => $comments->last()->id, 'cri' => $request->cri]);
+            $nextPageUrl = app(IndexController::class)->getCommentsNextPageUrl($comments, 'null', 'null', 'null', 1, $request->cri);
 
             $comments = $this->sendCommentRefferIdToTop($request, $comments);
 
@@ -342,7 +258,19 @@ class CategoryCommentController extends Controller
             $advertise_page = route('ads.index');
             $blog_page = route('blog.index');
 
-            return view('category.comment.index', compact('suggestCats', 'forum_page', 'blog_page', 'hasComments', 'advertise_page', 'nextPageUrl', 'comments', 'title'));
+            $compactVars = [
+                'is_admin',
+                'suggestCats',
+                'forum_page',
+                'blog_page',
+                'hasComments',
+                'advertise_page',
+                'nextPageUrl',
+                'comments',
+                'title'
+            ];
+
+            return view('category.comment.index', compact(...$compactVars));
         }
     }
 

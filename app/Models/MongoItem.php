@@ -248,4 +248,9 @@ class MongoItem extends Model
         }
         return $title;
     }
+
+    public function tags()
+    {
+        return $this->hasMany(MongoItemTag::class, 'item_id');
+    }
 }

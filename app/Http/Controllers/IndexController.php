@@ -9,6 +9,7 @@ use App\Models\CategoryFeatureItem;
 use App\Models\MongoBlog;
 use App\Models\MongoCategory;
 use App\Models\MongoItem;
+use App\Models\MongoItemTag;
 use App\Models\MongoQuestion;
 use App\Models\MongoVideo;
 use App\Models\Ostan;
@@ -16,6 +17,10 @@ use App\Models\Question;
 use App\Models\SiteCategory;
 use App\Models\User;
 use App\Models\UserSearch;
+use App\Repositories\Category\Mongodb\CategoryRepository;
+use App\Repositories\CategoryComment\Mongodb\CategoryCommentRepository;
+use App\Services\Affilate\AffilateService;
+use App\Services\Comment\CommentEditorService;
 use App\Services\Suggestion\SuggestionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -306,6 +311,267 @@ class IndexController extends Controller
             echo '</ul>';
         } else {
             echo '<p>سوال پیدا نشد میزگرد جدیدی ایجاد کنید</p>';
+        }
+    }
+
+    public function terms()
+    {
+        return view('terms');
+    }
+    public function aboutus()
+    {
+        return view('aboutus');
+    }
+
+    public function generateMetaDataForItem($item, $category, $followFeature)
+    {
+        $result = [];
+
+        if ($followFeature->item_is_in_title) {
+            $ctitle = ($category->is_cat_in_title == 1)
+                ? (($category->full_title ?? $category->title) . ' ')
+                : '';
+            $result['title'] = $ctitle
+                . ($followFeature->is_feature_in_title == 1 ? ' ' . $followFeature->title : '')
+                . ($item->full_title ?? $item->title);
+        }
+
+        $title = $result['title'] ?? ($item->full_title ?? $item->title);
+
+        $result['meta_title'] = isset($item->title_in_comment)
+            ? str_replace("*", $title, $item->title_in_comment)
+            : (isset($category->title_in_comment)
+                ? str_replace("*", $title, $category->title_in_comment)
+                : "نظرات کاربران درباره " . $title);
+
+        $result['meta_desc'] = isset($item->desc_in_comment)
+            ? str_replace("*", $title, $item->desc_in_comment)
+            : (isset($category->desc_in_comment)
+                ? str_replace("*", $title, $category->desc_in_comment)
+                : "بحث و گفتگو با موضوع  " . $title);
+
+        if (isset($item->desc_in_comment_editor)) {
+            $result['meta_desc_editor'] = str_replace("*", $title, $item->desc_in_comment_editor);
+        } elseif (isset($category->desc_in_comment_editor)) {
+            $result['meta_desc_editor'] = str_replace("*", $title, $category->desc_in_comment_editor);
+        }
+
+        if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
+            $result['page_intro_title'] = str_replace("*", $title, $followFeature->page_intro_title);
+            $result['page_intro_desc'] = str_replace("*", $title, $followFeature->page_intro_desc);
+        }
+
+        return $result;
+    }
+    public function generateMetaDataForCat($category)
+    {
+        $result = [];
+
+        $cat_title = $category->full_title ?? $category->title;
+        $result['title'] = $cat_title;
+
+        $result['meta_title'] = isset($category->title_in_comment)
+            ? str_replace("*", $cat_title, $category->title_in_comment)
+            : "نظرات کاربران درباره " . $cat_title;
+
+        $result['meta_desc'] = isset($category->desc_in_comment)
+            ? str_replace("*", $cat_title, $category->desc_in_comment)
+            : "بحث و گفتگو با موضوع  " . $cat_title;
+
+        return $result;
+    }
+
+    public function generatePageLinksForItem($category, $item)
+    {
+        $result = [];
+        if ($category->has_forums) {
+            $result['forum_page'] = $item->withParentsForumUrl();
+        }
+        if ($category->has_blogs) {
+            $result['blog_page'] = $item->withParentsBlogUrl();
+        }
+        if ($category->has_ads) {
+            $result['advertise_page'] = $item->withParentsAdvertiseUrl();
+        }
+        return $result;
+    }
+    public function generatePageLinksForCat($category)
+    {
+        $result = [];
+        if ($category->has_forums) {
+            $result['forum_page'] = route('question.index', $category->slug);
+        }
+        if ($category->has_blogs) {
+            $result['blog_page'] = route('blog.index', $category->slug);
+        }
+        if ($category->has_ads) {
+            $result['advertise_page'] = route('ads.index', $category->slug);
+        }
+        return $result;
+    }
+
+    public function getCommentsPaginatePage($category_id, $item_id, $tag_id, $page, $lastId, $cri = null)
+    {
+        $allComments = $this->getMainComments($category_id, $item_id, $tag_id);
+
+        $responseData = [];
+
+        if ($allComments->isEmpty()) {
+            $responseData['nextPageUrl'] = null;
+
+            if ($tag_id != 'null' && $page == 1) {
+                $responseData['no_cm'] = 1;
+            }
+
+            return response()->json($responseData, 200);
+        }
+
+        // انتخاب نظرات برجسته
+        $allComments = $this->selectTopComments($allComments, 0);
+
+        // حذف نظرها تا قبل از lastId
+        if ($lastId != 'null') {
+            $index = $allComments->search(fn($c) => $c->id == $lastId);
+            if ($index !== false) {
+                $allComments = $allComments->slice($index + 1)->values();
+            }
+        }
+        $checkNextPage = 0;
+        if ($allComments->count() > 20) {
+            $checkNextPage = 1;
+            $allComments = $allComments->take(20);
+        }
+
+        // حذف نظر با آیدی cri اگر موجود باشه
+        //اگه ای دی نظری توی لینک صفحه باشه اون رو اول نشون میده بخاطر همین اگه دوباره نظر توی لیست بود میخوام پاک بشه
+        if ($cri) {
+            $allComments = $allComments->reject(fn($c) => $c->id == $cri)->values();
+        }
+
+        $editor_service = new CommentEditorService();
+        foreach ($allComments as $newComment) {
+            $editor_service->changeTempEditorLazyImg($newComment);
+        }
+
+        if ($allComments->isEmpty()) {
+            $responseData['nextPageUrl'] = null;
+
+            if ($tag_id != 'null') {
+                $responseData['no_cm'] = 1;
+            }
+
+            return response()->json($responseData, 200);
+        }
+
+        if ($checkNextPage) {
+            $nextPageUrl = $this->getCommentsNextPageUrl($allComments, $category_id, $item_id, $tag_id, $page, $cri);
+        } else {
+            $nextPageUrl = null;
+        }
+
+        if ($page == 1) {
+            $affilateService = new AffilateService();
+            $affilates = $affilateService->suggestsForPagesApi($category_id, $item_id, 3);
+
+            foreach ($affilates as $affilate) {
+                $affilate->body = preg_replace('/<img[^>]*>/i', '', $affilate->body);
+            }
+
+            if (isset($tag_id)) {
+                $child_tags = [];
+                $item = MongoItem::find($item_id);
+                if ($item && isset($item->tags_array)) {
+                    foreach ($item->tags_array as $tag_object) {
+                        if (isset($tag_object['parent_id']) && $tag_object['parent_id'] == $tag_id) {
+                            $child_tags[] = $tag_object;
+                        }
+                    }
+                    usort($child_tags, function ($a, $b) {
+                        return $a['priority'] <=> $b['priority'];
+                    });
+                }
+
+                $responseData['child_tags'] = $child_tags;
+                $responseData['category_id'] = $category_id;
+                $responseData['item_id'] = $item_id;
+            }
+
+            $responseData['html'] = view('question.comment-items-api', [
+                'comments' => $allComments,
+                'affilates' => $affilates
+            ])->render();
+        } else {
+            $responseData['html'] = view('question.comment-items-api', [
+                'comments' => $allComments
+            ])->render();
+        }
+        $responseData['scrollTo'] = 'comment-box-' . $allComments->first()->id;
+        $responseData['nextPageUrl'] = $nextPageUrl;
+
+        return response()->json($responseData, 200);
+    }
+    public function getMainComments($category_id, $item_id, $tag_id)
+    {
+        $category_comment_repository = new CategoryCommentRepository();
+        if ($category_id != 'null') {
+            if ($item_id != 'null') {
+                if ($tag_id != 'null') {
+                    $comments = $category_comment_repository->getParentCommentsByTagId($category_id, $item_id, $tag_id, 120);
+                } else {
+                    $comments = $category_comment_repository->getParentCommentsByItemId($category_id, $item_id, 120);
+                }
+            } else {
+                $comments = $category_comment_repository->getParentCommentsByCategoryId($category_id, 120);
+            }
+        } else {
+            $comments = $category_comment_repository->getParentComments(100);
+        }
+        return $comments;
+    }
+
+    //cri ای دی اون کامنتی هستش که با لینک اون صفحه رو باز کرده
+    public function getCommentsNextPageUrl($comments, $category_id, $item_id, $tag_id, $page, $cri)
+    {
+        if ($comments->isEmpty()) {
+            return null;
+        }
+        $nextPageUrl = ($page == 4) ? null : route('api.get.comments.page', [
+            'category_id' => $category_id != 'null' ? $category_id : 'null',
+            'item_id' => $item_id != 'null' ? $item_id : 'null',
+            'tag_id' => $tag_id != 'null' ? $tag_id : 'null',
+            'page' => $page + 1,
+            'lastId' => $comments->last()->id,
+            'cri' => isset($cri) ? $cri : 'null',
+        ]);
+        return $nextPageUrl;
+    }
+
+    public function selectTopComments($allComments, $getAccepted)
+    {
+        $lastComments = $allComments->take(30);
+        $firstComs = $lastComments->take(3);
+        $topUnLikes = $lastComments->sortByDesc('unlike_count')->take(3);
+        $topLikes = $lastComments->sortByDesc('like_count')->take(3);
+
+        $allComments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($allComments)->unique('id')->values();
+
+        if ($getAccepted == 1) {
+            $allComments = $allComments->take(40);
+            if (count($topUnLikes) > 0) {
+                $acceptedAnswer = $topUnLikes->first();
+            } else {
+                if (count($topLikes) > 0) {
+                    $acceptedAnswer = $topLikes->first();
+                } else {
+                    $acceptedAnswer = $allComments->first();
+                }
+            }
+            $data = [];
+            $data['comments'] = $allComments;
+            $data['acceptedAnswer'] = $acceptedAnswer;
+            return $data;
+        } else {
+            return $allComments;
         }
     }
 }

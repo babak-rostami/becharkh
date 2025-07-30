@@ -57,6 +57,8 @@
                                 <td>
                                     <a class="btn btn-warning"
                                         href="{{ route('admin.category.comment.edit', $comment->id) }}">ویرایش</a>
+                                    <a class="btn btn-dark" href="{{ route('comment.item.tags.admin', $comment->id) }}">تگ
+                                        ها</a>
                                     <a class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
                                         data-target="#replyto-{{ $comment->id }}" href="">ریپلای</a>
                                     <a class="btn btn-danger" data-toggle="modal" data-dismiss="modal"

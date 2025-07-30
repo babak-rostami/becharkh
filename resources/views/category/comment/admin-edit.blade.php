@@ -19,6 +19,73 @@
 @section('content')
     <div class="row justify-content-center p-2">
 
+        <div class="col-12 text-center my-4">
+            @if (!isset($comment->parent_id))
+                <a class="btn btn-dark" href="{{ route('comment.item.tags.admin', $comment->id) }}">تگ
+                    ها</a>
+            @endif
+            <a class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#replyto-{{ $comment->id }}"
+                href="">ریپلای</a>
+            <a class="btn btn-danger" data-toggle="modal" data-dismiss="modal" data-target="#delete-{{ $comment->id }}"
+                href="">حذف</a>
+
+            <div class="modal fade" id="delete-{{ $comment->id }}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <form action="{{ route('admin.category.comment.delete') }}" method="post">
+                                @csrf
+                                {{ method_field('DELETE') }}
+                                <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                                <p>میخواهید نظر حذف شود؟</p>
+                                <input type="submit" class="btn btn-danger" value="حذف">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="replyto-{{ $comment->id }}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <form action="{{ route('admin.category.comment.store') }}" method="post">
+                                @csrf
+                                @if (isset($comment->parent_id))
+                                    <input type="hidden" name="parent_id" value="{{ $comment->parent_id }}">
+                                    <input type="hidden" name="reply_id" value="{{ $comment->id }}">
+                                @else
+                                    <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                @endif
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>نام فیک</label>
+                                            <input type="text" class="form-control" name="name" id="name"
+                                                value="{{ old('name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>نام کاربری فیک</label>
+                                            <input type="text" class="form-control" name="username" id="username"
+                                                value="{{ old('username') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">نظر:</label>
+                                    <textarea style="height: 150px;" name="body" class="form-control"></textarea>
+                                </div>
+                                <input type="submit" class="btn btn-success">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-12 col-md-10 text-right p-2 mb-5 p-sm-5 bg-wht radius-10">
 
             @if (isset($comment->parent_id))

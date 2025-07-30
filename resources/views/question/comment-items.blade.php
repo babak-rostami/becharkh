@@ -116,6 +116,19 @@
                 @endif
             </span>
 
+            @if ($is_admin)
+                <hr>
+                <a target="_blank" class="btn btn-warning"
+                    href="{{ route('admin.category.comment.edit', $comment->id) }}">ویرایش</a>
+                @if (isset($comment->tags))
+                    <br>
+                    <span class="badge badge-light">تگ ها:</span>
+                    @foreach ($comment->getTags() as $com_tag)
+                        <span class="badge badge-dark">{{ $com_tag->title }}</span>
+                    @endforeach
+                @endif
+            @endif
+
             @if ((!isset($item) || $hasComments == 0) && $firstItems == 1)
                 <hr>
                 @if (isset($comment->items_title))
@@ -165,6 +178,11 @@
                     @else class="unlike-com-image"
                     src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}" @endif>
                 </span>
+                @if ($is_admin)
+                    <hr>
+                    <a target="_blank" class="btn btn-warning"
+                        href="{{ route('admin.category.comment.edit', $reply->id) }}">ویرایش</a>
+                @endif
             </div>
         @endforeach
     @endforeach

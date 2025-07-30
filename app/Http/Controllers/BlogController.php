@@ -287,6 +287,9 @@ class BlogController extends Controller
         if (isset($category)) {
             if (!isset($random_id)) {
                 $blog = MongoBlog::where('category_id', $category->id)->where('slug', $slug)->first();
+                if (!isset($blog)) {
+                    return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است');
+                }
                 return redirect(route('blog.show', ['category_slug' => $category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id]));
             }
             $blog = MongoBlog::where('category_id', $category->id)->where('slug', $slug)->where('random_id', $random_id)->first();

@@ -42,6 +42,7 @@ use App\Http\Controllers\LetMeKnowController;
 use App\Http\Controllers\MigrateToMongoController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ModelDatailController;
+use App\Http\Controllers\MongoItemTagController;
 use App\Http\Controllers\PageErrorController;
 use App\Http\Controllers\ProductCommentController;
 use App\Http\Controllers\ProductCommentLikeController;
@@ -75,6 +76,7 @@ use App\Http\Controllers\WebScraperController;
 use App\Http\Controllers\WorkController;
 use App\Models\MongoBlog;
 use App\Models\MongoQuestion;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -301,6 +303,16 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::put('feature-item-update/{item_id}', [CategoryFeatureItemController::class, 'updateItemAdmin'])->name('feature.item.update.admin');
     Route::get('feature-item-destroy/{item_id}', [CategoryFeatureItemController::class, 'destroyItemAdmin'])->name('feature.item.destroy.admin');
 
+    Route::get('item-tags/{id?}', [MongoItemTagController::class, 'index'])->name('item.tags.admin');
+    Route::post('item-tag-store', [MongoItemTagController::class, 'store'])->name('item.tag.store.admin');
+    Route::put('item-tag-update/{tag_id}', [MongoItemTagController::class, 'update'])->name('item.tag.update.admin');
+    Route::delete('item-tag-destroy/{tag_id}', [MongoItemTagController::class, 'delete'])->name('item.tag.destroy.admin');
+    Route::get('item-tag-edit/{tag_id}', [MongoItemTagController::class, 'edit'])->name('item.tag.edit.admin');
+
+    Route::get('comment-item-tags/{comment_id}', [MongoItemTagController::class, 'commentTags'])->name('comment.item.tags.admin');
+    Route::post('comment-item-tag-store', [MongoItemTagController::class, 'comTagStore'])->name('comment.item.tag.store.admin');
+    Route::delete('comment-item-tag-delete', [MongoItemTagController::class, 'comTagDelete'])->name('comment.item.tag.delete.admin');
+
     Route::get('hot-items', [CategoryFeatureItemController::class, 'hotItemsAdmin'])->name('hot.items.admin');
 
     Route::get('affilates', [AffilateController::class, 'indexAdmin'])->name('affilate.index.admin');
@@ -510,7 +522,12 @@ Route::get('suggest-page-show', [SuggestPageController::class, 'show'])->name('s
 
 Route::post('comment-editor-img/{page}', [EditorImageController::class, 'upload'])->name('comment.editor.img.uplaod');
 
-Route::get('contactus/create', [ContactUsController::class, 'create'])->name('contactus.create');
+Route::get('terms', [IndexController::class, 'terms'])->name('terms.create');
+Route::get('about-us', [IndexController::class, 'aboutus'])->name('aboutus.create');
+Route::get('contact-us', [ContactUsController::class, 'create'])->name('contactus.create');
+Route::get('contactus/create', function () {
+    return Redirect::to(route('contactus.create'), 301);
+});
 
 Route::get('charge-account-callback/{order_id}', [UserOrderController::class, 'chargeAccountCallback'])->name('charge.account.callback');
 Route::get('callback', [UserOrderController::class, 'callback'])->name('callback');

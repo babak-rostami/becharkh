@@ -15,8 +15,9 @@
     <script src="{{ $ftp_path . 'library/axios.min.js' }}"></script>
     <script src="{{ $ftp_path . 'library/jquery-3.1.1.min.js' }}"></script>
 
-    <link href="{{ asset('assets/style.css') . '?lm=' . filemtime('assets/style.css') }}" rel="stylesheet"
-        type="text/css" />
+    <link href="{{ asset('assets/style.css') }}" rel="stylesheet" type="text/css" />
+    {{-- <link href="{{ asset('assets/style.css') . '?lm=' . filemtime('assets/style.css') }}" rel="stylesheet"
+        type="text/css" /> --}}
 
     <title>@yield('title')</title>
     <link rel="icon" type="image/x-icon" href="{{ $ftp_path . 'files/other/images/logo1.png' }}" />
@@ -466,8 +467,9 @@
         const x_16 = "{{ $ftp_path . 'files/other/images/x-16.webp' }}";
     </script>
 
-    <script type="text/javascript" src="{{ asset('assets/js/main.js') . '?lm=' . filemtime('assets/js/main.js') }}">
-    </script>
+    <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('assets/js/main.js') . '?lm=' . filemtime('assets/js/main.js') }}">
+    </script> --}}
 
     @yield('script')
 

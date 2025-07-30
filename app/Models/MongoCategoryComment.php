@@ -94,4 +94,12 @@ class MongoCategoryComment extends Model
         }
         return MongoItem::whereIn('_id', $this->items)->get();
     }
+
+    public function getTags()
+    {
+        if (!isset($this->tags)) {
+            return collect();
+        }
+        return MongoItemTag::whereIn('_id', $this->tags)->get();
+    }
 }

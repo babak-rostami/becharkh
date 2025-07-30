@@ -207,3 +207,12 @@
     animation: prsmoveLB 1s ease-in-out infinite;
     margin-right: 4px;
 }
+
+.prod-a-api {
+    display: block;
+}
+.prod-a-api img {
+    max-height: 200px;
+    max-width: 100%;
+    border-radius: 12px;
+}

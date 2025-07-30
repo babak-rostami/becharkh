@@ -116,26 +116,25 @@
             ])
 
             @if (isset($category))
-                @if (isset($item_video))
+                {{-- @if (isset($item_video))
                     <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
                         src="{{ route('video.embedb.show', $item_video->slug2) }}" style="border:none;" width="100%"
                         height="292px" allowfullscreen></iframe>
+                @else --}}
+                @if (isset($item->images))
+                    <div id="item-gallery">
+                        @foreach ($item->images as $key => $img)
+                            <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!}
+                                class="my-3" onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
+                                src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
+                                alt="عکس {{ $item->full_title ?? $item->title }}">
+                        @endforeach
+                    </div>
                 @else
-                    @if (isset($item->images))
-                        <div id="item-gallery">
-                            @foreach ($item->images as $key => $img)
-                                <img id="item-img-{{ $key }}" class="my-3 lazy-load"
-                                    onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
-                                    data-src="{{ asset($item->image($key)) }}"
-                                    title="{{ $item->full_title ?? $item->title }}"
-                                    alt="عکس {{ $item->full_title ?? $item->title }}">
-                            @endforeach
-                        </div>
-                    @else
-                        <img id="page-img" class="mb-3 mt-4" src="{{ asset($category->image()) }}"
-                            title="{{ $category->title }}" alt="{{ $category->title }}">
-                    @endif
+                    <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
+                        title="{{ $category->title }}" alt="{{ $category->title }}">
                 @endif
+                {{-- @endif --}}
             @else
                 <img class="mb-3 mt-4" src="{{ $ftp_path . 'files/other/images/cat-comments.png' }}" title="نظرات کاربران"
                     alt="نظرات کاربران">
@@ -235,7 +234,7 @@
 
             @if (isset($ircats))
                 <div class="col-12 text-center mt-4">
-                    <span id="itempr-div-title">فروشگاه {{ $item->full_title ?? $item->title }}</span>
+                    {{-- <span id="itempr-div-title">فروشگاه {{ $item->full_title ?? $item->title }}</span> --}}
                     <div class="bslider mt-2" id="ircat-slider">
                         @foreach ($ircats as $ircat)
                             <div class="bslider-item ircat-slider-item">
@@ -267,6 +266,36 @@
 
             @include('mainPart.mainPage.add-to-home')
 
+            @if (isset($item) && isset($item->tags_array))
+                <div id="item-tags-box">
+                    <span id="item-tags-title">بحث های مهم</span>
+                    <span id="item-tags-body">جستجوی سریع در بحث ها و مشکلات پرتکرار</span>
+                    <div id="item-tags">
+                        <span class="item-tag-selected"
+                            onclick="selectItemTag('{{ $category->id }}','{{ $item->id }}','null')"
+                            id="item-tag-null">همه نظرات
+                            <img id="item-tag-tick-icon" src="{{ $ftp_path . 'files/other/images/tick-18.png' }}">
+                        </span>
+                        @foreach (collect($item->tags_array)->sortBy('priority') as $itag)
+                            @if (!isset($itag['parent_id']))
+                                <span class="item-tag"
+                                    onclick="selectItemTag('{{ $category->id }}','{{ $item->id }}','{{ $itag['id'] }}')"
+                                    id="item-tag-{{ $itag['id'] }}">{{ $itag['title'] }} </span>
+                            @endif
+                        @endforeach
+                    </div>
+                    <div id="item-tags-2">
+                    </div>
+                    <div id="com-tags-loading">
+                        <img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
+                        <span id="com-tags-loading-txt">در حال جستجو</span>
+                    </div>
+                    <div id="com-tags-loading-msg">
+                        <span id="com-tags-loading-msg-txt"></span>
+                    </div>
+                </div>
+            @endif
+
             @if ($hasComments == 0)
                 @include('question.comment-items', [
                     'firstItems' => 1,
@@ -284,7 +313,7 @@
                 </div>
             @endif
 
-            @if (isset($category))
+            {{-- @if (isset($category))
                 @if ($meta_desc_editor)
                     <div class="row mt-5">
                         <div class="col-12">
@@ -292,10 +321,14 @@
                         </div>
                     </div>
                 @endif
-            @endif
+            @endif --}}
 
 
-            @include('mainPart.mainPage.breadc', ['page' => 'comment'])
+            <div class="row">
+                <div class="col-12 my-3">
+                    @include('mainPart.mainPage.breadc', ['page' => 'comment'])
+                </div>
+            </div>
 
             @if (isset($hot_pages))
                 <div class="row mt-4">

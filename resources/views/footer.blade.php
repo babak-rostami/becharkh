@@ -28,7 +28,9 @@
 
         <div class="col-12 text-center my-2">
             <hr>
-            <a class="btn btn-sm btn-dark" href="{{ route('contactus.create') }}">پشتیبانی</a>
+            <a class="btn btn-sm btn-light" href="{{ route('contactus.create') }}">پشتیبانی</a>
+            <a class="btn btn-sm btn-light" href="{{ route('aboutus.create') }}">درباره ما</a>
+            <a class="btn btn-sm btn-light" href="{{ route('terms.create') }}">قوانین استفاده</a>
         </div>
 
     </div>
