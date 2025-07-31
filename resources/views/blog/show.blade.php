@@ -438,7 +438,7 @@
             </div>
 
             @if (isset($hot_pages))
-                <div class="row mt-4">
+                <div class="row mt-4 justify-content-center">
                     @include('mainPart.hot-pages')
                 </div>
             @endif

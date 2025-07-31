@@ -5,6 +5,8 @@
 @endsection
 
 @section('style')
+    <link href="{{ asset('mixassets/css/style.min.css') . '?lm=' . filemtime('mixassets/css/style.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -42,7 +44,8 @@
                                 <span>{{ Str::limit($affilate->title, 50, '...') }}</span>
                             </td>
                             <td>
-                                <a class="btn btn-warning" href="{{ route('affilate.edit.admin', $affilate->id) }}">ویرایش</a>
+                                <a class="btn btn-warning"
+                                    href="{{ route('affilate.edit.admin', $affilate->id) }}">ویرایش</a>
                                 <a target="_blank" class="btn btn-light"
                                     href="{{ route('product.show', $affilate->slug) }}">مشاهده</a>
                                 <a class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
@@ -77,7 +80,7 @@
     </div>
 @endsection
 
-
-
 @section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/main.min.js') . '?lm=' . filemtime('mixassets/js/main.min.js') }}"></script>
 @endsection

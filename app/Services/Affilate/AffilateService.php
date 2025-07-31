@@ -15,6 +15,7 @@ class AffilateService
         if ($item) {
             $affiliates = Affilate::where('items', $item->id)
                 ->where('status', 1)
+                ->with('video')
                 ->take(20)
                 ->get()
                 ->shuffle()
@@ -41,7 +42,9 @@ class AffilateService
         // }
 
         if ($aff_count < 3) {
-            $other_affiliates = Affilate::where('just_this_page', 0)->where('status', 1)->take(20)->get()->shuffle()->take($take - $aff_count);
+            $other_affiliates = Affilate::where('just_this_page', 0)
+                ->with('video')
+                ->where('status', 1)->take(20)->get()->shuffle()->take($take - $aff_count);
             $affiliates = $affiliates->merge($other_affiliates)->unique();
             $aff_count = $affiliates->count();
         }
@@ -107,15 +110,15 @@ class AffilateService
     public function suggestForPages($category = null, $item = null)
     {
         if ($item) {
-            $affiliate = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get()->shuffle()->first();
+            $affiliate = Affilate::where('items', $item->id)->where('status', 1)->with('video')->take(20)->get()->shuffle()->first();
         }
 
         if (!isset($affiliate) && $category) {
-            $affiliate = Affilate::where('categories', $category->id)->where('status', 1)->take(20)->get()->shuffle()->first();
+            $affiliate = Affilate::where('categories', $category->id)->where('status', 1)->with('video')->take(20)->get()->shuffle()->first();
         }
 
         if (!isset($affiliate)) {
-            $affiliate = Affilate::where('just_this_page', 0)->where('status', 1)->take(20)->get()->shuffle()->first();
+            $affiliate = Affilate::where('just_this_page', 0)->where('status', 1)->with('video')->take(20)->get()->shuffle()->first();
         }
 
         $affiliate->body = $this->modifyAffiliateBody($affiliate);
@@ -127,7 +130,7 @@ class AffilateService
     {
         $affiliates = collect();
         if ($item) {
-            $affiliates = Affilate::where('items', $item->id)->where('status', 1)->take(20)->get();
+            $affiliates = Affilate::where('items', $item->id)->where('status', 1)->with('video')->take(20)->get();
             if ($category) {
                 $affiliates = $affiliates->sortByDesc(function ($affiliate) use ($category) {
                     return in_array($category->id, (array)$affiliate->categories) ? 1 : 0;
@@ -135,7 +138,7 @@ class AffilateService
             }
         }
         if ($affiliates->count() < 10) {
-            $cat_affilates = Affilate::where('just_this_page', 0)->where('status', 1)->take(20)->get()->shuffle();
+            $cat_affilates = Affilate::where('just_this_page', 0)->where('status', 1)->with('video')->take(20)->get()->shuffle();
             $affiliates = $affiliates->merge($cat_affilates);
         }
         $affiliates = $affiliates->unique('id')->take(10);
@@ -148,6 +151,9 @@ class AffilateService
     private function modifyAffiliateBody($affiliate)
     {
         $body = $affiliate->body;
+
+        $body = preg_replace('/<figure[^>]*>.*?<\/figure>/is', '', $body);
+
         return preg_replace_callback(
             '/<h2>(.*?)<\/h2>/i',
             function ($matches) use ($affiliate) {
@@ -163,9 +169,11 @@ class AffilateService
         );
     }
 
+
+
     public function suggestForQuestion($question_id, $category = null, $item = null)
     {
-        $affiliates = Affilate::where('questions', $question_id)->where('status', 1)->take(3)->get()->shuffle();
+        $affiliates = Affilate::where('questions', $question_id)->where('status', 1)->with('video')->take(3)->get()->shuffle();
         foreach ($affiliates as $affiliate) {
             $affiliate->body = $this->modifyAffiliateBody($affiliate);
         }

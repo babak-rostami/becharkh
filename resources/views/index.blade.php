@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {{-- <link href="{{ asset('admin_c/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" /> --}}
@@ -15,7 +15,7 @@
     <script src="{{ $ftp_path . 'library/axios.min.js' }}"></script>
     <script src="{{ $ftp_path . 'library/jquery-3.1.1.min.js' }}"></script>
 
-    <link href="{{ asset('assets/style.css') }}" rel="stylesheet" type="text/css" />
+    {{-- <link href="{{ asset('assets/style.css') }}" rel="stylesheet" type="text/css" /> --}}
     {{-- <link href="{{ asset('assets/style.css') . '?lm=' . filemtime('assets/style.css') }}" rel="stylesheet"
         type="text/css" /> --}}
 
@@ -467,7 +467,7 @@
         const x_16 = "{{ $ftp_path . 'files/other/images/x-16.webp' }}";
     </script>
 
-    <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script> --}}
     {{-- <script type="text/javascript" src="{{ asset('assets/js/main.js') . '?lm=' . filemtime('assets/js/main.js') }}">
     </script> --}}
 

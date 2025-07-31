@@ -1,4 +1,5 @@
 {
+    "/mixassets/js/main.min.js": "/mixassets/js/main.min.js",
     "/mixassets/js/forum/index.min.js": "/mixassets/js/forum/index.min.js",
     "/mixassets/js/forum/create.min.js": "/mixassets/js/forum/create.min.js",
     "/mixassets/js/forum/edit.min.js": "/mixassets/js/forum/edit.min.js",
@@ -29,6 +30,12 @@
     "/mixassets/js/suggestp/edit.min.js": "/mixassets/js/suggestp/edit.min.js",
     "/mixassets/js/affilate/show.min.js": "/mixassets/js/affilate/show.min.js",
     "/mixassets/js/affilate/comment-create.min.js": "/mixassets/js/affilate/comment-create.min.js",
+    "/mixassets/js/user/favorite.min.js": "/mixassets/js/user/favorite.min.js",
+    "/mixassets/js/pages/contact-us.min.js": "/mixassets/js/pages/contact-us.min.js",
+    "/mixassets/js/pages/about-us.min.js": "/mixassets/js/pages/about-us.min.js",
+    "/mixassets/js/pages/terms.min.js": "/mixassets/js/pages/terms.min.js",
+    "/mixassets/js/admin/user/search.min.js": "/mixassets/js/admin/user/search.min.js",
+    "/mixassets/css/style.min.css": "/mixassets/css/style.min.css",
     "/mixassets/css/affilate/create.min.css": "/mixassets/css/affilate/create.min.css",
     "/mixassets/css/video/create.min.css": "/mixassets/css/video/create.min.css",
     "/mixassets/css/affilate/edit.min.css": "/mixassets/css/affilate/edit.min.css",
@@ -55,5 +62,10 @@
     "/mixassets/css/advertise/edit.min.css": "/mixassets/css/advertise/edit.min.css",
     "/mixassets/css/advertise/create.min.css": "/mixassets/css/advertise/create.min.css",
     "/mixassets/css/affilate/show.min.css": "/mixassets/css/affilate/show.min.css",
-    "/mixassets/css/affilate/comment-create.min.css": "/mixassets/css/affilate/comment-create.min.css"
+    "/mixassets/css/affilate/comment-create.min.css": "/mixassets/css/affilate/comment-create.min.css",
+    "/mixassets/css/user/favorite.min.css": "/mixassets/css/user/favorite.min.css",
+    "/mixassets/css/pages/contact-us.min.css": "/mixassets/css/pages/contact-us.min.css",
+    "/mixassets/css/pages/about-us.min.css": "/mixassets/css/pages/about-us.min.css",
+    "/mixassets/css/pages/terms.min.css": "/mixassets/css/pages/terms.min.css",
+    "/mixassets/css/admin/user/search.min.css": "/mixassets/css/admin/user/search.min.css"
 }

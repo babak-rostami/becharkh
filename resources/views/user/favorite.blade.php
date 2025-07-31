@@ -6,7 +6,8 @@
 
 
 @section('style')
-    <link href="{{ asset('assets/css/user/favorite.css') . '?lm=' . filemtime('assets/css/user/favorite.css') }}"
+    <link
+        href="{{ asset('mixassets/css/user/favorite.min.css') . '?lm=' . filemtime('mixassets/css/user/favorite.min.css') }}"
         rel="stylesheet" type="text/css" />
 
     <meta name="robots" content="noindex">
@@ -50,4 +51,7 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/user/favorite.min.js') . '?lm=' . filemtime('mixassets/js/user/favorite.min.js') }}">
+    </script>
 @endsection

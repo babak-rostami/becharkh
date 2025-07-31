@@ -50,7 +50,8 @@
                 ])
 
                 @include('affilate.show-box', ['affilate' => $product])
-
+                @include('mainPart.gallery')
+                
                 <h1 id="page-title" class="font-weight-bold">{{ $product->title }}</h1>
 
                 <div class="bg-wht radius-10 py-3 product-post-content px-2">

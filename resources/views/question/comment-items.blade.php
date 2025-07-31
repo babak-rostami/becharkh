@@ -19,7 +19,7 @@
             @endif
             @if (isset($affilates) && ($count + 1) % 4 == 0)
                 @if ($affilates->slice($affnum, 1)->first() != null)
-                    <div class="col-12 text-right py-2 px-0">
+                    <div class="col-12 text-right py-2 px-0 mt-3">
                         @include('affilate.show-box', [
                             'affilate' => $affilates->slice($affnum, 1)->first(),
                         ])
@@ -38,7 +38,8 @@
             <span class="cm-box-time">{{ jdate($comment->created_at)->ago() }}</span>
             @if (isset($comment->images))
                 <div class="text-center">
-                    <img onclick="clickCommentImg('{{ $comment->id }}')" id="c-img-{{ $comment->id }}"
+                    <img alt="comment image" onclick="clickCommentImg('{{ $comment->id }}')"
+                        id="c-img-{{ $comment->id }}"
                         class="com-img @if ($firstItems == 1) lazy-load @endif"
                         @if ($firstItems == 1) data-src="{{ $comment->imageFile() }}" @else
                     src="{{ $comment->imageFile() }}" @endif>
@@ -61,11 +62,12 @@
                 <span
                     id="category-comment-like-count-{{ $comment->id }}">{{ $comment->like_count ? $comment->like_count : 0 }}</span>
                 @if ($firstItems == 1)
-                    <img class="lazy-load like-com-image"
+                    <img alt="like icon" class="lazy-load like-com-image"
                         data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
                         id="like-com-image-{{ $comment->id }}">
                 @else
-                    <img class="like-com-image" src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
+                    <img alt="like icon" class="like-com-image"
+                        src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
                         id="like-com-image-{{ $comment->id }}">
                 @endif
             </span>
@@ -74,11 +76,12 @@
                 <span
                     id="category-comment-unlike-count-{{ $comment->id }}">{{ $comment->unlike_count ? $comment->unlike_count : 0 }}</span>
                 @if ($firstItems == 1)
-                    <img class="lazy-load unlike-com-image"
+                    <img alt="dislike icon" class="lazy-load unlike-com-image"
                         data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
                         id="unlike-com-image-{{ $comment->id }}">
                 @else
-                    <img class="unlike-com-image" src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
+                    <img alt="dislike icon" class="unlike-com-image"
+                        src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
                         id="unlike-com-image-{{ $comment->id }}">
                 @endif
             </span>
@@ -87,7 +90,7 @@
 
             <button class="comment-reply-btn"
                 onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
-                    class="mr-1 @if ($firstItems == 1) lazy-load @endif"
+                    alt="reply icon" class="mr-1 @if ($firstItems == 1) lazy-load @endif"
                     @if ($firstItems == 1) data-src="{{ asset('files/other/images/reply.png') }}"@else
                         src="{{ asset('files/other/images/reply.png') }}" @endif>
             </button>
@@ -153,7 +156,7 @@
                 <p class="textarea-preline mt-2">{{ $reply->body }}</p>
                 <button type="button" class="comment-reply-btn"
                     onclick="openCCommentModal('replyto','{{ $comment->category_id }}','{{ $comment->id }}','{{ $reply->id }}')">پاسخ<img
-                        class="mr-1 @if ($firstItems == 1) lazy-load @endif"
+                        alt="reply icon" class="mr-1 @if ($firstItems == 1) lazy-load @endif"
                         @if ($firstItems == 1) data-src="{{ asset('files/other/images/reply.png') }}"@else
                         src="{{ asset('files/other/images/reply.png') }}" @endif>
                 </button>
@@ -161,18 +164,19 @@
                     <span
                         id="category-comment-like-count-{{ $reply->id }}">{{ $reply->like_count ? $reply->like_count : 0 }}</span>
                     @if ($firstItems == 1)
-                        <img class="lazy-load like-com-image"
+                        <img alt="like icon" class="lazy-load like-com-image"
                             data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
                             id="like-com-image-{{ $reply->id }}">
                     @else
-                        <img class="like-com-image" src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
+                        <img alt="like icon" class="like-com-image"
+                            src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
                             id="like-com-image-{{ $reply->id }}">
                     @endif
                 </span>
                 <span class="dislike-icon" onclick="unlikeCategoryComment('{{ $reply->id }}')">
                     <span
                         id="category-comment-unlike-count-{{ $reply->id }}">{{ $reply->unlike_count ? $reply->unlike_count : 0 }}</span>
-                    <img id="unlike-com-image-{{ $reply->id }}"
+                    <img alt="dislike icon" id="unlike-com-image-{{ $reply->id }}"
                         @if ($firstItems == 1) class="lazy-load unlike-com-image" 
                     data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
                     @else class="unlike-com-image"
@@ -190,7 +194,7 @@
     @if ($firstItems == 1)
         @while ($affnum != -1 && $pqnum != -1)
             @if ($affnum != -1 && isset($affilates) && $affilates->slice($affnum, 1)->first() != null)
-                <div class="col-12 text-right py-2 px-0">
+                <div class="col-12 text-right py-2 px-0 mt-3">
                     @include('affilate.show-box', [
                         'affilate' => $affilates->slice($affnum, 1)->first(),
                     ])

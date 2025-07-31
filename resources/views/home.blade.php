@@ -30,7 +30,7 @@
                 @endforeach
             @endif
 
-            <div class="row justify-content-center pb-3">
+            {{-- <div class="row justify-content-center pb-3">
                 <div class="col-12 mx-2 text-center">
                     <div class="bslider mt-4" id="cat-slider">
                         @foreach ($categories as $category)
@@ -52,15 +52,22 @@
                         @endforeach
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
-            <div class="row justify-content-center q-bg mt-2 py-4">
+            <div class="row justify-content-center q-bg py-4">
                 <div class="col-12 text-center">
                     <h1 id="page-title">بچرخ</h1>
                     <p class="mb-0" id="page-desc">هر سوالی جوابی داره</p>
+
+                    <img id="online-users-home-bicon" alt="online user"
+                        src="{{ $ftp_path . 'files/other/images/blue-circle.png' }}">
+                    <span id="online-users-home">
+                        {{ $online_user_count }} نفر آنلاین</span>
+                    <img id="online-users-home-bicon" alt="online user"
+                        src="{{ $ftp_path . 'files/other/images/blue-circle.png' }}">
                 </div>
-                <div class="col-12 mt-4 px-0">
+                {{-- <div class="col-12 mt-4 px-0">
                     <div class="bslider" id="question-slider">
                         @foreach ($questions as $question)
                             <div class="bslider-item mt-2 bg-wht">
@@ -84,10 +91,10 @@
                             </div>
                         @endforeach
                     </div>
-                </div>
+                </div> --}}
             </div>
 
-            <div class="row justify-content-center bg-wht py-4" id="blog-box">
+            {{-- <div class="row justify-content-center bg-wht py-4" id="blog-box">
                 <div class="col-12">
                     <div class="bslider" id="blog-slider">
                         @foreach ($products as $product)
@@ -106,10 +113,10 @@
                         @endforeach
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             @if (isset($hot_pages))
-                <div class="row q-bg pt-4">
+                <div class="row q-bg pt-4 justify-content-center">
                     @include('mainPart.hot-pages')
                 </div>
             @endif

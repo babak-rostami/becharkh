@@ -123,12 +123,16 @@
                 @else --}}
                 @if (isset($item->images))
                     <div id="item-gallery">
-                        @foreach ($item->images as $key => $img)
-                            <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!}
-                                class="my-3" onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
+                        <img id="item-img-0" fetchpriority="high" class="my-3"
+                            onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
+                            title="{{ $item->full_title ?? $item->title }}"
+                            alt="عکس {{ $item->full_title ?? $item->title }}">
+                        {{-- @foreach ($item->images as $key => $img)
+                            <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!} class="my-3"
+                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
                                 src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
                                 alt="عکس {{ $item->full_title ?? $item->title }}">
-                        @endforeach
+                        @endforeach --}}
                     </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
@@ -139,7 +143,7 @@
                 <img class="mb-3 mt-4" src="{{ $ftp_path . 'files/other/images/cat-comments.png' }}" title="نظرات کاربران"
                     alt="نظرات کاربران">
             @endif
-
+            @include('mainPart.gallery')
         </div>
 
         <div id="comImageModal" class="imgslider-modal">
@@ -179,7 +183,7 @@
             @if (isset($category) && $category->getAnim())
                 <div class="row mt-4">
                     <div class="col-12 text-center">
-                        <img src="{{ $category->anim() }}">
+                        <img alt="about page" src="{{ $category->anim() }}">
                         @if (!empty($category->tips) && is_array($category->tips))
                             <span id="cat-abt-title"></span>
                             <p id="cat-abt-desc"></p>
@@ -331,7 +335,7 @@
             </div>
 
             @if (isset($hot_pages))
-                <div class="row mt-4">
+                <div class="row mt-4 justify-content-center">
                     @include('mainPart.hot-pages')
                 </div>
             @endif

@@ -31,16 +31,17 @@ class IndexController extends Controller
 
     public function home(SuggestionService $suggestionService)
     {
-        $products = Affilate::orderBy('created_at', 'desc')->where('google_index', 1)->where('status', 1)->take(15)->get();
+        // $products = Affilate::orderBy('created_at', 'desc')->where('google_index', 1)->where('status', 1)->take(15)->get();
 
-        $suggests = $suggestionService->suggest();
-        $categories = $suggests['cats'];
+        // $suggests = $suggestionService->suggest();
+        // $categories = $suggests['cats'];
 
-        $questions = MongoQuestion::where('status', 1)->orderBy('created_at', 'desc')->take(20)->with('user')->get();
+        // $questions = MongoQuestion::where('status', 1)->orderBy('created_at', 'desc')->take(20)->with('user')->get();
 
         $hot_pages = Cache::get('hot_pages');
 
-        return view('home', compact('questions', 'products', 'categories', 'hot_pages'));
+        return view('home', compact('hot_pages'));
+        // return view('home', compact('questions', 'products', 'categories', 'hot_pages'));
     }
 
     public function getCities(Request $request)

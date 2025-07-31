@@ -5,6 +5,9 @@
 @endsection
 
 @section('style')
+    <link
+        href="{{ asset('mixassets/css/admin/user/search.min.css') . '?lm=' . filemtime('mixassets/css/admin/user/search.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -38,7 +41,8 @@
                             <td> {{ $search->text }}</td>
                             <td>{{ jdate($search->created_at)->ago() }}</td>
                             <td>
-                                <a class="btn btn-danger" href="{{ route('admin.destroy.user.search', $search->id) }}">حذف</a>
+                                <a class="btn btn-danger"
+                                    href="{{ route('admin.destroy.user.search', $search->id) }}">حذف</a>
                             </td>
                         </tr>
                     @endforeach
@@ -49,4 +53,7 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/admin/user/search.min.js') . '?lm=' . filemtime('mixassets/js/admin/user/search.min.js') }}">
+    </script>
 @endsection

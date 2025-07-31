@@ -3,11 +3,8 @@
 @section('title', 'قوانین استفاده از سایت')
 
 @section('style')
-    <style>
-        #ptfs {
-            font-size: 28px;
-        }
-    </style>
+    <link href="{{ asset('mixassets/css/pages/terms.min.css') . '?lm=' . filemtime('mixassets/css/pages/terms.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -39,4 +36,10 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/pages/terms.min.js') . '?lm=' . filemtime('mixassets/js/pages/terms.min.js') }}">
+    </script>
 @endsection

@@ -6,7 +6,8 @@
                     <div class="bslider-item cat-slider-item">
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsCommentUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -20,7 +21,8 @@
                     <div class="bslider-item cat-slider-item">
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsForumUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -35,7 +37,7 @@
                         {{-- @if (isset($category) && $suggetItem->category_id != $category->id)
                             <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                                 href="{{ str_replace($suggetItem->category->slug, $category->slug, $suggetItem->withParentsAdvertiseUrl()) }}">
-                                <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                                <img draggable="false" alt="عکس {{$suggetItem->full_title ?? $suggetItem->title}}" src="{{ $suggetItem->thumb() }}">
                                 <span>
                                     {{ $suggetItem->full_title ?? $suggetItem->title }}
                                 </span>
@@ -43,7 +45,8 @@
                         @else --}}
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsAdvertiseUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -58,7 +61,8 @@
                     <div class="bslider-item cat-slider-item">
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsBlogUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -72,7 +76,8 @@
                     <div class="bslider-item cat-slider-item">
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsCommentUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -86,7 +91,8 @@
                     <div class="bslider-item cat-slider-item">
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsForumUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -100,7 +106,8 @@
                     <div class="bslider-item cat-slider-item">
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsAdvertiseUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -114,7 +121,8 @@
                     <div class="bslider-item cat-slider-item">
                         <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
                             href="{{ $suggetItem->withParentsAdvertiseUrl() }}">
-                            <img draggable="false" src="{{ $suggetItem->thumb() }}">
+                            <img draggable="false" alt="عکس {{ $suggetItem->full_title ?? $suggetItem->title }}"
+                                src="{{ $suggetItem->thumb() }}">
                             <span>
                                 {{ $suggetItem->full_title ?? $suggetItem->title }}
                             </span>
@@ -128,7 +136,8 @@
             <div class="bslider-item cat-slider-item">
                 <a class="suggest-item" id="slidera-{{ $suggestCat->id }}" draggable="false"
                     href="{{ urlForSuggest($page, $suggestCat, $category ?? null, $features ?? null, $currentQueryParams ?? null) }}">
-                    <img draggable="false" src="{{ $suggestCat->thumb() }}" alt="{{ $suggestCat->title }}">
+                    <img draggable="false" alt="عکس {{ $suggestCat->full_title ?? $suggestCat->title }}"
+                        src="{{ $suggestCat->thumb() }}">
                     <span>
                         {{ $suggestCat->full_title ?? $suggestCat->title }}
                     </span>

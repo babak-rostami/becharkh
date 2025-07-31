@@ -13,6 +13,14 @@ const mix = require("laravel-mix");
 
 mix.minify(
     [
+        "public/assets/js/main.js"
+    ],
+    "public/mixassets/js/main.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
         "public/assets/js/forum/index.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/item/price.js",
@@ -28,6 +36,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/js/rtable/create.js",
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/survey/create.js"
@@ -36,12 +45,18 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/js/rtable/edit.js", "public/assets/js/pages/comment-box.js"],
+    [
+        "public/assets/js/main.js",
+        "public/js/rtable/edit.js",
+        "public/assets/js/pages/comment-box.js"
+    ],
     "public/mixassets/js/forum/edit.min.js"
 );
 
 mix.minify(
-    ["public/js/rtable/admin-edit.js",
+    [
+        "public/assets/js/main.js",
+        "public/js/rtable/admin-edit.js",
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/pages/forum/sasf-edit.js"],
     "public/mixassets/js/forum/admin-edit.min.js"
@@ -49,6 +64,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/js/rtable/create.js",
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/survey/create.js",
@@ -59,6 +75,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/category/comment/index.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/item/price.js",
@@ -70,14 +87,15 @@ mix.minify(
         "public/assets/js/survey/show.js",
         "public/assets/js/gallery/show.js",
         "public/assets/js/affilate/show-box.js",
-        // "public/assets/js/pages/fifilter.js",
         "public/assets/js/pages/share-page.js",
         "public/assets/js/pages/add-to-home.js",
     ],
     "public/mixassets/js/category/comment/index.min.js"
 );
+
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/category/comment-create.js",
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/survey/create.js",
@@ -89,6 +107,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/advertise/index.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/item/price.js",
@@ -104,6 +123,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/blog/index.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/item/price.js",
@@ -116,6 +136,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/blog/show.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/item/price.js",
@@ -129,17 +150,27 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/js/blog/create.js", "public/assets/js/pages/comment-box.js"],
+    [
+        "public/assets/js/main.js",
+        "public/js/blog/create.js",
+        "public/assets/js/pages/comment-box.js"
+
+    ],
     "public/mixassets/js/blog/create.min.js"
 );
 
 mix.minify(
-    ["public/js/blog/edit.js", "public/assets/js/pages/comment-box.js"],
+    [
+        "public/assets/js/main.js",
+        "public/js/blog/edit.js",
+        "public/assets/js/pages/comment-box.js"
+    ],
     "public/mixassets/js/blog/edit.min.js"
 );
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/forum/show.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/item/price.js",
@@ -156,18 +187,25 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/assets/js/pages/comment-box.js"],
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/pages/comment-box.js"
+    ],
     "public/mixassets/js/forum/edit-answer-admin.min.js"
 );
 
 mix.minify(
-    ["public/assets/js/pages/comment-box.js",
-        "public/assets/js/admin/check-fake-user.js"],
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/pages/comment-box.js",
+        "public/assets/js/admin/check-fake-user.js"
+    ],
     "public/mixassets/js/forum/answers-admin.min.js"
 );
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/advertise/show.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/item/price.js",
@@ -178,25 +216,38 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/assets/js/dashboard/dash-edit.js"],
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/dashboard/dash-edit.js"
+    ],
     "public/mixassets/js/user/dashboard-edit.min.js"
 );
 
 mix.minify(
-    ["public/assets/js/home.js", "public/assets/js/bslider/index.js"],
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/home.js",
+        "public/assets/js/bslider/index.js"
+    ],
     "public/mixassets/js/home.min.js"
 );
 
 mix.minify(
-    ["public/js/advertise/edit.js"],
+    [
+        "public/assets/js/main.js",
+        "public/js/advertise/edit.js"],
     "public/mixassets/js/advertise/edit.min.js"
 );
 mix.minify(
-    ["public/js/advertise/create.js"],
+    [
+        "public/assets/js/main.js",
+        "public/js/advertise/create.js"
+    ],
     "public/mixassets/js/advertise/create.min.js"
 );
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/affilate/edit.js",
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/pages/forum/sasf-edit.js"
@@ -205,6 +256,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/tag/edit.js",
         "public/assets/js/pages/forum/sasf-edit.js"
     ],
@@ -212,6 +264,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/category/admin/edit.js",
         "public/assets/js/pages/forum/sasf-edit.js"
     ],
@@ -219,6 +272,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/video/admin/edit.js",
         "public/assets/js/pages/forum/sasf-edit.js"
     ],
@@ -226,6 +280,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/affilate/create.js",
         "public/assets/js/cisearch/create.js",
         "public/assets/js/pages/comment-box.js"
@@ -234,6 +289,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/video/admin/create.js",
         "public/assets/js/cisearch/create.js"
     ],
@@ -242,12 +298,14 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/suggestp/create.js"
     ],
     "public/mixassets/js/suggestp/create.min.js"
 );
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/suggestp/edit.js",
         "public/assets/js/pages/forum/sasf-edit.js"
     ],
@@ -256,6 +314,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/affilate/show.js",
         "public/assets/js/item/follow.js",
         "public/assets/js/bslider/index.js",
@@ -267,8 +326,10 @@ mix.minify(
     ],
     "public/mixassets/js/affilate/show.min.js"
 );
+
 mix.minify(
     [
+        "public/assets/js/main.js",
         "public/assets/js/affilate/comment-create.js",
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/admin/check-fake-user.js"
@@ -276,10 +337,58 @@ mix.minify(
     "public/mixassets/js/affilate/comment-create.min.js"
 );
 
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/user/favorite.js"
+    ],
+    "public/mixassets/js/user/favorite.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/pages/contact-us.js"
+    ],
+    "public/mixassets/js/pages/contact-us.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/pages/about-us.js"
+    ],
+    "public/mixassets/js/pages/about-us.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/pages/terms.js"
+    ],
+    "public/mixassets/js/pages/terms.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/admin/user/search.js"
+    ],
+    "public/mixassets/js/admin/user/search.min.js"
+);
+
 // for css //////////////////////////////////////////
 
 mix.minify(
     [
+        "public/assets/style.css"
+    ],
+    "public/mixassets/css/style.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
         "public/assets/css/affilate/create.css",
         "public/assets/css/cisearch/create.css",
         "public/assets/css/pages/comment-box.css"
@@ -289,6 +398,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/video/create.css",
         "public/assets/css/cisearch/create.css"
     ],
@@ -296,6 +406,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/affilate/edit.css",
         "public/assets/css/pages/comment-box.css",
         "public/assets/css/pages/forum/sasf-edit.css",
@@ -304,6 +415,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/tag/edit.css",
         "public/assets/css/pages/forum/sasf-edit.css",
     ],
@@ -311,6 +423,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/category/admin/edit.css",
         "public/assets/css/pages/forum/sasf-edit.css",
     ],
@@ -318,6 +431,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/video/edit.css",
         "public/assets/css/pages/forum/sasf-edit.css",
     ],
@@ -325,6 +439,7 @@ mix.minify(
 );
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/suggestp/edit.css",
         "public/assets/css/pages/forum/sasf-edit.css",
     ],
@@ -332,28 +447,37 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/assets/css/home1.css",
+    [
+        "public/assets/style.css",
+        "public/assets/css/home1.css",
         "public/assets/css/bslider/index.css",
         "public/assets/css/pages/hot-pages.css"],
     "public/mixassets/css/home.min.css"
 );
 
 mix.minify(
-    ["public/assets/css/dashboard-edit.css"],
+    [
+        "public/assets/style.css",
+        "public/assets/css/dashboard-edit.css"],
     "public/mixassets/css/user/dashboard-edit.min.css"
 );
 
 mix.minify(
-    ["public/assets/css/user/notifs.css"],
+    [
+        "public/assets/style.css",
+        "public/assets/css/user/notifs.css"],
     "public/mixassets/css/user/notifs.min.css"
 );
 
 mix.minify(
-    ["public/assets/css/user/profile.css"],
+    [
+        "public/assets/style.css",
+        "public/assets/css/user/profile.css"],
     "public/mixassets/css/user/profile.min.css"
 );
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/advertise/index.css",
         "public/assets/css/video/suggest-video.css",
         "public/assets/css/item/follow.css",
@@ -376,6 +500,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/forum/index.css",
         "public/assets/css/item/follow.css",
         "public/assets/css/tabs/top-tab.css",
@@ -397,6 +522,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/rtable-create-edit.css",
         "public/assets/css/pages/comment-box.css",
         "public/assets/css/survey/create.css",
@@ -407,6 +533,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/category/comment/index.css",
         "public/assets/css/item/follow.css",
         "public/assets/css/tabs/top-tab.css",
@@ -435,6 +562,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/category/comment-create.css",
         "public/assets/css/pages/comment-box.css",
         "public/assets/css/survey/create.css",
@@ -445,6 +573,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/blog/index.css",
         "public/assets/css/item/follow.css",
         "public/assets/css/tabs/top-tab.css",
@@ -461,6 +590,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/blog/show.css",
         "public/assets/css/item/follow.css",
         "public/assets/css/tabs/top-tab.css",
@@ -482,6 +612,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/blog/create-edit.css",
         "public/assets/css/pages/comment-box.css"
     ],
@@ -490,6 +621,7 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/forum/show.css",
         "public/assets/css/item/follow.css",
         "public/assets/css/tabs/top-tab.css",
@@ -512,17 +644,22 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/assets/css/pages/comment-box.css"],
+    [
+        "public/assets/style.css",
+        "public/assets/css/pages/comment-box.css"],
     "public/mixassets/css/forum/edit-answer-admin.min.css"
 );
 
 mix.minify(
-    ["public/assets/css/pages/comment-box.css"],
+    [
+        "public/assets/style.css",
+        "public/assets/css/pages/comment-box.css"],
     "public/mixassets/css/forum/answers-admin.min.css"
 );
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/advertise/show.css",
         "public/assets/css/item/follow.css",
         "public/assets/css/tabs/top-tab.css",
@@ -534,16 +671,21 @@ mix.minify(
 );
 
 mix.minify(
-    ["public/assets/css/advertise/edit.css"],
+    [
+        "public/assets/style.css",
+        "public/assets/css/advertise/edit.css"],
     "public/mixassets/css/advertise/edit.min.css"
 );
 mix.minify(
-    ["public/assets/css/advertise/create.css"],
+    [
+        "public/assets/style.css",
+        "public/assets/css/advertise/create.css"],
     "public/mixassets/css/advertise/create.min.css"
 );
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/affilate/show.css",
         "public/assets/css/item/follow.css",
         "public/assets/css/tabs/top-tab.css",
@@ -562,8 +704,49 @@ mix.minify(
 
 mix.minify(
     [
+        "public/assets/style.css",
         "public/assets/css/affilate/comment-create.css",
         "public/assets/css/pages/comment-box.css"
     ],
     "public/mixassets/css/affilate/comment-create.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/user/favorite.css",
+    ],
+    "public/mixassets/css/user/favorite.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/pages/contact-us.css",
+    ],
+    "public/mixassets/css/pages/contact-us.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/pages/about-us.css",
+    ],
+    "public/mixassets/css/pages/about-us.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/pages/terms.css",
+    ],
+    "public/mixassets/css/pages/terms.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/admin/user/search.css",
+    ],
+    "public/mixassets/css/admin/user/search.min.css"
 );

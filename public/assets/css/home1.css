@@ -237,3 +237,33 @@
         opacity: 1;
     }
 }
+
+#online-users-home-bicon {
+    animation: online-user-bi-glow 1.5s infinite;
+}
+
+@keyframes online-user-bi-glow {
+    0% {
+        opacity: 1;
+        /* fully visible */
+    }
+
+    50% {
+        opacity: 0;
+        /* fully hidden */
+    }
+
+    100% {
+        opacity: 1;
+        /* fully visible again */
+    }
+}
+
+#online-users-home {
+    margin-top: 12px;
+    display: inline-block;
+    background-color: #fff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: bold;
+}

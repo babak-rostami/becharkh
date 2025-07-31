@@ -3,12 +3,9 @@
 namespace App\Jobs\pages;
 
 use App\Models\Affilate;
-use App\Models\MongoBlog;
-use App\Models\MongoBlogComment;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
-use App\Models\MongoQuestionAnswer;
 use App\Models\ProductComment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -57,7 +54,14 @@ class UpdateHotPages implements ShouldQueue
                     $item = MongoItem::find($cc->items[0]);
                     if ($item && !in_array($item->id, $processed_item_ids)) {
                         $new_page = new stdClass();
-                        $new_page->title = "نظرات در مورد " . $item->withParentsTitle();
+                        $category = $item->category;
+                        if (isset($category) && $category->is_cat_in_title == 1) {
+                            $title = $category->title . ' ' . $item->withParentsTitle();
+                        } else {
+                            $title = $item->withParentsTitle();
+                        }
+                        $title .= ' | نظرات + تجربیات + مشکلات';
+                        $new_page->title = $title;
                         $new_page->body = str_limit($cc->body, 100, '...');
                         $new_page->url = $item->withParentsCommentUrl();
                         $new_page->image = $item->image();

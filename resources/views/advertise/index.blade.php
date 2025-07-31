@@ -60,12 +60,16 @@
                 @else --}}
                 @if (isset($item->images))
                     <div id="item-gallery">
-                        @foreach ($item->images as $key => $img)
+                        <img id="item-img-0" fetchpriority="high" class="my-3"
+                            onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
+                            title="{{ $item->full_title ?? $item->title }}"
+                            alt="عکس {{ $item->full_title ?? $item->title }}">
+                        {{-- @foreach ($item->images as $key => $img)
                             <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!} class="my-3"
                                 onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
                                 src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
                                 alt="عکس {{ $item->full_title ?? $item->title }}">
-                        @endforeach
+                        @endforeach --}}
                     </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
@@ -76,6 +80,7 @@
                 <img id="page-img" class="mb-3 mt-4" src="{{ $ftp_path . 'files/other/images/shop.jpg' }}"
                     title="خرید و فروش و استخدام و خدمات" alt="خرید و فروش و استخدام و خدمات">
             @endif
+            @include('mainPart.gallery')
         </div>
 
     </div>
@@ -181,7 +186,10 @@
                         @if (isset($affilates))
                             <div class="col-12 text-right py-2 mb-4">
                                 @foreach ($affilates as $affilate)
-                                    @include('affilate.show-box', ['page' => 'advertise'])
+                                    <div class="my-4">
+                                        @include('affilate.show-box', ['page' => 'advertise'])
+                                        <hr>
+                                    </div>
                                 @endforeach
                             </div>
                         @endif
@@ -200,7 +208,7 @@
 
                         @if (isset($hot_pages))
                             <div class="col-12">
-                                <div class="row mt-4">
+                                <div class="row mt-4 justify-content-center">
                                     @include('mainPart.hot-pages')
                                 </div>
                             </div>

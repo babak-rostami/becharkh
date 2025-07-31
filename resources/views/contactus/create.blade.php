@@ -7,16 +7,9 @@
 
 
 @section('style')
-    <style>
-        #cu-page-title {
-            font-weight: 600;
-            font-size: 24px;
-        }
-
-        #cu-ta {
-            min-height: 100px
-        }
-    </style>
+    <link
+        href="{{ asset('mixassets/css/pages/contact-us.min.css') . '?lm=' . filemtime('mixassets/css/pages/contact-us.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 
@@ -72,18 +65,7 @@
 
 
 @section('script')
-    <script>
-        $(document).ready(function() {
-            var textarea = $('#cu-ta');
-
-            textarea.on('input', function() {
-                this.style.overflow = 'hidden';
-                this.style.height = 0;
-                this.style.height = this.scrollHeight + 'px';
-            });
-
-            // Force trigger the input event after setting the value of the textarea programmatically
-            textarea.trigger('input');
-        });
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/pages/contact-us.min.js') . '?lm=' . filemtime('mixassets/js/pages/contact-us.min.js') }}">
     </script>
 @endsection

@@ -672,19 +672,17 @@
             @else
                 <button type="button" class="btn btn-primary my-2 w-100" onclick="editorCommentSend()"
                     id="comment-editor-btn">
-                    <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
-                        alt="send">
+                    <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" alt="send">
                     ارسال نظر
                 </button>
             @endif
         @else
-            <button type="button" class="btn btn-outline-primary bg-wht w-100 my-2"
+            <button type="button" class="btn btn-lg btn-primary w-100 my-2"
                 @if ($page == 'comment') onclick="setActionForAfterAuth('comment', 'cm_form')"
                 @elseif($page == 'show_question') onclick="setActionForAfterAuth('answer', 'cm_form')"
                 @elseif($page == 'show_product')
                     data-toggle="modal" data-target="#login_user" onclick="setActionForAfterAuth('comment', 'cm_form')" @endif>
-                <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
-                    alt="send">
+                <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" alt="send">
                 ارسال نظر
             </button>
         @endif

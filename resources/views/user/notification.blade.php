@@ -38,3 +38,8 @@
         </div>
     </div>
 @endsection
+
+@section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/main.min.js') . '?lm=' . filemtime('mixassets/js/main.min.js') }}"></script>
+@endsection

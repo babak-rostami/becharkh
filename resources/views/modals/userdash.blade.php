@@ -1,5 +1,6 @@
 <button class="comusr-link">
-    <img class="
+    <img alt="عکس {{ $dashuser->name }}"
+        class="
     @if ($dashuser->getImage()) comusr-style
     @else
     dcomusr-style @endif

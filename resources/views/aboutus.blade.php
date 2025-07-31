@@ -3,11 +3,9 @@
 @section('title', 'درباره ما')
 
 @section('style')
-    <style>
-        #ptfs {
-            font-size: 28px;
-        }
-    </style>
+    <link
+        href="{{ asset('mixassets/css/pages/about-us.min.css') . '?lm=' . filemtime('mixassets/css/pages/about-us.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -46,4 +44,10 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/pages/about-us.min.js') . '?lm=' . filemtime('mixassets/js/pages/about-us.min.js') }}">
+    </script>
 @endsection

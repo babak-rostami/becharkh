@@ -66,12 +66,16 @@
                 @else --}}
                 @if (isset($item->images))
                     <div id="item-gallery">
-                        @foreach ($item->images as $key => $img)
+                        <img id="item-img-0" fetchpriority="high" class="my-3"
+                            onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
+                            title="{{ $item->full_title ?? $item->title }}"
+                            alt="عکس {{ $item->full_title ?? $item->title }}">
+                        {{-- @foreach ($item->images as $key => $img)
                             <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!} class="my-3"
                                 onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
                                 src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
                                 alt="عکس {{ $item->full_title ?? $item->title }}">
-                        @endforeach
+                        @endforeach --}}
                     </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
@@ -82,6 +86,7 @@
                 <img class="mb-3 mt-4" src="{{ $ftp_path . 'files/other/images/crtable.png' }}" title="انجمن"
                     alt="انجمن">
             @endif
+            @include('mainPart.gallery')
         </div>
     </div>
 
@@ -163,7 +168,7 @@
             @include('mainPart.mainPage.breadc', ['page' => 'forum'])
 
             @if (isset($hot_pages))
-                <div class="row mt-4">
+                <div class="row mt-4 justify-content-center">
                     @include('mainPart.hot-pages')
                 </div>
             @endif
