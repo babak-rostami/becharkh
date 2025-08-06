@@ -23,6 +23,9 @@
     <link rel="icon" type="image/x-icon" href="{{ $ftp_path . 'files/other/images/logo1.png' }}" />
     <link rel="apple-touch-icon" href="{{ $ftp_path . 'files/other/images/logo1.png' }}">
 
+    <link rel="preload" as="font" href="{{ asset('fonts/Vazirmatn[wght].woff2') }}" type="font/woff2"
+        crossorigin="anonymous">
+
     @yield('style')
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EN95ELW4G1"></script>
@@ -421,12 +424,12 @@
         @endif
 
 
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-12 text-center" id="motto-box">
                 <span id="motto1">بچرخ</span>
                 <span id="motto2"></span>
             </div>
-        </div>
+        </div> --}}
 
         @yield('content')
 

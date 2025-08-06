@@ -37,6 +37,7 @@ use App\Http\Controllers\FollowFeatureItemController;
 use App\Http\Controllers\FourChoiceController;
 use App\Http\Controllers\ImageCompressorController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\InputImagesController;
 use App\Http\Controllers\ItemImageController;
 use App\Http\Controllers\LetMeKnowController;
 use App\Http\Controllers\MigrateToMongoController;
@@ -490,6 +491,10 @@ Route::middleware(['user'])->group(function () {
     //ctegory comment
     Route::post('cat-comment-store', [CategoryCommentController::class, 'store'])->name('category.comment.store');
     Route::post('cat-comment-store-dref', [CategoryCommentController::class, 'storeWithoutRefresh'])->name('category.comment.store.dref');
+
+    Route::post('input-images-store', [InputImagesController::class, 'store'])->name('input.images.store');
+    Route::post('input-images-destroy', [InputImagesController::class, 'destroy'])->name('input.images.destroy');
+    Route::post('input-images-update', [InputImagesController::class, 'update'])->name('input.images.update');
 
     //advertise comment
     Route::post('ad-comment/store', [AdvertiseCommentController::class, 'store'])->name('advertise.comment.store');

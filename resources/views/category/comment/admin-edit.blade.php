@@ -142,6 +142,8 @@
     <script>
         const submit_form_id = "cm_form";
 
+        let csrf_t = "{{ csrf_token() }}";
+        
         const page = 'admin_edit_comment';
 
         //for select category modal

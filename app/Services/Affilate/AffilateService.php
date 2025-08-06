@@ -56,6 +56,31 @@ class AffilateService
         return $affiliates;
     }
 
+    private function modifyAffiliateBody($affiliate)
+    {
+        $body = $affiliate->body;
+
+        preg_match_all('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $body, $matches);
+        $affiliate->image_urls = $matches[1] ?? [];
+
+        $body = preg_replace('/<figure[^>]*>.*?<\/figure>/is', '', $body);
+
+        return preg_replace_callback(
+            '/<h2>(.*?)<\/h2>/i',
+            function ($matches) use ($affiliate) {
+                $a_id = "affilb-route-" . $affiliate->id;
+                if ($affiliate->google_index) {
+                    return '<a target="_blank" class="mb-2" id="' . $a_id . '" href="' . route('product.show', $affiliate->slug) . '">' . $matches[1] . '</a>';
+                } else {
+                    return '<h2 class="cur-p mb-2" id="' . $a_id . '" onclick="jslink(\'' . route('product.show', $affiliate->slug) . '\', 1)">' . $matches[1] . '</h2>';
+                }
+            },
+            $body,
+            1
+        );
+    }
+
+
     public function suggestsForPagesApi($category_id = null, $item_id = null, $take = null)
     {
         $affiliates = collect();
@@ -147,29 +172,6 @@ class AffilateService
         }
         return $affiliates;
     }
-
-    private function modifyAffiliateBody($affiliate)
-    {
-        $body = $affiliate->body;
-
-        $body = preg_replace('/<figure[^>]*>.*?<\/figure>/is', '', $body);
-
-        return preg_replace_callback(
-            '/<h2>(.*?)<\/h2>/i',
-            function ($matches) use ($affiliate) {
-                $a_id = "affilb-route-" . $affiliate->id;
-                if ($affiliate->google_index) {
-                    return '<a target="_blank" class="mb-2" id="' . $a_id . '" href="' . route('product.show', $affiliate->slug) . '">' . $matches[1] . '</a>';
-                } else {
-                    return '<h2 class="cur-p mb-2" id="' . $a_id . '" onclick="jslink(\'' . route('product.show', $affiliate->slug) . '\', 1)">' . $matches[1] . '</h2>';
-                }
-            },
-            $body,
-            1
-        );
-    }
-
-
 
     public function suggestForQuestion($question_id, $category = null, $item = null)
     {

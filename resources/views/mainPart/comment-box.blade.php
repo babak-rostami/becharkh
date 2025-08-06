@@ -170,6 +170,11 @@
 
         @case('admin_edit_comment')
             {{ method_field('PUT') }}
+
+            @include('mainPart.form.images-input-edit', [
+                'object' => $comment,
+            ])
+
             <input type="hidden" name="category_id" id="category_id" value="{{ $comment->category_id }}">
             @if ($comment->parent_id == null)
                 @include('modals.create.select-category', ['categories' => $categories])
@@ -215,6 +220,9 @@
                     </div>
                 </div>
             </div>
+
+            @include('mainPart.form.images-input-create')
+
             @include('modals.create.select-category', ['categories' => $categories])
             <div class="row">
                 <div class="col-12 mb-4 text-right" id="features-box">

@@ -30,6 +30,8 @@
     <script>
         var loadingGif = '<img src="{{ asset('files/other/images/loading.gif') }}">';
 
+        let csrf_t = "{{ csrf_token() }}";
+
         //for select category modal
         const categories = @json($categories);
         var cat_children = [];

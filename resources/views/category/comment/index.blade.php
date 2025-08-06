@@ -278,7 +278,8 @@
                         <span class="item-tag-selected"
                             onclick="selectItemTag('{{ $category->id }}','{{ $item->id }}','null')"
                             id="item-tag-null">همه نظرات
-                            <img id="item-tag-tick-icon" src="{{ $ftp_path . 'files/other/images/tick-18.png' }}">
+                            <img id="item-tag-tick-icon" alt="tick icon"
+                                src="{{ $ftp_path . 'files/other/images/tick-18.png' }}">
                         </span>
                         @foreach (collect($item->tags_array)->sortBy('priority') as $itag)
                             @if (!isset($itag['parent_id']))
@@ -316,6 +317,8 @@
                     <img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
                 </div>
             @endif
+
+            @include('modals.categoryComment.reply')
 
             {{-- @if (isset($category))
                 @if ($meta_desc_editor)

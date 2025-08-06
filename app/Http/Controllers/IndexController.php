@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Affilate;
 use App\Models\Blog;
 use App\Models\Brand;
-use App\Models\CategoryFeatureItem;
 use App\Models\MongoBlog;
 use App\Models\MongoCategory;
 use App\Models\MongoItem;
-use App\Models\MongoItemTag;
 use App\Models\MongoQuestion;
 use App\Models\MongoVideo;
 use App\Models\Ostan;
@@ -17,10 +14,8 @@ use App\Models\Question;
 use App\Models\SiteCategory;
 use App\Models\User;
 use App\Models\UserSearch;
-use App\Repositories\Category\Mongodb\CategoryRepository;
 use App\Repositories\CategoryComment\Mongodb\CategoryCommentRepository;
 use App\Services\Affilate\AffilateService;
-use App\Services\Comment\CommentEditorService;
 use App\Services\Suggestion\SuggestionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -396,6 +391,7 @@ class IndexController extends Controller
         }
         return $result;
     }
+
     public function generatePageLinksForCat($category)
     {
         $result = [];
@@ -447,11 +443,6 @@ class IndexController extends Controller
         //اگه ای دی نظری توی لینک صفحه باشه اون رو اول نشون میده بخاطر همین اگه دوباره نظر توی لیست بود میخوام پاک بشه
         if ($cri) {
             $allComments = $allComments->reject(fn($c) => $c->id == $cri)->values();
-        }
-
-        $editor_service = new CommentEditorService();
-        foreach ($allComments as $newComment) {
-            $editor_service->changeTempEditorLazyImg($newComment);
         }
 
         if ($allComments->isEmpty()) {

@@ -89,45 +89,45 @@ function createSlider(
         }
     }
 
-    if (!no_scroll) {
-        setInterval(() => {
-            if (autoScrolling) {
-                if (!autoScrollingDir) {
-                    if (sliderElement.scrollLeft >= 0) {
-                        autoScrollingDir = true;
-                    } else {
-                        sliderElement.scrollLeft += 5;
-                        velX = 5;
-                    }
-                } else {
-                    if (scroll_smooth) {
-                        if (
-                            sliderElement.scrollLeft - 1 <=
-                            -(
-                                sliderElement.scrollWidth -
-                                sliderElement.offsetWidth
-                            )
-                        ) {
-                            sliderElement.scrollLeft = 0;
-                        }
-                        velX = -0.1;
-                    } else {
-                        if (
-                            sliderElement.scrollLeft - 1 <=
-                            -(
-                                sliderElement.scrollWidth -
-                                sliderElement.offsetWidth
-                            )
-                        ) {
-                            autoScrollingDir = false;
-                        } else {
-                            sliderElement.scrollLeft -= 5;
-                            velX = -5;
-                        }
-                    }
-                }
-                beginMomentumTracking();
-            }
-        }, scroll_time);
-    }
+    // if (!no_scroll) {
+    //     setInterval(() => {
+    //         if (autoScrolling) {
+    //             if (!autoScrollingDir) {
+    //                 if (sliderElement.scrollLeft >= 0) {
+    //                     autoScrollingDir = true;
+    //                 } else {
+    //                     sliderElement.scrollLeft += 5;
+    //                     velX = 5;
+    //                 }
+    //             } else {
+    //                 if (scroll_smooth) {
+    //                     if (
+    //                         sliderElement.scrollLeft - 1 <=
+    //                         -(
+    //                             sliderElement.scrollWidth -
+    //                             sliderElement.offsetWidth
+    //                         )
+    //                     ) {
+    //                         sliderElement.scrollLeft = 0;
+    //                     }
+    //                     velX = -0.1;
+    //                 } else {
+    //                     if (
+    //                         sliderElement.scrollLeft - 1 <=
+    //                         -(
+    //                             sliderElement.scrollWidth -
+    //                             sliderElement.offsetWidth
+    //                         )
+    //                     ) {
+    //                         autoScrollingDir = false;
+    //                     } else {
+    //                         sliderElement.scrollLeft -= 5;
+    //                         velX = -5;
+    //                     }
+    //                 }
+    //             }
+    //             beginMomentumTracking();
+    //         }
+    //     }, scroll_time);
+    // }
 }

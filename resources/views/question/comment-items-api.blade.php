@@ -21,12 +21,15 @@
             'itemid' => $comment->id,
         ])
         <span class="cm-box-time">{{ jdate($comment->created_at)->ago() }}</span>
-        @if (isset($comment->images))
-            <div class="text-center">
-                <img onclick="clickCommentImg('{{ $comment->id }}')" id="c-img-{{ $comment->id }}" class="com-img"
-                    src="{{ $comment->imageFile() }}">
+        @if (isset($comment->iimages))
+            <div class="com-img-box">
+                @foreach ($comment->iimages as $iimg)
+                    <img alt="comment image {{ $iimg['id'] }}"
+                        onclick="clickGalleryImg('iimg-{{ $comment->id }}-{{ $iimg['id'] }}','comment')"
+                        id="iimg-{{ $comment->id }}-{{ $iimg['id'] }}" class="com-img"
+                        src="{{ $ftp_path . $iimg['path'] }}">
+                @endforeach
             </div>
-            <hr>
         @endif
         @if (isset($comment->editor))
             <div class="cedshow">
@@ -73,8 +76,20 @@
             <img src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share" class="share-com-image"
                 id="share-com-image-{{ $comment->id }}">
         </span>
+
+        @if ($comment->replies_count)
+            <button class="show-replies-btn" id="show-replies-btn-{{ $comment->id }}"
+                onclick="loadCommentReplies('{{ $comment->id }}')">
+                نمایش {{ $comment->replies_count }} پاسخ به این نظر ...
+            </button>
+
+            <button class="toggle-replies-btn" id="toggle-replies-btn-{{ $comment->id }}"
+                onclick="toggleReplies('{{ $comment->id }}')">
+                پنهان کردن پاسخ‌ها
+            </button>
+        @endif
     </div>
-    @foreach ($comment->replies as $reply)
+    {{-- @foreach ($comment->replies as $reply)
         <div class="col-12 px-3 py-2 mr-2 radius-10 mt-1 comment-box text-right reply-div"
             id="reply-box-{{ $reply->id }}">
             @include('modals.userdash', [
@@ -104,9 +119,8 @@
                     src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
             </span>
         </div>
-    @endforeach
+    @endforeach --}}
 @endforeach
-@include('modals.categoryComment.reply')
 @while ($affnum != -1)
     @if ($affnum != -1 && isset($affilates) && $affilates->slice($affnum, 1)->first() != null)
         <div class="col-12 text-right py-2 px-0 mt-2">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryCommentController;
+use App\Http\Controllers\CategoryCommentPartController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SiteCategoryController;
@@ -26,6 +27,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::name('api.')->group(function () {
     Route::get('get-comments-page/{category_id}/{item_id}/{tag_id}/{page}/{lastId}/{cri?}', [IndexController::class, 'getCommentsPaginatePage'])->name('get.comments.page');
+
+    Route::get('get-comment-replies/{comment_id}', [CategoryCommentPartController::class, 'getReplies'])->name('get.comment.replies');
 
     Route::get('get-user-videos/{user_id}/{id?}/{forr?}', [VideoController::class, 'getUserVideos'])->name('get.user.videos');
 

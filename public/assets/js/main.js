@@ -912,6 +912,6 @@ function changeMotto() {
     }
 }
 
-setInterval(changeMotto, 2500);
+// setInterval(changeMotto, 2500);
 
 const ftp_path = "https://dl.becharkh.com/user_files/";

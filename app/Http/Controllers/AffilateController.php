@@ -89,7 +89,13 @@ class AffilateController extends Controller
             }
             $product->update();
         }
-        $product->body  = $this->modifyAffiliateBody($product, 0);
+        // $product->body  = $this->modifyAffiliateBody($product, 0);
+
+        $body = $product->body;
+        preg_match_all('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $body, $matches);
+        $product->image_urls = $matches[1] ?? [];
+        $body = preg_replace('/<figure[^>]*>.*?<\/figure>/is', '', $body);
+        $product->body = $body;
 
         $comments = $product->comments;
 

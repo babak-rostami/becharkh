@@ -46,24 +46,26 @@ class QuestionAnswerController extends Controller
 
         $answer->question_id = $request->question_id;
         if (isset($request->parent_id)) {
-            $answer->parent_id = $request->parent_id;
-
-            if (isset($request->reply_id)) {
-                $reply = MongoCategoryComment::find($request->reply_id);
-                if (isset($reply)) {
-                    $answer->reply_id = $request->reply_id;
-                    $reply_user = $reply->user;
-                    if (isset($reply_user)) {
-                        $answer->reply_name = $reply_user->username;
-                        if ($reply_user != $user && $reply_user != $questionUser) {
-                            $this->NE($user, $reply_user, $question);
+            $parent_comment = MongoCategoryComment::find($request->parent_id);
+            if (isset($parent_comment)) {
+                $answer->parent_id = $parent_comment->id;
+                $this->setCommentRepliesCount($parent_comment, 1);
+                if (isset($request->reply_id)) {
+                    $reply = MongoCategoryComment::find($request->reply_id);
+                    if (isset($reply)) {
+                        $answer->reply_id = $request->reply_id;
+                        $reply_user = $reply->user;
+                        if (isset($reply_user)) {
+                            $answer->reply_name = $reply_user->username;
+                            if ($reply_user != $user && $reply_user != $questionUser) {
+                                $this->NE($user, $reply_user, $question);
+                            }
                         }
+                    } else {
+                        return response()->json(['error' => 'این نظر حذف شده است.'], 404);
                     }
-                } else {
-                    return response()->json(['error' => 'این نظر حذف شده است.'], 404);
                 }
             }
-
             $answer->body = $request->body;
         } else {
             //NE to question user if Questionuser is not $user
@@ -125,24 +127,26 @@ class QuestionAnswerController extends Controller
         $user = auth('user')->user();
         $answer->question_id = $request->question_id;
         if (isset($request->parent_id)) {
-            $answer->parent_id = $request->parent_id;
-
-            if (isset($request->reply_id)) {
-                $reply = MongoCategoryComment::find($request->reply_id);
-                if (isset($reply)) {
-                    $answer->reply_id = $request->reply_id;
-                    $reply_user = $reply->user;
-                    if (isset($reply_user)) {
-                        $answer->reply_name = $reply_user->username;
-                        if ($reply_user != $user && $reply_user != $questionUser) {
-                            $this->NE($user, $reply_user, $question);
+            $parent_comment = MongoCategoryComment::find($request->parent_id);
+            if (isset($parent_comment)) {
+                $answer->parent_id = $parent_comment->id;
+                $this->setCommentRepliesCount($parent_comment, 1);
+                if (isset($request->reply_id)) {
+                    $reply = MongoCategoryComment::find($request->reply_id);
+                    if (isset($reply)) {
+                        $answer->reply_id = $request->reply_id;
+                        $reply_user = $reply->user;
+                        if (isset($reply_user)) {
+                            $answer->reply_name = $reply_user->username;
+                            if ($reply_user != $user && $reply_user != $questionUser) {
+                                $this->NE($user, $reply_user, $question);
+                            }
                         }
+                    } else {
+                        return response()->json(['error' => 'این نظر حذف شده است.'], 404);
                     }
-                } else {
-                    return response()->json(['error' => 'این نظر حذف شده است.'], 404);
                 }
             }
-
             $answer->body = $request->body;
         } else {
             if ($user != $questionUser) {
@@ -216,21 +220,24 @@ class QuestionAnswerController extends Controller
 
         $answer->question_id = $request->question_id;
         if (isset($request->parent_id)) {
-            $answer->parent_id = $request->parent_id;
-
-            if (isset($request->reply_id)) {
-                $reply = MongoCategoryComment::find($request->reply_id);
-                if (isset($reply)) {
-                    $answer->reply_id = $request->reply_id;
-                    $reply_user = $reply->user;
-                    if (isset($reply_user)) {
-                        $answer->reply_name = $reply_user->username;
-                        if ($reply_user != $user && $reply_user != $questionUser) {
-                            $this->NE($user, $reply_user, $question);
+            $parent_comment = MongoCategoryComment::find($request->parent_id);
+            if (isset(($parent_comment))) {
+                $answer->parent_id = $parent_comment->id;
+                $this->setCommentRepliesCount($parent_comment, 1);
+                if (isset($request->reply_id)) {
+                    $reply = MongoCategoryComment::find($request->reply_id);
+                    if (isset($reply)) {
+                        $answer->reply_id = $request->reply_id;
+                        $reply_user = $reply->user;
+                        if (isset($reply_user)) {
+                            $answer->reply_name = $reply_user->username;
+                            if ($reply_user != $user && $reply_user != $questionUser) {
+                                $this->NE($user, $reply_user, $question);
+                            }
                         }
+                    } else {
+                        return response()->json(['error' => 'این نظر حذف شده است.'], 404);
                     }
-                } else {
-                    return response()->json(['error' => 'این نظر حذف شده است.'], 404);
                 }
             }
 
@@ -271,6 +278,24 @@ class QuestionAnswerController extends Controller
         }
 
         return back()->with('success', 'پاسخ با موفقیت ثبت شد');
+    }
+
+    // action 1 = increase and 0 = decrease
+    private function setCommentRepliesCount($comment, $action)
+    {
+        $replies_count = $comment->replies_count ?? 0;
+        if ($action) {
+            $comment->replies_count = $replies_count + 1;
+            $comment->update();
+        } else {
+            $new_replies_count = $replies_count - 1;
+            if ($new_replies_count <= 0) {
+                $comment->unset('replies_count');
+            } else {
+                $comment->replies_count = $new_replies_count;
+                $comment->update();
+            }
+        }
     }
 
     public function questionAnswersAdmin($question_id)
@@ -317,6 +342,12 @@ class QuestionAnswerController extends Controller
         $likes = MongoCategoryCommentLike::where('comment_id', $answer->id)->get();
         foreach ($likes as $like) {
             $like->delete();
+        }
+        if (isset($answer->parent_id)) {
+            $parent_comment = MongoCategoryComment::find($answer->parent_id);
+            if (isset($parent_comment)) {
+                $this->setCommentRepliesCount($parent_comment, 0);
+            }
         }
         $answer->delete();
         if ($question->answer_count > 0) {

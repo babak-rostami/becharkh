@@ -469,20 +469,20 @@ function hasAtLeastOneParagraph(content) {
     return hasParagraphTag;
 }
 
-var cedshows = document.querySelectorAll(".cedshow");
-for (var i = 0; i < cedshows.length; i++) {
-    var cedshow = cedshows[i];
-    var images = cedshow.querySelectorAll("img");
-    for (var j = 0; j < images.length; j++) {
-        var img = images[j];
-        var imgId = "ed-img-" + i + "-" + j;
-        img.setAttribute("id", imgId);
-        img.setAttribute(
-            "onclick",
-            "clickGalleryImg('" + imgId + "'," + "'comment')"
-        );
-    }
-}
+// var cedshows = document.querySelectorAll(".cedshow");
+// for (var i = 0; i < cedshows.length; i++) {
+//     var cedshow = cedshows[i];
+//     var images = cedshow.querySelectorAll("img");
+//     for (var j = 0; j < images.length; j++) {
+//         var img = images[j];
+//         var imgId = "ed-img-" + i + "-" + j;
+//         img.setAttribute("id", imgId);
+//         img.setAttribute(
+//             "onclick",
+//             "clickGalleryImg('" + imgId + "'," + "'comment')"
+//         );
+//     }
+// }
 
 $("#edImageModal").on("click", function (event) {
     if ($(event.target).attr("id") !== "ed-img") {

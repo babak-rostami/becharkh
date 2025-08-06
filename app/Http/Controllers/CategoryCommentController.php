@@ -143,6 +143,7 @@ class CategoryCommentController extends Controller
                         ->get()
                         ->shuffle();
                 }
+
                 if (isset($item->pin_question_ids)) {
                     $pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
                         ->whereIn('_id', $item->pin_question_ids)
@@ -427,6 +428,7 @@ class CategoryCommentController extends Controller
         if (isset($request->parent_id)) {
             $comment->parent_id = $request->parent_id;
             $parent_comment = MongoCategoryComment::find($request->parent_id);
+            $this->setCommentRepliesCount($parent_comment, 1);
             $comment->category_id = $parent_comment->category_id;
             if (isset($request->reply_id)) {
                 $reply_comment = MongoCategoryComment::find($request->reply_id);
@@ -441,6 +443,14 @@ class CategoryCommentController extends Controller
             if (!isset($category)) {
                 return back()->with('success', 'دسته بندی وجود ندارد');
             }
+
+            if ($request->filled('images')) {
+                $address = $category->slug;
+                $images = app(InputImagesController::class)->setImagesArrayForStore($request->images, 'ccomment', $address);
+                $comment->iimages = $images; // فیلد json
+            }
+
+
             $comment->category_id = $category->id;
 
             $addItemService = new AdditemsService();
@@ -488,6 +498,25 @@ class CategoryCommentController extends Controller
         }
 
         return redirect()->route('admin.category.comment.index')->with('success', 'نظر با موفقیت ثبت شد');
+    }
+
+
+    // action 1 = increase and 0 = decrease
+    private function setCommentRepliesCount($comment, $action)
+    {
+        $replies_count = $comment->replies_count ?? 0;
+        if ($action) {
+            $comment->replies_count = $replies_count + 1;
+            $comment->update();
+        } else {
+            $new_replies_count = $replies_count - 1;
+            if ($new_replies_count <= 0) {
+                $comment->unset('replies_count');
+            } else {
+                $comment->replies_count = $new_replies_count;
+                $comment->update();
+            }
+        }
     }
 
     public function editAdmin(Request $request, $comment_id)
@@ -635,9 +664,16 @@ class CategoryCommentController extends Controller
             } else {
                 $unset_ques = 1;
             }
+
+            if ($request->filled('images')) {
+                $address = $category->slug;
+                $images = app(InputImagesController::class)->setImagesArrayForUpdate($request->images, 'ccomment', $comment, $address);
+                $comment->iimages = $images; // فیلد json
+            }
         } else {
             $comment->body = $request->body;
         }
+
         $comment->update();
 
         if ($request->remove_from_ccom == 1) {
@@ -658,8 +694,8 @@ class CategoryCommentController extends Controller
     {
         $comment = MongoCategoryComment::find($request->comment_id);
         $comment_images = CategoryCommentEditorImage::where('comment_id', $comment->id)->get();
+        $disk = Storage::disk('ftp');
         if (!$comment_images->isEmpty()) {
-            $disk = Storage::disk('ftp');
             foreach ($comment_images as $ci) {
                 $disk->delete($ci->path);
                 $ci->delete();
@@ -675,12 +711,24 @@ class CategoryCommentController extends Controller
             dispatch(new ChangeItemPageCount($comment->items, 'comment', 0))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
         }
         if (isset($comment->parent_id) || isset($comment->reply_id)) {
-            app(UserNotificationController::class)->deleteNotification('ccomment', $comment->id);
+            $parent_comment = MongoCategoryComment::find($comment->parent_id);
+            if (isset($parent_comment)) {
+                $this->setCommentRepliesCount($parent_comment, 0);
+                app(UserNotificationController::class)->deleteNotification('ccomment', $comment->id);
+            }
         }
         $likes = MongoCategoryCommentLike::where('comment_id', $comment->id)->get();
         foreach ($likes as $like) {
             $like->delete();
         }
+
+        $images = $comment->iimages ?? [];
+        foreach ($images as $image) {
+            if (isset($image['path']) && $disk->exists($image['path'])) {
+                $disk->delete($image['path']);
+            }
+        }
+
         $comment->delete();
         return back()->with('success', 'با موفقیت حذف شد');
     }
@@ -714,13 +762,17 @@ class CategoryCommentController extends Controller
         $comment->user_id = $user->id;
         //if comment is not main comment 
         if (isset($request->parent_id)) {
-            $comment->parent_id = $request->parent_id;
-            //if comment was reply to reply
-            if (isset($request->reply_id)) {
-                $reply_comment = MongoCategoryComment::find($request->reply_id);
-                if (isset($reply_comment)) {
-                    $comment->reply_id = $request->reply_id;
-                    $comment->reply_name = $reply_comment->user->username;
+            $parent_comment = MongoCategoryComment::find($request->parent_id);
+            if (isset($parent_comment)) {
+                $comment->parent_id = $parent_comment->id;
+                $this->setCommentRepliesCount($parent_comment, 1);
+                //if comment was reply to reply
+                if (isset($request->reply_id)) {
+                    $reply_comment = MongoCategoryComment::find($request->reply_id);
+                    if (isset($reply_comment)) {
+                        $comment->reply_id = $request->reply_id;
+                        $comment->reply_name = $reply_comment->user->username;
+                    }
                 }
             }
         }
@@ -796,6 +848,8 @@ class CategoryCommentController extends Controller
         if (!isset($parent)) {
             return response()->json(['error' => 'این نظر حذف شده است.'], 404);
         }
+
+        $this->setCommentRepliesCount($parent, 1);
 
         $comment = new MongoCategoryComment();
         $user = auth('user')->user();

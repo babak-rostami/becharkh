@@ -192,7 +192,16 @@ function addHtmlOnSuccess(comment) {
     if (comment.reply_id) {
         $('#reply-box-' + comment.reply_id).after(newReplyHtml);
     } else {
-        $('#comment-box-' + comment.parent_id).after(newReplyHtml);
+        // پاسخ مستقیم به کامنت اصلی
+        let repliesBoxId = 'replies-box-' + comment.parent_id;
+        let repliesBox = $('#' + repliesBoxId);
+
+        if (repliesBox.length) {
+            repliesBox.append(newReplyHtml);
+        } else {
+            let newRepliesBoxHtml = `<div class="mt-3" id="${repliesBoxId}">${newReplyHtml}</div>`;
+            $('#comment-box-' + comment.parent_id).append(newRepliesBoxHtml);
+        }
     }
     $('html, body').animate({
         scrollTop: $('#reply-box-' + comment.id).offset().top - 100
@@ -443,6 +452,8 @@ let tag2_container = $('#item-tags-2');
 function selectItemTag(catId, itemId, tagId) {
     if (!can_select_tag) return;
 
+    loadedCommentReplies = [];
+
     let currentSelected = $('.item-tag-selected').attr('id');
     if (currentSelected === 'item-tag-' + tagId) return;
 
@@ -543,6 +554,70 @@ function showChildTags(category_id, item_id, tags) {
     });
 }
 
-
-
 // end for comments tags
+
+// for load comment replies
+let loadedCommentReplies = [];
+let loadingCommentReplies = new Set();
+
+function loadCommentReplies(comment_id) {
+    let show_replies_btn = $('#show-replies-btn-' + comment_id);
+
+    // اگر در حال بارگذاری هست یا قبلاً لود شده، برگرد
+    if (loadingCommentReplies.has(comment_id) || loadedCommentReplies.includes(comment_id)) {
+        return;
+    }
+
+    let original_text = show_replies_btn.text();
+    show_replies_btn.text('در حال بارگذاری...');
+    loadingCommentReplies.add(comment_id); // علامت‌گذاری: در حال لود
+
+    $.ajax({
+        url: '/api/get-comment-replies/' + comment_id,
+        method: 'GET',
+        success: function (response) {
+            if (response.html) {
+                let repliesBox = $('#replies-box-' + comment_id);
+                if (repliesBox.length) {
+                    repliesBox.remove();
+                }
+                $('#comment-box-' + comment_id).append(response.html);
+
+                loadedCommentReplies.push(comment_id);
+                show_replies_btn.hide();
+                $('#toggle-replies-btn-' + comment_id).show().text('پنهان کردن پاسخ‌ها');
+            }
+        },
+        error: function () {
+            // نشان دادن خطا، ولی فعلاً اجازه کلیک نمی‌دیم
+            show_replies_btn.text('اینترنت در دسترس نیست').show();
+
+            setTimeout(() => {
+                show_replies_btn.text(original_text).show();
+                loadingCommentReplies.delete(comment_id); // حالا اجازه بده کلیک کنه
+            }, 4000);
+        },
+        complete: function () {
+            // فقط اگر موفق بود و دکمه هنوز هست (یعنی خطا نبود)، پاک کن
+            if (!show_replies_btn.is(':visible')) {
+                loadingCommentReplies.delete(comment_id);
+            }
+        }
+    });
+}
+
+
+function toggleReplies(comment_id) {
+    const box = $('#replies-box-' + comment_id);
+    const btn = $('#toggle-replies-btn-' + comment_id);
+
+    if (box.is(':visible')) {
+        box.hide();
+        btn.text('نمایش پاسخ‌ها');
+    } else {
+        box.show();
+        btn.text('پنهان کردن پاسخ‌ها');
+    }
+}
+
+// end for load comment replies

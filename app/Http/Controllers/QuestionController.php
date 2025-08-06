@@ -431,15 +431,14 @@ class QuestionController extends Controller
         $items = $question->items;
         $item = null;
         $user = null;
+        $questions = collect();
         if (auth('user')->check()) {
             $user = auth('user')->user();
         }
         if (isset($items) && count($items) > 0) {
             $item_id = $items[0];
             $item = MongoItem::find($item_id);
-            $questions = $this->getHotQuestions($category, $item->id, 15)->where('id', '!=', $question->id);
-        } else {
-            $questions = $this->getHotQuestions($category, null, 15)->where('id', '!=', $question->id);
+            $questions = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->where('status', 1)->take(10)->get();
         }
         $features = $category->features();
         if (isset($item)) {
@@ -492,9 +491,6 @@ class QuestionController extends Controller
         } else {
             $suggestCats = $suggests['cats'];
         }
-
-        $childFeature = null;
-        $childItem = null;
 
         $page_intro_title = null;
         $page_intro_desc = null;

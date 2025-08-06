@@ -100,9 +100,23 @@ mix.minify(
         "public/assets/js/pages/comment-box.js",
         "public/assets/js/survey/create.js",
         "public/assets/js/admin/check-fake-user.js",
-        "public/assets/js/pages/forum/sasf-edit.js"
+        "public/assets/js/pages/forum/sasf-edit.js",
+        "public/assets/js/pages/form/images-input-create.js"
     ],
     "public/mixassets/js/category/comment-create.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/category/comment-create.js",
+        "public/assets/js/pages/comment-box.js",
+        "public/assets/js/survey/create.js",
+        "public/assets/js/admin/check-fake-user.js",
+        "public/assets/js/pages/forum/sasf-edit.js",
+        "public/assets/js/pages/form/images-input-edit.js"
+    ],
+    "public/mixassets/js/category/comment-edit.min.js"
 );
 
 mix.minify(
@@ -566,9 +580,22 @@ mix.minify(
         "public/assets/css/category/comment-create.css",
         "public/assets/css/pages/comment-box.css",
         "public/assets/css/survey/create.css",
-        "public/assets/css/pages/forum/sasf-edit.css"
+        "public/assets/css/pages/forum/sasf-edit.css",
+        "public/assets/css/pages/form/images-input-create.css"
     ],
     "public/mixassets/css/category/comment-create.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/category/comment-create.css",
+        "public/assets/css/pages/comment-box.css",
+        "public/assets/css/survey/create.css",
+        "public/assets/css/pages/forum/sasf-edit.css",
+        "public/assets/css/pages/form/images-input-edit.css"
+    ],
+    "public/mixassets/css/category/comment-edit.min.css"
 );
 
 mix.minify(

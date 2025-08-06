@@ -1,0 +1,72 @@
+#inputImageList {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+#form-images-input {
+    display: none;
+}
+
+#inputImageBox {
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#form-img-upload-btn {
+    outline: none !important;
+    width: 100%;
+    padding: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #e7e7e7;
+    background-color: #f7f7f7;
+}
+
+#form-img-upload-btn:hover {
+    background-color: #f1f1f1;
+}
+
+#form-img-upload-msg {
+    width: 100%;
+    padding: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #e7e7e7;
+    background-color: #f7f7f7;
+    display: block;
+    text-align: center;
+}
+
+#inputImageList img {
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.input-file-d-img {
+    width: 64px;
+    border-radius: 6px;
+}
+
+.remove-uploaded-image {
+    background-color: #ffe5e5;
+    border: 1px solid #ffaaaa;
+    color: #cc0000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.uploaded-image-wrapper {
+    margin: 4px;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 8px;
+}

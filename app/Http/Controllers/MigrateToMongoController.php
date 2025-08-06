@@ -133,6 +133,62 @@ class MigrateToMongoController extends Controller
 
         // $this->addCategoryQuestions();
 
+
+        // ۱) همه عکس‌ها رو بر اساس comment_id گروه‌بندی کن
+        // $commentImagesGrouped = CategoryCommentEditorImage::whereNotNull('comment_id')
+        //     ->get()
+        //     ->groupBy('comment_id');
+
+        // foreach ($commentImagesGrouped as $comment_id => $images) {
+        //     $comment = MongoCategoryComment::find($comment_id);
+
+        //     if (!$comment) {
+        //         continue; // اگر کامنت حذف شده بود
+        //     }
+
+        //     // آرایه iimages اگه وجود نداره ایجاد کن
+        //     $iimages = $comment->iimages ?? [];
+
+        //     // پیدا کردن بزرگترین کلید موجود در iimages
+        //     $existingKeys = array_keys($iimages);
+        //     $maxKey = empty($existingKeys) ? -1 : max($existingKeys);
+
+        //     foreach ($images as $image) {
+        //         $maxKey++;
+        //         $iimages[$maxKey] = [
+        //             'path' => $image->path,
+        //             'id'   => $maxKey,
+        //         ];
+        //     }
+
+        //     // به‌روزرسانی کامنت و ذخیره
+        //     $comment->iimages = $iimages;
+        //     $comment->save();
+        // }
+
+        // $comments = MongoCategoryComment::where('images', '!=', null)->get();
+        // foreach ($comments as $comment) {
+        //     $iimages = [];
+        //     $iimages[0] = [
+        //         'path' => $comment->images[0],
+        //         'id'   => 0,
+        //     ];
+        //     $comment->iimages = $iimages;
+        //     $comment->update();
+        // }
+
+        // $comments = MongoCategoryComment::where('iimages', '!=', null)->get();
+        // foreach ($comments as $comment) {
+        //     if (strpos($comment->editor, '<figure') !== false) {
+        //         $cleanedEditor = preg_replace('/<figure[^>]*>.*?<\/figure>/si', '', $comment->editor);
+
+        //         if ($cleanedEditor !== $comment->editor) {
+        //             $comment->editor = $cleanedEditor;
+        //             $comment->update();
+        //         }
+        //     }
+        // }
+
         dd("done");
     }
     private function addCategoryQuestions()
