@@ -404,6 +404,8 @@
                 'has_videos' => 0,
                 'video_input_name' => 'video',
             ])
+
+            @include('mainPart.form.images-input-create')
         @break
 
         @case('edit_affilate')
@@ -482,6 +484,10 @@
                 'sasfVideoId' => $videoId ?? null,
                 'sasfVideoSelect' => $videoSelect ?? null,
             ])
+
+            @include('mainPart.form.images-input-edit', [
+                'object' => $affilate,
+            ])
         @break
 
         @case('admin_create_product_comment')
@@ -508,8 +514,10 @@
     @endswitch
 
     @if ($page == 'admin_edit_comment')
-        <textarea required class="form-control comment-input" id="cm-input" name="body"
-            placeholder="نظر خود را اینجا بنویسید...">{{ $comment->editor ?? $comment->body }}</textarea>
+        <label>نمایش در نظرات</label>
+        <textarea required class="form-control" id="cm-input" name="body">{{ $comment->editor ?? $comment->body }}</textarea>
+        <label>نمایش در صفحه سوال</label>
+        <textarea class="form-control" id="cm-input-2" name="editor2">{{ $comment->editor2 }}</textarea>
     @elseif($page == 'admin_edit_qanswer')
         <textarea required class="form-control comment-input" id="cm-input" name="body"
             placeholder="نظر خود را اینجا بنویسید...">{{ $answer->editor ?? $answer->body }}</textarea>
@@ -576,17 +584,9 @@
     @elseif($page == 'admin_edit_product_comment')
         {{ method_field('PUT') }}
         <textarea class="form-control" id="cm-input" name="body">{{ $comment->editor }}</textarea>
-    @elseif(!isset($user) && $page == 'show_question')
-        <textarea class="form-control comment-input" id="qa-textarea" name="body"
+    @elseif($page == 'show_question')
+        <textarea class="form-control comment-input" id="cm-input" name="body"
             placeholder="نظر خود را اینجا بنویسید..."></textarea>
-        <script>
-            $(document).ready(function() {
-                $('#qa-textarea').on('input', function() {
-                    $(this).css('height', 'auto');
-                    $(this).css('height', Math.max(this.scrollHeight, 100) + 'px');
-                });
-            });
-        </script>
     @else
         <textarea class="form-control comment-input" id="cm-input" name="body"
             placeholder="نظر خود را اینجا بنویسید..."></textarea>
@@ -677,6 +677,13 @@
                             alt="survey">
                     </button>
                 </div>
+            @elseif($page == 'show_question')
+                <button type="button" class="btn btn-primary my-2 w-100" onclick="userCcommentSend()"
+                    id="comment-editor-btn">
+                    <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy"
+                        alt="send">
+                    ارسال نظر
+                </button>
             @else
                 <button type="button" class="btn btn-primary my-2 w-100" onclick="editorCommentSend()"
                     id="comment-editor-btn">
@@ -714,7 +721,7 @@
             در حال ارسال پیام...
         </button>
     @endif
-    <span id="comeditor-msg"></span>
+    <span id="comeditor-msg">نظر خود را بنویسید...</span>
 </form>
 
 <div id="edImageModal" class="ed-imgslider-modal">

@@ -303,6 +303,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('feature-item-store', [CategoryFeatureItemController::class, 'storeItemAdmin'])->name('feature.item.store.admin');
     Route::put('feature-item-update/{item_id}', [CategoryFeatureItemController::class, 'updateItemAdmin'])->name('feature.item.update.admin');
     Route::get('feature-item-destroy/{item_id}', [CategoryFeatureItemController::class, 'destroyItemAdmin'])->name('feature.item.destroy.admin');
+    Route::post('item-reset-suggests', [CategoryFeatureItemController::class, 'itemResetSuggests'])->name('item.reset.suggests.admin');
+
 
     Route::get('item-tags/{id?}', [MongoItemTagController::class, 'index'])->name('item.tags.admin');
     Route::post('item-tag-store', [MongoItemTagController::class, 'store'])->name('item.tag.store.admin');

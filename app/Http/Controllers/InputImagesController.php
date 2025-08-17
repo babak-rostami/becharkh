@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Affilate;
 use App\Models\InputImage;
 use App\Models\MongoCategoryComment;
 use Illuminate\Http\Request;
@@ -44,6 +45,8 @@ class InputImagesController extends Controller
 
         if ($request->is_for == 'ccomment') {
             $object = MongoCategoryComment::find($request->object_id);
+        } elseif ($request->is_for == 'affilate') {
+            $object = Affilate::find($request->object_id);
         }
 
         if (!$object || !is_array($object->iimages)) {
@@ -78,6 +81,8 @@ class InputImagesController extends Controller
 
         if ($request->is_for === 'ccomment') {
             $object = MongoCategoryComment::find($request->object_id);
+        } elseif ($request->is_for === 'affilate') {
+            $object = Affilate::find($request->object_id);
         }
 
         if (!$object || !is_array($object->iimages)) {
@@ -129,14 +134,19 @@ class InputImagesController extends Controller
         $disk->put($path . $filename, (string) $resizedImage);
     }
 
-    public function setImagesArrayForStore($images, $is_for, $address)
+    public function setImagesArrayForStore($images, $is_for, $address = null)
     {
         $images = explode(',', $images);
         $input_images = InputImage::find($images);
         $disk = Storage::disk('ftp');
 
         if ($is_for == 'ccomment') {
-            $new_path_dir = 'ccomment/images/' . $address;
+            $new_path_dir = 'ccomment/images';
+        } elseif ($is_for == 'affilate') {
+            $new_path_dir = 'product/images';
+        }
+        if ($address) {
+            $new_path_dir =  $new_path_dir . '/' . $address;
         }
 
         $result_images = [];
@@ -147,7 +157,11 @@ class InputImagesController extends Controller
 
             $extension = pathinfo($old_path, PATHINFO_EXTENSION);
 
-            $new_file_name = $address . '-' . time() . '-' . rand(1000, 9999) . '-' . $i . '.' . $extension;
+            if ($address) {
+                $new_file_name = $address . '-' . time() . '-' . rand(1000, 9999) . '-' . $i . '.' . $extension;
+            } else {
+                $new_file_name = time() . '-' . rand(1000, 9999) . '-' . $i . '.' . $extension;
+            }
             $new_path = $new_path_dir . '/' . $new_file_name;
 
 
@@ -180,7 +194,12 @@ class InputImagesController extends Controller
         $disk = Storage::disk('ftp');
 
         if ($is_for == 'ccomment') {
-            $new_path_dir = 'ccomment/images/' . $address;
+            $new_path_dir = 'ccomment/images';
+        } elseif ($is_for == 'affilate') {
+            $new_path_dir = 'product/images';
+        }
+        if ($address) {
+            $new_path_dir =  $new_path_dir . '/' . $address;
         }
 
         $new_images = [];
@@ -189,7 +208,12 @@ class InputImagesController extends Controller
             $old_path = $img->image;
             $extension = pathinfo($old_path, PATHINFO_EXTENSION);
 
-            $new_file_name = $address . '-' . time() . '-' . rand(1000, 9999) . '.' . $extension;
+            if ($address) {
+                $new_file_name = $address . '-' . time() . '-' . rand(1000, 9999) . '.' . $extension;
+            } else {
+                $new_file_name = time() . '-' . rand(1000, 9999) . '.' . $extension;
+            }
+
             $new_path = $new_path_dir . '/' . $new_file_name;
 
             if ($disk->exists($old_path)) {

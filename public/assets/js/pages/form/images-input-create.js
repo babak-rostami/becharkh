@@ -16,9 +16,10 @@ $(document).ready(function () {
         const inputImageFormData = new FormData();
         inputImageFormData.append('image', file);
 
-        if (typeof page !== 'undefined' && page === 'admin_create_comment') {
-            inputImageFormData.append('is_for', 'ccomment');
-            inputImageFormData.append('_token', csrf_t);
+        if (typeof page !== 'undefined') {
+            if (page === 'admin_create_comment' || page === 'create_affilate') {
+                inputImageFormData.append('_token', csrf_t);
+            }
         }
 
         const savingMsg = $('<span>', {

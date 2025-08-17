@@ -51,7 +51,7 @@ function likeCategoryComment(category_comment_id) {
 
     $.ajax({
         type: "POST",
-        url: category_comment_like_route,
+        url: '/category-comment-like',
         data: {
             _token: csrf_t,
             like_or_unlike: true,
@@ -82,7 +82,7 @@ function unlikeCategoryComment(category_comment_id) {
 
     $.ajax({
         type: "POST",
-        url: category_comment_like_route,
+        url: '/category-comment-like',
         data: {
             _token: csrf_t,
             like_or_unlike: false,
@@ -137,7 +137,7 @@ function sendCommentBtnAction() {
     };
 
     $.ajax({
-        url: reply_df_route,
+        url: '/cat-comment-store-dref',
         type: 'POST',
         data: reply_data,
         success: function (response) {

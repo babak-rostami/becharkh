@@ -31,7 +31,7 @@
                             data-target="#delete-{{ $answer->id }}">حذف</a>
                         <a class="btn btn-primary" href="" data-toggle="modal"
                             data-target="#reply-{{ $answer->id }}">جواب</a>
-                        <a class="btn btn-warning" href="{{ route('admin.question.answer.edit', $answer->id) }}">ویرایش</a>
+                        <a class="btn btn-warning" href="{{ route('admin.category.comment.edit', $answer->id) }}">ویرایش</a>
 
                         <div class="modal fade" id="reply-{{ $answer->id }}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -54,6 +54,7 @@ use App\Models\Video;
 use App\Models\Work;
 use App\Notifications\UserNotif;
 use App\Services\Elasticsearch;
+use DOMDocument;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -185,6 +186,52 @@ class MigrateToMongoController extends Controller
         //         if ($cleanedEditor !== $comment->editor) {
         //             $comment->editor = $cleanedEditor;
         //             $comment->update();
+        //         }
+        //     }
+        // }
+
+        // $affilates = Affilate::all();
+
+        // foreach ($affilates as $affilate) {
+        //     $doc = new DOMDocument();
+        //     @$doc->loadHTML('<?xml encoding="UTF-8">' . $affilate->body);
+
+        //     $imgs = $doc->getElementsByTagName('img');
+        //     $images = [];
+        //     $i = 0;
+
+        //     foreach ($imgs as $img) {
+        //         $base = 'https://dl.becharkh.com/user_files/';
+
+        //         $data_src_full = $img->getAttribute('data-src');
+        //         $src_full = $img->getAttribute('src');
+
+        //         $final_full = $data_src_full ?: $src_full;
+
+        //         if (str_starts_with($final_full, $base)) {
+        //             $path = substr($final_full, strlen($base));
+
+        //             if (!empty($path)) {
+        //                 $images[] = [
+        //                     'id' => $i++,
+        //                     'path' => $path,
+        //                 ];
+        //             }
+        //         }
+        //     }
+
+        //     $affilate->iimages = $images;
+        //     $affilate->update();
+        // }
+
+        // $affilates = Affilate::all();
+        // foreach ($affilates as $affilate) {
+        //     if (strpos($affilate->body, '<figure') !== false) {
+        //         $cleanedEditor = preg_replace('/<figure[^>]*>.*?<\/figure>/si', '', $affilate->body);
+
+        //         if ($cleanedEditor !== $affilate->body) {
+        //             $affilate->body = $cleanedEditor;
+        //             $affilate->update();
         //         }
         //     }
         // }

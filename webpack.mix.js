@@ -264,7 +264,8 @@ mix.minify(
         "public/assets/js/main.js",
         "public/assets/js/affilate/edit.js",
         "public/assets/js/pages/comment-box.js",
-        "public/assets/js/pages/forum/sasf-edit.js"
+        "public/assets/js/pages/forum/sasf-edit.js",
+        "public/assets/js/pages/form/images-input-edit.js"
     ],
     "public/mixassets/js/affilate/edit.min.js"
 );
@@ -297,7 +298,8 @@ mix.minify(
         "public/assets/js/main.js",
         "public/assets/js/affilate/create.js",
         "public/assets/js/cisearch/create.js",
-        "public/assets/js/pages/comment-box.js"
+        "public/assets/js/pages/comment-box.js",
+        "public/assets/js/pages/form/images-input-create.js"
     ],
     "public/mixassets/js/affilate/create.min.js"
 );
@@ -405,7 +407,8 @@ mix.minify(
         "public/assets/style.css",
         "public/assets/css/affilate/create.css",
         "public/assets/css/cisearch/create.css",
-        "public/assets/css/pages/comment-box.css"
+        "public/assets/css/pages/comment-box.css",
+        "public/assets/css/pages/form/images-input-create.css"
     ],
     "public/mixassets/css/affilate/create.min.css"
 );
@@ -424,6 +427,7 @@ mix.minify(
         "public/assets/css/affilate/edit.css",
         "public/assets/css/pages/comment-box.css",
         "public/assets/css/pages/forum/sasf-edit.css",
+        "public/assets/css/pages/form/images-input-edit.css"
     ],
     "public/mixassets/css/affilate/edit.min.css"
 );
@@ -665,7 +669,8 @@ mix.minify(
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/hot-pages.css",
         "public/assets/css/category/comment/uprof.css",
-        "public/assets/css/item/top-users.css"
+        "public/assets/css/item/page-item-link.css",
+        "public/assets/css/item/top-users.css",
     ],
     "public/mixassets/css/forum/show.min.css"
 );

@@ -31,6 +31,7 @@
 @section('script')
     <script>
         const page = 'edit_affilate';
+        const csrf_t = "{{ csrf_token() }}";
         const editor_img_upload_route =
             "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'edit_affilate']) }}";
     </script>

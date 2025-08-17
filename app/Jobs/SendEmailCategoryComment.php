@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class SendEmailCategoryComment implements ShouldQueue
@@ -70,12 +71,26 @@ class SendEmailCategoryComment implements ShouldQueue
             $replyComment = MongoCategoryComment::find($this->reply_id);
             $rUser = $replyComment->user;
             if (isset($rUser) && (!isset($rUser->email_actived) || $rUser->email_actived != 0) && $this->user != $rUser) {
-                Mail::to($rUser->email)->send(new ReplyToCommentMail($commentPageTitle, $this->user->username, $commentPage));
+                $user_send_email_key = 'user_email_send_' . $rUser->id;
+                if (Cache::add($user_send_email_key, 1, 3600)) {
+                    Mail::to($rUser->email)->send(new ReplyToCommentMail(
+                        $commentPageTitle,
+                        $this->user->username,
+                        $commentPage
+                    ));
+                }
             }
         } else {
             $pCUser = $parentComment->user;
             if (isset($pCUser) && (!isset($pCUser->email_actived) || $pCUser->email_actived != 0) && $this->user != $pCUser) {
-                Mail::to($pCUser->email)->send(new ReplyToCommentMail($commentPageTitle, $this->user->username, $commentPage));
+                $user_send_email_key = 'user_email_send_' . $pCUser->id;
+                if (Cache::add($user_send_email_key, 1, 3600)) {
+                    Mail::to($pCUser->email)->send(new ReplyToCommentMail(
+                        $commentPageTitle,
+                        $this->user->username,
+                        $commentPage
+                    ));
+                }
             }
         }
     }

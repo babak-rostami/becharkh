@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use App\Services\Suggestion\SuggestionService;
 use App\Services\Survey\SurveyService;
+use DOMDocument;
 use Illuminate\Support\Facades\Cache;
 
 class QuestionController extends Controller
@@ -227,12 +228,11 @@ class QuestionController extends Controller
             $features = $category->features();
             $currentQueryParams = $request->query();
 
-            $hot_pages = Cache::get('hot_pages');
+            // $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
                 'page_intro_title',
                 'page_intro_desc',
-                'hot_pages',
                 'hotQuestions',
                 'item',
                 'meta_title',
@@ -430,11 +430,8 @@ class QuestionController extends Controller
 
         $items = $question->items;
         $item = null;
-        $user = null;
         $questions = collect();
-        if (auth('user')->check()) {
-            $user = auth('user')->user();
-        }
+
         if (isset($items) && count($items) > 0) {
             $item_id = $items[0];
             $item = MongoItem::find($item_id);
@@ -443,57 +440,54 @@ class QuestionController extends Controller
         $features = $category->features();
         if (isset($item)) {
             $tab_title = $item->full_title ?? $item->title;
-            if ($category->has_comments) {
-                $comment_page = $item->withParentsCommentUrl();
-            }
-            if ($category->has_forums) {
-                $forum_page = $item->withParentsForumUrl();
-            }
-            if ($category->has_blogs) {
-                $blog_page = $item->withParentsBlogUrl();
-            }
-            if ($category->has_ads) {
-                $advertise_page = $item->withParentsAdvertiseUrl();
-            }
+            // if ($category->has_comments) {
+            //     $comment_page = $item->withParentsCommentUrl();
+            // }
+            // if ($category->has_forums) {
+            //     $forum_page = $item->withParentsForumUrl();
+            // }
+            // if ($category->has_blogs) {
+            //     $blog_page = $item->withParentsBlogUrl();
+            // }
+            // if ($category->has_ads) {
+            //     $advertise_page = $item->withParentsAdvertiseUrl();
+            // }
             $followFeature = $features->find($item->feature_id);
-            if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
-                $page_intro_title = str_replace("*", $tab_title, $followFeature->page_intro_title);
-                $page_intro_desc = str_replace("*", $tab_title, $followFeature->page_intro_desc);
-            }
+            // if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
+            //     $page_intro_title = str_replace("*", $tab_title, $followFeature->page_intro_title);
+            //     $page_intro_desc = str_replace("*", $tab_title, $followFeature->page_intro_desc);
+            // }
         } else {
             $tab_title = $category->full_title ?? $category->title;
-            if ($category->has_comments) {
-                $comment_page = route('question.index', $category->slug) . '?s=1';
-            }
-            if ($category->has_forums) {
-                $forum_page = route('question.index', $category->slug);
-            }
-            if ($category->has_blogs) {
-                $blog_page = route('blog.index', $category->slug);
-            }
-            if ($category->has_ads) {
-                $advertise_page = route('ads.index', $category->slug);
-            }
+            // if ($category->has_comments) {
+            //     $comment_page = route('question.index', $category->slug) . '?s=1';
+            // }
+            // if ($category->has_forums) {
+            //     $forum_page = route('question.index', $category->slug);
+            // }
+            // if ($category->has_blogs) {
+            //     $blog_page = route('blog.index', $category->slug);
+            // }
+            // if ($category->has_ads) {
+            //     $advertise_page = route('ads.index', $category->slug);
+            // }
         }
-        $pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
-            ->where('just_this_page', 0)
-            ->take(20)
-            ->get();
-        $pin_questions = $pin_questions->where('id', '!=', $question->id)->shuffle()->take(3);
-        $pinQuestionIds = $pin_questions->pluck('_id');
-        $questions = $questions->whereNotIn('_id', $pinQuestionIds);
-        $questions->each(function ($hq) {
-            $hq->load('user');
-        });
+        // $pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
+        //     ->where('just_this_page', 0)
+        //     ->take(20)
+        //     ->get();
+        // $pin_questions = $pin_questions->where('id', '!=', $question->id)->shuffle()->take(3);
+        // $pinQuestionIds = $pin_questions->pluck('_id');
+        $questions = $questions->whereNotIn('_id', $question->id);
+        // $questions->each(function ($hq) {
+        //     $hq->load('user');
+        // });
         $suggests = $suggestionService->suggest($category, $item);
         if (isset($suggests['items'])) {
             $suggetItems = $suggests['items'];
         } else {
             $suggestCats = $suggests['cats'];
         }
-
-        $page_intro_title = null;
-        $page_intro_desc = null;
 
         $lastAnswers = MongoCategoryComment::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
         $firstComs = $lastAnswers->take(1);
@@ -515,7 +509,7 @@ class QuestionController extends Controller
 
         $currentQueryParams = [];
 
-        $hot_pages = Cache::get('hot_pages');
+        // $hot_pages = Cache::get('hot_pages');
 
         if ($question->video) {
             $video = $question->video;
@@ -525,39 +519,23 @@ class QuestionController extends Controller
 
         $compactVars = [
             'video',
-            'page_intro_title',
-            'page_intro_desc',
-            'hot_pages',
             'question',
             'answers',
             'acceptedAnswer',
             'questions',
-            'user',
             'item',
             'category',
             'tab_title',
             'currentQueryParams',
         ];
-        if (isset($pin_questions) && !$pin_questions->isEmpty()) {
-            $compactVars[] = 'pin_questions';
-        }
+        // if (isset($pin_questions) && !$pin_questions->isEmpty()) {
+        //     $compactVars[] = 'pin_questions';
+        // }
         if (isset($features)) {
             $compactVars[] = 'features';
         }
         if (isset($affilates)) {
             $compactVars[] = 'affilates';
-        }
-        if (isset($forum_page)) {
-            $compactVars[] = 'forum_page';
-        }
-        if (isset($comment_page)) {
-            $compactVars[] = 'comment_page';
-        }
-        if (isset($blog_page)) {
-            $compactVars[] = 'blog_page';
-        }
-        if (isset($advertise_page)) {
-            $compactVars[] = 'advertise_page';
         }
         if (isset($suggetItems)) {
             $compactVars[] = 'suggetItems';
@@ -934,6 +912,20 @@ class QuestionController extends Controller
             $compactVars[] = 'videoId';
             $compactVars[] = 'videoSelect';
         }
+
+        $lastAnswers = MongoCategoryComment::where('question_id', $question->id)->where('parent_id', null)->get();
+        $links_from_editor = [];
+        foreach ($lastAnswers as $comment) {
+            // استخراج لینک‌ها از editor
+            if (!empty($comment->editor2)) {
+                $dom = new DOMDocument();
+                @$dom->loadHTML(mb_convert_encoding($comment->editor2, 'HTML-ENTITIES', 'UTF-8'));
+                foreach ($dom->getElementsByTagName('a') as $aTag) {
+                    $links_from_editor[] = trim($aTag->textContent);
+                }
+            }
+        }
+        $compactVars[] = 'links_from_editor';
 
         return view('question.admin.edit', compact(...$compactVars));
     }

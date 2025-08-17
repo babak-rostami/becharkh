@@ -3,11 +3,11 @@
 }
 
 #comeditor-msg {
-    display: none;
-    position: absolute;
-    color: #e50016;
+    padding: 8px;
+    background-color: #f8d7da;
+    color: #721c24;
     font-weight: 600;
-    z-index: 1;
+    display: none;
 }
 
 .cedshow {

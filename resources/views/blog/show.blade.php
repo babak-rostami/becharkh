@@ -95,7 +95,11 @@
                 </div>
 
                 @if (isset($affilate))
-                    @include('affilate.show-box')
+                    @include('affilate.show-box', [
+                        'affilate' => $affilate,
+                        'page' => 'show_blog',
+                        'show_link' => 1,
+                    ])
                 @endif
 
                 {{-- <div class="mt-3">

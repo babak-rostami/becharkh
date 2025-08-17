@@ -337,11 +337,11 @@
                 </div>
             </div>
 
-            @if (isset($hot_pages))
+            {{-- @if (isset($hot_pages))
                 <div class="row mt-4 justify-content-center">
                     @include('mainPart.hot-pages')
                 </div>
-            @endif
+            @endif --}}
 
         </div>
     </div>
@@ -350,54 +350,24 @@
 @section('script')
     {{-- <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> --}}
     <script>
-        // const yplayer = new Plyr('#affilb-video');
         send_comment_after_login = 0;
         const page = 'comment';
         const index_route = "{{ route('question.index') }}";
         const is_rtable_page = 0;
 
-        var csrf_t = "{{ csrf_token() }}";
+        let csrf_t = "{{ csrf_token() }}";
         let nextPageUrl = '{{ isset($nextPageUrl) ? $nextPageUrl : null }}';
-        let category_comment_like_route = '{{ route('category.comment.like') }}';
         let dontLoadMore = 0;
-        // let follow_item_route = '{{ route('follow.item') }}';
-        var loadingGif = '<img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">';
-
-        // let editor_img_upload_route;
-        // setTimeout(function() {
-        //     editor_img_upload_route =
-        //         "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'comment']) }}";
-        // }, 500);
-
-        const route_surop_choose = "{{ route('surop.choose') }}";
-
-        const reply_df_route = "{{ route('category.comment.store.dref') }}";
+        let loadingGif = '<img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">';
 
         let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
-
         const cat_tips = @json($category->tips ?? []);
 
-        //for fifil
-        // const fifil_load_items_route = "{{ route('fifil.load.items') }}";
-        // let features = @json($features ?? []);
-        // features = features.map(function(feature) {
-        //     return {
-        //         id: feature._id,
-        //         title: feature.title,
-        //         slug: feature.slug,
-        //         p_id: feature.parent_id,
-        //     };
-        // });
-        // let selected_items = @json($selected_items ?? []);
-        // selected_items = selected_items.map(function(item) {
-        //     return {
-        //         id: item._id,
-        //         title: item.title,
-        //         p_id: item.parent_id ?? null,
-        //         f_id: item.feature_id ?? null,
-        //     };
-        // });
-        //end for fifil
+        // const yplayer = new Plyr('#affilb-video');
+        // let category_comment_like_route = '{{ route('category.comment.like') }}';
+        // let follow_item_route = '{{ route('follow.item') }}';
+        // const route_surop_choose = "{{ route('surop.choose') }}";
+        // const reply_df_route = "{{ route('category.comment.store.dref') }}";
     </script>
 
 

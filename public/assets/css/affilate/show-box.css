@@ -61,6 +61,8 @@
     text-wrap: nowrap;
     border: none !important;
     outline: 0 !important;
+    text-decoration: none !important;
+    display: block;
     animation: aflink-back-change 5s infinite;
 }
 

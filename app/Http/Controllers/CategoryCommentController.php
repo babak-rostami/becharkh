@@ -175,14 +175,14 @@ class CategoryCommentController extends Controller
                 $suggestCats = $suggests['cats'];
             }
 
-            if ($pin_questions->count() < 3) {
-                $other_pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
-                    ->where('just_this_page', 0)
-                    ->take(20)
-                    ->get();
-                $other_pin_questions = $other_pin_questions->shuffle();
-                $pin_questions = $pin_questions->merge($other_pin_questions)->unique('_id')->take(3);
-            }
+            // if ($pin_questions->count() < 3) {
+            //     $other_pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
+            //         ->where('just_this_page', 0)
+            //         ->take(20)
+            //         ->get();
+            //     $other_pin_questions = $other_pin_questions->shuffle();
+            //     $pin_questions = $pin_questions->merge($other_pin_questions)->unique('_id')->take(3);
+            // }
             $affilateService = new AffilateService();
             $affilates = $affilateService->suggestsForPages($category, $item, 3);
 
@@ -190,13 +190,12 @@ class CategoryCommentController extends Controller
 
             $comments = $this->sendCommentRefferIdToTop($request, $comments);
 
-            $hot_pages = Cache::get('hot_pages');
+            // $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
                 'is_admin',
                 'page_intro_title',
                 'page_intro_desc',
-                'hot_pages',
                 'acceptedAnswer',
                 'hasComments',
                 'nextPageUrl',
@@ -489,7 +488,7 @@ class CategoryCommentController extends Controller
 
         if (isset($comment->parent_id)) {
             $user = MongoUser::find($user_id);
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite');
+            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
             $this->sendUserNotification('ccomment', $user, $comment);
         }
 
@@ -657,6 +656,8 @@ class CategoryCommentController extends Controller
             $editor_service = new CommentEditorService();
             $editor_service->update('admin_edit_comment', $request->body, $comment);
 
+            $comment->editor2 = $request->editor2;
+
             $questions = array_filter(explode(',', $request->questions));
             $unset_ques = 0;
             if (count($questions) > 0) {
@@ -800,7 +801,7 @@ class CategoryCommentController extends Controller
 
         $admin = Admin::first();
         if (isset($comment->parent_id)) {
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite');
+            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
             $commentPage = route('question.index', $category->slug) . "?s=1";
             $this->sendUserNotification('ccomment', $user, $comment);
             $admin->notify(new SiteEvent([
@@ -873,7 +874,7 @@ class CategoryCommentController extends Controller
 
         $admin = Admin::first();
         if (isset($comment->parent_id)) {
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite');
+            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
             $commentPage = route('question.index', $category->slug) . "?s=1";
             $this->sendUserNotification('ccomment', $user, $comment);
             $admin->notify(new SiteEvent([

@@ -8,6 +8,8 @@
             <div class="col-12 text-right py-2 px-0 mt-2">
                 @include('affilate.show-box-api', [
                     'affilate' => $affilates->slice($affnum, 1)->first(),
+                    'page' => 'comment',
+                    'show_link' => 1,
                 ])
                 @php $affnum += 1 @endphp
             </div>
@@ -126,6 +128,8 @@
         <div class="col-12 text-right py-2 px-0 mt-2">
             @include('affilate.show-box-api', [
                 'affilate' => $affilates->slice($affnum, 1)->first(),
+                'page' => 'comment',
+                'show_link' => 1,
             ])
             @php $affnum += 1 @endphp
         </div>

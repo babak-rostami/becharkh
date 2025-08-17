@@ -16,6 +16,14 @@
 @section('content')
     <div class="row justify-content-center p-2">
 
+        <div class="col-12 col-md-10 text-right mt-4">
+            <h4>تگ های استفاده شده در نظرات</h4>
+            @foreach ($links_from_editor as $ctag)
+                <span class="badge badge-info">{{ $ctag }}</span>
+                <br>
+            @endforeach
+        </div>
+
         <div class="col-12 col-md-10 text-right p-2 mb-5 p-sm-5 create-div">
 
             @include('mainPart.comment-box', ['page' => 'edit_question_admin'])

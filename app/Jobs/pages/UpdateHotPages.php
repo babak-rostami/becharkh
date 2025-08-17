@@ -69,7 +69,7 @@ class UpdateHotPages implements ShouldQueue
                         $hot_pages->add($new_page);
                         $processed_item_ids[] = $item->id;
                         $fccom_count += 1;
-                        if ($fccom_count >= 30) {
+                        if ($fccom_count >= 25) {
                             break;
                         }
                     }
@@ -89,7 +89,7 @@ class UpdateHotPages implements ShouldQueue
                     $unique_question_ids[] = $qcom->question_id;
                     $filtered_qcomments->add($qcom);
                 }
-                if (count($filtered_qcomments) >= 25) {
+                if (count($filtered_qcomments) >= 10) {
                     break;
                 }
             }
@@ -116,29 +116,29 @@ class UpdateHotPages implements ShouldQueue
                 }
             }
             //products take 30
-            $processed_product_ids = [];
-            $product_commetns = ProductComment::orderBy('created_at', 'desc')
-                ->whereNull('parent_id')
-                ->take(30)
-                ->get();
-            foreach ($product_commetns as $pc) {
-                $product = Affilate::find($pc->product_id);
-                if ($product && !in_array($product->id, $processed_product_ids)) {
-                    $new_page = new stdClass();
-                    $new_page->title = $product->title;
-                    $new_page->body = str_limit($pc->body, 100, '...');
-                    $product_route = route('product.show', $product->slug);
-                    $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $product_route);
-                    $new_page->image = $product->image;
-                    $new_page->time = $pc->created_at->format('Y-m-d H:i:s');
-                    $hot_pages->add($new_page);
-                    $processed_product_ids[] = $product->id;
-                }
-            }
+            // $processed_product_ids = [];
+            // $product_commetns = ProductComment::orderBy('created_at', 'desc')
+            //     ->whereNull('parent_id')
+            //     ->take(30)
+            //     ->get();
+            // foreach ($product_commetns as $pc) {
+            //     $product = Affilate::find($pc->product_id);
+            //     if ($product && !in_array($product->id, $processed_product_ids)) {
+            //         $new_page = new stdClass();
+            //         $new_page->title = $product->title;
+            //         $new_page->body = str_limit($pc->body, 100, '...');
+            //         $product_route = route('product.show', $product->slug);
+            //         $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $product_route);
+            //         $new_page->image = $product->image;
+            //         $new_page->time = $pc->created_at->format('Y-m-d H:i:s');
+            //         $hot_pages->add($new_page);
+            //         $processed_product_ids[] = $product->id;
+            //     }
+            // }
             $hot_pages = $hot_pages->sortByDesc(function ($page) {
                 return $page->time;
             });
-            $hot_pages = $hot_pages->values()->take(85);
+            $hot_pages = $hot_pages->values()->take(35);
             return $hot_pages;
         });
     }

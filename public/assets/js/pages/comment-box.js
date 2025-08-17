@@ -6,10 +6,10 @@ setTimeout(() => {
     if (typeof page !== "undefined") {
         if (
             // page == "comment" ||
-            page == "admin_edit_comment" ||
+            // page == "admin_edit_comment" ||
             page == "admin_create_comment" ||
             page == "admin_edit_qanswer" ||
-            page == "show_question" ||
+            // page == "show_question" ||
             page == "edit_question_admin" ||
             page == "edit_question" ||
             page == "create_question_admin" ||
@@ -22,9 +22,32 @@ setTimeout(() => {
             page == "admin_edit_product_comment"
         ) {
             editor_id = "#cm-input";
-        } else if (page == "create_affilate" || page == "edit_affilate") {
+        } else if (page == "create_affilate" || page == "edit_affilate" || page == "admin_edit_comment") {
             editor_id = "#cm-input";
             editor2_id = "#cm-input-2";
+        }
+
+        const pluginsToRemove = ["MediaEmbed", "CKFinder"];
+        const toolbarItems = [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "|",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "blockQuote",
+            "|",
+            "insertTable",
+            "imageUpload",
+            "undo",
+            "redo"
+        ];
+        if (page !== "admin_edit_comment") {
+            pluginsToRemove.push("Link");
+        } else {
+            toolbarItems.splice(3, 0, "link");
         }
 
         const editorElement = document.querySelector(editor_id);
@@ -73,24 +96,8 @@ setTimeout(() => {
                         }
                     ]
                 },
-                toolbar: [
-                    "heading",
-                    "|",
-                    "bold",
-                    "italic",
-                    "|",
-                    "bulletedList",
-                    "numberedList",
-                    "|",
-                    "blockQuote",
-                    "|",
-                    "insertTable", // Add table support
-                    "imageUpload", // Add image upload support
-                    "undo",
-                    "redo"
-                    // Exclude 'MediaEmbed', 'Link', 'CKFinder'
-                ],
-                removePlugins: ["MediaEmbed", "Link", "CKFinder"]
+                toolbar: toolbarItems,
+                removePlugins: pluginsToRemove
             })
                 .then(editor => {
                     comment_editor = editor;
@@ -154,24 +161,8 @@ setTimeout(() => {
                             }
                         ]
                     },
-                    toolbar: [
-                        "heading",
-                        "|",
-                        "bold",
-                        "italic",
-                        "|",
-                        "bulletedList",
-                        "numberedList",
-                        "|",
-                        "blockQuote",
-                        "|",
-                        "insertTable", // Add table support
-                        "imageUpload", // Add image upload support
-                        "undo",
-                        "redo"
-                        // Exclude 'MediaEmbed', 'Link', 'CKFinder'
-                    ],
-                    removePlugins: ["MediaEmbed", "Link", "CKFinder"]
+                    toolbar: toolbarItems,
+                    removePlugins: pluginsToRemove
                 })
                     .then(editor2 => {
                         comment_editor2 = editor2;

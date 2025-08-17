@@ -6,7 +6,7 @@
 
 @section('style')
     <link
-        href="{{ asset('mixassets/css/category/comment-create.min.css') . '?lm=' . filemtime('mixassets/css/category/comment-create.min.css') }}"
+        href="{{ asset('mixassets/css/category/comment-edit.min.css') . '?lm=' . filemtime('mixassets/css/category/comment-edit.min.css') }}"
         rel="stylesheet" type="text/css" />
 
     <script src="{{ asset('library/ckeditor/ckeditor.js') }}"></script>
@@ -107,32 +107,6 @@
                 @include('mainPart.comment-box', ['page' => 'admin_edit_comment'])
             @endif
 
-            {{-- <form id="cm_form" action="{{ route('admin.category.comment.update', $comment->id) }}" method="POST"
-                role="form">
-                @csrf
-                {{ method_field('PUT') }}
-
-                <input type="hidden" name="category_id" id="category_id" value="{{ $comment->category_id }}">
-
-                <div class="form-group">
-                    <label>نظر</label>
-                    <textarea class="form-control" style="height: 150px" id="body" name="body">{{ $comment->body }}</textarea>
-                </div>
-
-                @if ($parent_id == null)
-                    @include('modals.create.select-category', ['categories' => $categories])
-
-                    <div class="row">
-                        <div class="col-12 mb-4 text-right" id="features-box">
-                        </div>
-                    </div>
-                @else
-                    <span>{{ $parent->body }}</span>
-                @endif
-
-                <button type="submit" class="btn btn-success w-100">ثبت
-                    نظر</button>
-            </form> --}}
         </div>
 
     </div>
@@ -143,7 +117,7 @@
         const submit_form_id = "cm_form";
 
         let csrf_t = "{{ csrf_token() }}";
-        
+
         const page = 'admin_edit_comment';
 
         //for select category modal
@@ -163,11 +137,11 @@
         var feature_items = @json($commentFeatueItems);
         //end for select features modal
 
-        var editor_img_upload_route =
+        let editor_img_upload_route =
             "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'admin_edit_comment']) }}";
     </script>
     <script type="text/javascript"
-        src="{{ asset('mixassets/js/category/comment-create.min.js') . '?lm=' . filemtime('mixassets/js/category/comment-create.min.js') }}">
+        src="{{ asset('mixassets/js/category/comment-edit.min.js') . '?lm=' . filemtime('mixassets/js/category/comment-edit.min.js') }}">
     </script>
     <script>
         sasf_questions = {!! json_encode(isset($questionIds) ? explode(',', $questionIds) : []) !!};

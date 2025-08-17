@@ -187,7 +187,11 @@
                             <div class="col-12 text-right py-2 mb-4">
                                 @foreach ($affilates as $affilate)
                                     <div class="my-4">
-                                        @include('affilate.show-box', ['page' => 'advertise'])
+                                        @include('affilate.show-box', [
+                                            'affilate' => $affilate,
+                                            'page' => 'advertise',
+                                            'show_link' => 1,
+                                        ])
                                         <hr>
                                     </div>
                                 @endforeach
@@ -206,13 +210,13 @@
                             @include('mainPart.mainPage.breadc', ['page' => 'advertise'])
                         </div>
 
-                        @if (isset($hot_pages))
+                        {{-- @if (isset($hot_pages))
                             <div class="col-12">
                                 <div class="row mt-4 justify-content-center">
                                     @include('mainPart.hot-pages')
                                 </div>
                             </div>
-                        @endif
+                        @endif --}}
 
                     </div>
                 </div>

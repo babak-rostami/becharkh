@@ -15,7 +15,7 @@ function chooseSurOp(obj_id, option_number) {
     }
 
     $.ajax({
-        url: route_surop_choose, // Replace with your actual route
+        url: '/surop-choose', // Replace with your actual route
         type: "POST",
         data: {
             page: page_name,

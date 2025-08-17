@@ -134,7 +134,7 @@
 .answer-box {
     border: 1px solid #dee2e6;
     background-color: #fdfdfd;
-    line-height: 32px;
+    line-height: 38px;
     word-wrap: break-word;
     border-radius: 8px;
 }
@@ -245,6 +245,18 @@
     animation: lcomoveDown 0.6s ease;
 }
 
+.questions-box {
+    text-align: right;
+    display: block;
+    text-decoration: none !important;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 4px;
+    color: #000;
+    border: 1px solid #f1f1f1;
+    margin: 12px 0;
+}
+
 .comment-reply-btn {
     text-decoration: none !important;
     border: 1px solid #cae4ff;
@@ -258,8 +270,12 @@
     line-height: normal;
 }
 
-#qa-textarea {
-    min-height: 100px;
+#cm-input {
+    width: 100%;
+    min-height: 140px;
+    overflow: hidden;
+    resize: none;
+    font-size: 21px;
 }
 
 .c-shortans {

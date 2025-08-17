@@ -40,6 +40,8 @@
             margin-bottom: 8px;
         }
     </style>
+    <link href="{{ asset('mixassets/css/style.min.css') . '?lm=' . filemtime('mixassets/css/style.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -66,4 +68,6 @@
 
 
 @section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/main.min.js') . '?lm=' . filemtime('mixassets/js/main.min.js') }}"></script>
 @endsection

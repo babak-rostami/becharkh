@@ -465,10 +465,6 @@ class IndexController extends Controller
             $affilateService = new AffilateService();
             $affilates = $affilateService->suggestsForPagesApi($category_id, $item_id, 3);
 
-            foreach ($affilates as $affilate) {
-                $affilate->body = preg_replace('/<img[^>]*>/i', '', $affilate->body);
-            }
-
             if (isset($tag_id)) {
                 $child_tags = [];
                 $item = MongoItem::find($item_id);

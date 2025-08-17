@@ -49,9 +49,13 @@
                     'is_follow' => isset($is_follow) ? $is_follow : null,
                 ])
 
-                @include('affilate.show-box', ['affilate' => $product])
+                @include('affilate.show-box', [
+                    'affilate' => $product,
+                    'page' => 'show_product',
+                    'show_link' => 0,
+                ])
                 @include('mainPart.gallery')
-                
+
                 <h1 id="page-title" class="font-weight-bold">{{ $product->title }}</h1>
 
                 <div class="bg-wht radius-10 py-3 product-post-content px-2">
@@ -279,7 +283,11 @@
                 @if (isset($affilates))
                     <div class="col-12 text-right py-2 mb-4 px-0">
                         @foreach ($affilates as $affilate)
-                            @include('affilate.show-box', ['page' => 'advertise'])
+                            @include('affilate.show-box', [
+                                'affilate' => $affilate,
+                                'page' => 'show_product',
+                                'show_link' => 1,
+                            ])
                         @endforeach
                     </div>
                 @endif

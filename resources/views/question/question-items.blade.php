@@ -4,7 +4,11 @@
     @if ($count == 3)
         @if (isset($affilate))
             <div class="col-12 text-right py-2 mb-3">
-                @include('affilate.show-box')
+                @include('affilate.show-box', [
+                    'affilate' => $affilate,
+                    'page' => 'forum',
+                    'show_link' => 1,
+                ])
             </div>
         @endif
     @endif
@@ -34,7 +38,11 @@
 @if ($count < 3)
     @if (isset($affilate))
         <div class="col-12 text-right py-2 mb-3">
-            @include('affilate.show-box')
+            @include('affilate.show-box', [
+                'affilate' => $affilate,
+                'page' => 'comment',
+                'show_link' => 1,
+            ])
         </div>
     @endif
 @endif

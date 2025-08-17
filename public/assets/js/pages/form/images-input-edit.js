@@ -26,8 +26,10 @@ $(document).ready(function () {
         const inputImageFormData = new FormData();
         inputImageFormData.append('image', file);
 
-        if (typeof page !== 'undefined' && page === 'admin_edit_comment') {
-            inputImageFormData.append('_token', csrf_t);
+        if (typeof page !== 'undefined') {
+            if (page === 'admin_edit_comment' || page === 'edit_affilate') {
+                inputImageFormData.append('_token', csrf_t);
+            }
         }
 
         const savingMsg = $('<span>', {
@@ -92,9 +94,14 @@ $(document).ready(function () {
         inputImageFormDataEdit.append('object_id', editTargetObjectId);
         inputImageFormDataEdit.append('image_id', editTargetImageId);
 
-        if (typeof page !== 'undefined' && page === 'admin_edit_comment') {
-            inputImageFormDataEdit.append('is_for', 'ccomment');
-            inputImageFormDataEdit.append('_token', csrf_t);
+        if (typeof page !== 'undefined') {
+            if (page === 'admin_edit_comment') {
+                inputImageFormDataEdit.append('is_for', 'ccomment');
+                inputImageFormDataEdit.append('_token', csrf_t);
+            } else if (page === 'edit_affilate') {
+                inputImageFormDataEdit.append('is_for', 'affilate');
+                inputImageFormDataEdit.append('_token', csrf_t);
+            }
         }
 
         inputImgBoxLoading.removeClass("hidden");
@@ -155,8 +162,15 @@ function deleteFormImg(commentId, imageId) {
 function confirmDelete() {
     inputImgBoxLoading.removeClass("hidden");
     let delete_csrf = null;
-    if (typeof page !== 'undefined' && page === 'admin_edit_comment') {
-        delete_csrf = csrf_t;
+    let is_for = null;
+    if (typeof page !== 'undefined') {
+        if (page === 'admin_edit_comment') {
+            delete_csrf = csrf_t;
+            is_for = 'ccomment';
+        } else if (page === 'edit_affilate') {
+            delete_csrf = csrf_t;
+            is_for = 'affilate';
+        }
     }
 
     $.ajax({
@@ -165,7 +179,7 @@ function confirmDelete() {
         data: {
             object_id: deleteTargetCommentId,
             image_id: deleteTargetImageId,
-            is_for: 'ccomment',
+            is_for: is_for,
             _token: delete_csrf
         },
         success: function (response) {

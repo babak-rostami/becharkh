@@ -10,7 +10,7 @@ function setActionForAfterAuth(action = null, action_id = null) {
         send_comment_after_login = 0;
     }
     if (action == "answer") {
-        let commentInput = $('#qa-textarea');
+        let commentInput = $('#cm-input');
         let commentBody = commentInput.val();
         if (commentBody.trim() === "") {
             if (show_reply_dref_error) {
@@ -122,7 +122,7 @@ function like(question_answer_id) {
 
     $.ajax({
         type: "POST",
-        url: q_answer_like_route,
+        url: '/question-answer-like',
         data: {
             _token: q_show_csrf,
             like_or_unlike: true,
@@ -153,7 +153,7 @@ function unlike(question_answer_id) {
 
     $.ajax({
         type: "POST",
-        url: q_answer_like_route,
+        url: '/question-answer-like',
         data: {
             _token: q_show_csrf,
             like_or_unlike: false,
@@ -171,6 +171,13 @@ function unlike(question_answer_id) {
         }
     });
 }
+
+$(document).ready(function () {
+    $('#cm-input').on('input', function () {
+        $(this).css('height', 'auto');
+        $(this).css('height', Math.max(this.scrollHeight, 100) + 'px');
+    });
+});
 
 /* for bslider */
 const catSlider = document.getElementById("cat-slider");
@@ -223,7 +230,7 @@ function sendCommentBtnAction() {
     };
 
     $.ajax({
-        url: reply_df_route,
+        url: '/question-answer-store-dref',
         type: 'POST',
         data: reply_data,
         success: function (response) {

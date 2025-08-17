@@ -149,6 +149,16 @@ class SiteCategoryController extends Controller
 
         Cache::forget('categories');
 
+        $categories = MongoCategory::all();
+        foreach ($categories as $cat) {
+            if ($cat->children->isEmpty()) {
+                $cat->unset('has_children');
+            } else {
+                $cat->has_children = 1;
+                $cat->update();
+            }
+        }
+
         return back()->with('success', 'دسته بندی با موفقیت ایجاد شد');
     }
 
@@ -293,6 +303,16 @@ class SiteCategoryController extends Controller
 
         $this->updateItemsHRCats($items, $category);
 
+        $categories = MongoCategory::all();
+        foreach ($categories as $cat) {
+            if ($cat->children->isEmpty()) {
+                $cat->unset('has_children');
+            } else {
+                $cat->has_children = 1;
+                $cat->update();
+            }
+        }
+
         return back()->with('success', 'تغییرات ثبت شد');
     }
 
@@ -341,12 +361,22 @@ class SiteCategoryController extends Controller
 
         Cache::forget('categories');
         Cache::forget('parentCategories');
-        $categories = Cache::rememberForever('categories', function () {
+        Cache::rememberForever('categories', function () {
             return SiteCategory::where('status', 1)->get();
         });
-        $sliderCategories = Cache::rememberForever('parentCategories', function () {
+        Cache::rememberForever('parentCategories', function () {
             return SiteCategory::where('status', 1)->doesntHave('children')->get();
         });
+
+        $categories = MongoCategory::all();
+        foreach ($categories as $cat) {
+            if ($cat->children->isEmpty()) {
+                $cat->unset('has_children');
+            } else {
+                $cat->has_children = 1;
+                $cat->update();
+            }
+        }
 
         return back()->with('success', 'دسته بندی با موفقیت حذف شد');
     }

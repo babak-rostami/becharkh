@@ -275,6 +275,17 @@ class AffilateController extends Controller
         if (count($questions) > 0) {
             $affilate->questions = $questions;
         }
+
+        if ($request->filled('images')) {
+            $address = null;
+            if (count($categories) > 0) {
+                $category = MongoCategory::find($categories[0]);
+                $address = $category->slug;
+            }
+            $images = app(InputImagesController::class)->setImagesArrayForStore($request->images, 'product', $address);
+            $affilate->iimages = $images; // فیلد json
+        }
+
         $affilate->save();
 
         $this->setAffilateMainImage($affilate);
@@ -284,19 +295,17 @@ class AffilateController extends Controller
         return redirect()->route('affilate.index.admin')->with('success', 'با موفقیت اضافه شد');
     }
 
-
     private function setAffilateMainImage($affilate)
     {
+        $imageSrc = null;
         if (isset($affilate->video)) {
-            $imageSrc = $affilate->video->image();
+            $imageSrc = $affilate->video->imageAttr();
         } else {
-            $dom = new DOMDocument();
-            @$dom->loadHTML($affilate->body);
-            $images = $dom->getElementsByTagName('img');
-            if ($images->length > 0) {
-                $imageSrc = $images->item(0)->getAttribute('data-src');
-            } else {
-                $imageSrc = null;
+
+            $images = $affilate->iimages ?? [];
+            foreach ($images as $image) {
+                $imageSrc = $image['path'];
+                break;
             }
         }
         $affilate->image = $imageSrc;
@@ -432,6 +441,17 @@ class AffilateController extends Controller
         } else {
             $unset_vid = 1;
         }
+
+        if ($request->filled('images')) {
+            $address = null;
+            if (count($categories) > 0) {
+                $category = MongoCategory::find($categories[0]);
+                $address = $category->slug;
+            }
+            $images = app(InputImagesController::class)->setImagesArrayForUpdate($request->images, 'affilate', $affilate, $address);
+            $affilate->iimages = $images;
+        }
+
         $affilate->update();
 
         $this->setAffilateMainImage($affilate);
@@ -471,7 +491,6 @@ class AffilateController extends Controller
             $video->unset('affilate_id');
         }
         $disk = Storage::disk('ftp');
-        $disk->delete($affilate->getImage());
         $comment_images = AffilateEditorImage::where('comment_id', $affilate->id)->get();
         if (!$comment_images->isEmpty()) {
             foreach ($comment_images as $ci) {
@@ -479,6 +498,14 @@ class AffilateController extends Controller
                 $ci->delete();
             }
         }
+
+        $images = $affilate->iimages ?? [];
+        foreach ($images as $image) {
+            if (isset($image['path']) && $disk->exists($image['path'])) {
+                $disk->delete($image['path']);
+            }
+        }
+
         $affilate->delete();
         return back()->with('success', 'با موفقیت حذف شد');
     }

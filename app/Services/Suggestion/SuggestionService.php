@@ -31,7 +31,7 @@ class SuggestionService
     public function suggest($category = null, $item = null)
     {
         if ($category) {
-            if (!$category->children->isEmpty()) {
+            if ($category->has_children == 1) {
                 return $this->suggestCategories($category);
             } else {
                 if ($item) {
@@ -85,14 +85,14 @@ class SuggestionService
         } elseif ($cats !== null) {
             return ['cats' => $cats];
         } else {
-            $children = $this->categoryRepository->getCategoryChildren($category->id)->where('is_active', 1);
+            $children = $this->categoryRepository->getCategoryChildren($category->id)->where('show_in_sug', 1);
             if (count($children) > 0) {
                 $cats = Cache::remember($catsCacheKey, 21600, function () use ($children) {
                     return $children;
                 });
             } else {
                 $items = Cache::remember($itemsCacheKey, 21600, function () use ($category) {
-                    return MongoItem::where('category_id', $category->id)->where('parent_id', null)->orderBy('priority', 'desc')->take(15)->get();
+                    return MongoItem::where('category_id', $category->id)->where('parent_id', null)->orderBy('comment_count', 'desc')->take(15)->get();
                 });
             }
             if (isset($cats)) {
@@ -117,22 +117,22 @@ class SuggestionService
             $filteredItems = $allItems->where('feature_id', $feature->id)
                 ->where('parent_id', $item->parent_id)
                 ->where('id', '!=', $item->id);
-            $items = $filteredItems->sortByDesc('priority')->take(20);
+            $items = $filteredItems->sortByDesc('comment_count')->take(20);
             $new_items = $filteredItems->sortByDesc('created_at')->take(5);
             $items = $items->merge($new_items)->unique();
-            if (count($items) < 20) {
-                $extraItems = $allItems->where('feature_id', $feature->id)
-                    ->where('id', '!=', $item->id)
-                    ->sortByDesc('priority')
-                    ->take(20)
-                    ->shuffle()
-                    ->take(20 - count($items));
-                $items = $items->merge($extraItems)->unique();
-            }
+            // if (count($items) < 20) {
+            //     $extraItems = $allItems->where('feature_id', $feature->id)
+            //         ->where('id', '!=', $item->id)
+            //         ->sortByDesc('comment_count')
+            //         ->take(20)
+            //         ->shuffle()
+            //         ->take(20 - count($items));
+            //     $items = $items->merge($extraItems)->unique();
+            // }
         } else {
             $suggestFeature = MongoCategory::find($categoryId)->features()->where('is_in_filter_rtable', 1)->first();
             $filteredItems = $allItems->where('feature_id', $suggestFeature->id)->where('id', '!=', $item->id);
-            $items = $filteredItems->sortByDesc('priority')->take(20);
+            $items = $filteredItems->sortByDesc('comment_count')->take(20);
             $new_items = $filteredItems->sortByDesc('created_at')->take(5);
             $items = $items->merge($new_items)->unique();
         }
@@ -141,24 +141,24 @@ class SuggestionService
 
     private function getItemsWithChildren($item, $itemChildren, $allItems)
     {
-        $items = $itemChildren->sortByDesc('priority')->take(40);
+        $items = $itemChildren->sortByDesc('comment_count')->take(40);
+        // پنج تا تصادفی از بیست تای با اولویت پایین تر انتخاب میکنه
         $randomItems = $items->slice(20, 20)->shuffle()->take(5);
-
-        $items = $itemChildren->sortByDesc('priority')->take(40);
+        $items = $items->take(20);
         $new_items = $itemChildren->sortByDesc('created_at')->take(5);
         $items = $items->merge($new_items)->merge($randomItems)->unique();
-        if ($items->count() < 20) {
-            if ($items->isNotEmpty()) {
-                $featureId = $items->first()->feature_id;
-                $extraItems = $allItems->where('feature_id', $featureId)
-                    ->where('id', '!=', $item->id)
-                    ->sortByDesc('priority')
-                    ->take(20)
-                    ->shuffle()
-                    ->take(20 - $items->count());
-                $items = $items->merge($extraItems)->unique('id');
-            }
-        }
+        // if ($items->count() < 20) {
+        //     if ($items->isNotEmpty()) {
+        //         $featureId = $items->first()->feature_id;
+        //         $extraItems = $allItems->where('feature_id', $featureId)
+        //             ->where('id', '!=', $item->id)
+        //             ->sortByDesc('comment_count')
+        //             ->take(20)
+        //             ->shuffle()
+        //             ->take(20 - $items->count());
+        //         $items = $items->merge($extraItems)->unique('id');
+        //     }
+        // }
         return $items;
     }
 
@@ -177,7 +177,7 @@ class SuggestionService
                 return $collection->distinct('category_id');
             });
             $categoryIds = array_unique(array_merge($comment_categoryIds, $question_categoryIds, $advertise_categoryIds));
-            return $this->categoryRepository->getCategoryByIds($categoryIds)->where('is_active', 1);
+            return $this->categoryRepository->getCategoryByIds($categoryIds)->where('show_in_sug', 1);
         });
         return ['cats' => $suggestCats];
     }

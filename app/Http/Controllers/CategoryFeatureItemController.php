@@ -8,6 +8,7 @@ use App\Models\MongoCategory;
 use App\Models\MongoFeature;
 use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
+use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -23,7 +24,24 @@ class CategoryFeatureItemController extends Controller
         if (isset($feature->parent_id)) {
             $parent_itmes = $feature->parent->allItems;
         }
-        return view('item.admin.edit', compact('item', 'parent_itmes'));
+
+        //اینو گذاشتم تگ هایی که نظرات صفحه آخر گذاشتم رو بفهمم
+        $comments = app(IndexController::class)->getMainComments($item->category_id, $item->id, 'null');
+        $get_top_comments_data = app(IndexController::class)->selectTopComments($comments, 1);
+        $comments = $get_top_comments_data['comments'];
+        $links_from_editor = [];
+        foreach ($comments as $comment) {
+            // استخراج لینک‌ها از editor
+            if (!empty($comment->editor)) {
+                $dom = new DOMDocument();
+                @$dom->loadHTML(mb_convert_encoding($comment->editor, 'HTML-ENTITIES', 'UTF-8'));
+                foreach ($dom->getElementsByTagName('a') as $aTag) {
+                    $links_from_editor[] = trim($aTag->textContent);
+                }
+            }
+        }
+
+        return view('item.admin.edit', compact('item', 'parent_itmes', 'links_from_editor'));
     }
 
     public function getItemsAdmin($id)
@@ -223,6 +241,17 @@ class CategoryFeatureItemController extends Controller
         $item = MongoItem::find($item_id);
         $item->delete();
         return back()->with('success', 'آیتم حذف شد!');
+    }
+
+    public function itemResetSuggests(Request $request)
+    {
+        $item = MongoItem::find($request->item_id);
+        $item->unset('suggest_items');
+        $items = MongoItem::where('parent_id', $item->id)->get();
+        foreach ($items as $i) {
+            $i->unset('suggest_items');
+        }
+        return back()->with('success', 'آیتم های پیشنهادی ریست شد');
     }
 
     public function fChildrenByItem($feature_id, $item_id = null)

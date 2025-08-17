@@ -5,7 +5,10 @@
 @endsection
 
 @section('style')
+    <link href="{{ asset('mixassets/css/style.min.css') . '?lm=' . filemtime('mixassets/css/style.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
+
 
 @section('content')
     <div class="row bg-wht justify-content-center">
@@ -60,4 +63,6 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/main.min.js') . '?lm=' . filemtime('mixassets/js/main.min.js') }}"></script>
 @endsection

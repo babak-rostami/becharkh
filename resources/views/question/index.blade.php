@@ -167,11 +167,11 @@
 
             @include('mainPart.mainPage.breadc', ['page' => 'forum'])
 
-            @if (isset($hot_pages))
+            {{-- @if (isset($hot_pages))
                 <div class="row mt-4 justify-content-center">
                     @include('mainPart.hot-pages')
                 </div>
-            @endif
+            @endif --}}
 
         </div>
     </div>

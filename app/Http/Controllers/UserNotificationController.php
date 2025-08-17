@@ -141,7 +141,7 @@ class UserNotificationController extends Controller
 
     public function adminUserNotifs()
     {
-        $notifs = UserNotification::all();
+        $notifs = UserNotification::orderBy('created_at', 'desc')->get();
         return view('admin.user.notifs', compact('notifs'));
     }
 

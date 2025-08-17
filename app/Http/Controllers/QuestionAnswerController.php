@@ -197,9 +197,12 @@ class QuestionAnswerController extends Controller
 
     private function NE($fromUser, $toUser, $question)
     {
-        if (isset($toUser) && (!isset($toUser->email_actived) || $toUser->email_actived != 0)) {
-            $route = route('question.show', $question->slug2);
-            dispatch(new SendEmailQuestionAnswer($toUser->email, $question->title, $fromUser->username, $route))->onQueue('becharkhsite');
+        $user_send_email_key = 'user_email_send_' . $toUser->id;
+        if (Cache::add($user_send_email_key, 1, 3600)) {
+            if (isset($toUser) && (!isset($toUser->email_actived) || $toUser->email_actived != 0)) {
+                $route = route('question.show', $question->slug2);
+                dispatch(new SendEmailQuestionAnswer($toUser->email, $question->title, $fromUser->username, $route))->onQueue('becharkhsite');
+            }
         }
     }
 

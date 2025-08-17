@@ -234,10 +234,9 @@ class AdvertiseController extends Controller
             $features = $category->features();
             $currentQueryParams = $request->query();
 
-            $hot_pages = Cache::get('hot_pages');
+            // $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
-                'hot_pages',
                 'item',
                 'meta_title',
                 'meta_desc',

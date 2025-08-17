@@ -8,6 +8,9 @@
     <script src="{{ asset('library/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('library/ckeditor/ckfinder.js') }}"></script>
     <script src="{{ asset('library/ckeditor/de.js') }}"></script>
+
+    <link href="{{ asset('mixassets/css/style.min.css') . '?lm=' . filemtime('mixassets/css/style.min.css') }}"
+        rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -39,6 +42,41 @@
                     </div>
                 </div>
             </div>
+
+            <a class="btn btn-primary" href="" data-toggle="modal" data-target="#reset-{{ $item->id }}">پیشنهادی
+                ها ریست بشه</a>
+
+            <div class="modal fade" id="reset-{{ $item->id }}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <form action="{{ route('item.reset.suggests.admin') }}" method="post" role="form">
+                                @csrf
+
+                                <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                <button class="btn btn-danger" type="submit">ریست شود</button>
+                                <a class="btn btn-primary" href="" data-dismiss="modal">بیخیال</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-12 text-right mt-4">
+            <h4>تگ های صفحه نظرات</h4>
+            @foreach ($links_from_editor as $ctag)
+                <span class="badge badge-info">{{ $ctag }}</span>
+                <br>
+            @endforeach
         </div>
 
         <div class="col-12 text-right mt-4">
@@ -190,4 +228,6 @@
             });
         });
     </script>
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/main.min.js') . '?lm=' . filemtime('mixassets/js/main.min.js') }}"></script>
 @endsection
