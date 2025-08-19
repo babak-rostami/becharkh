@@ -28,14 +28,14 @@ class UserNotificationController extends Controller
                         return;
                     }
                     $notif_text = $notif_text . $item->withParentsTitle() . ' ارسال کرد';
-                    $notif_route = $item->withParentsCommentUrl();
+                    $notif_route = $item->withParentsCommentUrl() . "&cri=" . $main_parent->id;
                 } else {
                     $category = MongoCategory::find($main_parent->category_id);
                     if (!isset($category)) {
                         return;
                     }
                     $notif_text = $notif_text . $category->title . ' ارسال کرد';
-                    $notif_route = route('question.index', $category->slug) . "?s=1";
+                    $notif_route = route('question.index', $category->slug) . "?s=1&cri=" . $main_parent->id;
                 }
                 $this->updateUserNotifs($parent_comment->user_id);
                 $notif->user_id = $parent_comment->user_id;
@@ -57,11 +57,17 @@ class UserNotificationController extends Controller
                     $parent_comment_user = $parent_comment->user;
                 }
             }
+            $main_parent = $new_object->parent;
+
             $notif_text = $from_user->username . ' نظری برای شما در صفحه ';
             $question = $new_object->question;
             $notif_text = $notif_text . $question->title . ' ارسال کرد';
 
-            $notid_r = route('question.show',  $question->slug2);
+            if (isset($main_parent)) {
+                $notid_r = route('question.show',  $question->slug2) . '?cri=' . $main_parent->id;
+            } else {
+                $notid_r = route('question.show',  $question->slug2);
+            }
             if (strpos($notid_r, "http://localhost") === 0) {
                 $notid_r = str_replace("http://localhost", "https://becharkh.com", $notid_r);
             }

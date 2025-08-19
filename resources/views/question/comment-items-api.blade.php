@@ -62,7 +62,7 @@
         <hr>
 
         <button class="comment-reply-btn"
-            onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
+            onclick="openCCommentModal('reply','{{ isset($comment->question_id) ? $comment->question_id : $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
                 class="mr-1" src="{{ asset('files/other/images/reply.png') }}">
         </button>
 
@@ -91,37 +91,6 @@
             </button>
         @endif
     </div>
-    {{-- @foreach ($comment->replies as $reply)
-        <div class="col-12 px-3 py-2 mr-2 radius-10 mt-1 comment-box text-right reply-div"
-            id="reply-box-{{ $reply->id }}">
-            @include('modals.userdash', [
-                'dashuser' => $reply->user,
-                'lazyload' => 0,
-                'itemid' => $reply->id,
-            ])
-            @if (isset($reply->reply_name))
-                <span class="rep-name">پاسخ به {{ $reply->reply_name }}</span>
-            @endif
-            <span class="cm-box-time">{{ jdate($reply->created_at)->ago() }}</span>
-            <p class="textarea-preline mt-2">{{ $reply->body }}</p>
-            <button type="button" class="comment-reply-btn"
-                onclick="openCCommentModal('replyto','{{ $comment->category_id }}','{{ $comment->id }}','{{ $reply->id }}')">پاسخ<img
-                    class="mr-1" src="{{ asset('files/other/images/reply.png') }}">
-            </button>
-            <span class="like-icon" onclick="likeCategoryComment('{{ $reply->id }}')">
-                <span
-                    id="category-comment-like-count-{{ $reply->id }}">{{ $reply->like_count ? $reply->like_count : 0 }}</span>
-                <img class="like-com-image" src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
-                    id="like-com-image-{{ $reply->id }}">
-            </span>
-            <span class="dislike-icon" onclick="unlikeCategoryComment('{{ $reply->id }}')">
-                <span
-                    id="category-comment-unlike-count-{{ $reply->id }}">{{ $reply->unlike_count ? $reply->unlike_count : 0 }}</span>
-                <img id="unlike-com-image-{{ $reply->id }}" class="unlike-com-image"
-                    src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
-            </span>
-        </div>
-    @endforeach --}}
 @endforeach
 @while ($affnum != -1)
     @if ($affnum != -1 && isset($affilates) && $affilates->slice($affnum, 1)->first() != null)

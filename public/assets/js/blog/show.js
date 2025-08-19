@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // Check if the 'page_seen' cookie is set for the current path
     if (getCookie("page_seen") == null) {
         // Set the 'page_seen' cookie for the current path with an expiration time of 1 hour
@@ -6,7 +6,7 @@ $(document).ready(function() {
     }
 });
 
-$(".comment-span").click(function(e) {
+$(".comment-span").click(function (e) {
     $("html, body").animate(
         {
             scrollTop: $("#commentsSection").offset().top
@@ -25,7 +25,7 @@ function likeBlog(is_like) {
             like_or_unlike: is_like,
             blog_id: blog_id
         },
-        success: function(data) {
+        success: function (data) {
             if (data.status == 0) {
                 //delete like
                 changeLikeAndUnlike(0, 0);
@@ -82,13 +82,13 @@ function changeLikeAndUnlike(islike, isUnlike) {
 function likeBlogComment(blog_comment_id) {
     $.ajax({
         type: "POST",
-        url: blog_comment_like_route,
+        url: '/blog-comment-like',
         data: {
             _token: blog_show_csrf,
             like_or_unlike: true,
             blog_comment_id: blog_comment_id
         },
-        success: function(data) {
+        success: function (data) {
             var ellike = "blog-comment-like-count-" + blog_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
@@ -101,13 +101,13 @@ function likeBlogComment(blog_comment_id) {
 function unlikeBlogComment(blog_comment_id) {
     $.ajax({
         type: "POST",
-        url: blog_comment_like_route,
+        url: '/blog-comment-like',
         data: {
             _token: blog_show_csrf,
             like_or_unlike: false,
             blog_comment_id: blog_comment_id
         },
-        success: function(data) {
+        success: function (data) {
             var ellike = "blog-comment-like-count-" + blog_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 

@@ -7,7 +7,12 @@
                 <form action="{{ route('category.comment.store') }}" id="ccom-rep-form" method="POST" role="form">
                     @csrf
 
-                    <input type="hidden" name="category_id" id="ccom-rep-category-id">
+                    @if (isset($question))
+                        <input type="hidden" name="page" value="show_question">
+                    @else
+                        <input type="hidden" name="page" value="comment">
+                    @endif
+                    <input type="hidden" name="object_id" id="ccom-rep-object-id">
                     <input type="hidden" name="parent_id" id="ccom-rep-parent-id">
                     <input type="hidden" name="reply_id" id="ccom-rep-replyto-id">
 

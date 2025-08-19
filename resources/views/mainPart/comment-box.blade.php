@@ -1,7 +1,7 @@
 <form
     @if ($page == 'comment') action="{{ route('category.comment.store') }}"
     @elseif($page == 'show_question')
-    action="{{ route('question.answer.store') }}"
+    action="{{ route('category.comment.store') }}"
     @elseif($page == 'edit_question_admin')
     action="{{ route('admin.question.update', $question->id) }}"
     @elseif($page == 'create_question_admin')
@@ -47,7 +47,8 @@
 
     @switch($page)
         @case('comment')
-            <input type="hidden" name="category_id" value="{{ $category->id }}">
+            <input type="hidden" name="page" value="comment">
+            <input type="hidden" name="object_id" value="{{ $category->id }}">
             @if (isset($item))
                 <input type="hidden" name="item_id" value="{{ $item->id }}">
             @endif
@@ -58,7 +59,8 @@
         @break
 
         @case('show_question')
-            <input type="hidden" name="question_id" value="{{ $question->id }}">
+            <input type="hidden" name="page" value="show_question">
+            <input type="hidden" name="object_id" value="{{ $question->id }}">
         @break
 
         @case('edit_question_admin')
@@ -590,14 +592,14 @@
     @else
         <textarea class="form-control comment-input" id="cm-input" name="body"
             placeholder="نظر خود را اینجا بنویسید..."></textarea>
-        <script>
+        {{-- <script>
             $(document).ready(function() {
                 $('#cm-input').on('input', function() {
                     $(this).css('height', 'auto');
                     $(this).css('height', Math.max(this.scrollHeight, 100) + 'px');
                 });
             });
-        </script>
+        </script> --}}
     @endif
 
     @if ($page == 'edit_question_admin' || $page == 'edit_question')
@@ -677,7 +679,7 @@
                             alt="survey">
                     </button>
                 </div>
-            @elseif($page == 'show_question')
+            @elseif($page == 'show_question' || $page == 'show_product')
                 <button type="button" class="btn btn-primary my-2 w-100" onclick="userCcommentSend()"
                     id="comment-editor-btn">
                     <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy"
@@ -693,8 +695,7 @@
             @endif
         @else
             <button type="button" class="btn btn-lg btn-primary w-100 my-2"
-                @if ($page == 'comment') onclick="setActionForAfterAuth('comment', 'cm_form')"
-                @elseif($page == 'show_question') onclick="setActionForAfterAuth('answer', 'cm_form')"
+                @if ($page == 'comment' || $page == 'show_question') onclick="setActionForAfterAuth('comment', 'cm_form')"
                 @elseif($page == 'show_product')
                     data-toggle="modal" data-target="#login_user" onclick="setActionForAfterAuth('comment', 'cm_form')" @endif>
                 <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" alt="send">

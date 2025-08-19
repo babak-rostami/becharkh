@@ -26,7 +26,6 @@
     @endif
 
     <meta name="robots" content="index, follow">
-    {{-- <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" /> --}}
 @endsection
 
 @section('content')
@@ -228,38 +227,14 @@
 @endsection
 
 @section('script')
-    {{-- <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> --}}
     <script>
         let page = 'advertise';
-        // const yplayer = new Plyr('#affilb-video');
         const index_route = "{{ route('ads.index') }}";
         let csrf_t = "{{ csrf_token() }}";
         let follow_item_route = "{{ route('follow.item') }}";
         let let_me_know_route = "{{ route('let.me.know') }}";
 
         let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
-
-        //for fifil
-        // const fifil_load_items_route = "{{ route('fifil.load.items') }}";
-        // let features = @json($features ?? []);
-        // features = features.map(function(feature) {
-        //     return {
-        //         id: feature._id,
-        //         title: feature.title,
-        //         slug: feature.slug,
-        //         p_id: feature.parent_id,
-        //     };
-        // });
-        // let selected_items = @json($selected_items ?? []);
-        // selected_items = selected_items.map(function(item) {
-        //     return {
-        //         id: item._id,
-        //         title: item.title,
-        //         p_id: item.parent_id ?? null,
-        //         f_id: item.feature_id ?? null,
-        //     };
-        // });
-        //end for fifil
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/advertise/index.min.js') . '?lm=' . filemtime('mixassets/js/advertise/index.min.js') }}">

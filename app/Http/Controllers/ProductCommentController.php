@@ -20,15 +20,6 @@ class ProductCommentController extends Controller
     public function adminIndex($product_id)
     {
         $comments = ProductComment::where('product_id', $product_id)->orderBy('created_at', 'desc')->paginate(100);
-        $comments->getCollection()->transform(function ($comment) {
-            if (isset($comment->editor)) {
-                preg_match('/<p>(.*?)<\/p>/', $comment->editor, $matches);
-                $comment->body = isset($matches[1]) ? $matches[1] : null;
-                return $comment;
-            } else {
-                return $comment;
-            }
-        });
         return view('affilate.comment.index', compact('comments', 'product_id'));
     }
 

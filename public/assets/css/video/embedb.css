@@ -28,7 +28,7 @@ body {
 }
 .plyr__video-wrapper,
 .plyr__poster {
-    background-color: #fff;
+    background-color: #fff !important;
 }
 
 #n-v-box {

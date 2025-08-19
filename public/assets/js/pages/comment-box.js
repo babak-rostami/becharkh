@@ -17,7 +17,7 @@ setTimeout(() => {
             page == "admin_qanswers" ||
             page == "create_blog" ||
             page == "edit_blog" ||
-            page == "show_product" ||
+            // page == "show_product" ||
             page == "admin_create_product_comment" ||
             page == "admin_edit_product_comment"
         ) {
@@ -280,6 +280,7 @@ function editorQuestionUpdate() {
                 setTimeout(() => {
                     comment_form.submit();
                 }, 3000);
+                return;
             } else {
                 error_span.text("دسته بندی را انتخاب کنید");
             }
@@ -320,6 +321,7 @@ function editorQuestionStore() {
                             setTimeout(() => {
                                 comment_form.submit();
                             }, 3000);
+                            return;
                         } else {
                             error_span.text("بخش نظر سنجی را تکمیل کنید");
                         }
@@ -329,6 +331,7 @@ function editorQuestionStore() {
                         setTimeout(() => {
                             comment_form.submit();
                         }, 3000);
+                        return;
                     }
                 }
             } else {
@@ -371,6 +374,7 @@ function editorBlogStore() {
                         setTimeout(() => {
                             comment_form.submit();
                         }, 3000);
+                        return;
                     } else {
                         error_span.text("تصویر مقاله را انتخاب کنید");
                     }
@@ -411,6 +415,7 @@ function editorBlogUpdate() {
                 setTimeout(() => {
                     comment_form.submit();
                 }, 3000);
+                return;
             } else {
                 error_span.text("توضیحات باید بین 30 تا 160 کاراکتر باشد");
             }
@@ -441,6 +446,7 @@ function affilateStoreUpdate() {
             setTimeout(() => {
                 comment_form.submit();
             }, 3000);
+            return;
         } else {
             error_span.text("عنوان سوال باید حداقل 10 کاراکتر باشد");
         }

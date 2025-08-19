@@ -86,17 +86,11 @@ class QuestionAnswerController extends Controller
 
         dispatch(new SendUserNotification('question_answer', $user, $answer))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
 
-        if (!isset($request->parent_id)) {
-            $editor_service->updateImageCommentId($editor_images, $answer->id);
-        }
-
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
-                'route' => route('question.show', $question->slug2)
-            ]));
-        }
+        $admin = Admin::first();
+        $admin->notify(new SiteEvent([
+            'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
+            'route' => route('question.show', $question->slug2)
+        ]));
 
         if (isset($question->items)) {
             dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));

@@ -30,12 +30,6 @@
 
     <meta name="robots" content="index, follow">
 
-    {{-- <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" /> --}}
-
-    {{-- <script src="{{ $ftp_path . 'library/ckeditor/ckeditor.js' }}"></script>
-    <script src="{{ $ftp_path . 'library/ckeditor/ckfinder.js' }}"></script>
-    <script src="{{ $ftp_path . 'library/ckeditor/de.js' }}"></script> --}}
-
     <link
         href="{{ asset('mixassets/css/category/comment/index.min.css') . '?lm=' . filemtime('mixassets/css/category/comment/index.min.css') }}"
         rel="stylesheet" type="text/css" />
@@ -213,29 +207,6 @@
                 </div>
             @endif
 
-            {{-- @if (!isset($page_intro_title) || !isset($page_intro_desc))
-                @if (isset($category))
-                    <div class="row justify-content-center">
-                        <div class="col-12 text-center">
-                            @if ($hasComments == 0)
-                                <div id="nocoms-box">
-                                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
-                                        alt="arrow top">
-                                    <span id="nocoms-title">شروع گفتگو</span>
-                                    <span id="nocoms-decs">نظر خود را بنویسید</span>
-                                </div>
-                            @else
-                                <div id="nocoms-box">
-                                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}"
-                                        alt="arrow top">
-                                    <span id="nocoms-decs">نظر خود را اینجا بنویسید</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-            @endif --}}
-
             @if (isset($ircats))
                 <div class="col-12 text-center mt-4">
                     {{-- <span id="itempr-div-title">فروشگاه {{ $item->full_title ?? $item->title }}</span> --}}
@@ -305,9 +276,14 @@
                 @include('question.comment-items', [
                     'firstItems' => 1,
                     'comments' => $comments,
+                    'page' => 'comment',
                 ])
             @else
-                @include('question.comment-items', ['firstItems' => 1, 'comments' => $comments])
+                @include('question.comment-items', [
+                    'firstItems' => 1,
+                    'comments' => $comments,
+                    'page' => 'comment',
+                ])
                 <button class="btn btn-lg btn-dark w-100 mt-4" onclick="loadMorePosts()" id="load-more-com-btn">نمایش
                     نظرات
                     بیشتر ...</button>
@@ -317,8 +293,6 @@
                     <img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
                 </div>
             @endif
-
-            @include('modals.categoryComment.reply')
 
             {{-- @if (isset($category))
                 @if ($meta_desc_editor)
@@ -348,7 +322,6 @@
 @endsection
 
 @section('script')
-    {{-- <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> --}}
     <script>
         send_comment_after_login = 0;
         const page = 'comment';
@@ -362,12 +335,6 @@
 
         let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
         const cat_tips = @json($category->tips ?? []);
-
-        // const yplayer = new Plyr('#affilb-video');
-        // let category_comment_like_route = '{{ route('category.comment.like') }}';
-        // let follow_item_route = '{{ route('follow.item') }}';
-        // const route_surop_choose = "{{ route('surop.choose') }}";
-        // const reply_df_route = "{{ route('category.comment.store.dref') }}";
     </script>
 
 

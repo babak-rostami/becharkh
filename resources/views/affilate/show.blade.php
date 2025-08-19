@@ -6,7 +6,7 @@
 
 @section('style')
     <meta name="title" content="{{ $product->title }}">
-    <link rel="canonical" href="{{ Request::fullUrl() }}">
+    <link rel="canonical" href="{{ Request::url() }}">
     @if ($product->google_index == 1)
         <meta name="robots" content="index, follow">
     @else
@@ -15,19 +15,21 @@
     <link
         href="{{ asset('mixassets/css/affilate/show.min.css') . '?lm=' . filemtime('mixassets/css/affilate/show.min.css') }}"
         rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-
-    <script src="{{ asset('library/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('library/ckeditor/ckfinder.js') }}"></script>
-    <script src="{{ asset('library/ckeditor/de.js') }}"></script>
 @endsection
 
 @section('content')
-    @if (session('success'))
-        <p class="alert alert-success text-center m-0">{{ session('success') }}</p>
-    @endif
-
     <div class="row justify-content-center bg-wht">
+
+        <div class="col-12">
+            @if (session('success'))
+                <p class="alert alert-success text-center">{{ session('success') }}</p>
+            @endif
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <p class="alert alert-danger text-center">{{ $error }}</p>
+                @endforeach
+            @endif
+        </div>
 
         @if (isset($category))
             <div class="col-12 text-center mb-3">
@@ -300,23 +302,13 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         page = 'show_product';
-        const yplayer = new Plyr('#affilb-video');
         let product_ids = {!! isset($product) ? json_encode([$product->id]) : '[]' !!};
         let affilate_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
         product_ids = [...new Set([...product_ids, ...affilate_ids])];
-        let follow_item_route = '{{ route('follow.item') }}';
 
-        const product_comment_like_route = "{{ route('product.comment.like') }}";
         const product_show_csrf = "{{ csrf_token() }}";
-
-        let editor_img_upload_route;
-        setTimeout(function() {
-            editor_img_upload_route =
-                "{{ route('comment.editor.img.uplaod', ['_token' => csrf_token(), 'page' => 'show_product']) }}";
-        }, 500);
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/affilate/show.min.js') . '?lm=' . filemtime('mixassets/js/affilate/show.min.js') }}">

@@ -48,12 +48,29 @@
                     @endforeach
                 </div>
             @endif
-            @if (isset($comment->editor))
-                <div class="cedshow">
-                    {!! $comment->editor !!}
-                </div>
-            @else
-                <p class="textarea-preline mt-2 mb-4">{{ $comment->body }}</p>
+
+            @if ($page == 'question')
+                @if (isset($comment->editor2))
+                    <div class="cedshow">
+                        {!! $comment->editor2 !!}
+                    </div>
+                @else
+                    @if (isset($comment->editor))
+                        <div class="cedshow">
+                            {!! $comment->editor !!}
+                        </div>
+                    @else
+                        <p class="ml-2 mt-4 font-18 textarea-preline">{{ $comment->body }}</p>
+                    @endif
+                @endif
+            @elseif($page == 'comment')
+                @if (isset($comment->editor))
+                    <div class="cedshow">
+                        {!! $comment->editor !!}
+                    </div>
+                @else
+                    <p class="textarea-preline mt-2 mb-4">{{ $comment->body }}</p>
+                @endif
             @endif
 
             @include('survey.surshow', [
@@ -79,23 +96,25 @@
             <hr>
 
             <button class="comment-reply-btn"
-                onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
+                onclick="openCCommentModal('reply','{{ isset($comment->question_id) ? $comment->question_id : $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
                     alt="reply icon" class="mr-1 lazy-load" data-src="{{ asset('files/other/images/reply.png') }}">
             </button>
 
-            <span class="copy-comment" id="copy-comment-{{ $comment->id }}"
-                onclick="copyComment('{{ $comment->id }}')">
-                ذخیره
-                <img data-src="{{ $ftp_path . 'files/other/images/copy-18.png' }}" alt="copy"
-                    class="copy-com-image lazy-load" id="copy-com-image-{{ $comment->id }}">
-            </span>
+            @if ($page == 'comment')
+                <span class="copy-comment" id="copy-comment-{{ $comment->id }}"
+                    onclick="copyComment('{{ $comment->id }}')">
+                    ذخیره
+                    <img data-src="{{ $ftp_path . 'files/other/images/copy-18.png' }}" alt="copy"
+                        class="copy-com-image lazy-load" id="copy-com-image-{{ $comment->id }}">
+                </span>
 
-            <span class="share-comment" id="share-comment-{{ $comment->id }}"
-                onclick="shareComment('{{ $comment->id }}')">
-                ارسال
-                <img data-src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share"
-                    class="share-com-image lazy-load" id="share-com-image-{{ $comment->id }}">
-            </span>
+                <span class="share-comment" id="share-comment-{{ $comment->id }}"
+                    onclick="shareComment('{{ $comment->id }}')">
+                    ارسال
+                    <img data-src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share"
+                        class="share-com-image lazy-load" id="share-com-image-{{ $comment->id }}">
+                </span>
+            @endif
 
             @if ($comment->replies_count)
                 <button class="show-replies-btn" id="show-replies-btn-{{ $comment->id }}"
@@ -122,7 +141,7 @@
                 @endif
             @endif
 
-            @if (!isset($item) || $hasComments == 0)
+            @if (!isset($item) || (isset($hasComments) && $hasComments == 0))
                 <hr>
                 @if (isset($comment->items_title))
                     @foreach ($comment->items_title as $title)
@@ -158,3 +177,4 @@
         @endif
     @endwhile
 </div>
+@include('modals.categoryComment.reply')

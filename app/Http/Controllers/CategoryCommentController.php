@@ -274,7 +274,7 @@ class CategoryCommentController extends Controller
         }
     }
 
-    private function sendCommentRefferIdToTop($request, $comments)
+    public function sendCommentRefferIdToTop($request, $comments)
     {
         $reffer_comment_id = $request->cri;
 
@@ -741,26 +741,86 @@ class CategoryCommentController extends Controller
         ], [
             'body.required' => 'نظر خود را بنویسید',
         ]);
-        if (!auth('user')->check()) {
+        $user = auth('user')->user();
+        if (!$user) {
             abort(403);
         }
 
-        $category = MongoCategory::find($request->category_id);
-        if (!isset($category)) {
-            return back()->with('success', 'دسته بندی وجود ندارد');
+        $page = $request->page;
+        if ($page == 'show_question') {
+            $object = MongoQuestion::find($request->object_id);
+            if (!isset($object)) {
+                return back()->with('success', 'صفحه وجود ندارد');
+            }
+        } elseif ($page == 'comment') {
+            $object = MongoCategory::find($request->object_id);
+            if (!isset($object)) {
+                return back()->with('success', 'دسته بندی وجود ندارد');
+            }
         }
-        $comment = new MongoCategoryComment();
 
-        // if (!isset($request->parent_id)) {
-        //     $editor_service = new CommentEditorService();
-        //     $editor_images = $editor_service->store('comment', $request->body, $comment);
-        // } else {
-        $comment->body = $request->body;
-        // }
+        $this->storeCommentSection($request, $user, $page, $object);
 
+        return back()->with('success', 'نظر شما با موفقیت ثبت شد');
+    }
+
+    public function storeWithoutRefresh(Request $request)
+    {
+        if (!isset($request->object_id) || !isset($request->parent_id)) {
+            return response()->json(['error' => 'خطایی رخ داد'], 404);
+        }
+        if (!isset($request->body) || trim($request->body) === '') {
+            return response()->json(['error' => 'دیدگاه خود را بنویسید.'], 404);
+        }
         $user = auth('user')->user();
-        $comment->category_id = $category->id;
+        if (!$user) {
+            return response()->json(['error' => 'وارد حساب کاربری خود شوید.'], 401);
+        }
+
+        $page = $request->page;
+        if ($page == 'show_question') {
+            $object = MongoQuestion::find($request->object_id);
+            if (!isset($object)) {
+                return back()->with('success', 'صفحه وجود ندارد');
+            }
+        } elseif ($page == 'comment') {
+            $object = MongoCategory::find($request->object_id);
+            if (!isset($object)) {
+                return back()->with('success', 'دسته بندی وجود ندارد');
+            }
+        }
+
+        $comment = $this->storeCommentSection($request, $user, $page, $object);
+
+        return response()->json([
+            'success' => 'نظر شما با موفقیت ثبت شد',
+            'comment' => [
+                'id' => $comment->id,
+                'body' => $request->body,
+                'username' => $user->username,
+                'user_image' => $user->thumb(),
+                'like_count' => 0,
+                'unlike_count' => 0,
+                'object_id' => $request->object_id,
+                'parent_id' => $request->parent_id,
+                'reply_id' => $request->reply_id,
+                'reply_name' => $comment->reply_name,
+            ]
+        ], 201);
+    }
+
+    private function storeCommentSection($request, $user, $page, $object)
+    {
+        $comment = new MongoCategoryComment();
+        $comment->body = $request->body;
         $comment->user_id = $user->id;
+
+        if ($page == 'show_question') {
+            $comment->question_id = $object->id;
+        } elseif ($page == 'comment') {
+            $comment->category_id = $object->id;
+        }
+
         //if comment is not main comment 
         if (isset($request->parent_id)) {
             $parent_comment = MongoCategoryComment::find($request->parent_id);
@@ -777,127 +837,67 @@ class CategoryCommentController extends Controller
                 }
             }
         }
-        if (isset($request->item_id)) {
-            $item = MongoItem::find($request->item_id);
-            $fv = [];
-            $items_title = [];
-            $fv[] = $item->id;
-            $items_title[] = $item->full_title ?? $item->title;
-            foreach ($item->parents() as $i) {
-                $fv[] = $i->id;
-                $items_title[] = $i->full_title ?? $i->title;
-            }
-            dispatch(new ChangeItemPageCount($fv, 'comment', 1))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
-            $comment->items = $fv;
-            $comment->items_title = $items_title;
-        }
-
-        $survey_service = new SurveyService();
-        $survey_service->addSurveyTo($comment, $request);
-
-        $comment->save();
-
-        $this->updateHotItems();
-
-        $admin = Admin::first();
-        if (isset($comment->parent_id)) {
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-            $commentPage = route('question.index', $category->slug) . "?s=1";
-            $this->sendUserNotification('ccomment', $user, $comment);
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک ریپلای ارسال کرد',
-                'route' => $commentPage,
-            ]));
-        } else {
+        if ($page == 'comment') {
             if (isset($request->item_id)) {
-                $commentPage = $item->withParentsCommentUrl();
-                $commentPageTitle = $item->full_title ?? $item->title;
-            } else {
-                $commentPage = route('question.index', $category->slug) . "?s=1";
-                $commentPageTitle = $category->full_title ?? $category->title;
+                $item = MongoItem::find($request->item_id);
+                $fv = [];
+                $items_title = [];
+                $fv[] = $item->id;
+                $items_title[] = $item->full_title ?? $item->title;
+                foreach ($item->parents() as $i) {
+                    $fv[] = $i->id;
+                    $items_title[] = $i->full_title ?? $i->title;
+                }
+                dispatch(new ChangeItemPageCount($fv, 'comment', 1))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
+                $comment->items = $fv;
+                $comment->items_title = $items_title;
             }
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' نظری در صفحه ' . $commentPageTitle . ' ارسال کرد',
-                'route' => $commentPage,
-            ]));
-        }
-
-        if (isset($comment->items)) {
-            dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-        }
-
-        return back()->with('success', 'نظر شما با موفقیت ثبت شد');
-    }
-
-    public function storeWithoutRefresh(Request $request)
-    {
-        if (!isset($request->category_id) || !isset($request->body) || !isset($request->parent_id)) {
-            return response()->json(['error' => 'خطایی رخ داد'], 404);
-        }
-        if ($request->body == '') {
-            return response()->json(['error' => 'دیدگاه خود را بنویسید.'], 404);
-        }
-        if (!auth('user')->check()) {
-            return response()->json(['error' => 'وارد حساب کاربری خود شوید.'], 401);
-        }
-
-        $category = MongoCategory::find($request->category_id);
-        $parent = MongoCategoryComment::find($request->parent_id);
-        if (!isset($category)) {
-            return response()->json(['error' => 'دسته بندی وجود ندارد.'], 404);
-        }
-        if (!isset($parent)) {
-            return response()->json(['error' => 'این نظر حذف شده است.'], 404);
-        }
-
-        $this->setCommentRepliesCount($parent, 1);
-
-        $comment = new MongoCategoryComment();
-        $user = auth('user')->user();
-        $comment->body = $request->body;
-        $comment->category_id = $category->id;
-        $comment->user_id = $user->id;
-        $comment->parent_id = $request->parent_id;
-        if (isset($request->reply_id)) {
-            $reply = MongoCategoryComment::find($request->reply_id);
-            if (isset($reply)) {
-                $comment->reply_id = $request->reply_id;
-                $comment->reply_name = $reply->user->username;
-            } else {
-                return response()->json(['error' => 'این نظر حذف شده است.'], 404);
-            }
+            $survey_service = new SurveyService();
+            $survey_service->addSurveyTo($comment, $request);
         }
 
         $comment->save();
 
-        $this->updateHotItems();
-
         $admin = Admin::first();
-        if (isset($comment->parent_id)) {
-            dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-            $commentPage = route('question.index', $category->slug) . "?s=1";
-            $this->sendUserNotification('ccomment', $user, $comment);
+        if ($page == 'show_question') {
+            dispatch(new SendUserNotification('question_answer', $user, $comment))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
             $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک ریپلای ارسال کرد',
-                'route' => $commentPage,
+                'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $object->title . ' منتشر کرد',
+                'route' => route('question.show', $object->slug2)
             ]));
+            if (isset($object->items)) {
+                dispatch(new UpdateUserFollowItem('question_answer', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+            }
+        } elseif ($page == 'comment') {
+            $this->updateHotItems();
+            if (isset($comment->parent_id)) {
+                dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+                $commentPage = route('question.index', $object->slug) . "?s=1";
+                $this->sendUserNotification('ccomment', $user, $comment);
+                $admin->notify(new SiteEvent([
+                    'action' => $user->username . ' یک ریپلای ارسال کرد',
+                    'route' => $commentPage,
+                ]));
+            } else {
+                if (isset($request->item_id)) {
+                    $commentPage = $item->withParentsCommentUrl();
+                    $commentPageTitle = $item->full_title ?? $item->title;
+                } else {
+                    $commentPage = route('question.index', $object->slug) . "?s=1";
+                    $commentPageTitle = $object->full_title ?? $object->title;
+                }
+                $admin->notify(new SiteEvent([
+                    'action' => $user->username . ' نظری در صفحه ' . $commentPageTitle . ' ارسال کرد',
+                    'route' => $commentPage,
+                ]));
+            }
+
+            if (isset($comment->items)) {
+                dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+            }
         }
 
-        return response()->json([
-            'success' => 'نظر شما با موفقیت ثبت شد',
-            'comment' => [
-                'id' => $comment->id,
-                'body' => $request->body,
-                'username' => $user->username,
-                'user_image' => $user->thumb(),
-                'like_count' => 0,
-                'unlike_count' => 0,
-                'category_id' => $request->category_id,
-                'parent_id' => $request->parent_id,
-                'reply_id' => $request->reply_id,
-                'reply_name' => $comment->reply_name,
-            ]
-        ], 201);
+        return $comment;
     }
 
     private function sendUserNotification($forr, $from_user, $new_object)

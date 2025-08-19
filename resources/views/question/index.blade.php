@@ -29,8 +29,6 @@
 
     <meta name="robots" content="index, follow">
 
-    {{-- <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" /> --}}
-
     <link href="{{ asset('mixassets/css/forum/index.min.css') . '?lm=' . filemtime('mixassets/css/forum/index.min.css') }}"
         rel="stylesheet" type="text/css" />
 @endsection
@@ -182,9 +180,7 @@
         page = 'forum';
     </script>
 
-    {{-- <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> --}}
     <script>
-        // const yplayer = new Plyr('#affilb-video');
         const index_route = "{{ route('question.index') }}";
         const is_rtable_page = 1;
 
@@ -193,28 +189,6 @@
         const loadingGif = '<img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">';
 
         let product_ids = {!! isset($affilate) ? json_encode([$affilate->id]) : '[]' !!};
-
-        //for fifil
-        // const fifil_load_items_route = "{{ route('fifil.load.items') }}";
-        // let features = @json($features ?? []);
-        // features = features.map(function(feature) {
-        //     return {
-        //         id: feature._id,
-        //         title: feature.title,
-        //         slug: feature.slug,
-        //         p_id: feature.parent_id,
-        //     };
-        // });
-        // let selected_items = @json($selected_items ?? []);
-        // selected_items = selected_items.map(function(item) {
-        //     return {
-        //         id: item._id,
-        //         title: item.title,
-        //         p_id: item.parent_id ?? null,
-        //         f_id: item.feature_id ?? null,
-        //     };
-        // });
-        //end for fifil
     </script>
 
 

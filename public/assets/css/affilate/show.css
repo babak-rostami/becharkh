@@ -2,6 +2,10 @@
     font-size: 18px;
 }
 
+#cm-input {
+    min-height: 125px;
+}
+
 .comment-texterea {
     border: none;
     overflow: auto;

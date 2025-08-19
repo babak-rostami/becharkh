@@ -9,7 +9,7 @@
 @section('style')
     <meta name="title" content="{{ $blog->title }}">
 
-    <link rel="canonical" href="{{ Request::fullUrl() }}">
+    <link rel="canonical" href="{{ Request::url() }}">
 
     @if ($blog->google_index == 1)
         <meta name="robots" content="index, follow">
@@ -19,8 +19,6 @@
 
     <link href="{{ asset('mixassets/css/blog/show.min.css') . '?lm=' . filemtime('mixassets/css/blog/show.min.css') }}"
         rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-
 
     <script type="application/ld+json">
             {
@@ -454,34 +452,13 @@
 
 
 @section('script')
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-    {{-- @if ($user)
-        <script>
-            let is_like = "{{ $userIsLike }}";
-            let is_unlike = "{{ $userIsUnLike }}";
-        </script>
-    @else
-        <script>
-            let is_like = 0;
-            let is_unlike = 0;
-        </script>
-    @endif --}}
     <script>
         // send comment after auth
         page = 'show_blog';
         send_comment_after_login = 0;
         //end send comment after auth
 
-        const yplayer = new Plyr('#affilb-video');
-        // const blog_like_route = "{{ route('blog.like') }}";
         const blog_id = "{{ $blog->id }}";
-        // const unlike_img = '{{ $ftp_path . 'files/other/images/b-unlike.webp' }}';
-        // const no_unlike_img = '{{ $ftp_path . 'files/other/images/w-unlike.webp' }}';
-        // const like_img = '{{ $ftp_path . 'files/other/images/red-like.png' }}';
-        // const no_like_img = '{{ $ftp_path . 'files/other/images/white-like.png' }}';
-
-        const follow_item_route = '{{ route('follow.item') }}';
-        const blog_comment_like_route = "{{ route('blog.comment.like') }}";
         const blog_show_csrf = "{{ csrf_token() }}";
 
         let product_ids = {!! isset($affilate) ? json_encode([$affilate->id]) : '[]' !!};

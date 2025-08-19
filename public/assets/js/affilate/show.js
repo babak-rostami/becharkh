@@ -26,7 +26,7 @@ function doThisAfterAuth() {
 function likeProductComment(product_comment_id) {
     $.ajax({
         type: "POST",
-        url: product_comment_like_route,
+        url: '/product-comment-like',
         data: {
             _token: product_show_csrf,
             like_or_unlike: true,
@@ -45,7 +45,7 @@ function likeProductComment(product_comment_id) {
 function unlikeProductComment(product_comment_id) {
     $.ajax({
         type: "POST",
-        url: product_comment_like_route,
+        url: '/product-comment-like',
         data: {
             _token: product_show_csrf,
             like_or_unlike: false,

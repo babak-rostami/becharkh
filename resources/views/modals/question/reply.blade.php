@@ -5,11 +5,12 @@
             <div class="modal-body">
                 <div class="row p-2 radius-10">
                     <div class="col-12">
-                        <form class="mt-2" action="{{ route('question.answer.store') }}" method="POST" role="form"
-                            id="qa-form">
+                        <form class="mt-2" action="{{ route('category.comment.store') }}" method="POST"
+                            role="form" id="qa-form">
                             @csrf
 
-                            <input type="hidden" id="qa-rep-question-id" name="question_id">
+                            <input type="hidden" name="page" value="show_question">
+                            <input type="hidden" id="qa-rep-question-id" name="object_id">
                             <input type="hidden" id="qa-rep-parent-id" name="parent_id">
                             <input type="hidden" id="qa-rep-replyto-id" name="reply_id">
                             <textarea required name="body" id="qa-rep-input" class="qa-form-ta" placeholder="نظر خود را بنویسید..."></textarea>

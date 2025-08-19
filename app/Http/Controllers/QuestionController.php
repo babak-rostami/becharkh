@@ -490,8 +490,8 @@ class QuestionController extends Controller
         }
 
         $lastAnswers = MongoCategoryComment::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
-        $firstComs = $lastAnswers->take(1);
-        $topLikes = $lastAnswers->sortByDesc('like_count')->take(3);
+        $firstComs = $lastAnswers->take(2);
+        $topLikes = $lastAnswers->sortByDesc('like_count')->take(2);
         $acceptedAnswer = $topLikes->first();
         $answers = $firstComs->merge($topLikes)->merge($lastAnswers)->unique();
 
@@ -509,15 +509,21 @@ class QuestionController extends Controller
 
         $currentQueryParams = [];
 
-        // $hot_pages = Cache::get('hot_pages');
-
         if ($question->video) {
             $video = $question->video;
         } else {
             $video = null;
         }
 
+        $is_admin = null;
+        if (auth('admin')->check()) {
+            $is_admin = 1;
+        }
+        
+        $answers = app(CategoryCommentController::class)->sendCommentRefferIdToTop(request(), $answers);
+
         $compactVars = [
+            'is_admin',
             'video',
             'question',
             'answers',

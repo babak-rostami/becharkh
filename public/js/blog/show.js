@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // Check if the 'page_seen' cookie is set for the current path
     if (getCookie("page_seen") == null) {
         // Set the 'page_seen' cookie for the current path with an expiration time of 1 hour
@@ -6,8 +6,8 @@ $(document).ready(function() {
     }
 });
 
-$(document).ready(function() {
-    $(document).on("click", function(event) {
+$(document).ready(function () {
+    $(document).on("click", function (event) {
         if (
             $(".share-box").hasClass("hide-share") &&
             $(event.target).closest(".share-span").length
@@ -46,7 +46,7 @@ function sentPageToWhatsapp() {
     window.open(shareUrl, "_blank");
 }
 
-$(".comment-span").click(function(e) {
+$(".comment-span").click(function (e) {
     $("html, body").animate(
         {
             scrollTop: $("#commentsSection").offset().top
@@ -65,7 +65,7 @@ function likeBlog(is_like) {
             like_or_unlike: is_like,
             blog_id: blog_id
         },
-        success: function(data) {
+        success: function (data) {
             if (data.status == 0) {
                 //delete like
                 changeLikeAndUnlike(0, 0);
@@ -150,7 +150,7 @@ function changeLikeAndUnlike(islike, isUnlike) {
 // });
 
 var d = 0;
-setInterval(function() {
+setInterval(function () {
     if (d == 0) {
         $(".click-go-question").css("background-color", "#48C9B0");
         d = 1;
@@ -163,13 +163,13 @@ setInterval(function() {
 function likeBlogComment(blog_comment_id) {
     $.ajax({
         type: "POST",
-        url: blog_comment_like_route,
+        url: '/blog-comment-like',
         data: {
             _token: blog_show_csrf,
             like_or_unlike: true,
             blog_comment_id: blog_comment_id
         },
-        success: function(data) {
+        success: function (data) {
             var ellike = "blog-comment-like-count-" + blog_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
@@ -182,13 +182,13 @@ function likeBlogComment(blog_comment_id) {
 function unlikeBlogComment(blog_comment_id) {
     $.ajax({
         type: "POST",
-        url: blog_comment_like_route,
+        url: '/blog-comment-like',
         data: {
             _token: blog_show_csrf,
             like_or_unlike: false,
             blog_comment_id: blog_comment_id
         },
-        success: function(data) {
+        success: function (data) {
             var ellike = "blog-comment-like-count-" + blog_comment_id;
             document.getElementById(ellike).innerHTML = data.likecount;
 
@@ -218,7 +218,7 @@ function doThisAfterAuth() {
 //end for send comment after auth
 
 // for go to comment section btn
-$.fn.inViewport = function() {
+$.fn.inViewport = function () {
     var elementTop = this.offset().top + 70;
     var elementBottom = elementTop + this.outerHeight();
     var viewportTop = $(window).scrollTop();
@@ -226,7 +226,7 @@ $.fn.inViewport = function() {
 
     return elementBottom > viewportTop && elementTop < viewportBottom;
 };
-$(window).on("resize scroll", function() {
+$(window).on("resize scroll", function () {
     if ($("#blog_comment_form").inViewport()) {
         $("#goToCommentForm").hide();
         $("#goToCommentFormDesk").hide();
@@ -235,7 +235,7 @@ $(window).on("resize scroll", function() {
         $("#goToCommentFormDesk").show();
     }
 });
-$("#goToCommentForm").click(function() {
+$("#goToCommentForm").click(function () {
     $("html, body").animate(
         {
             scrollTop: $("#blog_comment_form").offset().top - 120
@@ -243,7 +243,7 @@ $("#goToCommentForm").click(function() {
         500
     );
 });
-$("#goToCommentFormDesk").click(function() {
+$("#goToCommentFormDesk").click(function () {
     $("html, body").animate(
         {
             scrollTop: $("#blog_comment_form").offset().top - 120

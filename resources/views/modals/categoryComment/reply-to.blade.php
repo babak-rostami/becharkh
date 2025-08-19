@@ -8,7 +8,12 @@
                     role="form">
                     @csrf
 
-                    <input type="hidden" name="category_id" value="{{ $comment->category_id }}">
+                    @if (isset($question))
+                        <input type="hidden" name="page" value="show_question">
+                    @else
+                        <input type="hidden" name="page" value="comment">
+                    @endif
+                    <input type="hidden" name="object_id" value="{{ $comment->question_id ?? $comment->category_id }}">
                     <input type="hidden" name="parent_id" value="{{ $comment->id }}">
                     <input type="hidden" name="reply_id" value="{{ $reply->id }}">
 

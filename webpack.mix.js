@@ -89,6 +89,7 @@ mix.minify(
         "public/assets/js/affilate/show-box.js",
         "public/assets/js/pages/share-page.js",
         "public/assets/js/pages/add-to-home.js",
+        "public/assets/js/category/comment/show-comments.js"
     ],
     "public/mixassets/js/category/comment/index.min.js"
 );
@@ -195,7 +196,8 @@ mix.minify(
         "public/assets/js/survey/show.js",
         "public/assets/js/gallery/show.js",
         "public/assets/js/affilate/show-box.js",
-        "public/assets/js/pages/share-page.js"
+        "public/assets/js/pages/share-page.js",
+        "public/assets/js/category/comment/show-comments.js"
     ],
     "public/mixassets/js/forum/show.min.js"
 );
@@ -393,6 +395,23 @@ mix.minify(
     "public/mixassets/js/admin/user/search.min.js"
 );
 
+mix.minify(
+    [
+        "public/assets/js/video/embedb.js",
+        "public/library/plyr/plyr.polyfilled.js"
+    ],
+    "public/mixassets/js/video/embedb.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/video/show.js",
+        "public/library/plyr/plyr.polyfilled.js"
+    ],
+    "public/mixassets/js/video/show.min.js"
+);
+
 // for css //////////////////////////////////////////
 
 mix.minify(
@@ -574,6 +593,7 @@ mix.minify(
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/add-to-home.css",
         "public/assets/css/category/comment/uprof.css",
+        "public/assets/css/category/comment/show-comments.css",
     ],
     "public/mixassets/css/category/comment/index.min.css"
 );
@@ -636,9 +656,26 @@ mix.minify(
         "public/assets/css/category/rcats.css",
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/hot-pages.css",
-        "public/assets/css/category/comment/uprof.css",
+        "public/assets/css/category/comment/uprof.css"
     ],
     "public/mixassets/css/blog/show.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/css/video/embedb.css",
+        "public/library/plyr/plyr.css"
+    ],
+    "public/mixassets/css/video/embedb.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/video/show.css",
+        "public/library/plyr/plyr.css"
+    ],
+    "public/mixassets/css/video/show.min.css"
 );
 
 mix.minify(
@@ -671,6 +708,7 @@ mix.minify(
         "public/assets/css/category/comment/uprof.css",
         "public/assets/css/item/page-item-link.css",
         "public/assets/css/item/top-users.css",
+        "public/assets/css/category/comment/show-comments.css"
     ],
     "public/mixassets/css/forum/show.min.css"
 );
@@ -729,7 +767,7 @@ mix.minify(
         "public/assets/css/category/rcats.css",
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/comment-box.css",
-        "public/assets/css/category/comment/uprof.css",
+        "public/assets/css/category/comment/uprof.css"
     ],
     "public/mixassets/css/affilate/show.min.css"
 );

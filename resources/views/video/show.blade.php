@@ -14,10 +14,9 @@
     @else
         <meta name="robots" content="noindex">
     @endif
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
-    <link href="{{ asset('assets/css/video/show.css') . '?lm=' . filemtime('assets/css/video/show.css') }}" rel="stylesheet"
-        type="text/css" />
+    <link href="{{ asset('mixassets/css/video/show.min.css') . '?lm=' . filemtime('mixassets/css/video/show.min.css') }}"
+        rel="stylesheet" type="text/css" />
     <link rel="canonical" href="{{ url()->current() }}" />
 
     <script type="application/ld+json">
@@ -94,38 +93,6 @@
                             alt="shop">
                     </button>
                 @endif
-
-                {{-- <div class="mt-4">
-                    <div class="position-relative d-inline-block">
-                        <img class="mr-3 share-span" src="{{ $ftp_path . 'files/other/images/share.png' }}">
-                        <div class="share-box hide-share">
-
-                            <div class="row">
-                                <div class="col text-center cur-p" onclick="sentPageToTelegram()">
-                                    <img src="{{ $ftp_path . 'files/other/images/telegram.png' }}">
-                                    <br>
-                                    <span>تلگرام</span>
-                                </div>
-                                <div class="col text-center cur-p" onclick="copyToClipboard()">
-                                    <img src="{{ $ftp_path . 'files/other/images/chain.png' }}">
-                                    <br>
-                                    <span>کپی لینک</span>
-                                </div>
-                                <div class="col text-center cur-p" onclick="sentPageToWhatsapp()">
-                                    <img src="{{ $ftp_path . 'files/other/images/whatsapp.png' }}">
-                                    <br>
-                                    <span>واتساپ</span>
-                                </div>
-                                <div class="col-12 mt-3 text-center">
-                                    <input class="form-control w-100" type="text" id="page-url-for-clipboard" readonly
-                                        value="{{ Request::url() }}">
-                                    <p id="copy-clipboard-done-span">آدرس صفحه کپی شد</p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div> --}}
                 <hr>
             </main>
 
@@ -157,11 +124,10 @@
 
 
 @section('script')
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/video/show.min.js') . '?lm=' . filemtime('mixassets/js/video/show.min.js') }}">
+    </script>
     <script>
         const player = new Plyr('#video-s');
     </script>
-
-    <script type="text/javascript"
-        src="{{ asset('assets/js/video/show.js') . '?lm=' . filemtime('assets/js/video/show.js') }}"></script>
 @endsection

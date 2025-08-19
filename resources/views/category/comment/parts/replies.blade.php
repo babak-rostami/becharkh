@@ -13,7 +13,7 @@
             <span class="cm-box-time">{{ jdate($reply->created_at)->ago() }}</span>
             <p class="textarea-preline mt-2">{{ $reply->body }}</p>
             <button type="button" class="comment-reply-btn"
-                onclick="openCCommentModal('replyto','{{ $comment->category_id }}','{{ $comment->id }}','{{ $reply->id }}')">
+                onclick="openCCommentModal('replyto','{{ isset($comment->question_id) ? $comment->question_id : $comment->category_id }}','{{ $comment->id }}','{{ $reply->id }}')">
                 پاسخ
                 <img alt="reply icon" class="mr-1" src="{{ asset('files/other/images/reply.png') }}">
             </button>

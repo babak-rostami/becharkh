@@ -11,15 +11,13 @@
         <meta name="description" content="{{ $question->body }}">
     @endif
 
-    <link rel="canonical" href="{{ Request::fullUrl() }}">
+    <link rel="canonical" href="{{ Request::url() }}">
 
     @if ($question->google_index == 1)
         <meta name="robots" content="index, follow">
     @else
         <meta name="robots" content="noindex, nofollow">
     @endif
-
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
     <link href="{{ asset('mixassets/css/forum/show.min.css') . '?lm=' . filemtime('mixassets/css/forum/show.min.css') }}"
         rel="stylesheet" type="text/css" />
@@ -181,7 +179,11 @@
 
             {{-- پاسخ ها --}}
 
-            @include('question.answers')
+            @include('question.comment-items', [
+                'comments' => $answers,
+                'page' => 'question',
+            ])
+            {{-- @include('question.answers') --}}
             @include('mainPart.gallery')
             @include('category.rcats')
 
@@ -210,6 +212,9 @@
         const q_show_csrf = "{{ csrf_token() }}";
         const question_id = "{{ $question->id }}";
         let send_comment_after_login = 0;
+
+        let nextPageUrl = '{{ isset($nextPageUrl) ? $nextPageUrl : null }}';
+        let dontLoadMore = 0;
 
         let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
     </script>
