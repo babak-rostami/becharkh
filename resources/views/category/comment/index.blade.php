@@ -239,7 +239,11 @@
                 </div>
             @endif --}}
 
-            @include('mainPart.mainPage.add-to-home')
+            @if (isset($item) && isset($item->id_for_tel))
+                @include('item.telegram')
+            @else
+                @include('mainPart.mainPage.add-to-home')
+            @endif
 
             @if (isset($item) && isset($item->tags_array))
                 <div id="item-tags-box">

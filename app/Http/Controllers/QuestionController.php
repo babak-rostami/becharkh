@@ -491,8 +491,13 @@ class QuestionController extends Controller
 
         $lastAnswers = MongoCategoryComment::where('question_id', $question->id)->where('parent_id', null)->with('user')->orderBy('created_at', 'desc')->get();
         $firstComs = $lastAnswers->take(2);
-        $topLikes = $lastAnswers->sortByDesc('like_count')->take(2);
-        $acceptedAnswer = $topLikes->first();
+        $topLikes = $lastAnswers->where('best_answer', 1);
+        if ($topLikes->isNotEmpty()) {
+            $acceptedAnswer = $topLikes->first();
+        } else {
+            $topLikes2 = $lastAnswers->sortByDesc('like_count')->take(2);
+            $acceptedAnswer = $topLikes2->first();
+        }
         $answers = $firstComs->merge($topLikes)->merge($lastAnswers)->unique();
 
         if (!isset($_COOKIE['page_seen'])) {
@@ -519,7 +524,7 @@ class QuestionController extends Controller
         if (auth('admin')->check()) {
             $is_admin = 1;
         }
-        
+
         $answers = app(CategoryCommentController::class)->sendCommentRefferIdToTop(request(), $answers);
 
         $compactVars = [

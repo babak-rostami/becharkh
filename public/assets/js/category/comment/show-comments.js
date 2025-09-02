@@ -281,12 +281,13 @@ function scrollToId(id, extra_offset = 0) {
 setTimeout(() => {
     const criParam = getQueryParam('cri');
     if (criParam) {
-        const criValue = '#comment-box-' + criParam;
-        if ($(criValue).length) {
+        const criValue = 'comment-box-' + criParam;
+        if ($("#" + criValue).length) {
             scrollToId(criValue, 100);
         }
     }
 }, 1000);
+
 
 
 function getQueryParam(param) {

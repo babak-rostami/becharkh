@@ -25,6 +25,7 @@
                     <thead>
                         <tr>
                             <th>ردیف</th>
+                            <th>تایید شده</th>
                             <th>نظر</th>
                             <th>#</th>
                         </tr>
@@ -33,6 +34,15 @@
                         @foreach ($comments as $key => $comment)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
+                                @if (isset($comment->status) && $comment->status == 0)
+                                    <td>
+                                        <span class="badge badge-danger">خیر</span>
+                                    </td>
+                                @else
+                                    <td>
+                                        <span class="badge badge-success">بله</span>
+                                    </td>
+                                @endif
                                 <td>
                                     <span>{{ Str::limit($comment->body, 100, '...') }}</span>
                                     <br>

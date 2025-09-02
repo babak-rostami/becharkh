@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DoAfterStoreComment;
 use App\Jobs\Item\ChangeItemPageCount;
 use App\Jobs\pages\UpdateHotPages;
 use App\Jobs\SendEmailCategoryComment;
@@ -666,6 +667,13 @@ class CategoryCommentController extends Controller
                 $unset_ques = 1;
             }
 
+            $unset_best_answ = 0;
+            if (isset($request->best_answer) && $request->best_answer == 1) {
+                $comment->best_answer = 1;
+            } else {
+                $unset_best_answ = 1;
+            }
+
             if ($request->filled('images')) {
                 $address = $category->slug;
                 $images = app(InputImagesController::class)->setImagesArrayForUpdate($request->images, 'ccomment', $comment, $address);
@@ -673,6 +681,10 @@ class CategoryCommentController extends Controller
             }
         } else {
             $comment->body = $request->body;
+        }
+
+        if ($comment->status == 0) {
+            $comment->status = 1;
         }
 
         $comment->update();
@@ -684,6 +696,9 @@ class CategoryCommentController extends Controller
         }
         if (isset($unset_ques) && $unset_ques == 1) {
             $comment->unset('question_id');
+        }
+        if (isset($unset_best_answ) && $unset_best_answ == 1) {
+            $comment->unset('best_answer');
         }
 
         $this->updateHotItems();
@@ -715,7 +730,12 @@ class CategoryCommentController extends Controller
             $parent_comment = MongoCategoryComment::find($comment->parent_id);
             if (isset($parent_comment)) {
                 $this->setCommentRepliesCount($parent_comment, 0);
-                app(UserNotificationController::class)->deleteNotification('ccomment', $comment->id);
+                if (isset($parent_comment->question_id)) {
+                    app(UserNotificationController::class)->deleteNotification('question_answer', $comment->id);
+                }
+                if (isset($parent_comment->category_id)) {
+                    app(UserNotificationController::class)->deleteNotification('ccomment', $comment->id);
+                }
             }
         }
         $likes = MongoCategoryCommentLike::where('comment_id', $comment->id)->get();
@@ -814,6 +834,7 @@ class CategoryCommentController extends Controller
         $comment = new MongoCategoryComment();
         $comment->body = $request->body;
         $comment->user_id = $user->id;
+        $item = null;
 
         if ($page == 'show_question') {
             $comment->question_id = $object->id;
@@ -858,44 +879,25 @@ class CategoryCommentController extends Controller
 
         $comment->save();
 
-        $admin = Admin::first();
-        if ($page == 'show_question') {
-            dispatch(new SendUserNotification('question_answer', $user, $comment))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $object->title . ' منتشر کرد',
-                'route' => route('question.show', $object->slug2)
-            ]));
-            if (isset($object->items)) {
-                dispatch(new UpdateUserFollowItem('question_answer', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-            }
-        } elseif ($page == 'comment') {
-            $this->updateHotItems();
-            if (isset($comment->parent_id)) {
-                dispatch(new SendEmailCategoryComment($comment->parent_id, $request->reply_id, $user))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-                $commentPage = route('question.index', $object->slug) . "?s=1";
-                $this->sendUserNotification('ccomment', $user, $comment);
-                $admin->notify(new SiteEvent([
-                    'action' => $user->username . ' یک ریپلای ارسال کرد',
-                    'route' => $commentPage,
-                ]));
-            } else {
-                if (isset($request->item_id)) {
-                    $commentPage = $item->withParentsCommentUrl();
-                    $commentPageTitle = $item->full_title ?? $item->title;
-                } else {
-                    $commentPage = route('question.index', $object->slug) . "?s=1";
-                    $commentPageTitle = $object->full_title ?? $object->title;
-                }
-                $admin->notify(new SiteEvent([
-                    'action' => $user->username . ' نظری در صفحه ' . $commentPageTitle . ' ارسال کرد',
-                    'route' => $commentPage,
-                ]));
-            }
-
-            if (isset($comment->items)) {
-                dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-            }
+        $item_id = 'null';
+        if (isset($item)) {
+            $item_id = $item->id;
         }
+        if (isset($object)) {
+            $object_id = $object->id;
+        }
+
+        dispatch(new DoAfterStoreComment(
+            $page ?? 'null',
+            $user->id ?? 'null',
+            $comment->id ?? 'null',
+            $object_id,
+            $item_id,
+            [
+                'reply_id' => $request->reply_id ?? null,
+                'item_id'  => $request->item_id ?? null,
+            ]
+        ))->onQueue('becharkhsite')->delay(now()->addSeconds(10));
 
         return $comment;
     }

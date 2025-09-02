@@ -21,14 +21,18 @@
                     class="mx-2 badge badge-danger">{{ admin_notification_count() }}</span></a>
 
             @if (auth('admin')->user()->type == 1)
-                <a class="btn btn-dark" href="{{ route('admin.users') }}">مدیریت کاربران</a>
+                <a class="btn btn-dark" href="{{ route('admin.users') }}">مدیریت کاربران
+                    <span class="badge badge-danger">{{ $user_new_imgs_count }}</span>
+                </a>
             @endif
 
             <a class="btn btn-dark" href="{{ route('cats.items.admin') }}">دسته بندی سایت
                 <span class="badge badge-danger">{{ $cat_waiting_count }}</span>
             </a>
 
-            <a class="btn btn-light" href="{{ route('admin.category.comment.index') }}">مدیریت نظرات</a>
+            <a class="btn btn-light" href="{{ route('admin.category.comment.index') }}">مدیریت نظرات
+                <span class="badge badge-danger">{{ $nac_coms_count }}</span>
+            </a>
             <hr>
 
             <a class="btn btn-danger" href="{{ route('question.index.admin') }}">سوال ها
@@ -90,34 +94,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div class="col-6 text-center mt-2 p-4">
-            <div class="card">
-                <div class="card-body" style="background-color: #fcfdd9; border-radius: 8px">
-                    <h5 class="card-title" style="color: #000000">تعداد اعضای سایت</h5>
-                    <hr>
-                    <p class="card-text" style="color: #000000">{{ $user_count }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 text-center mt-2 p-4">
-            <div class="card">
-                <div class="card-body" style="background-color: #fcfdd9; border-radius: 8px">
-                    <h5 class="card-title" style="color: #000000">تعداد مقالات</h5>
-                    <hr>
-                    <p class="card-text" style="color: #000000">{{ $blogs_count }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 text-center mt-2 p-4">
-            <div class="card">
-                <div class="card-body" style="background-color: #fcfdd9; border-radius: 8px">
-                    <h5 class="card-title" style="color: #000000">تعداد آگهی ها</h5>
-                    <hr>
-                    <p class="card-text" style="color: #000000">{{ $ad_count }}</p>
-                </div>
-            </div>
         </div>
     </div>
 @endsection

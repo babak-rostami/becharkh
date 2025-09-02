@@ -40,6 +40,12 @@ class MongoUser extends Model implements AuthenticatableContract
         'password'
     ];
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'likes_count_updated_at',
+    ];
+
     public function questions()
     {
         return $this->hasMany(MongoQuestion::class, 'user_id')->orderBy('created_at', 'desc');

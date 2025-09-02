@@ -11,6 +11,7 @@ use App\Models\LetMeKnow;
 use App\Models\MongoAdvertise;
 use App\Models\MongoBlog;
 use App\Models\MongoCategory;
+use App\Models\MongoCategoryComment;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
@@ -31,9 +32,6 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        $blogs_count = MongoBlog::count();
-        $user_count = MongoUser::count();
-        $ad_count = MongoAdvertise::count();
         $videoNotAcceptedCount = MongoVideo::where('status', 0)->orWhere('status', 2)->count();
         $itemNotAccepted = MongoItem::where('status', 0)->get();
         $notAcceptedQuestions = MongoQuestion::where('status', 0)->count();
@@ -42,9 +40,11 @@ class AdminController extends Controller
         $search_count = UserSearch::count();
         $site_errors_count = PageError::count();
         $user_notifs_count = UserNotification::where('unread', 1)->count();
+        $user_new_imgs_count = MongoUser::where('new_img', 1)->count();
+        $nac_coms_count = MongoCategoryComment::where('status', 0)->count();
         return view(
             'admin.dashboard',
-            compact('user_notifs_count', 'cun_count', 'site_errors_count', 'search_count', 'blogs_count', 'user_count', 'ad_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
+            compact('user_notifs_count', 'user_new_imgs_count', 'nac_coms_count', 'cun_count', 'site_errors_count', 'search_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
         );
     }
 
@@ -184,9 +184,18 @@ class AdminController extends Controller
     }
 
 
-    public function users()
+    public function users($type = null)
     {
-        $users = MongoUser::orderBy('created_at', 'desc')->paginate(500);
-        return view('admin.users', compact('users'));
+        if ($type == 'like') {
+            $users = MongoUser::whereNotNull('likes_count')
+                ->orderBy('likes_count_updated_at', 'desc')
+                ->paginate(500);
+        } else {
+            $users = MongoUser::orderByDesc('new_img')
+                ->orderBy('created_at', 'desc')
+                ->paginate(500);
+        }
+
+        return view('admin.users', compact('users', 'type'));
     }
 }

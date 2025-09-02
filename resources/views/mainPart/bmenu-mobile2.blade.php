@@ -17,7 +17,7 @@
                 @endif
                 @if ($user)
                     @if (!$user->getImage() || !$user->email_actived)
-                        <img id="bm-war-icon-user" class="bm-war-icon-user" alt="warning"
+                        <img id="bm-war-icon-user" alt="warning"
                             src="{{ $ftp_path . 'files/other/images/warning16.webp' }}" alt="warning">
                     @endif
                 @else
@@ -82,19 +82,70 @@
                 <br>
                 <span class="n-active-btab-mobile">جستجو</span>
             </div>
-
-            <div class="col-2 text-center buttom-menu-item p-2">
+            <div class="col-2 text-center buttom-menu-item p-2 c-bm-btn" onclick="openBottomMenuMore()">
+                <img alt="more icon" id="bm-more-img" src="{{ $ftp_path . 'files/other/images/more-menu.webp' }}">
+                <br>
+                <span id="bm-more-txt" class="n-active-btab-mobile">بیشتر</span>
+            </div>
+            <div class="col-3 text-center buttom-menu-item p-2">
                 @if (request()->is('/'))
-                    <span class="text-white text-decoration-none">
+                    <a class="text-white text-decoration-none">
                         <img alt="home" src="{{ $ftp_path . 'files/other/images/home-blue.png' }}">
                         <br>
                         <span class="active-btab-mobile">خانه</span>
-                    </span>
+                    </a>
                 @else
                     <a href="{{ route('home') }}" class="text-white text-decoration-none">
                         <img alt="home" src="{{ $ftp_path . 'files/other/images/home-gray.png' }}">
                         <br>
                         <span class="n-active-btab-mobile">خانه</span>
+                    </a>
+                @endif
+            </div>
+            <div class="col-3 text-center buttom-menu-item p-2">
+                @if (request()->is('ads') || request()->is('ads/*'))
+                    <a class="text-white text-decoration-none">
+                        <img alt="shop icon" src="{{ $ftp_path . 'files/other/images/shop-blue.png' }}">
+                        <br>
+                        <span class="active-btab-mobile">بازار</span>
+                    </a>
+                @else
+                    <a href="{{ route('ads.index') }}" class="text-white text-decoration-none">
+                        <img alt="shop icon" src="{{ $ftp_path . 'files/other/images/shop-gray.png' }}">
+                        <br>
+                        <span class="n-active-btab-mobile">بازار</span>
+                    </a>
+                @endif
+            </div>
+            <div class="col-3 text-center buttom-menu-item p-2">
+                @if (strpos(request()->fullUrl(), 'forum') !== false && strpos(request()->fullUrl(), 's=1') !== false)
+                    <a class="text-white text-decoration-none">
+                        <img alt="comment icon" src="{{ $ftp_path . 'files/other/images/chat-blue.png' }}">
+                        <br>
+                        <span class="active-btab-mobile">نظرات</span>
+                    </a>
+                @else
+                    <a href="{{ route('question.index') . '?s=1' }}" class="text-white text-decoration-none">
+                        <img alt="comment icon" src="{{ $ftp_path . 'files/other/images/chat-gray.png' }}">
+                        <br>
+                        <span class="n-active-btab-mobile">نظرات</span>
+                    </a>
+                @endif
+            </div>
+            <div class="col-3 text-center buttom-menu-item p-2">
+                @if (
+                    (strpos(request()->fullUrl(), 'forum') !== false || strpos(request()->fullUrl(), 'question/create') !== false) &&
+                        strpos(request()->fullUrl(), 's=1') === false)
+                    <a class="text-white text-decoration-none">
+                        <img alt="forum icon" src="{{ $ftp_path . 'files/other/images/group-blue.png' }}">
+                        <br>
+                        <span class="active-btab-mobile">انجمن</span>
+                    </a>
+                @else
+                    <a href="{{ route('question.index') }}" class="text-white text-decoration-none">
+                        <img alt="forum icon" src="{{ $ftp_path . 'files/other/images/group-gray.png' }}">
+                        <br>
+                        <span class="n-active-btab-mobile">انجمن</span>
                     </a>
                 @endif
             </div>

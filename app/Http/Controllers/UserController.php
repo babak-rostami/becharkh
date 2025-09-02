@@ -6,6 +6,8 @@ use App\Jobs\SendEmailActiveEmail;
 use App\Mail\ActiveCodeEmail;
 use App\Models\Admin;
 use App\Models\ChangeUsername;
+use App\Models\MongoCategoryComment;
+use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoUser;
@@ -211,48 +213,39 @@ class UserController extends Controller
     public function dashboardEdit($tab = null)
     {
         $user = auth('user')->user();
-        if (isset($user)) {
-            $user_money = (int)$user->money ?? 0;
 
-            $compact = [
-                'user_money',
-                'tab',
-            ];
-            switch ($tab) {
-                case 'ad':
-                    $uadvertises = $user->advertises;
-                    $compact[] = 'uadvertises';
-                    break;
-                case 'job':
-                    $ujobs = $user->works ?? [];
-                    $jobs = MongoWork::all();
-                    $compact = array_merge($compact, ['ujobs', 'jobs']);
-                    break;
-                case 'post':
-                    $uBlogs = $user->blogs;
-                    $compact[] = 'uBlogs';
-                    break;
-                case 'forum':
-                    $uquestions = $user->questions;
-                    $compact[] = 'uquestions';
-                    break;
-            }
-            return view('user.dashboard-edit', compact($compact));
-        } else {
+        if (!isset($user)) {
             abort(404);
         }
+
+        if (
+            !$user->likes_count_updated_at ||
+            now()->diffInHours($user->likes_count_updated_at) >= 1
+        ) {
+            $user_comments = MongoCategoryComment::where('parent_id', null)->where('user_id', $user->id)->get();
+            $user_likes = $user_comments->sum('like_count');
+
+            if ($user_likes > 0) {
+                $user->likes_count = $user_likes;
+                $user->likes_count_updated_at = now();
+                $user->update();
+            }
+        } else {
+            $user_likes = $user->likes_count;
+        }
+
+        return view('user.dashboard-edit', compact('user', 'user_likes'));
     }
 
     public function uploadUserImage(Request $request)
     {
-        $user = auth('user')->user();
-
         if ($request->hasFile('image')) {
+            $user = auth('user')->user();
             $cover = $request->file('image');
             $path = 'user/profile/';
-
-            if (isset($user->attributes['image'])) {
-                $image_name = explode($path, $user->attributes['image'])[1];
+            $user_img = $user->getImage();
+            if ($user_img !== null) {
+                $image_name = explode($path, $user_img)[1];
                 $basefilename = explode('.webp', $image_name)[0];
             } else {
                 $basefilename = $user->username . rand(1000, 9999) . time();
@@ -266,15 +259,20 @@ class UserController extends Controller
             //thum image
             $filename2 = $basefilename . '2.webp';
             $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
+
+            $user->new_img = 1;
+            $user->update();
+
+            $npath = asset($user->image());
+            return response()->json([
+                'success' => 1,
+                'filePath' => $npath,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => 0,
+            ], 404);
         }
-
-        $user->update();
-
-        $npath = asset($user->image());
-        return response()->json([
-            'success' => 1,
-            'filePath' => $npath,
-        ], 200);
     }
 
     private function uploadAndResizeImage($image, $path, $filename, $quality, $thumb)
@@ -318,23 +316,48 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required'
-        ], [
-            'name.required' => 'نام خود را وارد کنید'
-        ]);
-
         $user = auth('user')->user();
-        $user->name = $request->name;
-        $user->body = $request->body;
-        if ($request->phone != null) {
-            $user->phone = $request->phone;
+
+        if ($request->has('name')) {
+            $validated = $request->validate([
+                'name' => ['required', 'string', 'max:25'],
+            ], [
+                'name.required' => 'نام نمی‌تواند خالی باشد.',
+                'name.max' => 'نام نباید بیشتر از 25 کاراکتر باشد.'
+            ]);
+
+            $user->name = $validated['name'];
+        }
+
+        if ($request->has('phone')) {
+            $validated = $request->validate([
+                'phone' => ['required', 'digits_between:1,15'],
+            ], [
+                'phone.required' => 'شماره تلفن نمی‌تواند خالی باشد.',
+                'phone.digits_between' => 'شماره تلفن باید حداکثر 15 رقم باشد.',
+            ]);
+
+            $user->phone = $validated['phone'];
+        }
+
+        if ($request->has('body')) {
+            $validated = $request->validate([
+                'body' => ['required', 'string'],
+            ], [
+                'body.required' => 'بیوگرافی نمی‌تواند خالی باشد.',
+            ]);
+
+            $user->body = $validated['body'];
         }
 
         $user->update();
 
-        return back()->with('success', 'تغییرات ذخیره شد');
+        return response()->json([
+            'success' => true,
+            'message' => 'اطلاعات با موفقیت به‌روزرسانی شد.',
+        ]);
     }
+
 
     public function updateAdmin(Request $request, $user_id)
     {
@@ -387,6 +410,8 @@ class UserController extends Controller
         }
 
         $user->update();
+
+        $user->unset('new_img');
 
         if (isset($unset_is_fake)) {
             $user->unset('is_fake');
@@ -534,18 +559,31 @@ class UserController extends Controller
 
     public function requestChangeUsername(Request $request)
     {
-        $checkUser = MongoUser::where('username', $request->new_username)->first();
-        if (isset($checkUser)) {
+        $newUsername = trim($request->new_username);
+
+        // بررسی تکراری بودن نام کاربری
+        $checkUser = MongoUser::where('username', $newUsername)->first();
+        if ($checkUser) {
             return response()->json(['message' => 'این نام کاربری قبلا انتخاب شده است'], 403);
         }
+
+        if (preg_match('/^\d/', $newUsername)) {
+            return response()->json(['message' => 'نام کاربری نمی‌تواند با عدد شروع شود'], 403);
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9_.]+$/', $newUsername)) {
+            return response()->json(['message' => 'نام کاربری فقط می‌تواند شامل حروف انگلیسی، اعداد، نقطه و _ باشد'], 403);
+        }
+
         $user = auth('user')->user();
         $change_user_name = new ChangeUsername();
         $change_user_name->user_id = $user->id;
-        $change_user_name->username = $request->new_username;
-        $change_user_name->body = $request->body;
+        $change_user_name->username = $newUsername;
         $change_user_name->save();
+
         return response()->json(['success' => 1], 200);
     }
+
     public function changeUserNameReqs(Request $request)
     {
         $reqs = ChangeUsername::with('user')->get();

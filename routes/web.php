@@ -141,7 +141,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     Route::post('email-to-user', [EmailToUserController::class, 'store'])->name('email.to.user');
 
-    Route::get('users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('users/{type?}', [AdminController::class, 'users'])->name('admin.users');
     Route::post('user-update/{id}', [UserController::class, 'updateAdmin'])->name('user.update.admin');
     Route::get('change-username-reqs', [UserController::class, 'changeUserNameReqs'])->name('admin.change.username.reqs');
     Route::delete('destroy-chun-reqs', [UserController::class, 'DestroyChunReqs'])->name('admin.destroy.chun.reqs');

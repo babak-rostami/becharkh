@@ -194,6 +194,14 @@
                         </select>
                     </div>
                 @endif
+                <div class="form-group">
+                    <label>نظر برتر</label>
+                    <select class="form-control" name="best_answer">
+                        <option value="1" {{ $comment->best_answer == 1 ? 'selected' : '' }}>آره
+                        <option value="0" {{ $comment->best_answer == 0 ? 'selected' : '' }}>نه</option>
+                        </option>
+                    </select>
+                </div>
                 @include('mainPart.form.search-and-select-for-edit', [
                     'question_input_name' => 'questions',
                     'sasfQuestionIds' => $questionIds ?? null,
@@ -632,13 +640,15 @@
     @elseif($page == 'edit_blog')
         <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="editorBlogUpdate()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
+            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+                alt="send">
             ویرایش مطلب
         </button>
     @elseif($page == 'create_affilate' || $page == 'edit_affilate')
         <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="affilateStoreUpdate()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
+            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+                alt="send">
             ثبت افیلیت
         </button>
     @else

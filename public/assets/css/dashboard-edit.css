@@ -71,37 +71,24 @@
 }
 
 .user-image {
-    width: 64px;
-    height: 64px;
-    background-color: #f0f0f0;
-    border: 1px solid #e0d7f0;
+    width: 76px;
+    height: 76px;
+    padding: 4px;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
     object-fit: contain;
     border-radius: 50%;
-    margin-left: 8px;
 }
 
 .user-image-div {
     position: relative;
-    display: inline-block;
-    margin: 16px 0;
+    display: block;
+    margin: 12px 0;
+    text-align: center;
 }
 
 #user-image-input {
     display: none;
-}
-
-#loading-image-icon {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    background-color: rgb(255 255 255 / 70%);
-    padding: 8px;
-    border-radius: 50%;
-    display: none;
-}
-
-#loading-image-icon {
-    animation: rotation 6s infinite linear;
 }
 
 @keyframes rotation {
@@ -183,9 +170,13 @@ div[id^="post-edit-"] {
 
 #active-email-msg {
     display: block;
-    margin-top: 12px;
-    color: #dc3545;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
     font-weight: 500;
+    padding: 8px 0;
+    border-radius: 8px;
+    margin-bottom: 8px;
 }
 
 #change-email-msg {
@@ -263,4 +254,91 @@ button[id^="pay-ad-btn-loading-"] {
     display: block;
     text-align: center;
     color: #dc3545;
+}
+
+#uimg-select-btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 24px;
+    font-size: 18px;
+    font-weight: 600;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 4px #e9ecef;
+}
+
+.uimg-select-btn-loading {
+    background-color: #f1f8ff !important;
+    border: 1px solid #f8f9fa !important;
+}
+
+#edit-profile-title {
+    display: block;
+    margin-top: 16px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    padding-bottom: 16px;
+}
+
+.ueform-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fdfdfd;
+    border-bottom: 1px solid #ddd;
+    padding: 12px 16px;
+}
+
+.uuform-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #333;
+    font-size: 14px;
+}
+
+.uuform-info span:first-child {
+    font-weight: bold;
+    color: #555;
+}
+
+.uuform-edit a,
+.uuform-edit button {
+    color: #007bff;
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+    border: none;
+    background-color: #fff;
+    padding: 0;
+    font-size: 15px;
+}
+
+.uuform-edit a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.likes-label {
+    font-size: 15px;
+    color: #888;
+    display: block;
+    margin-top: 12px;
+}
+
+.likes-count {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff4081;
+    background: #fff3f8;
+    padding: 4px 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(255, 64, 129, 0.3);
+    display: inline-block;
+    min-width: 36px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.likes-count:hover {
+    transform: scale(1.1);
 }

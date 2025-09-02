@@ -42,8 +42,7 @@ class SiteCategoryController extends Controller
                 'selectedCat'
             ];
             if (isset($selectedCat->related_cats)) {
-                $categories = $selectedCat->related_cats;
-                $categoryIds = implode(',', $categories);
+                $categoryIds = implode(',', $selectedCat->related_cats);
                 $categorySelects = MongoCategory::whereIn('_id', $categories)->select('title')->get();
                 $compactVars[] = 'categoryIds';
                 $compactVars[] = 'categorySelects';

@@ -361,7 +361,7 @@ body {
 }
 
 :root {
-    --bm-box-bottom: -66px;
+    --bm-box-bottom: 0;
 }
 
 .bottom-menu-box {
@@ -557,6 +557,19 @@ body {
     position: absolute;
     top: -1px;
     right: 10px;
+}
+.bm-war-icon-user {
+    animation: bwiu-glow-anim 0.5s infinite alternate;
+}
+
+@keyframes bwiu-glow-anim {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 #modal-back-box {

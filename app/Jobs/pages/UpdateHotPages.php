@@ -45,6 +45,7 @@ class UpdateHotPages implements ShouldQueue
                 ->whereNull('parent_id')
                 ->where('items', '!=', null)
                 ->whereNull('question_id')
+                ->where('status', '!=', 0)
                 ->take(150)
                 ->get();
             $processed_item_ids = [];
@@ -80,6 +81,7 @@ class UpdateHotPages implements ShouldQueue
             $question_commetns = MongoCategoryComment::orderBy('created_at', 'desc')
                 ->whereNull('parent_id')
                 ->where('question_id', '!=', null)
+                ->where('status', '!=', 0)
                 ->take(250)
                 ->get();
             $unique_question_ids = [];
@@ -115,26 +117,6 @@ class UpdateHotPages implements ShouldQueue
                     $processed_question_ids[] = $question->id;
                 }
             }
-            //products take 30
-            // $processed_product_ids = [];
-            // $product_commetns = ProductComment::orderBy('created_at', 'desc')
-            //     ->whereNull('parent_id')
-            //     ->take(30)
-            //     ->get();
-            // foreach ($product_commetns as $pc) {
-            //     $product = Affilate::find($pc->product_id);
-            //     if ($product && !in_array($product->id, $processed_product_ids)) {
-            //         $new_page = new stdClass();
-            //         $new_page->title = $product->title;
-            //         $new_page->body = str_limit($pc->body, 100, '...');
-            //         $product_route = route('product.show', $product->slug);
-            //         $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $product_route);
-            //         $new_page->image = $product->image;
-            //         $new_page->time = $pc->created_at->format('Y-m-d H:i:s');
-            //         $hot_pages->add($new_page);
-            //         $processed_product_ids[] = $product->id;
-            //     }
-            // }
             $hot_pages = $hot_pages->sortByDesc(function ($page) {
                 return $page->time;
             });

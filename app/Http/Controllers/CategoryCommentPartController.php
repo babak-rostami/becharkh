@@ -10,7 +10,7 @@ class CategoryCommentPartController extends Controller
     public function getReplies($comment_id)
     {
         $comment = MongoCategoryComment::findOrFail($comment_id);
-        $replies = $comment->replies()->with([
+        $replies = $comment->replies()->where('status', '!=', 0)->with([
             'user:id,username,name,image'
         ])->get([
             'id',

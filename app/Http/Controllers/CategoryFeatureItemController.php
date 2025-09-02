@@ -212,6 +212,25 @@ class CategoryFeatureItemController extends Controller
             $item->desc_in_ads_editor = $request->desc_in_ads_editor;
         }
 
+        $unset_title_for_tel = 0;
+        $unset_desc_for_tel = 0;
+        $unset_id_for_tel = 0;
+        if ($request->title_for_tel) {
+            $item->title_for_tel = $request->title_for_tel;
+        } else {
+            $unset_title_for_tel = 1;
+        }
+        if ($request->desc_for_tel) {
+            $item->desc_for_tel = $request->desc_for_tel;
+        } else {
+            $unset_desc_for_tel = 1;
+        }
+        if ($request->id_for_tel) {
+            $item->id_for_tel = $request->id_for_tel;
+        } else {
+            $unset_id_for_tel = 1;
+        }
+
         $item->status = (int)$request->status == 1 ? 1 : 0;
 
         $item->update();
@@ -231,6 +250,16 @@ class CategoryFeatureItemController extends Controller
         }
         if ($update_again) {
             $item->update();
+        }
+
+        if ($unset_title_for_tel == 1 && isset($item->title_for_tel)) {
+            $item->unset('title_for_tel');
+        }
+        if ($unset_desc_for_tel == 1 && isset($item->desc_for_tel)) {
+            $item->unset('desc_for_tel');
+        }
+        if ($unset_id_for_tel == 1 && isset($item->id_for_tel)) {
+            $item->unset('id_for_tel');
         }
 
         return back()->with('success', 'آیتم با موفقیت ویرایش شد');

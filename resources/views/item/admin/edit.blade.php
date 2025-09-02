@@ -209,6 +209,22 @@
                             <textarea class="form-control ckeditor" name="desc_in_ads_editor">{{ $item->desc_in_ads_editor }}</textarea>
                         </div>
                     </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="title_for_tel">عنوان تلگرام</label>
+                            <input type="text" value="{{ $item->title_for_tel }}" class="form-control"
+                                name="title_for_tel" id="title_for_tel">
+                        </div>
+                        <div class="form-group">
+                            <label for="desc_for_tel">توضیح تلگرام</label>
+                            <textarea class="form-control" name="desc_for_tel" id="desc_for_tel">{{ $item->desc_for_tel }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_for_tel">ای دی تلگرام</label>
+                            <input type="text" value="{{ $item->id_for_tel }}" class="form-control"
+                                name="id_for_tel" id="id_for_tel">
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary mt-2 w-100">ثبت تغییرات</button>

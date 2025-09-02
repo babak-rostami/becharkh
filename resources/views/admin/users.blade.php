@@ -13,6 +13,9 @@
     <div class="row justify-content-center">
 
         <div class="col-10 text-center">
+
+            <a class="btn btn-dark" href="{{ route('admin.users') . '/like' }}">آخرین کسایی که لایکشون رو دیدن</a>
+
             {{ $users->links() }}
 
             <div class="table-responsive mb-4 mt-4">
@@ -20,7 +23,12 @@
                     <thead>
                         <tr>
                             <th>ردیف</th>
+                            <th>پروفایل</th>
                             <th>نام کاربری</th>
+                            <th>بیوگرافی</th>
+                            @if ($type == 'like')
+                                <th>لایک</th>
+                            @endif
                             <th>ایمیل</th>
                             <th>وضعیت تایید ایمیل</th>
                             <th>عملیات</th>
@@ -30,7 +38,25 @@
                         @foreach ($users as $key => $user)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
+                                <td>
+                                    @if ($user->getImage() !== null)
+                                        <img style="width: 64px;height: 64px;object-fit: contain"
+                                            src="{{ $user->image() }}">
+                                    @else
+                                        ندارد
+                                    @endif
+                                </td>
                                 <td>{{ $user->username }}</td>
+                                <td>
+                                    @if (isset($user->body))
+                                        <span class="badge badge-success">نوشته</span>
+                                    @else
+                                        <span class="badge badge-danger">ندارد</span>
+                                    @endif
+                                </td>
+                                @if ($type == 'like')
+                                    <td>{{ $user->likes_count }}</td>
+                                @endif
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     @if (!isset($user->email_actived))
