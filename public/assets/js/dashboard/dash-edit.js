@@ -3,19 +3,36 @@ let uploadingUserImg = false;
 if ($("#user-image").length > 0) {
     user_img_input.addEventListener("change", () => {
 
-        if (uploadingUserImg) return;
-
         let select_img_btn = $('#uimg-select-btn');
         let select_img_btn_last_text = select_img_btn.text();
 
-        const formUploadImgData = new FormData();
         if (user_img_input.files.length === 0) {
             return;
         }
-        formUploadImgData.append("image", user_img_input.files[0]);
-        formUploadImgData.append("_token", dash_edit_csrf);
 
         uploadingUserImg = true;
+
+        const file = user_img_input.files[0];
+        const fileName = file.name.toLowerCase();
+        const mimeType = (file.type || "").toLowerCase();
+
+
+        if (fileName.endsWith(".heic") || fileName.endsWith(".heif") ||
+            mimeType === "image/heic" || mimeType === "image/heif") {
+            select_img_btn.text("فرمت HEIC/HEIF پشتیبانی نمی‌شود ❌");
+            select_img_btn.addClass('uimg-select-btn-loading');
+            setTimeout(() => {
+                select_img_btn.text(select_img_btn_last_text);
+                select_img_btn.removeClass('uimg-select-btn-loading');
+                $('#user-image-input').val('');
+                uploadingUserImg = false;
+            }, 4000);
+            return; // کلا دیگه سمت سرور ارسال نشه
+        }
+
+        const formUploadImgData = new FormData();
+        formUploadImgData.append("image", file);
+        formUploadImgData.append("_token", dash_edit_csrf);
 
         $.ajax({
             url: '/upload-user-image',
@@ -31,13 +48,19 @@ if ($("#user-image").length > 0) {
                 select_img_btn.text(select_img_btn_last_text);
                 select_img_btn.removeClass('uimg-select-btn-loading');
                 user_img_preview.src = data.filePath + '?v=' + new Date().getTime();
-            },
-            error: function () {
-                select_img_btn.text(select_img_btn_last_text);
-                select_img_btn.removeClass('uimg-select-btn-loading');
-            },
-            complete: function () {
                 uploadingUserImg = false;
+            },
+            error: function (xhr, status, error) {
+                let msg = "خطای ناشناخته‌ای.";
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                }
+                select_img_btn.text(msg);
+                setTimeout(() => {
+                    select_img_btn.text(select_img_btn_last_text);
+                    select_img_btn.removeClass('uimg-select-btn-loading');
+                    uploadingUserImg = false;
+                }, 4000);
             }
         });
     });

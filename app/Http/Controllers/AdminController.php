@@ -13,6 +13,7 @@ use App\Models\MongoBlog;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoItem;
+use App\Models\MongoItemTelNumber;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
 use App\Models\MongoVideo;
@@ -42,9 +43,10 @@ class AdminController extends Controller
         $user_notifs_count = UserNotification::where('unread', 1)->count();
         $user_new_imgs_count = MongoUser::where('new_img', 1)->count();
         $nac_coms_count = MongoCategoryComment::where('status', 0)->count();
+        $itn_count = MongoItemTelNumber::count();
         return view(
             'admin.dashboard',
-            compact('user_notifs_count', 'user_new_imgs_count', 'nac_coms_count', 'cun_count', 'site_errors_count', 'search_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
+            compact('user_notifs_count', 'itn_count', 'user_new_imgs_count', 'nac_coms_count', 'cun_count', 'site_errors_count', 'search_count', 'cat_waiting_count', 'videoNotAcceptedCount', 'itemNotAccepted', 'notAcceptedQuestions')
         );
     }
 

@@ -184,7 +184,7 @@ class AffilateService
         return $affiliates;
     }
 
-    public function suggestForQuestion($question_id, $category = null, $item = null)
+    public function suggestForQuestion($question_id, $adCount, $category = null, $item = null)
     {
         $affiliates = Affilate::where('questions', $question_id)->where('status', 1)->with('video')->take(3)->get()->shuffle();
         foreach ($affiliates as $affiliate) {
@@ -192,9 +192,9 @@ class AffilateService
         }
 
         $aff_count = $affiliates->count();
-        if ($aff_count < 3) {
-            $new_affiliates = $this->suggestsForPages($category, $item, 5);
-            $affiliates = $affiliates->merge($new_affiliates)->unique()->take(3);
+        if ($aff_count < $adCount + 3) {
+            $new_affiliates = $this->suggestsForPages($category, $item, $adCount + 5);
+            $affiliates = $affiliates->merge($new_affiliates)->unique()->take($adCount + 3);
         }
         return $affiliates;
     }

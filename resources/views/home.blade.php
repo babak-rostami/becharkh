@@ -30,7 +30,7 @@
                 @endforeach
             @endif
 
-            {{-- <div class="row justify-content-center pb-3">
+            <div class="row justify-content-center pb-3">
                 <div class="col-12 mx-2 text-center">
                     <div class="bslider mt-4" id="cat-slider">
                         @foreach ($categories as $category)
@@ -52,7 +52,7 @@
                         @endforeach
                     </div>
                 </div>
-            </div> --}}
+            </div>
 
 
             <div class="row justify-content-center q-bg py-4">

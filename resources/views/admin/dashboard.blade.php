@@ -80,6 +80,12 @@
                 @endif
             </a>
 
+            <a class="btn btn-light" href="{{ route('item.tel.numbers.admin') }}">شماره های تلگرام
+                @if ($itn_count > 0)
+                    <span class="badge badge-danger">{{ $itn_count }}</span>
+                @endif
+            </a>
+
             <div class="modal fade" id="newitems" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">

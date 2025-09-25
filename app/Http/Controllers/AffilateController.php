@@ -282,7 +282,7 @@ class AffilateController extends Controller
                 $category = MongoCategory::find($categories[0]);
                 $address = $category->slug;
             }
-            $images = app(InputImagesController::class)->setImagesArrayForStore($request->images, 'product', $address);
+            $images = app(InputImagesController::class)->setImagesArrayForStore($request->images, 'affilate', $address);
             $affilate->iimages = $images; // فیلد json
         }
 

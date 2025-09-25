@@ -201,8 +201,14 @@ class SiteCategoryController extends Controller
         if ($request->title_in_comment) {
             $category->title_in_comment = $request->title_in_comment;
         }
+        if ($request->title_in_comment_noi) {
+            $category->title_in_comment_noi = $request->title_in_comment_noi;
+        }
         if ($request->desc_in_comment) {
             $category->desc_in_comment = $request->desc_in_comment;
+        }
+        if ($request->desc_in_comment_noi) {
+            $category->desc_in_comment_noi = $request->desc_in_comment_noi;
         }
         if ($request->desc_in_comment_editor) {
             $category->desc_in_comment_editor = $request->desc_in_comment_editor;

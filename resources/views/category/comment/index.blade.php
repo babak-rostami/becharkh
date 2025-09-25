@@ -239,7 +239,7 @@
                 </div>
             @endif --}}
 
-            @if (isset($item) && isset($item->id_for_tel))
+            @if (isset($item) && $item->feature_id == '6682148710cf783aeb0ef6ce')
                 @include('item.telegram')
             @else
                 @include('mainPart.mainPage.add-to-home')

@@ -44,6 +44,7 @@ use App\Http\Controllers\MigrateToMongoController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ModelDatailController;
 use App\Http\Controllers\MongoItemTagController;
+use App\Http\Controllers\MongoItemTelNumberController;
 use App\Http\Controllers\PageErrorController;
 use App\Http\Controllers\ProductCommentController;
 use App\Http\Controllers\ProductCommentLikeController;
@@ -305,6 +306,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('feature-item-destroy/{item_id}', [CategoryFeatureItemController::class, 'destroyItemAdmin'])->name('feature.item.destroy.admin');
     Route::post('item-reset-suggests', [CategoryFeatureItemController::class, 'itemResetSuggests'])->name('item.reset.suggests.admin');
 
+    Route::get('itel-numbers', [MongoItemTelNumberController::class, 'indexAdmin'])->name('item.tel.numbers.admin');
+    Route::get('itel-numbers-destroy/{id}', [MongoItemTelNumberController::class, 'destroy'])->name('itel.numbers.destroy.admin');
 
     Route::get('item-tags/{id?}', [MongoItemTagController::class, 'index'])->name('item.tags.admin');
     Route::post('item-tag-store', [MongoItemTagController::class, 'store'])->name('item.tag.store.admin');
@@ -384,6 +387,8 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('new-question/{category_slug?}', [QuestionController::class, 'create'])->name('question.create');
 
     Route::get('fifil-load-items', [CategoryFeatureController::class, 'fifilLoadItems'])->name('fifil.load.items');
+
+    Route::post('item-tel-save-number', [MongoItemTelNumberController::class, 'saveNumber'])->name('item.tel.save.number');
 });
 
 Route::middleware(['user'])->group(function () {

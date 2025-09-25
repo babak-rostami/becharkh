@@ -222,7 +222,7 @@ class UserController extends Controller
             !$user->likes_count_updated_at ||
             now()->diffInHours($user->likes_count_updated_at) >= 1
         ) {
-            $user_comments = MongoCategoryComment::where('parent_id', null)->where('user_id', $user->id)->get();
+            $user_comments = MongoCategoryComment::where('user_id', $user->id)->get();
             $user_likes = $user_comments->sum('like_count');
 
             if ($user_likes > 0) {
@@ -251,14 +251,26 @@ class UserController extends Controller
                 $basefilename = $user->username . rand(1000, 9999) . time();
             }
 
-            //main image
-            $filename = $basefilename . '.webp';
-            $user->image = $path . $filename;
-            $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
+            // نوع پسوند فایل
+            $ext = strtolower($cover->getClientOriginalExtension()); // اضافه شد
+            // لیست فرمت‌های قابل پشتیبانی توسط Intervention
+            $supported = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']; // اضافه شد
 
-            //thum image
-            $filename2 = $basefilename . '2.webp';
-            $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
+            if (in_array($ext, $supported)) {
+                //main image
+                $filename = $basefilename . '.webp';
+                $user->image = $path . $filename;
+                $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
+
+                //thumb image
+                $filename2 = $basefilename . '2.webp';
+                $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
+            } else {
+                return response()->json([
+                    'success' => 0,
+                    'message' => 'فرمت HEIC پشتیبانی نمی‌شود',
+                ], 415); // Unsupported Media Type
+            }
 
             $user->new_img = 1;
             $user->update();

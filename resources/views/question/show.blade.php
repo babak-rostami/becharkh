@@ -90,7 +90,7 @@
 
         <div class="col-12 text-center mb-3">
             @include('mainPart.mainPage.cat-slider', [
-                'page' => 'show_blog',
+                'page' => 'show_question',
                 'suggetItems' => isset($suggetItems) ? $suggetItems : null,
                 'suggestCats' => isset($suggestCats) ? $suggestCats : null,
             ])
@@ -139,8 +139,8 @@
 
                 <div class="col-12 mt-2">
                     <h1 id="page-title" class="bold-font-title">{{ $question->title }}</h1>
-                    @if ($question->editor)
-                        <div class="question-editor">{!! $question->editor !!}</div>
+                    @if ($content)
+                        <div class="question-editor">{!! $content !!}</div>
                     @else
                         <div class="question-editor">{{ $question->body }}</div>
                     @endif
@@ -165,44 +165,45 @@
             @endif
 
             @if (isset($item))
-                @if (isset($item->id_for_tel))
+                {{-- @if ($item->feature_id == '6682148710cf783aeb0ef6ce')
                     @include('item.telegram')
-                @else
-                    <div class="text-center py-4 px-2 mt-3" id="itempl-div"
-                        style="--itempl-div-bg-url: url('{{ $item->image() }}')">
-                        <span id="itempl-title">{{ $item->full_title ?? $item->title }}</span>
-                        <span id="itempl-desc">گروه حل مشکلات و تبادل تجربیات کاربران در مورد
-                            {{ $item->full_title ?? $item->title }}</span>
-                        <a class="btn btn-lg btn-light mt-3" href="{{ $item->withParentsCommentUrl() }}">ورود به گروه
-                            <img loading="lazy" src="{{ $ftp_path . 'files/other/images/left-arrow.png' }}" alt="next">
-                        </a>
-                    </div>
-                @endif
+                @else --}}
+                <div class="text-center py-4 px-2 mt-3" id="itempl-div"
+                    style="--itempl-div-bg-url: url('{{ $item->image() }}')">
+                    <span id="itempl-title">{{ $item->full_title ?? $item->title }}</span>
+                    <span id="itempl-desc">گروه حل مشکلات و تبادل تجربیات کاربران در مورد
+                        {{ $item->full_title ?? $item->title }}</span>
+                    <a class="btn btn-lg btn-light mt-3" href="{{ $item->withParentsCommentUrl() }}">ورود به گروه
+                        <img loading="lazy" src="{{ $ftp_path . 'files/other/images/left-arrow.png' }}" alt="next">
+                    </a>
+                </div>
+                {{-- @endif --}}
+            @endif
 
-                {{-- پاسخ ها --}}
+            {{-- پاسخ ها --}}
 
-                @include('question.comment-items', [
-                    'comments' => $answers,
-                    'page' => 'question',
-                ])
-                {{-- @include('question.answers') --}}
-                @include('mainPart.gallery')
-                @include('category.rcats')
+            @include('question.comment-items', [
+                'comments' => $answers,
+                'page' => 'question',
+            ])
+            {{-- @include('question.answers') --}}
+            @include('mainPart.gallery')
+            @include('category.rcats')
 
-                @if (!$questions->isEmpty())
-                    @foreach ($questions as $ques)
-                        <a class="questions-box" href="{{ route('question.show', $ques->slug2) }}">
-                            @if ($ques->getImage())
-                                <img class="lazy-load hop-img" data-src="{{ $ques->image() }}" alt="{{ $ques->title }}">
-                            @endif
-                            <h2 class="sq-item-title">{{ $ques->sug_title ?? $ques->title }}</h2>
-                            @if (isset($ques->answer))
-                                <span class="c-shortans">-{{ $ques->answer }}
-                                </span>
-                            @endif
-                        </a>
-                    @endforeach
-                @endif
+            @if (!$questions->isEmpty())
+                @foreach ($questions as $ques)
+                    <a class="questions-box" href="{{ route('question.show', $ques->slug2) }}">
+                        @if ($ques->getImage())
+                            <img class="lazy-load hop-img" data-src="{{ $ques->image() }}" alt="{{ $ques->title }}">
+                        @endif
+                        <h2 class="sq-item-title">{{ $ques->sug_title ?? $ques->title }}</h2>
+                        @if (isset($ques->answer))
+                            <span class="c-shortans">-{{ $ques->answer }}
+                            </span>
+                        @endif
+                    </a>
+                @endforeach
+            @endif
 
         </div>
     </div>

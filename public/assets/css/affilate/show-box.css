@@ -93,7 +93,7 @@
 [id^="affil-gallery-"] {
     width: 100%;
     overflow-x: auto;
-    display: flex;
+    white-space: nowrap;
     margin-bottom: 16px;
 }
 

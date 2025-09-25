@@ -28,14 +28,14 @@ class IndexController extends Controller
     {
         // $products = Affilate::orderBy('created_at', 'desc')->where('google_index', 1)->where('status', 1)->take(15)->get();
 
-        // $suggests = $suggestionService->suggest();
-        // $categories = $suggests['cats'];
+        $suggests = $suggestionService->suggest();
+        $categories = $suggests['cats'];
 
         // $questions = MongoQuestion::where('status', 1)->orderBy('created_at', 'desc')->take(20)->with('user')->get();
 
         $hot_pages = Cache::get('hot_pages');
 
-        return view('home', compact('hot_pages'));
+        return view('home', compact('hot_pages', 'categories'));
         // return view('home', compact('questions', 'products', 'categories', 'hot_pages'));
     }
 
@@ -366,13 +366,21 @@ class IndexController extends Controller
         $cat_title = $category->full_title ?? $category->title;
         $result['title'] = $cat_title;
 
-        $result['meta_title'] = isset($category->title_in_comment)
-            ? str_replace("*", $cat_title, $category->title_in_comment)
-            : "نظرات کاربران درباره " . $cat_title;
+        if (isset($category->title_in_comment_noi)) {
+            $result['meta_title'] = str_replace("*", $cat_title, $category->title_in_comment_noi);
+        } else {
+            $result['meta_title'] = isset($category->title_in_comment)
+                ? str_replace("*", $cat_title, $category->title_in_comment)
+                : "نظرات کاربران درباره " . $cat_title;
+        }
 
-        $result['meta_desc'] = isset($category->desc_in_comment)
-            ? str_replace("*", $cat_title, $category->desc_in_comment)
-            : "بحث و گفتگو با موضوع  " . $cat_title;
+        if ($category->desc_in_comment_noi) {
+            $result['meta_desc'] = str_replace("*", $cat_title, $category->desc_in_comment_noi);
+        } else {
+            $result['meta_desc'] = isset($category->desc_in_comment)
+                ? str_replace("*", $cat_title, $category->desc_in_comment)
+                : "بحث و گفتگو با موضوع  " . $cat_title;
+        }
 
         return $result;
     }

@@ -182,6 +182,16 @@ setTimeout(() => {
     }
 }, 1000);
 
+if (typeof page !== "undefined") {
+    if (page == "comment" || page == "show_question" || page == "show_product")
+        $(document).ready(function () {
+            $('#cm-input').on('input', function () {
+                $(this).css('height', 'auto');
+                $(this).css('height', Math.max(this.scrollHeight, 100) + 'px');
+            });
+        });
+}
+
 let editorTimeoutId;
 
 function editorCommentSend() {

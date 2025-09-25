@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\Item\ChangeItemPageCount;
 use App\Models\Admin;
+use App\Models\Affilate;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoFollowItem;
@@ -413,6 +414,33 @@ class QuestionController extends Controller
         return redirect()->route('question.show', $question->slug2);
     }
 
+    private function injectAds($content, $all_affiliates, $chosen_affiliates)
+    {
+        $randomProducts = $all_affiliates->slice(3);
+        $show_link = 1;
+        $page = 'show_question';
+
+        $content = preg_replace_callback(
+            '/\[ad:([a-zA-Z0-9\-]+)\]/',
+            function ($matches) use ($chosen_affiliates, $page, $show_link) {
+                $id = $matches[1];
+                $affilate = $chosen_affiliates[$id] ?? null;
+                if (!$affilate) return '';
+                return view('affilate.show-box', compact('affilate', 'page', 'show_link'))->render();
+            },
+            $content
+        );
+
+        foreach ($randomProducts as $affilate) {
+            $adHtml = view('affilate.show-box', compact('affilate', 'page', 'show_link'))->render();
+            $content = preg_replace('/\[ad\]/', $adHtml, $content, 1);
+        }
+
+        $content = preg_replace('/\[ad(?::[a-zA-Z0-9\-]+)?\]/', '', $content);
+        return $content;
+    }
+
+
     public function show(SuggestionService $suggestionService, $category, $slug = null, $random = null)
     {
         if (!isset($category) || !isset($slug) || !isset($random)) {
@@ -472,16 +500,7 @@ class QuestionController extends Controller
             //     $advertise_page = route('ads.index', $category->slug);
             // }
         }
-        // $pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
-        //     ->where('just_this_page', 0)
-        //     ->take(20)
-        //     ->get();
-        // $pin_questions = $pin_questions->where('id', '!=', $question->id)->shuffle()->take(3);
-        // $pinQuestionIds = $pin_questions->pluck('_id');
         $questions = $questions->whereNotIn('_id', $question->id);
-        // $questions->each(function ($hq) {
-        //     $hq->load('user');
-        // });
         $suggests = $suggestionService->suggest($category, $item);
         if (isset($suggests['items'])) {
             $suggetItems = $suggests['items'];
@@ -505,13 +524,6 @@ class QuestionController extends Controller
             $question->update();
         }
 
-        if ($question->editor) {
-            $question->editor = preg_replace('/<img(.*?)src=\"(.*?)\"/', '<img$1class="lazy-load" data-src="$2"', $question->editor);
-        }
-
-        $affilateService = new AffilateService();
-        $affilates = $affilateService->suggestForQuestion($question->id, $category, $item);
-
         $currentQueryParams = [];
 
         if ($question->video) {
@@ -527,7 +539,23 @@ class QuestionController extends Controller
 
         $answers = app(CategoryCommentController::class)->sendCommentRefferIdToTop(request(), $answers);
 
+        $content = $question->editor;
+        preg_match_all('/\[ad\]/', $content, $adMatches);
+        preg_match_all('/\[ad:([a-zA-Z0-9\-]+)\]/', $content, $matches);
+        $q_chosen_ids = $matches[1] ?? [];
+        $chosen_affiliates = Affilate::whereIn('_id', $q_chosen_ids)->get()->keyBy('_id');
+        $adCount = count($adMatches[0]) + count($chosen_affiliates);
+        $affilateService = new AffilateService();
+        $all_affiliates = $affilateService
+            ->suggestForQuestion($question->id, $adCount, $category, $item)
+            ->whereNotIn('_id', $chosen_affiliates->keys());
+        $content = $this->injectAds($content, $all_affiliates, $chosen_affiliates);
+
+        $affilates = $all_affiliates->take(3);
+
+
         $compactVars = [
+            'content',
             'is_admin',
             'video',
             'question',

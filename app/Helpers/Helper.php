@@ -21,7 +21,7 @@ if (!function_exists('urlForSuggest')) {
         } elseif ($page == 'comment') {
             $url = route('question.index', $suggestCat->slug) . '?s=1';
         } elseif ($page == 'forum') {
-            $url = route('ads.index', $suggestCat->slug);
+            $url = route('question.index', $suggestCat->slug);
         } elseif ($page == 'blog-index') {
             $url = route('blog.index', $suggestCat->slug);
         } elseif ($page == 'show_blog') {

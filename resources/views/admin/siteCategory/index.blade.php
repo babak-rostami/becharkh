@@ -271,11 +271,20 @@
                             <input type="text" class="form-control" name="title_in_comment" id="title_in_comment"
                                 value="{{ $selectedCat->title_in_comment }}">
                         </div>
+                        <div class="form-group">
+                            <label for="title_in_comment_noi">متا تایتل نظرات اگه آیتم نداشت</label>
+                            <input type="text" class="form-control" name="title_in_comment_noi"
+                                id="title_in_comment_noi" value="{{ $selectedCat->title_in_comment_noi }}">
+                        </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
                             <label for="desc_in_comment">متا دسکریپشن نظرات کاربران</label>
                             <textarea class="form-control" name="desc_in_comment" id="desc_in_comment">{{ $selectedCat->desc_in_comment }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="desc_in_comment_noi">متا دسکریپشن نظرات اگه آیتم نداشت</label>
+                            <textarea class="form-control" name="desc_in_comment_noi" id="desc_in_comment_noi">{{ $selectedCat->desc_in_comment_noi }}</textarea>
                         </div>
                         <div class="form-group">
                             <label>دسکریپشن نظرات ادیتور</label>

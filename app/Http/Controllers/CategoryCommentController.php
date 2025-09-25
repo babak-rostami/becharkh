@@ -94,7 +94,7 @@ class CategoryCommentController extends Controller
             $comments = collect();
 
             if (isset($childFeature)) {
-                $item = MongoItem::where('feature_id', $childFeature->id)->where('slug', $request[$childFeature->slug])->first();
+                $item = MongoItem::where('feature_id', $childFeature->id)->where('slug', $request[$childFeature->slug])->with('parent')->first();
                 if ($childFeature->has_follow) {
                     $followFeature = $childFeature;
                 }
@@ -116,6 +116,7 @@ class CategoryCommentController extends Controller
             if ($comments->isEmpty()) {
                 $comments = MongoCategoryComment::orderBy('created_at', 'desc')
                     ->whereNull('parent_id')
+                    ->where('category_id', $category->id)
                     ->take(20)
                     ->with('user')
                     ->get();

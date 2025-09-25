@@ -4,10 +4,20 @@
         <span class="breadcr-devider">></span>
         @switch($page)
             @case('comment')
-                <a class="breadcr" href="{{ route('question.index') . '?s=1' }}">انجمن</a>
+                <a class="breadcr" href="{{ route('question.index') . '?s=1' }}">نظرات کاربران</a>
                 <span class="breadcr-devider">></span>
-                <a class="breadcr"
-                    href="{{ route('question.index', $category->slug) . '?s=1' }}">{{ $category->full_title ?? $category->title }}</a>
+                @if (!isset($item))
+                    <span>{{ $category->full_title ?? $category->title }}</span>
+                @else
+                    <a class="breadcr"
+                        href="{{ route('question.index', $category->slug) . '?s=1' }}">{{ $category->full_title ?? $category->title }}</a>
+                    @if (isset($item->parent))
+                        <span class="breadcr-devider">></span>
+                        <a class="breadcr" href="{{ $item->parent->withParentsCommentUrl() }}">{{ $item->parent->title }}</a>
+                    @endif
+                    <span class="breadcr-devider">></span>
+                    <span>{{ $item->full_title ?? $item->title }}</span>
+                @endif
             @break
 
             @case('forum')
@@ -58,6 +68,7 @@
                 <a class="breadcr"
                     href="{{ route('ads.index', $category->slug) }}">{{ $category->full_title ?? $category->title }}</a>
             @break
+
         @endswitch
     </div>
 @else
