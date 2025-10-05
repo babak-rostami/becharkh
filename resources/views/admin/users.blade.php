@@ -29,6 +29,9 @@
                             @if ($type == 'like')
                                 <th>لایک</th>
                             @endif
+                            @if ($type == 'update')
+                                <th>آپدیت</th>
+                            @endif
                             <th>ایمیل</th>
                             <th>وضعیت تایید ایمیل</th>
                             <th>عملیات</th>
@@ -56,6 +59,17 @@
                                 </td>
                                 @if ($type == 'like')
                                     <td>{{ $user->likes_count }}</td>
+                                @endif
+                                @if ($type == 'update')
+                                    @if ($user->update == 1)
+                                        نام
+                                    @elseif($user->update == 2)
+                                        تلفن
+                                    @elseif($user->update == 3)
+                                        بیوگرافی
+                                    @elseif($user->update == 4)
+                                        عکس
+                                    @endif
                                 @endif
                                 <td>{{ $user->email }}</td>
                                 <td>

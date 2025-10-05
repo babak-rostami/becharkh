@@ -132,13 +132,25 @@
                 <div class="col-12 p-2 mt-3">
                     @include('modals.userdash', [
                         'dashuser' => $question->user,
-                        'lazyload' => 1,
-                        'itemid' => 'q' . $question->id,
+                        'lazyload' => 0,
                     ])
+                    {{-- <button class="qusr-link">
+                        <img alt="عکس {{ $question->user->name }}"
+                            class="@if ($question->user->getImage()) qusr-style
+                            @else
+                            dqusr-style @endif"
+                            src="{{ asset($question->user->thumb()) }}">
+                        <div class="qusr-name-div">
+                            <span class="qusr-username">{{ $question->user->username }}</span>
+                            <br>
+                            <span class="qusr-name">{{ $question->user->name }}</span>
+                        </div>
+                    </button> --}}
+
                 </div>
 
                 <div class="col-12 mt-2">
-                    <h1 id="page-title" class="bold-font-title">{{ $question->title }}</h1>
+                    <h1 id="page-title">{{ $question->title }}</h1>
                     @if ($content)
                         <div class="question-editor">{!! $content !!}</div>
                     @else

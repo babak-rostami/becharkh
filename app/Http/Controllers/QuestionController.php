@@ -463,7 +463,16 @@ class QuestionController extends Controller
         if (isset($items) && count($items) > 0) {
             $item_id = $items[0];
             $item = MongoItem::find($item_id);
-            $questions = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->where('status', 1)->take(10)->get();
+            $questions = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->where('status', 1)->take(15)->get();
+        }
+        if ($questions->isEmpty()) {
+            $questions = MongoQuestion::orderBy('created_at', 'desc')
+                ->where('category_id', $category->id)
+                ->where('status', 1)
+                ->take(50)
+                ->get()
+                ->shuffle()
+                ->take(20);
         }
         $features = $category->features();
         if (isset($item)) {

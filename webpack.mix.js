@@ -511,7 +511,11 @@ mix.minify(
 mix.minify(
     [
         "public/assets/style.css",
-        "public/assets/css/user/profile.css"],
+        "public/assets/css/user/profile.css",
+        "public/assets/css/survey/create.css",
+        "public/assets/css/survey/show.css",
+        "public/assets/css/category/comment/show-comments.css"
+    ],
     "public/mixassets/css/user/profile.min.css"
 );
 mix.minify(
@@ -711,7 +715,6 @@ mix.minify(
         "public/assets/css/pages/hot-pages.css",
         "public/assets/css/category/comment/uprof.css",
         "public/assets/css/item/page-item-link.css",
-        "public/assets/css/item/top-users.css",
         "public/assets/css/category/comment/show-comments.css"
     ],
     "public/mixassets/css/forum/show.min.css"

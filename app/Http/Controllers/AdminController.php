@@ -41,7 +41,11 @@ class AdminController extends Controller
         $search_count = UserSearch::count();
         $site_errors_count = PageError::count();
         $user_notifs_count = UserNotification::where('unread', 1)->count();
-        $user_new_imgs_count = MongoUser::where('new_img', 1)->count();
+        $user_new_imgs_count = MongoUser::where('update', 1)
+            ->where('update', 2)
+            ->where('update', 3)
+            ->where('update', 4)
+            ->count();
         $nac_coms_count = MongoCategoryComment::where('status', 0)->count();
         $itn_count = MongoItemTelNumber::count();
         return view(
@@ -192,9 +196,11 @@ class AdminController extends Controller
             $users = MongoUser::whereNotNull('likes_count')
                 ->orderBy('likes_count_updated_at', 'desc')
                 ->paginate(500);
+        } elseif ($type == 'update') {
+            $users = MongoUser::whereNotNull('update')
+                ->paginate(500);
         } else {
-            $users = MongoUser::orderByDesc('new_img')
-                ->orderBy('created_at', 'desc')
+            $users = MongoUser::orderBy('created_at', 'desc')
                 ->paginate(500);
         }
 

@@ -20,11 +20,14 @@
             <a href="{{ route('event.all') }}" class="btn btn-secondary ml-2">رویداد های اخیر<span
                     class="mx-2 badge badge-danger">{{ admin_notification_count() }}</span></a>
 
-            @if (auth('admin')->user()->type == 1)
-                <a class="btn btn-dark" href="{{ route('admin.users') }}">مدیریت کاربران
-                    <span class="badge badge-danger">{{ $user_new_imgs_count }}</span>
-                </a>
-            @endif
+            {{-- @if (auth('admin')->user()->type == 1) --}}
+            <a class="btn btn-dark" href="{{ route('admin.users') }}">مدیریت کاربران
+            </a>
+            {{-- @endif --}}
+
+            <a class="btn btn-light" href="{{ route('admin.users', 'update') }}">کاربران آپدیت شده
+                <span class="badge badge-danger">{{ $user_new_imgs_count }}</span>
+            </a>
 
             <a class="btn btn-dark" href="{{ route('cats.items.admin') }}">دسته بندی سایت
                 <span class="badge badge-danger">{{ $cat_waiting_count }}</span>

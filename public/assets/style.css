@@ -562,6 +562,20 @@ body {
     animation: bwiu-glow-anim 0.5s infinite alternate;
 }
 
+.table thead {
+    background-color: #444444;
+    color: #fff;
+    font-size: 20px;
+}
+
+.table td {
+    border-top: 1px solid #dfdfdf;
+    border-left: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
+    font-size: 20px;
+}
+
 @keyframes bwiu-glow-anim {
     0% {
         opacity: 0;

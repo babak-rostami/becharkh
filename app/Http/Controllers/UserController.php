@@ -196,15 +196,55 @@ class UserController extends Controller
     {
         $dashuser = MongoUser::where('username', $useranme)->first();
         if (isset($dashuser)) {
-            $showPostForDefault = 1;
-            $advertises = $dashuser->advertises;
-            $blogs = $dashuser->blogs;
-            if (count($blogs) == 0) {
-                if (count($advertises) > 0) {
-                    $showPostForDefault = 0;
+            $comments = MongoCategoryComment::orderBy('created_at', 'desc')
+                ->whereNull('parent_id')
+                ->where('user_id', $dashuser->id)
+                ->with('question')
+                ->get();
+
+            foreach ($comments as $comment) {
+                if (isset($comment->question_id)) {
+                    $comment_question = $comment->question;
+                    if (isset($comment_question)) {
+                        $comment->page_url = route('question.show', $comment_question->slug2) . '?cri=' . $comment->id;
+                    }
+                } else {
+                    if (isset($comment->items)) {
+                        $comment_item = $comment->getItems()->last();
+                        if (isset($comment_item)) {
+                            $comment->page_url = $comment_item->withParentsCommentUrl() . '&cri=' . $comment->id;
+                        } else {
+                            $comment_category = $comment->category;
+                            if (isset($comment_category)) {
+                                $comment->page_url = route('question.index', $comment_category->slug) . '?s=1' . '&cri=' . $comment->id;
+                            }
+                        }
+                    } else {
+                        $comment_category = $comment->category;
+                        if (isset($comment_category)) {
+                            $comment->page_url = route('question.index', $comment_category->slug) . '?s=1' . '&cri=' . $comment->id;
+                        }
+                    }
                 }
             }
-            return view('user.dashboard', compact('dashuser', 'tab', 'advertises', 'blogs', 'showPostForDefault'));
+
+            if (
+                !$dashuser->likes_count_updated_at ||
+                now()->diffInHours($dashuser->likes_count_updated_at) >= 1
+            ) {
+                $user_comments = MongoCategoryComment::where('user_id', $dashuser->id)->get();
+                $user_likes = $user_comments->sum('like_count');
+
+                if ($user_likes > 0) {
+                    $dashuser->likes_count = $user_likes;
+                    $dashuser->likes_count_updated_at = now();
+                    $dashuser->update();
+                }
+            } else {
+                $user_likes = $dashuser->likes_count;
+            }
+
+            return view('user.dashboard', compact('dashuser', 'comments', 'user_likes'));
         } else {
             abort(404);
         }
@@ -268,11 +308,11 @@ class UserController extends Controller
             } else {
                 return response()->json([
                     'success' => 0,
-                    'message' => 'فرمت HEIC پشتیبانی نمی‌شود',
+                    'message' => 'عکس با فرمت HEIC پشتیبانی نمی‌شود',
                 ], 415); // Unsupported Media Type
             }
 
-            $user->new_img = 1;
+            $user->update = 4;
             $user->update();
 
             $npath = asset($user->image());
@@ -337,7 +377,7 @@ class UserController extends Controller
                 'name.required' => 'نام نمی‌تواند خالی باشد.',
                 'name.max' => 'نام نباید بیشتر از 25 کاراکتر باشد.'
             ]);
-
+            $user->update = 1;
             $user->name = $validated['name'];
         }
 
@@ -348,7 +388,7 @@ class UserController extends Controller
                 'phone.required' => 'شماره تلفن نمی‌تواند خالی باشد.',
                 'phone.digits_between' => 'شماره تلفن باید حداکثر 15 رقم باشد.',
             ]);
-
+            $user->update = 2;
             $user->phone = $validated['phone'];
         }
 
@@ -358,7 +398,7 @@ class UserController extends Controller
             ], [
                 'body.required' => 'بیوگرافی نمی‌تواند خالی باشد.',
             ]);
-
+            $user->update = 3;
             $user->body = $validated['body'];
         }
 
@@ -423,7 +463,7 @@ class UserController extends Controller
 
         $user->update();
 
-        $user->unset('new_img');
+        $user->unset('update');
 
         if (isset($unset_is_fake)) {
             $user->unset('is_fake');

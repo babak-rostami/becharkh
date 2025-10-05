@@ -21,16 +21,24 @@
     color: #10478f;
 }
 [id^="affilb-body-"] {
-    font-size: 15px;
     margin-bottom: 12px;
     display: block;
     word-wrap: break-word;
     text-align: right;
 }
 
+[id^="affilb-body-"] p {
+    font-size: 18px;
+    line-height: 32px;
+}
+
 [id^="affilb-body-"] ol,
 [id^="affilb-body-"] ul {
     padding-inline-start: 24px !important;
+}
+[id^="affilb-body-"] li {
+    font-size: 18px;
+    line-height: 32px;
 }
 
 [id^="affilb-body-"] h2 {
@@ -47,6 +55,8 @@
     display: block;
     word-wrap: break-word;
     color: #000;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 8px;
 }
 
 [id^="affilb-link-"] {

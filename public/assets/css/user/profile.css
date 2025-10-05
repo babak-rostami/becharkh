@@ -38,3 +38,36 @@
     width: 100%;
     object-fit: contain;
 }
+
+.likes-count {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff4081;
+    background: #fff3f8;
+    padding: 4px 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(255, 64, 129, 0.3);
+    display: inline-block;
+    min-width: 36px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.likes-count:hover {
+    transform: scale(1.1);
+}
+
+#duser-no-coms-box {
+    text-align: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 45px 0;
+    margin-top: 36px;
+}
+
+#duser-no-coms-title {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 16px;
+}

@@ -7,6 +7,8 @@
 
 .comusr-name {
     font-weight: 500;
+    color: #555;
+    font-size: 14px;
 }
 
 .comusr-label {
@@ -51,4 +53,32 @@
     border-radius: 50%;
     background-color: #f1f1f1;
     border: 1px solid #d9ecff;
+}
+
+.comusr-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comusr-name-div {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+}
+
+.comusr-username {
+    font-weight: bold;
+    color: #222;
+    font-size: 15px;
+}
+
+.comusr-biography {
+    display: block;
+    white-space: nowrap;
+    background-color: #f1f1f1;
+    overflow: auto;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #000;
 }

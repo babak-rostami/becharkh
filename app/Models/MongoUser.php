@@ -18,6 +18,8 @@ class MongoUser extends Model implements AuthenticatableContract
     //2 حرفه ای
     //3 متخصص
 
+    // user update 1 = name    2 = phone    3 = body    4 = image
+
     use Authenticatable;
 
     protected $connection = 'mongodb';
