@@ -154,14 +154,6 @@ class QuestionController extends Controller
                     $page_intro_title = str_replace("*", $title, $followFeature->page_intro_title);
                     $page_intro_desc = str_replace("*", $title, $followFeature->page_intro_desc);
                 }
-                // if ($user) {
-                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                //     if (isset($follow)) {
-                //         $is_follow = 1;
-                //     } else {
-                //         $is_follow = 0;
-                //     }
-                // }
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if ($category->title_in_rtable) {
@@ -184,7 +176,6 @@ class QuestionController extends Controller
                 $suggestCats = $suggests['cats'];
             }
 
-            // $hotVideos = MongoVideo::random(15, ['pr_link' => 'notnull']);
             if (isset($item) && isset($followFeature)) {
                 $hotQuestions = $this->getHotQuestions($category, $item->id);
             } else {
@@ -192,7 +183,7 @@ class QuestionController extends Controller
             }
             //clean query for paginate url
             $reqs = $data->getCurrentUrlWithoutPage($request);
-            $questions = $this->paginateC($questions, 20, null, $reqs)->onEachSide(1);
+            $questions = $this->paginateC($questions, 40, null, $reqs)->onEachSide(1);
 
             $advertise_page = null;
             if (isset($item)) {
@@ -205,12 +196,6 @@ class QuestionController extends Controller
                 if ($category->has_ads) {
                     $advertise_page = $item->withParentsAdvertiseUrl();
                 }
-                // if (isset($item->videos)) {
-                //     $ivids = MongoVideo::find($item->videos)->shuffle()->first();
-                //     if (isset($ivids)) {
-                //         $item_video = $ivids;
-                //     }
-                // }
             } else {
                 if ($category->has_comments) {
                     $comment_page = route('question.index', $category->slug) . '?s=1';
@@ -224,12 +209,10 @@ class QuestionController extends Controller
             }
 
             $affilateService = new AffilateService();
-            $affilate = $affilateService->suggestForPages($category, $item);
+            $affilates = $affilateService->suggestsForPages($category, $item, 5);
 
             $features = $category->features();
             $currentQueryParams = $request->query();
-
-            // $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
                 'page_intro_title',
@@ -244,16 +227,9 @@ class QuestionController extends Controller
                 'category',
                 'title',
                 'currentQueryParams',
-                // 'selected_items',
             ];
-            // if (isset($features)) {
-            //     $compactVars[] = 'features';
-            // }
-            // if (isset($item_video)) {
-            //     $compactVars[] = 'item_video';
-            // }
-            if (isset($affilate)) {
-                $compactVars[] = 'affilate';
+            if (isset($affilates)) {
+                $compactVars[] = 'affilates';
             }
             if (isset($comment_page)) {
                 $compactVars[] = 'comment_page';
@@ -274,17 +250,15 @@ class QuestionController extends Controller
             $suggests = $suggestionService->suggest();
             $suggestCats = $suggests['cats'];
 
-            // $hotVideos = MongoVideo::random(15, ['pr_link' => 'notnull']);
             $hotQuestions = $this->getHotQuestions(null, null);
 
             $questions = $question_repository->getlastQuestions();
-            $questions = $this->paginateC($questions, 20, null, $request->url())->onEachSide(1);
+            $questions = $this->paginateC($questions, 40, null, $request->url())->onEachSide(1);
 
-            $comment_page = route('question.index') . '?s=1';
-            $advertise_page = route('ads.index');
-            $blog_page = route('blog.index');
+            $affilateService = new AffilateService();
+            $affilates = $affilateService->suggestsForPages(null, null, 5);
 
-            return view('question.index', compact('suggestCats', 'comment_page', 'blog_page', 'advertise_page', 'hotQuestions', 'data', 'questions'));
+            return view('question.index', compact('suggestCats', 'affilates', 'hotQuestions', 'data', 'questions'));
         }
     }
 
@@ -463,13 +437,13 @@ class QuestionController extends Controller
         if (isset($items) && count($items) > 0) {
             $item_id = $items[0];
             $item = MongoItem::find($item_id);
-            $questions = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->where('status', 1)->take(15)->get();
+            $questions = MongoQuestion::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item_id)->where('status', 1)->take(20)->get();
         }
         if ($questions->isEmpty()) {
             $questions = MongoQuestion::orderBy('created_at', 'desc')
                 ->where('category_id', $category->id)
                 ->where('status', 1)
-                ->take(50)
+                ->take(40)
                 ->get()
                 ->shuffle()
                 ->take(20);
@@ -477,37 +451,9 @@ class QuestionController extends Controller
         $features = $category->features();
         if (isset($item)) {
             $tab_title = $item->full_title ?? $item->title;
-            // if ($category->has_comments) {
-            //     $comment_page = $item->withParentsCommentUrl();
-            // }
-            // if ($category->has_forums) {
-            //     $forum_page = $item->withParentsForumUrl();
-            // }
-            // if ($category->has_blogs) {
-            //     $blog_page = $item->withParentsBlogUrl();
-            // }
-            // if ($category->has_ads) {
-            //     $advertise_page = $item->withParentsAdvertiseUrl();
-            // }
             $followFeature = $features->find($item->feature_id);
-            // if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
-            //     $page_intro_title = str_replace("*", $tab_title, $followFeature->page_intro_title);
-            //     $page_intro_desc = str_replace("*", $tab_title, $followFeature->page_intro_desc);
-            // }
         } else {
             $tab_title = $category->full_title ?? $category->title;
-            // if ($category->has_comments) {
-            //     $comment_page = route('question.index', $category->slug) . '?s=1';
-            // }
-            // if ($category->has_forums) {
-            //     $forum_page = route('question.index', $category->slug);
-            // }
-            // if ($category->has_blogs) {
-            //     $blog_page = route('blog.index', $category->slug);
-            // }
-            // if ($category->has_ads) {
-            //     $advertise_page = route('ads.index', $category->slug);
-            // }
         }
         $questions = $questions->whereNotIn('_id', $question->id);
         $suggests = $suggestionService->suggest($category, $item);
@@ -607,18 +553,19 @@ class QuestionController extends Controller
 
     public function create(Request $request)
     {
-        $categories = MongoCategory::where('status', 1)->where('is_active', 1)->get();
-        $categories = $categories->map(function ($category) {
-            return [
-                'id' => $category->id,
-                'title' => $category->title,
-                'slug' => $category->slug,
-                'p_id' => $category->parent_id,
-                'ss' => $category->similar_search
-            ];
-        });
+        // $categories = MongoCategory::where('status', 1)->where('is_active', 1)->get();
+        // $categories = $categories->map(function ($category) {
+        //     return [
+        //         'id' => $category->id,
+        //         'title' => $category->title,
+        //         'slug' => $category->slug,
+        //         'p_id' => $category->parent_id,
+        //         'ss' => $category->similar_search
+        //     ];
+        // });
 
-        return view('question.create', compact('categories'));
+        return view('question.create');
+        // return view('question.create', compact('categories'));
     }
 
     public function createForAdmin(Request $request)
@@ -702,34 +649,40 @@ class QuestionController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                'title' => 'required',
-            ],
-            [
-                'title.required' => 'عنوان سوال را بنویسید',
-            ]
-        );
+        // $this->validate(
+        //     $request,
+        //     [
+        //         'title' => 'required',
+        //     ],
+        //     [
+        //         'title.required' => 'عنوان مطلب را بنویسید',
+        //     ]
+        // );
 
-        $category = MongoCategory::find($request->category_id);
+        // $category = MongoCategory::find($request->category_id);
 
-        if (!isset($category)) {
-            return back()->with('success', 'دسته بندی سوال را انتخاب کنید');
-        }
+        // if (!isset($category)) {
+        //     return back()->with('success', 'دسته بندی سوال را انتخاب کنید');
+        // }
 
         $user = auth('user')->user();
         $question = new MongoQuestion();
-        $question->category_id = $category->id;
-        if ($category->status) {
-            $question->status = 1;
-        } else {
-            $question->status = 0;
-        }
+        // $question->category_id = $category->id;
+        // if ($category->status) {
+        //     $question->status = 1;
+        // } else {
+        //     $question->status = 0;
+        // }
+
+        $question->category_id = '6682148210cf783aeb0ef63f';
+
+        $question->status = 0;
+
         $question->title = $request->title;
-        $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
-        $slug2 = $this->createQuestionSlug($category->slug, $slug);
-        $question->slug2 = $slug2;
+        $question->question_category = $request->question_category;
+        // $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
+        // $slug2 = $this->createQuestionSlug($category->slug, $slug);
+        // $question->slug2 = $slug2;
 
         $question->google_index = 0;
 
@@ -738,24 +691,23 @@ class QuestionController extends Controller
 
         $question->user_id = $user->id;
 
-        $addItemService = new AdditemsService();
-        $add_item_result = $addItemService->addForCreate($category, $request);
-        $items = $add_item_result['items'];
-        $items_title = $add_item_result['items_title'];
-        $changeStatus = $add_item_result['changeStatus'];
+        // $addItemService = new AdditemsService();
+        // $add_item_result = $addItemService->addForCreate($category, $request);
+        // $items = $add_item_result['items'];
+        // $items_title = $add_item_result['items_title'];
+        // $changeStatus = $add_item_result['changeStatus'];
 
-        if (count($items) > 0) {
-            $question->items = $items;
-            dispatch(new ChangeItemPageCount($items, 'question', 1))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
-        }
-        if (count($items_title) > 0) {
-            $question->items_title = $items_title;
-        }
+        // if (count($items) > 0) {
+        //     $question->items = $items;
+        //     dispatch(new ChangeItemPageCount($items, 'question', 1))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
+        // }
+        // if (count($items_title) > 0) {
+        //     $question->items_title = $items_title;
+        // }
 
-        $question->status = 0;
 
-        $survey_service = new SurveyService();
-        $survey_service->addSurveyTo($question, $request);
+        // $survey_service = new SurveyService();
+        // $survey_service->addSurveyTo($question, $request);
 
         $question->save();
 
@@ -766,11 +718,11 @@ class QuestionController extends Controller
         foreach ($admins as $admin) {
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' یک پرسش با عنوان ' . $request->title . ' منتشر کرد',
-                'route' => route('question.show', $question->slug2),
+                'route' => route('question.index.admin'),
             ]));
         }
 
-        return redirect()->route('user.dashboard.edit', "forum")->with('success', 'سوال شما با موفقیت در انجمن ثبت شد');
+        return redirect()->route('user.dashboard', $user->username)->with('success', 'مطلب با موفقیت ثبت شد');
     }
 
     public function indexAdmin($cat_slug = null)

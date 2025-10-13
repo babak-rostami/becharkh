@@ -92,9 +92,9 @@ class QuestionAnswerController extends Controller
             'route' => route('question.show', $question->slug2)
         ]));
 
-        if (isset($question->items)) {
-            dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-        }
+        // if (isset($question->items)) {
+        //     dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+        // }
 
         return back()->with('success', 'پاسخ شما با موفقیت ثبت شد');
     }
@@ -270,9 +270,9 @@ class QuestionAnswerController extends Controller
             }
         }
 
-        if (isset($question->items)) {
-            dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-        }
+        // if (isset($question->items)) {
+        //     dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+        // }
 
         return back()->with('success', 'پاسخ با موفقیت ثبت شد');
     }

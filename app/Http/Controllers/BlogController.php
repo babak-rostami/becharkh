@@ -449,9 +449,9 @@ class BlogController extends Controller
     //             $html = '<div class="col-12 text-right py-2 my-4">';
     //             if (isset($affilate->video_path)) {
     //                 $video_embed_route = route('video.embedb.show', ['category_slug' => $affilate->video->category->slug, 'video_slug' => $affilate->video->slug, 'random_id' => $affilate->video->random_id]);
-    //                 $html .= '<iframe class="shadow-sm p-0 m-0 mt-3 radius-10"';
+    //                 $html .= '<iframe class="shadow-sm p-0 m-0 radius-10"';
     //                 $html .= 'src="' . $video_embed_route . '"';
-    //                 $html .= 'style="border:none;" width="100%" height="292px" allowfullscreen></iframe>';
+    //                 $html .= 'style="border:none;" width="100%" height="400px" allowfullscreen></iframe>';
     //             } else {
     //                 $html .= '<img id="affilb-img" alt="' . $affilate->title . '" title="' . $affilate->title . '" src="' . $affilate->image() . '">';
     //             }

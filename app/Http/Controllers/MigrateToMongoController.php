@@ -15,6 +15,7 @@ use App\Models\CategoryCommentEditorImage;
 use App\Models\CategoryFeature;
 use App\Models\CategoryFeatureItem;
 use App\Models\Chat;
+use App\Models\ItemForTopUser;
 use App\Models\MongoAdvertise;
 use App\Models\MongoBlog;
 use App\Models\MongoBlogComment;
@@ -235,6 +236,17 @@ class MigrateToMongoController extends Controller
         //         }
         //     }
         // }
+
+
+        // $items = MongoItem::where('top_users', '!=', null)->get();
+        // foreach ($items as $item) {
+        //     $item->unset('top_users');
+        // }
+
+        // $item_for_top_user = new ItemForTopUser();
+        // $item_for_top_user->item_id = '66821a5910cf783aeb0f0c2f';
+        // $item_for_top_user->save();
+
 
         dd("done");
     }
@@ -763,6 +775,13 @@ class MigrateToMongoController extends Controller
                 'items' => 1
             ]);
         });
+        MongoCategoryComment::raw(function ($collection) {
+            $collection->createIndex([
+                'created_at' => -1,
+                'parent_id' => 1,
+                'user_id' => 1
+            ]);
+        });
         //////////////////////category comment likes
         MongoCategoryCommentLike::raw(function ($collection) {
             $collection->createIndex([
@@ -831,6 +850,12 @@ class MigrateToMongoController extends Controller
         });
         MongoQuestion::raw(function ($collection) {
             $collection->createIndex(['user_id' => 1]);
+        });
+        MongoQuestion::raw(function ($collection) {
+            $collection->createIndex([
+                'created_at' => -1,
+                'user_id' => 1
+            ]);
         });
         //////////////////////affilates
         Affilate::raw(function ($collection) {

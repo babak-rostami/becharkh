@@ -10,6 +10,7 @@ use App\Models\MongoCategoryComment;
 use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
+use App\Models\MongoQuestion;
 use App\Models\MongoUser;
 use App\Models\MongoWork;
 use App\Models\Question;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use stdClass;
 
 class UserController extends Controller
 {
@@ -195,59 +197,77 @@ class UserController extends Controller
     public function dashboard($useranme, $tab = null)
     {
         $dashuser = MongoUser::where('username', $useranme)->first();
-        if (isset($dashuser)) {
-            $comments = MongoCategoryComment::orderBy('created_at', 'desc')
-                ->whereNull('parent_id')
-                ->where('user_id', $dashuser->id)
-                ->with('question')
-                ->get();
+        if (!isset($dashuser)) {
+            abort(404);
+        }
+        $user_contents = collect();
+        $comments = MongoCategoryComment::orderBy('created_at', 'desc')
+            ->whereNull('parent_id')
+            ->where('user_id', $dashuser->id)
+            ->with('question')
+            ->get();
 
-            foreach ($comments as $comment) {
-                if (isset($comment->question_id)) {
-                    $comment_question = $comment->question;
-                    if (isset($comment_question)) {
-                        $comment->page_url = route('question.show', $comment_question->slug2) . '?cri=' . $comment->id;
-                    }
-                } else {
-                    if (isset($comment->items)) {
-                        $comment_item = $comment->getItems()->last();
-                        if (isset($comment_item)) {
-                            $comment->page_url = $comment_item->withParentsCommentUrl() . '&cri=' . $comment->id;
-                        } else {
-                            $comment_category = $comment->category;
-                            if (isset($comment_category)) {
-                                $comment->page_url = route('question.index', $comment_category->slug) . '?s=1' . '&cri=' . $comment->id;
-                            }
-                        }
+        foreach ($comments as $comment) {
+            if (isset($comment->question_id)) {
+                $comment_question = $comment->question;
+                if (isset($comment_question)) {
+                    $comment->page_url = route('question.show', $comment_question->slug2) . '?cri=' . $comment->id;
+                    $comment->page_img = $comment_question->image();
+                }
+            } else {
+                if (isset($comment->items)) {
+                    $comment_item = $comment->getItems()->last();
+                    if (isset($comment_item)) {
+                        $comment->page_url = $comment_item->withParentsCommentUrl() . '&cri=' . $comment->id;
+                        $comment->page_img = $comment_item->image();
                     } else {
                         $comment_category = $comment->category;
                         if (isset($comment_category)) {
                             $comment->page_url = route('question.index', $comment_category->slug) . '?s=1' . '&cri=' . $comment->id;
+                            $comment->page_img = $comment_category->image();
                         }
+                    }
+                } else {
+                    $comment_category = $comment->category;
+                    if (isset($comment_category)) {
+                        $comment->page_url = route('question.index', $comment_category->slug) . '?s=1' . '&cri=' . $comment->id;
+                        $comment->page_img = $comment_category->image();
                     }
                 }
             }
-
-            if (
-                !$dashuser->likes_count_updated_at ||
-                now()->diffInHours($dashuser->likes_count_updated_at) >= 1
-            ) {
-                $user_comments = MongoCategoryComment::where('user_id', $dashuser->id)->get();
-                $user_likes = $user_comments->sum('like_count');
-
-                if ($user_likes > 0) {
-                    $dashuser->likes_count = $user_likes;
-                    $dashuser->likes_count_updated_at = now();
-                    $dashuser->update();
-                }
-            } else {
-                $user_likes = $dashuser->likes_count;
-            }
-
-            return view('user.dashboard', compact('dashuser', 'comments', 'user_likes'));
-        } else {
-            abort(404);
+            $user_content = new stdClass();
+            $user_content->type = 'comment';
+            $user_content->id = $comment->id;
+            $user_content->editor = $comment->editor;
+            $user_content->editor2 = $comment->editor2;
+            $user_content->body = $comment->body;
+            $user_content->iimages = $comment->iimages;
+            $user_content->replies_count = $comment->replies_count;
+            $user_content->page_url = $comment->page_url;
+            $user_content->page_img = $comment->page_img;
+            $user_content->created_at = $comment->created_at;
+            $user_contents->add($user_content);
         }
+        $questions = MongoQuestion::orderBy('created_at', 'desc')->where('user_id', $dashuser->id)->get();
+
+        foreach ($questions as $question) {
+            $user_content = new stdClass();
+            $user_content->type = 'question';
+            $user_content->id = $question->id;
+            $user_content->status = $question->status;
+            $user_content->title = $question->title;
+            $user_content->body = $question->body;
+            $user_content->answer_count = $question->answer_count;
+            $user_content->page_url = $question->status == 1 ? route('question.show', $question->slug2) : null;
+            $user_content->page_img = $question->image();
+            $user_content->created_at = $question->created_at;
+            $user_contents->add($user_content);
+        }
+
+        $user_contents = $user_contents->sortByDesc('created_at')->values();
+
+
+        return view('user.dashboard', compact('dashuser', 'user_contents'));
     }
 
     public function dashboardEdit($tab = null)

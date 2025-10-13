@@ -6,7 +6,7 @@
 @endphp
 <div class="row mx-0" id="commentsBox">
     @foreach ($comments as $count => $comment)
-        @if ($count == 5 || $count == 9 || $count == 14)
+        @if ($count == 5 || $count == 9 || $count == 14 || $count == 18 || $count == 22 || $count == 30)
             @if (isset($pin_questions) && $pin_questions->slice($pqnum, 1)->first() != null)
                 <div class="col-12 text-right py-2 px-0 mt-4">
                     @include('question.hot-question-item', [
@@ -23,6 +23,7 @@
                         'affilate' => $affilates->slice($affnum, 1)->first(),
                         'page' => 'comment',
                         'show_link' => 1,
+                        'show_video' => $count + 1 == 4 ? 1 : 0,
                     ])
                     @php $affnum += 1 @endphp
                 </div>

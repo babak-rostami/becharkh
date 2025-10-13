@@ -57,32 +57,17 @@
             ])
 
             @if (isset($category))
-                {{-- @if (isset($item_video))
-                    <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
-                        src="{{ route('video.embedb.show', $item_video->slug2) }}" style="border:none;" width="100%"
-                        height="292px" allowfullscreen></iframe>
-                @else --}}
                 @if (isset($item->images))
                     <div id="item-gallery">
                         <img id="item-img-0" fetchpriority="high" class="my-3"
                             onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
                             title="{{ $item->full_title ?? $item->title }}"
                             alt="عکس {{ $item->full_title ?? $item->title }}">
-                        {{-- @foreach ($item->images as $key => $img)
-                            <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!} class="my-3"
-                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
-                                src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
-                                alt="عکس {{ $item->full_title ?? $item->title }}">
-                        @endforeach --}}
                     </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
                         title="{{ $category->title }}" alt="{{ $category->title }}">
                 @endif
-                {{-- @endif --}}
-            @else
-                <img class="mb-3 mt-4" src="{{ $ftp_path . 'files/other/images/crtable.png' }}" title="انجمن"
-                    alt="انجمن">
             @endif
             @include('mainPart.gallery')
         </div>
@@ -90,16 +75,8 @@
 
     <div class="row bg-wht justify-content-center">
         <div class="col-12 col-md-10">
-            @include('mainPart.mainPage.pages-tabs', [
-                'page' => 'forum',
-                'item' => isset($item) ? $item : null,
-                'user' => isset($user) ? $user : null,
-                'is_follow' => isset($is_follow) ? $is_follow : null,
-            ])
 
-            <div class="row mt-4">
-                @include('item.top-users')
-            </div>
+            @include('item.top-users')
 
             @if (isset($category))
                 <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
@@ -109,26 +86,13 @@
                 <p class="text-right">انجمنی برای حل مشکلات و به اشتراک گذاشتن تجربیات و ایده ها</p>
             @endif
 
-            <a id="new-q-btn" class="btn btn-lg btn-primary" target="_blank" rel="nofollow"
+            {{-- <a id="new-q-btn" class="btn btn-lg btn-primary" target="_blank" rel="nofollow"
                 href="{{ isset($category) ? $category->newQuestionUrl($category->slug) : route('question.create') }}">
                 سوال جدید +
-            </a>
+            </a> --}}
 
             @include('category.rcats', ['page' => 'forum'])
 
-            {{-- <div class="row my-4 px-0">
-                <div class="col-12 text-center mt-2">
-                    <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
-                    <br>
-                    <img class="mt-3 lazy-load" data-src="{{ $ftp_path . 'files/other/images/darrow.gif' }}"
-                        alt="arrow down">
-                    <br>
-                    <a class="btn btn-lg btn-primary mt-4" rel="nofollow"
-                        href="{{ isset($category) ? $data->newQuestionUrl($category->slug) : route('question.create') }}">
-                        سوال جدید +
-                    </a>
-                </div>
-            </div> --}}
             @if (isset($page_intro_title) && isset($page_intro_desc))
                 <div id="page-g-div" class="text-center mt-3">
                     <img class="lazy-load" id="page-g-img"
@@ -139,7 +103,7 @@
             @endif
 
             <div class="row px-0 mt-3">
-                @if ($questions->count() > 0)
+                @if (!$questions->isEmpty())
                     @include('question.question-items', ['questions' => $questions])
                 @else
                     <div class="col-12 text-right">

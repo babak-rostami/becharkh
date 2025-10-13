@@ -110,32 +110,17 @@
             ])
 
             @if (isset($category))
-                {{-- @if (isset($item_video))
-                    <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
-                        src="{{ route('video.embedb.show', $item_video->slug2) }}" style="border:none;" width="100%"
-                        height="292px" allowfullscreen></iframe>
-                @else --}}
                 @if (isset($item->images))
                     <div id="item-gallery">
                         <img id="item-img-0" fetchpriority="high" class="my-3"
                             onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
                             title="{{ $item->full_title ?? $item->title }}"
                             alt="عکس {{ $item->full_title ?? $item->title }}">
-                        {{-- @foreach ($item->images as $key => $img)
-                            <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!} class="my-3"
-                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
-                                src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
-                                alt="عکس {{ $item->full_title ?? $item->title }}">
-                        @endforeach --}}
                     </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
                         title="{{ $category->title }}" alt="{{ $category->title }}">
                 @endif
-                {{-- @endif --}}
-            @else
-                <img class="mb-3 mt-4" src="{{ $ftp_path . 'files/other/images/cat-comments.png' }}" title="نظرات کاربران"
-                    alt="نظرات کاربران">
             @endif
             @include('mainPart.gallery')
         </div>
@@ -149,21 +134,6 @@
 
     <div class="row bg-wht justify-content-center" id="forum-line-height">
         <div class="col-12 col-md-10">
-            {{-- @include('mainPart.mainPage.pages-tabs', [
-                'page' => 'comment',
-                'item' => isset($item) ? $item : null,
-                'user' => isset($user) ? $user : null,
-                'is_follow' => isset($is_follow) ? $is_follow : null,
-            ]) --}}
-
-            {{-- @if (isset($page_intro_title) && isset($page_intro_desc))
-                <div id="page-g-div" class="text-center my-3">
-                    <img class="lazy-load" id="page-g-img"
-                        data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
-                    <span id="page-g-title">{{ $page_intro_title }}</span>
-                    <span id="page-g">{{ $page_intro_desc }}</span>
-                </div>
-            @else --}}
             <div class="mt-2" id="page-title-box">
                 @if (isset($category))
                     <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
@@ -226,24 +196,16 @@
                 </div>
             @endif
 
-            {{-- @if (isset($page_intro_title) && isset($page_intro_desc))
-                <div id="page-title-box">
-                    @if (isset($category))
-                        <h1 class="mt-4 text-right" id="page-title">{{ $meta_title }}</h1>
-                        <p class="textarea-preline text-right mt-2">{{ $meta_desc }}</p>
-                    @else
-                        <h1 class="mt-4 text-right" id="page-title">نظرات کاربران</h1>
-                        <p class="text-right mt-2">از تجربیات شخصی ، پیشنهادات و نظرات درباره مسائل روزمره خود بنویسید.
-                        </p>
-                    @endif
-                </div>
-            @endif --}}
-
-            @if (isset($item) && $item->feature_id == '6682148710cf783aeb0ef6ce')
-                @include('item.telegram')
+            @if (isset($item) && !empty($item->top_users))
+                @include('item.item_top_users', [
+                    'top_users' => $item->top_users,
+                ])
             @else
-                @include('mainPart.mainPage.add-to-home')
+                @if (isset($item) && $item->feature_id == '6682148710cf783aeb0ef6ce')
+                    @include('item.telegram')
+                @endif
             @endif
+            @include('mainPart.mainPage.add-to-home')
 
             @if (isset($item) && isset($item->tags_array))
                 <div id="item-tags-box">

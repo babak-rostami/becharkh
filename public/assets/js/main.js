@@ -118,9 +118,9 @@ $(document).ready(function () {
     });
 });
 
-function gtudash() {
-    if (is_user_login) {
-        window.location.href = window.location.origin + "/dashboard";
+function gtudash(username = null) {
+    if (username) {
+        window.location.href = window.location.origin + "/profile/" + username;
     } else {
         $("#login_user").modal("show");
         openCloseUserDashBox();

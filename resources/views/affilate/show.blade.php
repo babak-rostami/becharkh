@@ -51,7 +51,7 @@
                     'is_follow' => isset($is_follow) ? $is_follow : null,
                 ])
 
-                @include('affilate.show-box', [
+                @include('affilate.show-box-show', [
                     'affilate' => $product,
                     'page' => 'show_product',
                     'show_link' => 0,

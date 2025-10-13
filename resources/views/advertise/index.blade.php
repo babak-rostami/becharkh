@@ -53,9 +53,9 @@
 
             @if (isset($category))
                 {{-- @if (isset($item_video))
-                    <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
+                    <iframe class="shadow-sm p-0 m-0 radius-10"
                         src="{{ route('video.embedb.show', $item_video->slug2) }}" style="border:none;" width="100%"
-                        height="292px" allowfullscreen></iframe>
+                        height="400px" allowfullscreen></iframe>
                 @else --}}
                 @if (isset($item->images))
                     <div id="item-gallery">

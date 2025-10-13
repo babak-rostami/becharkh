@@ -38,6 +38,7 @@
     "/mixassets/js/admin/user/search.min.js": "/mixassets/js/admin/user/search.min.js",
     "/mixassets/js/video/embedb.min.js": "/mixassets/js/video/embedb.min.js",
     "/mixassets/js/video/show.min.js": "/mixassets/js/video/show.min.js",
+    "/mixassets/js/user/profile.min.js": "/mixassets/js/user/profile.min.js",
     "/mixassets/css/style.min.css": "/mixassets/css/style.min.css",
     "/mixassets/css/affilate/create.min.css": "/mixassets/css/affilate/create.min.css",
     "/mixassets/css/video/create.min.css": "/mixassets/css/video/create.min.css",

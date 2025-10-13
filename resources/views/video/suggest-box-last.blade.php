@@ -4,9 +4,9 @@
             @foreach ($hotVideos as $key => $hv)
                 @if ($key == 0)
                     <div class="col-12 text-right mb-3">
-                        <iframe class="shadow-sm p-0 m-0 mt-3 radius-10"
+                        <iframe class="shadow-sm p-0 m-0 radius-10"
                             src="{{ route('video.embedb.show', $hv->slug2) }}" style="border:none;" width="100%"
-                            height="292px" allowfullscreen></iframe>
+                            height="400" allowfullscreen></iframe>
 
                         <a id="s-video-url" class="decor-none" @if (!$hv->google_index) rel="nofollow" @endif
                             href="{{ route('video.show', $hv->slug2) }}">

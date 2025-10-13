@@ -71,8 +71,10 @@
                                         href="{{ route('admin.question.edit', $question->id) }}">ویرایش</a>
                                     <a href="{{ route('admin.question.email', $question->id) }}" class="btn btn-dark">ارسال
                                         ایمیل</a>
-                                    <a target="_blank" href="{{ route('question.show', $question->slug2) }}"
-                                        class="btn btn-secondary">مشاهده</a>
+                                    @if ($question->status == 1)
+                                        <a target="_blank" href="{{ route('question.show', $question->slug2) }}"
+                                            class="btn btn-secondary">مشاهده</a>
+                                    @endif
                                     <a class="btn btn-light"
                                         href="{{ route('question.answers.admin', $question->id) }}">نظرها</a>
                                 </td>

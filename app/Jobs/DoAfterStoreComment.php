@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Jobs\pages\UpdateHotPages;
 use App\Jobs\User\UpdateUserFollowItem;
 use App\Models\Admin;
+use App\Models\ItemForTopUser;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoItem;
@@ -88,9 +89,9 @@ class DoAfterStoreComment implements ShouldQueue
                 'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $object->title . ' منتشر کرد',
                 'route' => $route
             ]));
-            if (isset($object->items)) {
-                dispatch(new UpdateUserFollowItem('question_answer', $comment->id))->onQueue('becharkhsite');
-            }
+            // if (isset($object->items)) {
+            //     dispatch(new UpdateUserFollowItem('question_answer', $comment->id))->onQueue('becharkhsite');
+            // }
         } elseif ($page == 'comment') {
             $this->updateHotItems();
             if (isset($comment->parent_id)) {
@@ -117,8 +118,13 @@ class DoAfterStoreComment implements ShouldQueue
                 ]));
             }
 
-            if (isset($comment->items)) {
-                dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite');
+            if (isset($item)) {
+                $item_for_top_user = ItemForTopUser::where('item_id', $item->id)->first();
+                if (!isset($item_for_top_user)) {
+                    $item_for_top_user = new ItemForTopUser();
+                    $item_for_top_user->item_id = $item->id;
+                    $item_for_top_user->save();
+                }
             }
         }
     }

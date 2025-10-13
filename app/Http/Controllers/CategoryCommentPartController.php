@@ -11,7 +11,7 @@ class CategoryCommentPartController extends Controller
     {
         $comment = MongoCategoryComment::findOrFail($comment_id);
         $replies = $comment->replies()->where('status', '!=', 0)->with([
-            'user:id,username,name,image'
+            'user:id,username,name,image,body'
         ])->get([
             'id',
             'parent_id',

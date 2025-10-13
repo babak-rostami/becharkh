@@ -4,6 +4,21 @@
     height: 292px;
 }
 
+.pshbox {
+    text-align: center;
+    display: block;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    box-shadow: rgb(241, 241, 241) 0px 0px 20px 0px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(247, 247, 247);
+    border-image: initial;
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-decoration: none !important;
+}
+
 #affilb-img {
     background-color: #f1f1f1;
     border-radius: 8px;
@@ -24,7 +39,7 @@
     margin-bottom: 12px;
     display: block;
     word-wrap: break-word;
-    text-align: right;
+    text-align: center;
 }
 
 [id^="affilb-body-"] p {
@@ -35,6 +50,7 @@
 [id^="affilb-body-"] ol,
 [id^="affilb-body-"] ul {
     padding-inline-start: 24px !important;
+    list-style-type: none;
 }
 [id^="affilb-body-"] li {
     font-size: 18px;
@@ -57,6 +73,7 @@
     color: #000;
     border-bottom: 1px solid #f1f1f1;
     padding-bottom: 8px;
+    text-decoration: none !important;
 }
 
 [id^="affilb-link-"] {
@@ -136,6 +153,11 @@
 [id^="affil-gallery-"] img:hover,
 #product-vimg-div img:hover {
     border: 2px solid #007bff;
+}
+
+[id^="affil-gallery-"] a {
+    text-decoration: none !important;
+    display: inline-block;
 }
 
 .video-label {

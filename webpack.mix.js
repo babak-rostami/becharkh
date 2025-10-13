@@ -90,7 +90,8 @@ mix.minify(
         "public/assets/js/affilate/show-box.js",
         "public/assets/js/pages/share-page.js",
         "public/assets/js/pages/add-to-home.js",
-        "public/assets/js/category/comment/show-comments.js"
+        "public/assets/js/category/comment/show-comments.js",
+        "public/assets/js/item/item-top-users.js"
     ],
     "public/mixassets/js/category/comment/index.min.js"
 );
@@ -414,6 +415,14 @@ mix.minify(
     "public/mixassets/js/video/show.min.js"
 );
 
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/gallery/show.js"
+    ],
+    "public/mixassets/js/user/profile.min.js"
+);
+
 // for css //////////////////////////////////////////
 
 mix.minify(
@@ -512,9 +521,8 @@ mix.minify(
     [
         "public/assets/style.css",
         "public/assets/css/user/profile.css",
-        "public/assets/css/survey/create.css",
-        "public/assets/css/survey/show.css",
-        "public/assets/css/category/comment/show-comments.css"
+        "public/assets/css/category/comment/show-comments.css",
+        "public/assets/css/gallery/show.css"
     ],
     "public/mixassets/css/user/profile.min.css"
 );
@@ -601,6 +609,7 @@ mix.minify(
         "public/assets/css/pages/add-to-home.css",
         "public/assets/css/category/comment/uprof.css",
         "public/assets/css/category/comment/show-comments.css",
+        "public/assets/css/item/item-top-users.css"
     ],
     "public/mixassets/css/category/comment/index.min.css"
 );

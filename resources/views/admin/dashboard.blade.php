@@ -26,15 +26,21 @@
             {{-- @endif --}}
 
             <a class="btn btn-light" href="{{ route('admin.users', 'update') }}">کاربران آپدیت شده
-                <span class="badge badge-danger">{{ $user_new_imgs_count }}</span>
+                @if ($user_new_imgs_count)
+                    <span class="badge badge-danger">{{ $user_new_imgs_count }}</span>
+                @endif
             </a>
 
             <a class="btn btn-dark" href="{{ route('cats.items.admin') }}">دسته بندی سایت
-                <span class="badge badge-danger">{{ $cat_waiting_count }}</span>
+                @if ($cat_waiting_count)
+                    <span class="badge badge-danger">{{ $cat_waiting_count }}</span>
+                @endif
             </a>
 
             <a class="btn btn-light" href="{{ route('admin.category.comment.index') }}">مدیریت نظرات
-                <span class="badge badge-danger">{{ $nac_coms_count }}</span>
+                @if ($nac_coms_count)
+                    <span class="badge badge-danger">{{ $nac_coms_count }}</span>
+                @endif
             </a>
             <hr>
 

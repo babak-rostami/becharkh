@@ -152,12 +152,6 @@ class CategoryCommentController extends Controller
                         ->get()
                         ->shuffle();
                 }
-                // if (isset($item->videos)) {
-                //     $ivids = MongoVideo::find($item->videos)->shuffle()->first();
-                //     if (isset($ivids)) {
-                //         $item_video = $ivids;
-                //     }
-                // }
             } else {
                 $metaData = app(IndexController::class)->generateMetaDataForCat($category);
                 $title = $metaData['title'] ?? null;
@@ -177,14 +171,6 @@ class CategoryCommentController extends Controller
                 $suggestCats = $suggests['cats'];
             }
 
-            // if ($pin_questions->count() < 3) {
-            //     $other_pin_questions = MongoQuestion::select('_id', 'title', 'sug_title', 'slug2', 'answer', 'image')
-            //         ->where('just_this_page', 0)
-            //         ->take(20)
-            //         ->get();
-            //     $other_pin_questions = $other_pin_questions->shuffle();
-            //     $pin_questions = $pin_questions->merge($other_pin_questions)->unique('_id')->take(3);
-            // }
             $affilateService = new AffilateService();
             $affilates = $affilateService->suggestsForPages($category, $item, 3);
 
@@ -494,9 +480,9 @@ class CategoryCommentController extends Controller
             $this->sendUserNotification('ccomment', $user, $comment);
         }
 
-        if (isset($comment->items)) {
-            dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
-        }
+        // if (isset($comment->items)) {
+        //     dispatch(new UpdateUserFollowItem('ccomment', $comment->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
+        // }
 
         return redirect()->route('admin.category.comment.index')->with('success', 'نظر با موفقیت ثبت شد');
     }

@@ -5,7 +5,9 @@
     <div class="col-12 d-sm-none">
 
         <div class="row justify-content-center bottom-menu-box">
-            <div class="col-2 text-center buttom-menu-item p-2 overflow-hidden" onclick="gtudash()" id="bm_open_dashbaord">
+            <div class="col-2 text-center buttom-menu-item p-2 overflow-hidden"
+                @if ($user) onclick="gtudash('{{ $user->username }}')" @else onclick="gtudash()" @endif
+                id="bm_open_dashbaord">
                 @if ($user)
                     <img id="bm-user-img" alt="{{ $user->username }}" src="{{ asset($user->thumb()) }}">
                     <br>
@@ -27,25 +29,25 @@
             </div>
             <div class="col-2 text-center buttom-menu-item p-2">
                 @if ($user)
-                    @if (request()->is('favorite'))
-                        <a class="text-white text-decoration-none d-block">
-                            <img alt="favorite icon" src="{{ $ftp_path . 'files/other/images/foryou-blue.png' }}">
+                    @if (request()->is('new-question'))
+                        <span class="text-white text-decoration-none d-block">
+                            <img alt="favorite icon" src="{{ $ftp_path . 'files/other/images/add-20-blue.png' }}">
                             <br>
-                            <span class="active-btab-mobile">ذخیره</span>
-                        </a>
+                            <span class="active-btab-mobile">نوشتن</span>
+                        </span>
                     @else
-                        <a href="{{ route('favorite.index') }}" class="text-white text-decoration-none d-block">
-                            <img alt="favorite icon" src="{{ $ftp_path . 'files/other/images/foryou-gray.png' }}">
+                        <a href="{{ route('question.create') }}" class="text-white text-decoration-none d-block">
+                            <img alt="favorite icon" src="{{ $ftp_path . 'files/other/images/add-20-gray.png' }}">
                             <br>
-                            <span class="n-active-btab-mobile">ذخیره</span>
+                            <span class="n-active-btab-mobile">نوشتن</span>
                         </a>
                     @endif
                 @else
                     <a href="" class="c-bm-btn decor-none d-block" data-toggle="modal" data-dismiss="modal"
                         data-target="#login_user">
-                        <img alt="favorite icon" src="{{ $ftp_path . 'files/other/images/foryou-gray.png' }}">
+                        <img alt="favorite icon" src="{{ $ftp_path . 'files/other/images/add-20-gray.png' }}">
                         <br>
-                        <span class="n-active-btab-mobile">ذخیره</span>
+                        <span class="n-active-btab-mobile">نوشتن</span>
                     </a>
                 @endif
             </div>

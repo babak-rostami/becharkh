@@ -298,7 +298,7 @@ function editorQuestionUpdate() {
             error_span.text("عنوان سوال باید حداقل 20 کاراکتر باشد");
         }
     } else {
-        error_span.text("حداقل از یک پاراگراف استفاده کنید");
+        error_span.text("حداقل یک پاراگراف بنویسید");
     }
     clearTimeout(editorTimeoutId);
     error_span.css("display", "block");
@@ -314,36 +314,33 @@ function editorQuestionStore() {
     let comment_form = $("#qform");
     let error_span = $("#comeditor-msg");
     let editor_contents = comment_editor.getData();
+    let cat = $('#category_id');
     if (hasAtLeastOneParagraph(editor_contents)) {
         if ($("#title").val().length >= 20 && $("#title").val().length < 60) {
-            if (
-                $("#category_id")
-                    .val()
-                    .trim()
-            ) {
-                if (send_question_after_login == 1) {
-                    $("#login_user").modal("show");
-                } else {
-                    if ($("#sur-box").length && $("#sur-box").is(":visible")) {
-                        if (checkSurIsComplete()) {
-                            btn.hide();
-                            load_btn.show();
-                            setTimeout(() => {
-                                comment_form.submit();
-                            }, 3000);
-                            return;
-                        } else {
-                            error_span.text("بخش نظر سنجی را تکمیل کنید");
-                        }
-                    } else {
-                        btn.hide();
-                        load_btn.show();
-                        setTimeout(() => {
-                            comment_form.submit();
-                        }, 3000);
-                        return;
-                    }
-                }
+            if (!cat.length || (cat.val() || '').trim()) {
+                // if (send_question_after_login == 1) {
+                //     $("#login_user").modal("show");
+                // } else {
+                // if ($("#sur-box").length && $("#sur-box").is(":visible")) {
+                // if (checkSurIsComplete()) {
+                btn.hide();
+                load_btn.show();
+                setTimeout(() => {
+                    comment_form.submit();
+                }, 3000);
+                return;
+                // } else {
+                //     error_span.text("بخش نظر سنجی را تکمیل کنید");
+                // }
+                // } else {
+                //     btn.hide();
+                //     load_btn.show();
+                //     setTimeout(() => {
+                //         comment_form.submit();
+                //     }, 3000);
+                //     return;
+                // }
+                // }
             } else {
                 error_span.text("دسته بندی را انتخاب کنید");
             }
@@ -351,7 +348,7 @@ function editorQuestionStore() {
             error_span.text("عنوان سوال باید حداقل 20 کاراکتر باشد");
         }
     } else {
-        error_span.text("حداقل از یک پاراگراف استفاده کنید");
+        error_span.text("حداقل یک پاراگراف بنویسید");
     }
     clearTimeout(editorTimeoutId);
     error_span.css("display", "block");

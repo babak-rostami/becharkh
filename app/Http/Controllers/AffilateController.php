@@ -366,6 +366,7 @@ class AffilateController extends Controller
         $affilate = Affilate::find($id);
         $affilate->title = $request->title;
         $affilate->page_link = $request->page_link;
+        $affilate->play_video = (int) $request->play_video;
         $affilate->just_this_page = (int) $request->just_this_page;
         $affilate->google_index = (int)$request->google_index;
         $affilate->img_is_link = (int)$request->img_is_link;

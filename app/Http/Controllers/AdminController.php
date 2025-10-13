@@ -42,9 +42,9 @@ class AdminController extends Controller
         $site_errors_count = PageError::count();
         $user_notifs_count = UserNotification::where('unread', 1)->count();
         $user_new_imgs_count = MongoUser::where('update', 1)
-            ->where('update', 2)
-            ->where('update', 3)
-            ->where('update', 4)
+            ->orWhere('update', 2)
+            ->orWhere('update', 3)
+            ->orWhere('update', 4)
             ->count();
         $nac_coms_count = MongoCategoryComment::where('status', 0)->count();
         $itn_count = MongoItemTelNumber::count();

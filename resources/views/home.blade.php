@@ -30,6 +30,20 @@
                 @endforeach
             @endif
 
+            <div class="row justify-content-center mt-4 mb-2">
+                <div class="col-12 text-center">
+                    <h1 id="page-title">بچرخ</h1>
+                    <p class="mb-0" id="page-desc">هر سوالی جوابی داره</p>
+
+                    <img id="online-users-home-bicon" alt="online user"
+                        src="{{ $ftp_path . 'files/other/images/blue-circle.png' }}">
+                    <span id="online-users-home">
+                        {{ $online_user_count }} نفر آنلاین</span>
+                    <img id="online-users-home-bicon" alt="online user"
+                        src="{{ $ftp_path . 'files/other/images/blue-circle.png' }}">
+                </div>
+            </div>
+
             <div class="row justify-content-center pb-3">
                 <div class="col-12 mx-2 text-center">
                     <div class="bslider mt-4" id="cat-slider">
@@ -54,69 +68,8 @@
                 </div>
             </div>
 
-
-            <div class="row justify-content-center q-bg py-4">
-                <div class="col-12 text-center">
-                    <h1 id="page-title">بچرخ</h1>
-                    <p class="mb-0" id="page-desc">هر سوالی جوابی داره</p>
-
-                    <img id="online-users-home-bicon" alt="online user"
-                        src="{{ $ftp_path . 'files/other/images/blue-circle.png' }}">
-                    <span id="online-users-home">
-                        {{ $online_user_count }} نفر آنلاین</span>
-                    <img id="online-users-home-bicon" alt="online user"
-                        src="{{ $ftp_path . 'files/other/images/blue-circle.png' }}">
-                </div>
-                {{-- <div class="col-12 mt-4 px-0">
-                    <div class="bslider" id="question-slider">
-                        @foreach ($questions as $question)
-                            <div class="bslider-item mt-2 bg-wht">
-                                <a draggable="false" id="{{ $question->id }}"
-                                    href="{{ route('question.show', $question->slug2) }}" class="w-100 decor-none q-box">
-                                    @if ($question->getImage())
-                                        <img draggable="false" class="lazy-load hop-img"
-                                            data-src="{{ $question->image() }}" alt="{{ $question->title }}">
-                                    @endif
-                                    <span class="q-title">{{ $question->title }}</span>
-                                    <span class="q-ans">-{{ $question->answer }}</span>
-                                    <br>
-                                    @if (isset($question->items_title))
-                                        <div class="w-100 overflow-hidden">
-                                            @foreach ($question->items_title as $qi)
-                                                <span class="q-item-title">{{ $qi }}</span>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-                </div> --}}
-            </div>
-
-            {{-- <div class="row justify-content-center bg-wht py-4" id="blog-box">
-                <div class="col-12">
-                    <div class="bslider" id="blog-slider">
-                        @foreach ($products as $product)
-                            <div class="bslider-item blog-slider-item mx-4">
-                                <a class="blog-h-btn" draggable="false" id="product-{{ $product->id }}"
-                                    href="{{ route('product.show', $product->slug) }}">
-                                    <div class="bimg-box">
-                                        <img draggable="false" class="mb-2 radius-10 blog-image lazy-load"
-                                            alt="{{ $product->title }}" data-src="{{ $product->image }}">
-                                    </div>
-                                    <span class="blog-item-title">
-                                        {{ Str::limit($product->title, 75) }}
-                                    </span>
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div> --}}
-
             @if (isset($hot_pages))
-                <div class="row q-bg pt-4 justify-content-center">
+                <div class="row pt-4 justify-content-center">
                     @include('mainPart.hot-pages')
                 </div>
             @endif

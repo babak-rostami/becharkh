@@ -53,6 +53,21 @@ class AffilateService
             $aff_count = $affiliates->count();
         }
 
+        $first_affiliate = $affiliates->first();
+        if ($first_affiliate->play_video != 1) {
+            $first_affiliate = Affilate::where('just_this_page', 0)
+                ->where('status', 1)
+                ->where('play_video', 1)
+                ->with('video')
+                ->take(20)
+                ->get()
+                ->shuffle()
+                ->first();
+            if (isset($first_affiliate)) {
+                $affiliates = $affiliates->prepend($first_affiliate);
+            }
+        }
+
         foreach ($affiliates as $affiliate) {
             $affiliate->body = $this->modifyAffiliateBody($affiliate);
         }

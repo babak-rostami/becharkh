@@ -1,27 +1,30 @@
-<?php $count = 0; ?>
-@foreach ($questions as $question)
-    <?php $count += 1; ?>
-    @if ($count == 3)
-        @if (isset($affilate))
-            <div class="col-12 text-right py-2 mb-3">
+@php
+    $affnum = 0;
+    $count = 0;
+@endphp
+@foreach ($questions as $count => $question)
+    @if (isset($affilates) && $count != 0 && $count % 4 == 0)
+        @if ($affilates->slice($affnum, 1)->first() != null)
+            <div class="col-12 text-right py-2 px-0 mt-3">
                 @include('affilate.show-box', [
-                    'affilate' => $affilate,
-                    'page' => 'forum',
+                    'affilate' => $affilates->slice($affnum, 1)->first(),
+                    'page' => 'comment',
                     'show_link' => 1,
                 ])
+                @php $affnum += 1 @endphp
             </div>
         @endif
     @endif
-    <div class="col-12 text-right my-2">
-        <a class="p-2 question-box" href="{{ route('question.show', $question->slug2) }}">
+    <div class="col-12 col-md-6 text-right my-2">
+        <a class="p-2 hop-item" href="{{ route('question.show', $question->slug2) }}">
             @if ($question->getImage())
                 <img class="lazy-load hop-img" data-src="{{ $question->image() }}" alt="{{ $question->title }}">
             @endif
 
-            <h2 class="q-item-title my-2">{{ $question->sug_title ?? $question->title }}</h2>
+            <h2 class="hop-title my-2">{{ $question->sug_title ?? $question->title }}</h2>
 
             @if ($question->answer)
-                <span class="c-shortans">-{{ $question->answer }}
+                <span class="hop-body">{{ $question->answer }}
                 </span>
             @endif
 
@@ -35,14 +38,17 @@
         </a>
     </div>
 @endforeach
-@if ($count < 3)
-    @if (isset($affilate))
-        <div class="col-12 text-right py-2 mb-3">
+@while ($affnum != -1)
+    @if ($affnum != -1 && isset($affilates) && $affilates->slice($affnum, 1)->first() != null)
+        <div class="col-12 text-right py-2 px-0 mt-3">
             @include('affilate.show-box', [
-                'affilate' => $affilate,
+                'affilate' => $affilates->slice($affnum, 1)->first(),
                 'page' => 'comment',
                 'show_link' => 1,
             ])
+            @php $affnum += 1 @endphp
         </div>
+    @else
+        @php $affnum = -1 @endphp
     @endif
-@endif
+@endwhile

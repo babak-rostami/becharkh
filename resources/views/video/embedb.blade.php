@@ -16,7 +16,7 @@
 
 <body>
     @if (isset($video->video_path))
-        <video preload="none" id="video-s" playsinline controls data-poster="{{ asset($video->image()) }}">
+        <video preload="none" id="video-s" muted playsinline controls data-poster="{{ asset($video->image()) }}">
             <source src="{{ $video->videoPath() }}" type="video/mp4" />
         </video>
     @else

@@ -41,7 +41,7 @@
     id="blogform"
     @else
     id="cm_form" @endif
-    class="shadow-sm" method="POST" role="form" enctype="multipart/form-data">
+    method="POST" role="form" enctype="multipart/form-data">
 
     @csrf
 
@@ -66,6 +66,10 @@
         @case('edit_question_admin')
             {{ method_field('PUT') }}
             <input type="hidden" id="category_id" name="category_id" value="{{ $question->category_id }}">
+            <div class="form-group">
+                <label>موضوعی که کاربر نوشته</label>
+                <span>{{ $question->question_category }}</span>
+            </div>
             <div class="form-group">
                 @if ($question->getImage())
                     <img style="max-height: 256px; margin-bottom: 8px;" src="{{ $question->image() }}">
@@ -158,11 +162,10 @@
         @break
 
         @case('create_question')
-            <input type="hidden" name="category_id" id="category_id">
             <div class="form-group">
-                <label>عنوان پرسش</label>
+                <label>عنوان مطلب</label>
                 <input type="text" class="form-control required" oninput="countCharacters(this,20,60)" name="title"
-                    id="title" placeholder="عنوان سوال مثلا : علت صدای تق تق زیر داشبورد پژو 206"
+                    id="title" placeholder="عنوان مطلب مثلا : علت صدای تق تق زیر داشبورد پژو 206"
                     value="{{ old('title') }}">
                 <span id="title-error"></span>
                 <span id="charCountMin-title" class="input-char-min"></span>
@@ -429,6 +432,13 @@
                 <input type="text" class="form-control" name="link" id="link" value="{{ $affilate->link }}">
             </div>
             <div class="form-group">
+                <label>ویدیو پخش بشه؟</label>
+                <select class="form-control" name="play_video">
+                    <option value="0">نه</option>
+                    <option @if (isset($affilate->play_video) && $affilate->play_video == 1) selected @endif value="1">آره</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>لینک عمومی</label>
                 <select class="form-control" name="public_link">
                     <option value="">ندارد</option>
@@ -565,15 +575,23 @@
             <div class="col-12 mb-4 text-right" id="features-box">
             </div>
         </div>
-    @elseif($page == 'create_question_admin' || $page == 'create_question')
-        <label>توضیحات سوال</label>
+    @elseif($page == 'create_question_admin')
+        <label>متن اصلی</label>
         <textarea required class="form-control comment-input" id="cm-input" name="body"
-            placeholder="توضیحات سوال را اینجا بنویسید..."></textarea>
+            placeholder="در این قسمت توضیحات رو کامل‌ و با جزئیات بنویس"></textarea>
         @include('modals.create.select-category', ['categories' => $categories])
         <div class="row">
             <div class="col-12 mb-4 text-right" id="features-box">
             </div>
         </div>
+    @elseif($page == 'create_question')
+        <label>متن اصلی</label>
+        <textarea required class="form-control comment-input" id="cm-input" name="body"
+            placeholder="در این قسمت توضیحات رو کامل‌ و با جزئیات بنویس"></textarea>
+        <br>
+        <label>دسته بندی مطلب</label>
+        <input type="text" class="form-control" required name="question_category"
+            placeholder="موضوع اصلی مثلا : پژو 206، سامسونگ a55، مسافرت ترکیه و ...">
     @elseif($page == 'create_blog')
         <label>پست رو اینجا بنویس</label>
         <textarea class="form-control" id="cm-input" name="body"
@@ -617,18 +635,10 @@
             ویرایش سوال
         </button>
     @elseif($page == 'create_question_admin' || $page == 'create_question')
-        @include('survey.surbox')
         <div class="d-flex">
-            <button type="button" class="btn btn-primary my-2 flex-grow-1" onclick="editorQuestionStore()"
+            <button type="button" class="btn btn-lg btn-primary mb-2 mt-4 w-100" onclick="editorQuestionStore()"
                 id="comment-editor-btn">
-                <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
-                    alt="send">
-                ثبت سوال
-            </button>
-            <input type="hidden" id="has_survey" name="has_survey" value="0">
-            <button class="btn btn-light my-2" id="add-survey-btn" onclick="addSurvey()" type="button">
-                <img data-src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" class="lazy-load"
-                    alt="survey">
+                انتشار مطلب
             </button>
         </div>
     @elseif($page == 'create_blog')
@@ -640,8 +650,7 @@
     @elseif($page == 'edit_blog')
         <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="editorBlogUpdate()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
-                alt="send">
+            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
             ویرایش مطلب
         </button>
     @elseif($page == 'create_affilate' || $page == 'edit_affilate')

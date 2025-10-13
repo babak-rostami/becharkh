@@ -63,23 +63,23 @@ function countCharacters(input, min = null, max = null) {
 }
 
 // for select category if set in url for cu modal
-let url = window.location.href;
-let categorySlug = url
-    .split("/")
-    .pop()
-    .split("?")[0];
-var queryParams = getQueryParams();
-if (categorySlug !== undefined && categorySlug !== "") {
-    let category = findCategoryWithSlugForSCFCE(categorySlug);
-    if (category != null) {
-        setTimeout(() => {
-            selectCatItemForSCFCE(category.id);
-            $.each(queryParams, function (feature_slug, item_slug) {
-                checkFeaturesAndSelect(feature_slug, item_slug);
-            });
-        }, 2000);
-    }
-}
+// let url = window.location.href;
+// let categorySlug = url
+//     .split("/")
+//     .pop()
+//     .split("?")[0];
+// var queryParams = getQueryParams();
+// if (categorySlug !== undefined && categorySlug !== "") {
+//     let category = findCategoryWithSlugForSCFCE(categorySlug);
+//     if (category != null) {
+//         setTimeout(() => {
+//             selectCatItemForSCFCE(category.id);
+//             $.each(queryParams, function (feature_slug, item_slug) {
+//                 checkFeaturesAndSelect(feature_slug, item_slug);
+//             });
+//         }, 2000);
+//     }
+// }
 function checkFeaturesAndSelect(feature_slug, item_slug) {
     let attempts = 0;
     let maxAttempts = 5;
@@ -430,8 +430,8 @@ function clearStepWords(text) {
 // end for select category for cu modal
 
 // for select feature item for cu modal
-showChildrenFeaturesBoxs();
-setFeatureItems();
+// showChildrenFeaturesBoxs();
+// setFeatureItems();
 
 function setFeatureItems(parent_feature_id = null) {
     if (feature_items != null) {
