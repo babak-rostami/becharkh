@@ -102,7 +102,7 @@
                     </a>
                 @endif
             </div>
-            <div class="col-3 text-center buttom-menu-item p-2">
+            {{-- <div class="col-3 text-center buttom-menu-item p-2">
                 @if (request()->is('ads') || request()->is('ads/*'))
                     <a class="text-white text-decoration-none">
                         <img alt="shop icon" src="{{ $ftp_path . 'files/other/images/shop-blue.png' }}">
@@ -116,7 +116,7 @@
                         <span class="n-active-btab-mobile">بازار</span>
                     </a>
                 @endif
-            </div>
+            </div> --}}
             <div class="col-3 text-center buttom-menu-item p-2">
                 @if (strpos(request()->fullUrl(), 'forum') !== false && strpos(request()->fullUrl(), 's=1') !== false)
                     <a class="text-white text-decoration-none">

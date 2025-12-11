@@ -91,48 +91,11 @@ class RtablePageData extends Model
         }
     }
 
-    // public function featureItemsByParentInUrl($feature)
-    // {
-    //     $items = Cache::rememberForever('items', function () {
-    //         return MongoItem::where('status', 1)->get();
-    //     });
-    //     $items = $items->where('category_id', $feature->category_id);
-    //     if (isset($feature->parent_id)) {
-    //         $req = Request::query();
-    //         $features = Cache::rememberForever('features', function () {
-    //             return MongoFeature::where('status', 1)->get();
-    //         });
-    //         $pFeature = $features->find($feature->parent_id); //return parent feature = brand
-
-    //         if (isset($req[$pFeature->slug])) {
-    //             $pItem = $items->where('feature_id', $pFeature->id)->where('slug', $req[$pFeature->slug])->first();
-    //         }
-
-    //         if (isset($pItem)) {
-    //             $items = $items->where('feature_id', $feature->id)->where('parent_id', $pItem->id);
-    //             return $items;
-    //         } else {
-    //             $items = $items->where('feature_id', $feature->id);
-    //             return $items;
-    //         }
-    //     } else {
-    //         $items = $items->where('feature_id', $feature->id);
-    //         return $items;
-    //     }
-    // }
-
-    public function AdvertiseCanonUrl($category, $selected_items = null)
+    public function AdvertiseCanonUrl($category, $item)
     {
-        if (!$selected_items->isEmpty()) {
-            $i = $selected_items->last();
-            $url = $i->withParentsAdvertiseUrl();
-            $parsedUrl = parse_url($url);
-            $path = explode('/', $parsedUrl['path']);
-            $wordToReplace = end($path);
-            $replacementWord = $category->slug;
-            $newPath = str_replace($wordToReplace, $replacementWord, $parsedUrl['path']);
-            $new_url = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $newPath . '?' . $parsedUrl['query'];
-            return $new_url;
+        if ($item) {
+            $url = $item->withParentsAdvertiseUrl();
+            return $url;
         } else {
             if ($category) {
                 return route('ads.index', $category->slug);
@@ -141,53 +104,6 @@ class RtablePageData extends Model
             }
         }
     }
-
-    // public function pageCanonUrl($category)
-    // {
-    //     $has_f = 1;
-    //     $has_c = 1;
-    //     $is_comment_page = 0;
-    //     if ($category->has_forums == 0) {
-    //         $has_f = 0;
-    //     }
-    //     if ($category->has_comments == 0) {
-    //         $has_c = 0;
-    //     }
-    //     $features = Cache::rememberForever('features', function () {
-    //         return MongoFeature::where('status', 1)->get();
-    //     });
-    //     $features = $features->where('cat_ids', $category->id)->where('be_indexed', 1);
-    //     $fullUrl = Request::fullUrl();
-    //     $parsed_url = parse_url($fullUrl);
-    //     if (isset($parsed_url['query'])) {
-    //         parse_str($parsed_url['query'], $query_params);
-    //         if (isset($query_params['s'])) {
-    //             $is_comment_page = 1;
-    //         }
-    //     }
-    //     $newUrl = Request::url();
-    //     $isFirstQuery = true;
-    //     if (($is_comment_page && $has_c) || (!$is_comment_page && !$has_f)) {
-    //         $newUrl .= "?s=1";
-    //         $isFirstQuery = false;
-    //     }
-
-    //     if (isset($parsed_url['query'])) {
-    //         foreach ($query_params as $key => $value) {
-    //             $feature = $features->where('slug', $key)->first();
-    //             if (isset($feature)) {
-    //                 if ($isFirstQuery) {
-    //                     $newUrl .= "?";
-    //                     $newUrl .= $key . "=" . $value;
-    //                     $isFirstQuery = false;
-    //                 } else {
-    //                     $newUrl .= "&" . $key . "=" . $value;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return $newUrl;
-    // }
 
     public function removeFeatureFromUrl($feature)
     {
@@ -592,20 +508,6 @@ class RtablePageData extends Model
         $questions = MongoQuestion::where('status', 1)->orderBy('created_at', 'desc')->take(5)->get();
         return $questions;
     }
-    // public function suggestComments($category_id = null)
-    // {
-    //     if ($category_id == null) {
-    //         $comments = MongoCategoryComment::whereNull('parent_id')->orderBy('created_at', 'desc')->take(30)->get();
-    //     } else {
-    //         $comments = MongoCategoryComment::whereNull('parent_id')->where('category_id', $category_id)->orderBy('created_at', 'desc')->take(30)->get();
-    //     }
-    //     $firstComs = $comments->take(3);
-    //     $topUnLikes = $comments->sortByDesc('unlike_count')->take(3);
-    //     $topLikes = $comments->sortByDesc('like_count')->take(3);
-    //     $comments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($comments)->unique()->take(20);
-
-    //     return $comments;
-    // }
 
     public function suggestAdvertises()
     {

@@ -940,11 +940,17 @@ class QuestionController extends Controller
 
         $unset_vid = 0;
         $unset_sug_title = 0;
+        $unset_video_embed = 0;
         $unset_just_this_page = 0;
         if (isset($request->sug_title)) {
             $question->sug_title = $request->sug_title;
         } else {
             $unset_sug_title = 1;
+        }
+        if (isset($request->video_embed)) {
+            $question->video_embed = $request->video_embed;
+        } else {
+            $unset_video_embed = 1;
         }
         if ($request->just_this_page == 0) {
             $question->just_this_page = (int) $request->just_this_page;
@@ -1015,6 +1021,9 @@ class QuestionController extends Controller
 
         if ($unset_sug_title) {
             $question->unset('sug_title');
+        }
+        if ($unset_video_embed) {
+            $question->unset('video_embed');
         }
         if ($unset_just_this_page) {
             $question->unset('just_this_page');

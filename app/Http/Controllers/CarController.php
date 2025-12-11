@@ -13,33 +13,6 @@ use Illuminate\Support\Str;
 class CarController extends Controller
 {
 
-    public function destroy($id)
-    {
-        $ad = MongoAdvertise::find($id);
-        if (!auth('admin')->check()) {
-            if (auth('user')->id() != $ad->user_id) {
-                abort(403);
-            }
-        }
-        $disk = Storage::disk('ftp');
-        foreach ($ad->featureValues as $fv) {
-            $fv->delete();
-        }
-        foreach ($ad->getImages() as $key => $image) {
-            if ($key == 0) {
-                $thumb = explode('.webp', $image['filename'])[0] . '2.webp';
-                $disk->delete($thumb);
-            }
-            $disk->delete($image['filename']);
-        }
-        if (isset($ad->items) && count($ad->items) > 0) {
-            dispatch(new ChangeItemPageCount($ad->items, 'advertise', 0))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
-        }
-        $ad->delete();
-
-        return redirect()->back()->with('success', 'آگهی با موفقیت حذف شد');
-    }
-
     public function carPage(Request $request, $brandEn, $modelEn = null)
     {
         if (isset($modelEn)) {

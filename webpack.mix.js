@@ -133,7 +133,8 @@ mix.minify(
         "public/assets/js/gallery/show.js",
         "public/assets/js/affilate/show-box.js",
         // "public/assets/js/pages/fifilter.js",
-        "public/assets/js/pages/share-page.js"
+        "public/assets/js/pages/share-page.js",
+        "public/assets/js/item/item-top-users.js"
     ],
     "public/mixassets/js/advertise/index.min.js"
 );
@@ -240,6 +241,22 @@ mix.minify(
         "public/assets/js/dashboard/dash-edit.js"
     ],
     "public/mixassets/js/user/dashboard-edit.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/user/dashboard-main.js"
+    ],
+    "public/mixassets/js/user/dashboard-main.min.js"
+);
+
+mix.minify(
+    [
+        "public/assets/js/main.js",
+        "public/assets/js/user/dashboard-ads.js"
+    ],
+    "public/mixassets/js/user/dashboard-ads.min.js"
 );
 
 mix.minify(
@@ -513,6 +530,20 @@ mix.minify(
 mix.minify(
     [
         "public/assets/style.css",
+        "public/assets/css/user/dashboard-main.css"],
+    "public/mixassets/css/user/dashboard-main.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
+        "public/assets/css/user/dashboard-ads.css"],
+    "public/mixassets/css/user/dashboard-ads.min.css"
+);
+
+mix.minify(
+    [
+        "public/assets/style.css",
         "public/assets/css/user/notifs.css"],
     "public/mixassets/css/user/notifs.min.css"
 );
@@ -544,7 +575,7 @@ mix.minify(
         // "public/assets/css/pages/fifilter.css",
         "public/assets/css/pages/share-page.css",
         "public/assets/css/pages/hot-pages.css",
-
+        "public/assets/css/item/item-top-users.css"
     ],
     "public/mixassets/css/advertise/index.min.css"
 );
@@ -609,7 +640,8 @@ mix.minify(
         "public/assets/css/pages/add-to-home.css",
         "public/assets/css/category/comment/uprof.css",
         "public/assets/css/category/comment/show-comments.css",
-        "public/assets/css/item/item-top-users.css"
+        "public/assets/css/item/item-top-users.css",
+        "public/assets/css/advertise/suggest-box.css"
     ],
     "public/mixassets/css/category/comment/index.min.css"
 );
@@ -751,7 +783,8 @@ mix.minify(
         "public/assets/css/tabs/top-tab.css",
         "public/assets/css/item/price.css",
         "public/assets/css/item/pages-suggest.css",
-        "public/assets/css/bslider/index.css"
+        "public/assets/css/bslider/index.css",
+        "public/assets/css/category/comment/uprof.css"
     ],
     "public/mixassets/css/advertise/show.min.css"
 );

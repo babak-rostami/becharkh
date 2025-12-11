@@ -134,7 +134,7 @@ if (typeof last_active_code !== "undefined") {
             }, 1000);
         } else {
             $("#active-email-btn")
-                .removeClass("btn-outline-primary")
+                .removeClass("btn-primary")
                 .addClass("btn-light");
             $("#active-email-btn").prop("disabled", true);
             $("#active-email-btn").html(`<img src="${loading_gif}">`);
@@ -148,7 +148,7 @@ if (typeof last_active_code !== "undefined") {
                         increaseLastActiveTime();
                         $("#active-email-btn")
                             .removeClass("btn-light")
-                            .addClass("btn-outline-primary");
+                            .addClass("btn-primary");
                         $("#active-email-btn").text("ارسال مجدد لینک فعالسازی");
                         $("#active-email-btn").prop("disabled", false);
                     }
@@ -156,7 +156,7 @@ if (typeof last_active_code !== "undefined") {
                 error: function () {
                     $("#active-email-btn")
                         .removeClass("btn-light")
-                        .addClass("btn-outline-primary");
+                        .addClass("btn-primary");
                     $("#active-email-btn").text("ارسال مجدد لینک فعالسازی");
                     $("#active-email-btn").prop("disabled", false);
                 }

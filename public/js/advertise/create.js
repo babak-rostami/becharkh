@@ -1,45 +1,15 @@
-function saveAdvertise(button) {
-    var tmp = 0;
-    $(".required").each(function(i, el) {
-        if ($(el).is("div")) {
-            let elementId = $(el).attr("id");
-            let inputid = elementId.split("fselect-box-")[1];
-            if ($(`#${inputid}`).length == 0) {
-                tmp += 1;
-            }
-        } else {
-            var data = $(el).val();
-            if (
-                data === null ||
-                data.match(/^ *$/) !== null ||
-                data == "" ||
-                data == "انتخاب کنید"
-            ) {
-                tmp += 1;
-            }
-        }
-    });
-    $(".error-count").text(tmp);
-    if (tmp > 0) {
-        $(".errorCat").show();
-    } else {
-        if (send_advertise_after_login == 1) {
-            $("#login_user").modal("show");
-        } else {
-            button.disabled = true;
-            button.innerHTML = loadingGif;
-            button.className = "dis-btn mt-2 mb-3 mr-1";
-            $(".errorCat").hide();
-            $("#adform").submit();
-        }
-    }
-}
-
 function doThisAfterAuth() {
     if (send_advertise_after_login == 1) {
         formObj = $(`#adform`);
         formObj.submit();
     }
+}
+
+function phoneOnChange(event, el, min, max) {
+    validateNumberInput(event);
+    countCharacters(el, min, max);
+    $("#phone-error").hide();
+    $("#advertise-phone").removeClass('input-style-error');
 }
 
 function validateNumberInput(event) {
@@ -56,7 +26,7 @@ function validateNumberInput(event) {
 function readURL(input, i) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             id = "#blah-" + i;
             $(id).attr("src", e.target.result);
         };
@@ -104,26 +74,43 @@ function addImage() {
     $("#image-row").append(newImageHtml);
 }
 
-function countCharacters(input, min = null, max = null) {
-    var currentLength = $(input).val().length;
-    var maxLength = max;
-    var checkMax = 0;
-    var minLength = min;
-    var charMinSpanId = "#charCountMin-" + input.id;
-    var CharMinSpan = $(charMinSpanId);
-    var charMaxSpanId = "#charCountMax-" + input.id;
-    var CharMaxSpan = $(charMaxSpanId);
+function titleChange(element, min, max) {
+    countCharacters(element, min, max)
+    $("#title-error").hide();
+    const title_input = $("#title");
+    if (title_input.hasClass('input-style-error')) {
+        title_input.removeClass('input-style-error');
+    }
+}
 
-    $(".error").hide();
-    if (input.id == "title") {
-        $("#title-error").hide();
+function bodyChange() {
+    $("#body-error").hide();
+    const body_input = $("#advertise_body");
+    if (body_input.hasClass('input-style-error')) {
+        body_input.removeClass('input-style-error');
     }
-    if (input.id == "short_description") {
-        $("#short_description-error").hide();
+}
+
+function locationChange() {
+    $("#location-error").hide();
+    const province_input = $("#choose-location-btn");
+    if (province_input.hasClass('input-style-error')) {
+        province_input.removeClass('input-style-error');
     }
+}
+
+function countCharacters(input, min = null, max = null) {
+    let currentLength = $(input).val().length;
+    let maxLength = max;
+    let checkMax = 0;
+    let minLength = min;
+    let charMinSpanId = "#charCountMin-" + input.id;
+    let CharMinSpan = $(charMinSpanId);
+    let charMaxSpanId = "#charCountMax-" + input.id;
+    let CharMaxSpan = $(charMaxSpanId);
 
     if (minLength != null) {
-        var remainingCharMin = minLength - currentLength;
+        let remainingCharMin = minLength - currentLength;
         if (remainingCharMin < 0) {
             remainingCharMin = 0;
         }
@@ -141,7 +128,7 @@ function countCharacters(input, min = null, max = null) {
     }
     if (maxLength != null && checkMax == 1) {
         CharMaxSpan.show();
-        var remainingCharMax = maxLength - currentLength;
+        let remainingCharMax = maxLength - currentLength;
         if (remainingCharMax < 0) {
             remainingCharMax = 0;
         }
@@ -157,24 +144,24 @@ function countCharacters(input, min = null, max = null) {
 }
 
 function changeChildrens(item, fea_id) {
-    var item_id = item.value;
+    let item_id = item.value;
 
     axios.get("/feature-children-item/" + fea_id + "/" + item_id).then(
         response => (
-            $.each(response.data.all_child, function(i, value) {
-                var id = "#" + value.slug;
+            $.each(response.data.all_child, function (i, value) {
+                let id = "#" + value.slug;
                 $(id).empty();
                 $(id).append("<option value>انتخاب نشده است</option>");
             }),
-            $.each(response.data.child_items, function(i, value) {
+            $.each(response.data.child_items, function (i, value) {
                 $(response.data.child_slug).append(
                     "<option value=" +
-                        value.id +
-                        " id=" +
-                        value.id +
-                        ">" +
-                        value.title +
-                        "</option>"
+                    value.id +
+                    " id=" +
+                    value.id +
+                    ">" +
+                    value.title +
+                    "</option>"
                 );
             }),
             $(response.data.child_slug).append(
@@ -196,7 +183,7 @@ if (categorySlug !== undefined && categorySlug !== "") {
     if (category != null) {
         setTimeout(() => {
             selectCatItemForSCFCE(category.id);
-            $.each(queryParams, function(feature_slug, item_slug) {
+            $.each(queryParams, function (feature_slug, item_slug) {
                 setTimeout(() => {
                     let feature = findFeatureWithSlugForSCFCE(feature_slug);
                     let item = findItemWithSlugForSCFCE(item_slug);
@@ -238,7 +225,7 @@ function getQueryParams() {
     var vars = {};
     var parts = window.location.href.replace(
         /[?&]+([^=&]+)=([^&]*)/gi,
-        function(m, key, value) {
+        function (m, key, value) {
             vars[key] = value;
         }
     );
@@ -353,6 +340,15 @@ function showCategoryInput() {
     $("#modcat-select-input").text(c.title);
 }
 
+if (categories.length == 1) {
+    setTimeout(() => {
+        selectCatItemForSCFCE(categories[0].id);
+        setTimeout(() => {
+            $("#next-page-btn").show();
+        }, 10000);
+    }, 1000);
+}
+
 function selectCatItemForSCFCE(category_id) {
     if (cat_selected == null) {
         $("#after-scat-divs").css("display", "contents");
@@ -371,7 +367,7 @@ function selectCatItemForSCFCE(category_id) {
             data: {
                 category_id: category_id
             },
-            success: function(data) {
+            success: function (data) {
                 cfeatures = data.cfeatures;
                 citems = data.citems;
                 feature_items = null;
@@ -500,10 +496,9 @@ function showChildrenFeaturesBoxs(f_id = null) {
         if ($(`#fselect-box-${chf.slug}`).children().length == 0) {
             let featureInput;
             if (chf.type == 0) {
-                featureInput = `<div class="position-relative ${
-                    chf.require ? "required" : ""
-                }" id="fselect-box-${chf.slug}">
-                                <span class="d-block">${chf.title}`;
+                featureInput = `<div class="fselect-box ${chf.require ? "required" : ""
+                    }" id="fselect-box-${chf.slug}">
+                                <span class="fselect-label">${chf.title}`;
                 if (chf.require) {
                     featureInput += `<span class="red-color">*</span>`;
                 }
@@ -511,8 +506,9 @@ function showChildrenFeaturesBoxs(f_id = null) {
                                 <div class="fselect-input" id="fselect-input-${chf.slug}"
                                     onclick="showFItemsForSCFCE('${chf.id}')">انتخاب
                                     ${chf.title}</div>
+                                <span class="fselect-error-msg" id="fselect-error-${chf.slug}"></span>
                                 <div class="sfbox shadow" id="sfbox-${chf.slug}">
-                                    <input class="sfsearch form-control" oninput="searchFItem('${chf.id}')"
+                                    <input class="sfsearch" oninput="searchFItem('${chf.id}')"
                                         id="sfsearch-${chf.slug}" type="text" placeholder="جستجو کنید...">
                                     <div id="sfitems-list-${chf.slug}">
                                     </div>
@@ -526,15 +522,13 @@ function showChildrenFeaturesBoxs(f_id = null) {
                             </div>`;
             } else if (chf.type == 1) {
                 featureInput = `<div class="my-2" id="fselect-box-${chf.slug}">
-                                <span class="d-block">${chf.title}`;
+                                <span class="fselect-label">${chf.title}`;
                 if (chf.require) {
                     featureInput += `<span class="red-color">*</span>`;
                 }
-                featureInput += `</span><input class="form-control ${
-                    chf.require ? "required" : ""
-                }" id="${chf.slug}" name="${
-                    chf.slug
-                }" type="text" placeholder="${chf.title}">
+                featureInput += `</span><input class="form-control ${chf.require ? "required" : ""
+                    }" id="${chf.slug}" name="${chf.slug
+                    }" type="text" placeholder="${chf.title}">
                             </div>`;
             }
             if (f_id == null) {
@@ -594,7 +588,7 @@ function closeCreateNewItemBox(feature_id) {
     $(`#sfnores-${feature_id}`).show();
 }
 
-$(document).click(function(event) {
+$(document).click(function (event) {
     if (open_box != null) {
         if (!$(event.target).closest(open_box).length) {
             $(open_box).hide();
@@ -605,16 +599,18 @@ $(document).click(function(event) {
 
 var open_box = null;
 function showFItemsForSCFCE(f_id) {
-    f = findFeatureForSCFCE(f_id);
-    $(`#sfbox-${f.slug}`).show();
+    let feature = findFeatureForSCFCE(f_id);
+    $(`#fselect-input-${feature.slug}`).removeClass('fselect-input-error');
+    $(`#fselect-error-${feature.slug}`).hide();
+    $(`#sfbox-${feature.slug}`).show();
     setTimeout(() => {
-        open_box = `#sfbox-${f.slug}`;
+        open_box = `#sfbox-${feature.slug}`;
     }, 40);
-    $(`#sfsearch-${f.slug}`).val("");
-    let items_list_box = $(`.sfitems-list-${f.slug}`);
+    $(`#sfsearch-${feature.slug}`).val("");
+    let items_list_box = $(`.sfitems-list-${feature.slug}`);
     if (items_list_box.children().length == 0) {
-        let items_list = showFeatureItemsInput(f.id);
-        $(`#sfitems-list-${f.slug}`).html(items_list);
+        let items_list = showFeatureItemsInput(feature.id);
+        $(`#sfitems-list-${feature.slug}`).html(items_list);
     }
 }
 
@@ -742,20 +738,16 @@ function showFeatureItemsInput(feature_id) {
         if (pfeatureInput.length > 0) {
             parent_item_id = pfeatureInput;
             featureItemsForSCFCE(feature_id, parent_item_id).forEach(i => {
-                ilist += `<span class="sfitem-${feature_id} ${
-                    selected_items.includes(i.id) ? "item-selected" : ""
-                }" data-entitle="${i.e_title}" onclick="selectItem('${
-                    i.id
-                }')">${i.title}</span>`;
+                ilist += `<span class="sfitem-${feature_id} ${selected_items.includes(i.id) ? "item-selected" : ""
+                    }" data-entitle="${i.e_title}" onclick="selectItem('${i.id
+                    }')">${i.title}</span>`;
             });
         }
     } else {
         featureItemsForSCFCE(feature_id, null).forEach(i => {
-            ilist += `<span class="sfitem-${feature_id} ${
-                selected_items.includes(i.id) ? "item-selected" : ""
-            }" data-entitle="${i.e_title}" onclick="selectItem('${i.id}')">${
-                i.title
-            }</span>`;
+            ilist += `<span class="sfitem-${feature_id} ${selected_items.includes(i.id) ? "item-selected" : ""
+                }" data-entitle="${i.e_title}" onclick="selectItem('${i.id}')">${i.title
+                }</span>`;
         });
     }
     return ilist;
@@ -809,7 +801,7 @@ function searchFItem(f_id) {
         );
     });
     // Show the filtered items
-    filteredItems.each(function() {
+    filteredItems.each(function () {
         $(this).show();
     });
 }
@@ -825,7 +817,6 @@ function changePriceTag(price_tag) {
 function priceShow(show) {
     if (show == 1) {
         $("#price-input-form").show();
-        $("#price").addClass("required");
         $("#show-price-option")
             .removeClass("btn-outline-dark")
             .addClass("btn-primary");
@@ -835,7 +826,6 @@ function priceShow(show) {
         $("#price-option-box").removeClass("mb-3");
     } else {
         $("#price").val("");
-        $("#price").removeClass("required");
         $("#price-input-form").hide();
         $("#dshow-price-option")
             .removeClass("btn-outline-dark")
@@ -896,14 +886,14 @@ function showProvinces() {
     container.empty();
     $("#search-choose-location-items").hide();
     $("#choose-location-search").val("");
-    $.each(provinces, function(index, province) {
+    $.each(provinces, function (index, province) {
         let new_item = $("<span>")
             .text(province.name)
             .addClass("choose-location-item")
             .append(
                 `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
             )
-            .click(function() {
+            .click(function () {
                 chooseProvince(province.id);
             });
         if (index == 0) {
@@ -913,6 +903,7 @@ function showProvinces() {
     });
 }
 function chooseProvince(prov_id) {
+    locationChange()
     location_modal_page = "city";
     city_id = null;
     district_id = null;
@@ -921,7 +912,7 @@ function chooseProvince(prov_id) {
     $("#choose-location-back").show();
     $("#choose-location-back")
         .unbind("click")
-        .bind("click", function() {
+        .bind("click", function () {
             showProvinces();
         });
     $("#choose-location-title").text("انتخاب شهر");
@@ -930,19 +921,19 @@ function chooseProvince(prov_id) {
     $("#search-choose-location-items").hide();
     $("#choose-location-search").val("");
 
-    let prov_cities = cities.filter(function(city) {
+    let prov_cities = cities.filter(function (city) {
         return city.p_id === prov_id;
     });
     if (prov_cities.length > 0) {
         container.empty();
-        $.each(prov_cities, function(index, city) {
+        $.each(prov_cities, function (index, city) {
             let new_item = $("<span>")
                 .text(city.name)
                 .addClass("choose-location-item")
                 .append(
                     `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
                 )
-                .click(function() {
+                .click(function () {
                     chooseCity(city.id);
                 });
             if (index == 0) {
@@ -961,7 +952,7 @@ function chooseCity(c_id) {
     $("#choose-location-back").show();
     $("#choose-location-back")
         .unbind("click")
-        .bind("click", function() {
+        .bind("click", function () {
             chooseProvince(province_id);
         });
     $("#choose-location-title").text("انتخاب محله");
@@ -970,16 +961,16 @@ function chooseCity(c_id) {
     $("#search-choose-location-items").hide();
     $("#choose-location-search").val("");
 
-    let prov_districts = districts.filter(function(district) {
+    let prov_districts = districts.filter(function (district) {
         return district.c_id === c_id;
     });
     if (prov_districts.length > 0) {
         container.empty();
-        $.each(prov_districts, function(index, district) {
+        $.each(prov_districts, function (index, district) {
             let new_item = $("<span>")
                 .text(district.name)
                 .addClass("choose-location-item")
-                .click(function() {
+                .click(function () {
                     chooseDistrict(district.id);
                 });
             if (index == 0) {
@@ -1027,11 +1018,11 @@ function addLocation() {
 
 var search_loc_delay = 1000;
 var search_loc_timeoutId;
-$("#choose-location-search").on("input", function() {
+$("#choose-location-search").on("input", function () {
     clearTimeout(search_loc_timeoutId);
-    search_loc_timeoutId = setTimeout(function() {
-        searchLocation();
-    }, search_loc_delay);
+    // search_loc_timeoutId = setTimeout(function () {
+    searchLocation();
+    // }, search_loc_delay);
 });
 function searchLocation() {
     if (location_modal_page == "prov" || location_modal_page == "city") {
@@ -1039,10 +1030,10 @@ function searchLocation() {
         const search_result_box = $("#search-choose-location-items");
         let search_input = $("#choose-location-search").val();
         if (search_input.trim() !== "") {
-            let search_provinces = provinces.filter(function(p) {
+            let search_provinces = provinces.filter(function (p) {
                 return p.name.includes(search_input);
             });
-            let search_cities = cities.filter(function(city) {
+            let search_cities = cities.filter(function (city) {
                 return (
                     (province_id != null ? city.p_id == province_id : true) &&
                     city.name.includes(search_input)
@@ -1052,14 +1043,14 @@ function searchLocation() {
             search_result_box.show();
             search_result_box.empty();
             if (search_cities.length > 0 || search_provinces.length > 0) {
-                $.each(search_provinces, function(index, province) {
+                $.each(search_provinces, function (index, province) {
                     let new_item = $("<span>")
                         .text("استان " + province.name)
                         .addClass("choose-location-item")
                         .append(
                             `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
                         )
-                        .click(function() {
+                        .click(function () {
                             chooseProvince(province.id);
                         });
                     if (index == 0) {
@@ -1067,19 +1058,19 @@ function searchLocation() {
                     }
                     new_item.appendTo(search_result_box);
                 });
-                $.each(search_cities, function(index, city) {
+                $.each(search_cities, function (index, city) {
                     let new_item = $("<span>")
                         .text(
                             "شهر " +
-                                city.name +
-                                " در استان " +
-                                findProvById(city.p_id).name
+                            city.name +
+                            " در استان " +
+                            findProvById(city.p_id).name
                         )
                         .addClass("choose-location-item")
                         .append(
                             `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
                         )
-                        .click(function() {
+                        .click(function () {
                             chooseCity(city.id);
                         });
                     if (index == 0) {
@@ -1103,7 +1094,7 @@ function searchLocation() {
         const search_result_box = $("#search-choose-location-items");
         let search_input = $("#choose-location-search").val();
         if (search_input.trim() !== "") {
-            let search_districts = districts.filter(function(district) {
+            let search_districts = districts.filter(function (district) {
                 return (
                     district.c_id == city_id &&
                     district.name.includes(search_input)
@@ -1113,11 +1104,11 @@ function searchLocation() {
             search_result_box.show();
             search_result_box.empty();
             if (search_districts.length > 0) {
-                $.each(search_districts, function(index, district) {
+                $.each(search_districts, function (index, district) {
                     let new_item = $("<span>")
                         .text(district.name)
                         .addClass("choose-location-item")
-                        .click(function() {
+                        .click(function () {
                             chooseDistrict(district.id);
                         });
                     if (index == 0) {
@@ -1156,35 +1147,211 @@ function findCityById(c_id) {
 
 /* end for choose location */
 
-// $("#ostan").append(
-//     `<option class="d-none" value="${null}">استان را انتخاب کنید</option>`
-// );
-// ostans.forEach(ostan => {
-//     $("#ostan").append(`<option value="${ostan.id}">${ostan.title}</option>`);
-// });
 
-// $("#ostan").change(function() {
-//     $("#city")
-//         .html("")
-//         .fadeIn(800)
-//         .append('<option value="{{null}}">لطفا کمی صبر کنید ...</option>');
-//     var id = $(this)
-//         .find("option:selected")
-//         .val();
-//     $("#city").empty();
-//     $("#city").append(
-//         `<option class="d-none" value="${null}">شهر را انتخاب کنید</option>`
-//     );
-//     getCities(id).forEach(city => {
-//         $("#city").append(`<option value="${city.id}">${city.title}</option>`);
-//     });
-// });
-// function getCities(ostan_id) {
-//     let ostan_cities = [];
-//     cities.forEach(city => {
-//         if (city.o_id == ostan_id) {
-//             ostan_cities.push(city);
-//         }
-//     });
-//     return ostan_cities;
-// }
+// for select images box
+
+let imageFiles = {}; // ذخیره‌ی فایل‌ها بر اساس id یکتا
+let nextId = 1; // شناسه یکتا برای هر عکس
+const maxImages = 8;
+
+function clickSelectImage() {
+    $('#images').click();
+}
+
+// فقط یک بار event ثبت می‌کنیم
+$(document).on('change', '#images', function (event) {
+    const files = event.target.files;
+
+    for (let file of files) {
+        if (Object.keys(imageFiles).length >= maxImages) break;
+
+        const id = nextId++;
+        imageFiles[id] = file;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (['heic', 'heif'].includes(ext)) {
+            // preview برای آیفون غیر فعال
+            addImagePreview(id, null, file, false);
+        } else {
+            const reader = new FileReader();
+            reader.onload = e => addImagePreview(id, e.target.result, file, true);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    $('#images').val('');
+    updateHiddenInput();
+});
+
+function addImagePreview(id, src, file, showPreview = true) {
+    let imgHtml = showPreview
+        ? `<img src="${src}" alt="selected">`
+        : `<div class="no-preview">انتخاب شد</div>`;
+
+    const html = `
+                    <div class="select-img-item" id="select-img-item-${id}">
+                        ${imgHtml}
+                        <div class="img-actions">
+                            <button type="button" class="edit-img-btn" onclick="editImage(${id})">ویرایش</button>
+                            <button type="button" class="delete-img-btn" onclick="removeImage(${id})">حذف</button>
+                        </div>
+                    </div>
+                `;
+    $('#add-image-btn').before(html);
+
+    if (Object.keys(imageFiles).length >= maxImages) {
+        $('#add-image-btn').hide();
+    }
+}
+
+function removeImage(id) {
+    delete imageFiles[id];
+    $(`#select-img-item-${id}`).remove();
+    updateHiddenInput();
+
+    if (Object.keys(imageFiles).length < maxImages) {
+        $('#add-image-btn').show();
+    }
+}
+
+function editImage(id) {
+    const input = $('<input type="file" accept="image/*" class="d-none">');
+    input.on('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        imageFiles[id] = file;
+
+        if (['heic', 'heif'].includes(ext)) {
+            $(`#select-img-item-${id} img`).remove();
+            $(`#select-img-item-${id}`).prepend('<div class="no-preview">انتخاب شد</div>');
+        } else {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                let imgEl = $(`#select-img-item-${id} img`);
+                if (imgEl.length === 0) {
+                    $(`#select-img-item-${id} .no-preview`).remove();
+                    $(`#select-img-item-${id}`).prepend(`<img src="${ev.target.result}" alt="selected">`);
+                } else {
+                    imgEl.attr('src', ev.target.result);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        updateHiddenInput();
+    });
+    input.click();
+}
+
+function updateHiddenInput() {
+    const newInput = $('<input>', {
+        type: 'file',
+        id: 'images',
+        name: 'images[]',
+        class: 'd-none',
+        multiple: true,
+        accept: 'image/*'
+    });
+
+    const dt = new DataTransfer();
+    Object.values(imageFiles).forEach(file => dt.items.add(file));
+    newInput[0].files = dt.files;
+
+    $('#images').replaceWith(newInput);
+}
+
+
+// end for select images box
+
+let isSubmitting = false;
+function storeAdvertise() {
+    let ad_title = $("#title").val().trim();
+    let ad_body = $("#advertise_body").val().trim();
+    let ad_province_id = $("#province_id").val();
+    let ad_phone = $("#advertise-phone").val();
+    let send_advertise = 1;
+    if (ad_title === '') {
+        send_advertise = 0;
+        $("#title-error").show()
+        $("#title").addClass('input-style-error')
+        $("#title-error").text('لطفا این قسمت را تکمیل کنید')
+        scrollToId('title', 50)
+    }
+    if (ad_body === '') {
+        send_advertise = 0;
+        $("#body-error").show()
+        $("#advertise_body").addClass('input-style-error')
+        $("#body-error").text('لطفا این قسمت را تکمیل کنید')
+        if (ad_title !== '') {
+            scrollToId('advertise_body', 50)
+        }
+    }
+    if (ad_province_id === '') {
+        send_advertise = 0;
+        $("#location-error").show()
+        $("#choose-location-btn").addClass('input-style-error')
+        $("#location-error").text('لطفا این قسمت را تکمیل کنید')
+    }
+    if (ad_phone === '') {
+        send_advertise = 0;
+        $("#phone-error").show()
+        $("#advertise-phone").addClass('input-style-error')
+        $("#phone-error").text('لطفا این قسمت را تکمیل کنید')
+    }
+    if (send_advertise) {
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        let store_btn = $("#store-ad-btn");
+        store_btn.prop('disabled', true);
+        store_btn.text('در حال ثبت آگهی...');
+        store_btn.removeClass('btn-primary').addClass('btn-light');
+
+        $("#adform").submit();
+    }
+}
+
+function nextPage() {
+    let require_feature_count = 0;
+    let require_features = [];
+    $(".required").each(function (i, el) {
+        if ($(el).is("div")) {
+            let elId = $(el).attr("id");
+            let inputid = elId.split("fselect-box-")[1];
+
+            if ($(`#${inputid}`).length == 0) {
+                let error_id = "#fselect-error-" + inputid;
+                $(error_id).show().text('لطفا این قسمت را تکمیل کنید');
+                $(`#fselect-input-${inputid}`).addClass('fselect-input-error')
+                require_features.push(elId);
+                require_feature_count += 1;
+            }
+        }
+    });
+
+    if (require_feature_count > 0) {
+        let first_error_id = require_features[0];
+        scrollToId(first_error_id, 50);
+    } else {
+        $("#ad-cat-page").hide();
+        $("#ad-detail-page").css('display', 'flex');
+        scrollToId('ad-detail-page', 50);
+    }
+}
+
+function prePage() {
+    $("#ad-cat-page").show();
+    $("#ad-detail-page").hide();
+}
+
+function scrollToId(id, extra_offset = 0) {
+    let sId = "#" + id;
+    let scrollOffset = $(sId).offset().top - extra_offset;
+    $("html, body").animate({
+        scrollTop: scrollOffset
+    },
+        1000
+    );
+}

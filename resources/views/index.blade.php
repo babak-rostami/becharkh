@@ -51,7 +51,7 @@
                     <a class="top-nav-link-logo" href="{{ route('home') }}">بچرخ</a>
                 </div>
                 <div class="col-4 text-center">
-                    <a class="mx-3 top-nav-link" href="{{ route('ads.index') }}">بازار</a>
+                    {{-- <a class="mx-3 top-nav-link" href="{{ route('ads.index') }}">بازار</a> --}}
                     {{-- <a class="mx-3 top-nav-link" href="{{ route('blog.index') }}">مجله</a> --}}
                     <a class="mx-3 top-nav-link" href="{{ route('question.index') }}">انجمن</a>
                     <a class="mx-3 top-nav-link" href="{{ route('question.index') }}?s=1">نظرات
@@ -409,11 +409,52 @@
                                         <label>مبلغ</label>
                                         <span id="chac-tom-span">به تومان</span>
                                         <input name="ammount" class="form-control mb-4"
-                                            oninput="convertToMoneyFormat(this)" placeholder="مبلغ به تومان"
+                                            oninput="convertToMoneyFormat()" placeholder="مبلغ به تومان"
                                             type="text" id="chacinp">
-                                        <button class="btn btn-primary w-50" type="submit">پرداخت</button>
-                                        <button class="btn btn-danger" data-dismiss="modal"
-                                            type="button">انصراف</button>
+                                        <button class="btn btn-primary w-100" id="chac-ch-btn" type="submit">شارژ
+                                            حساب</button>
+
+                                        <div class="row mt-4">
+                                            <div class="col-4" onclick="chacSelectOption(50000)">
+                                                <div class="chac-option">
+                                                    <span class="chac-amount">50</span>
+                                                    <span>تومان</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-4" onclick="chacSelectOption(150000)">
+                                                <div class="chac-option">
+                                                    <span class="chac-amount">150</span>
+                                                    <span>تومان</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-4" onclick="chacSelectOption(250000)">
+                                                <div class="chac-option">
+                                                    <span class="chac-amount">250</span>
+                                                    <span>تومان</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-4" onclick="chacSelectOption(500000)">
+                                                <div class="chac-option">
+                                                    <span class="chac-amount">500</span>
+                                                    <span>تومان</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-4" onclick="chacSelectOption(750000)">
+                                                <div class="chac-option">
+                                                    <span class="chac-amount">750</span>
+                                                    <span>تومان</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-4" onclick="chacSelectOption(1000000)">
+                                                <div class="chac-option">
+                                                    <span class="chac-amount">1</span>
+                                                    <span>میلیون</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button class="btn btn-light w-100 btn-lg my-4" data-dismiss="modal"
+                                            type="button">بعدا شارژ میکنم</button>
                                     </form>
                                 </div>
                             </div>

@@ -61,7 +61,7 @@
                                 @endif
                                 <td>
                                     <a class="btn btn-primary" target="_blank"
-                                        href="{{ route('ad.show', ['category_slug' => $advertise->category->slug, 'slug' => $advertise->slug, 'random' => $advertise->random_id]) }}">مشاهده</a>
+                                        href="{{ route('ad.show', $advertise->slug) }}">مشاهده</a>
                                     <a class="btn btn-warning" href="{{ route('ad.edit.admin', $advertise->id) }}">ویرایش
                                     </a>
                                     <a class="btn btn-sm btn-outline-danger mt-2" data-toggle="modal"

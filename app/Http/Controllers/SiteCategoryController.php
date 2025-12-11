@@ -554,9 +554,9 @@ class SiteCategoryController extends Controller
                 return;
             }
         }
-        if ($page == 'ads') {
+        if ($page == 'market') {
             if (!$category->has_ads) {
-                $page_title = 'ads';
+                $page_title = 'market';
                 $check_has_comments = 1;
                 $check_has_forums = 1;
                 $check_has_blogs = 1;
@@ -582,21 +582,21 @@ class SiteCategoryController extends Controller
                 $new_url = str_replace($category->slug . '?', $category->slug . '?s=1&', $new_url);
             }
             $new_url = str_replace($page_title, 'forum', $new_url);
-            Redirect::to($new_url, 302)->send();
+            Redirect::to($new_url, 301)->send();
         }
         $new_url = str_replace('s=1&', '', $new_url);
         $new_url = str_replace('?s=1', '', $new_url);
         if ($check_has_ads && $category->has_ads) {
-            $new_url = str_replace($page_title, 'ads', $new_url);
-            Redirect::to($new_url, 302)->send();
+            $new_url = str_replace($page_title, 'market', $new_url);
+            Redirect::to($new_url, 301)->send();
         }
         if ($check_has_forums && $category->has_forums) {
             $new_url = str_replace($page_title, 'forum', $new_url);
-            Redirect::to($new_url, 302)->send();
+            Redirect::to($new_url, 301)->send();
         }
         if ($check_has_blogs && $category->has_blogs) {
             $new_url = str_replace($page_title, 'blogs', $new_url);
-            Redirect::to($new_url, 302)->send();
+            Redirect::to($new_url, 301)->send();
         }
     }
 }

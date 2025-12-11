@@ -92,22 +92,18 @@ class UserOrderController extends Controller
                 $order->save();
 
                 if ($order->order_type_class == "charge") {
-
                     $money = $user->money;
                     $user->money = intval($money) + intval($order->amount);
                     $user->update();
-
-                    $admins = Admin::all();
-                    foreach ($admins as $admin) {
-                        $admin->notify(new SiteEvent([
-                            'action' => $user->username . ' حساب خود را به میزان ' . $amount . ' تومان شارژ کرد ',
-                            'route' => route('user.dashboard', $user->username),
-                        ]));
-                    }
+                    $admin = Admin::first();
+                    $admin->notify(new SiteEvent([
+                        'action' => $user->username . ' حساب خود را به میزان ' . $amount . ' تومان شارژ کرد ',
+                        'route' => route('user.dashboard', $user->username),
+                    ]));
                 }
 
-                $m = "تبریک حساب شما با موفقیت شارژ شد";
-                return redirect()->route('user.dashboard.edit', $user->username)->with('success', $m);
+                $m = "حساب با موفقیت شارژ شد";
+                return redirect()->route('user.dashboard.edit')->with('success', $m);
             } catch (InvalidPaymentException $exception) {
                 $error = $exception->getMessage();
                 return view('user.callback', compact('error'));

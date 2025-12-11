@@ -65,7 +65,7 @@ class MongoUser extends Model implements AuthenticatableContract
 
     public function canCreateAd()
     {
-        if ($this->money >= 20000) {
+        if ($this->money >= Config::get('gvars.ad_price')) {
             return 1;
         }
         return 0;
@@ -73,15 +73,7 @@ class MongoUser extends Model implements AuthenticatableContract
 
     public function canRocketAd()
     {
-        if ($this->money >= 10000) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public function canAddVideo()
-    {
-        if ($this->money >= 15000) {
+        if ($this->money >= Config::get('gvars.ad_rocket')) {
             return 1;
         }
         return 0;
@@ -89,7 +81,6 @@ class MongoUser extends Model implements AuthenticatableContract
 
     public function decreaseMoneyFor($type)
     {
-
         $user = $this;
         $money = $user->money;
         if ($type == "advertise") {
@@ -97,9 +88,6 @@ class MongoUser extends Model implements AuthenticatableContract
             $user->update();
         } elseif ($type == "rocket-advertise") {
             $user->money = $money - Config::get('gvars.ad_rocket');
-            $user->update();
-        } elseif ($type == "add-video") {
-            $user->money = $money - 15000;
             $user->update();
         }
     }

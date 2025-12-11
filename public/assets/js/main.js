@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 function gtudash(username = null) {
     if (username) {
-        window.location.href = window.location.origin + "/profile/" + username;
+        window.location.href = window.location.origin + "/dashboard/edit";
     } else {
         $("#login_user").modal("show");
         openCloseUserDashBox();
@@ -297,9 +297,9 @@ function showMainSearchItemsResults() {
             if (main_search_items.length > 0) {
                 main_search_items.forEach(item => {
                     let linksHtml = "";
-                    if (item.a_url !== null) {
-                        linksHtml += `<a class="msearch-result-item-link" href="${item.a_url}">آگهی ها</a>`;
-                    }
+                    // if (item.a_url !== null) {
+                    //     linksHtml += `<a class="msearch-result-item-link" href="${item.a_url}">آگهی ها</a>`;
+                    // }
                     if (item.c_url !== null) {
                         linksHtml += `<a class="msearch-result-item-link" href="${item.c_url}">نظرات کاربران</a>`;
                     }
@@ -307,12 +307,12 @@ function showMainSearchItemsResults() {
                         linksHtml += `<a class="msearch-result-item-link" href="${item.f_url}">سوال ها</a>`;
                     }
                     result_box.append(`
-                            <div class="msearch-result-item" onclick="openSearchItemLinks('${item.id}')">
-                                <img class="msearch-result-item-img" src="${item.img}">
-                                <span class="msearch-result-item-title">${item.title}</span> 
-                                <span class="msearch-result-item-cat">${item.cat}</span>
-                            </div>
-                            <div class="msearch-result-item-links" id="msearch-result-item-links-${item.id}">${linksHtml}</div>
+                        <div class="msearch-result-item" onclick="openSearchItemLinks('${item.id}')">
+                            <img class="msearch-result-item-img" src="${item.img}">
+                            <span class="msearch-result-item-title">${item.title}</span> 
+                            <span class="msearch-result-item-cat">${item.cat}</span>
+                        </div>
+                        <div class="msearch-result-item-links" id="msearch-result-item-links-${item.id}">${linksHtml}</div>
                     `);
                 });
             }
@@ -829,17 +829,30 @@ $(".convert-m").each(function () {
     $(this).text(formatMoney(amount));
 });
 
-function convertToMoneyFormat(input) {
-    var maxValueLength = 8;
-    var currentValue = input.value.replace(/\D/g, ""); // remove non-digit characters
+function convertToMoneyFormat() {
+    const chac_input = $("#chacinp");
+    let maxValueLength = 8;
+    let currentValue = chac_input.val();
+
+    currentValue = currentValue.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+    currentValue = currentValue.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+
+    currentValue = currentValue.replace(/\D/g, "");
     if (currentValue.length > maxValueLength) {
-        input.value = currentValue
+        chac_input.val(currentValue
             .substring(0, maxValueLength)
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     } else {
-        input.value = currentValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        chac_input.val(currentValue.replace(/\B(?=(\d{3})+(?!\d))/g, ","))
     }
 }
+
+
+function chacSelectOption(amount) {
+    $("#chacinp").val(amount);
+    convertToMoneyFormat()
+}
+
 
 function submitChacForm() {
     const amount = parseInt(

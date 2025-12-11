@@ -153,7 +153,7 @@ class MongoItem extends Model
                 $item_cat = $this->category;
                 $forum_url = preg_replace('/' . preg_quote($item_cat->slug, '/') . '/', $category_slug, $forum_url, 1);
             }
-            return str_replace('forum', 'ads', $forum_url);
+            return str_replace('forum', 'market', $forum_url);
         }
         return null;
     }

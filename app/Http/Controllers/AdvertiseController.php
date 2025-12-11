@@ -25,6 +25,7 @@ use App\Repositories\Advertise\Mongodb\AdvertiseRepository;
 use App\Repositories\Feature\Mongodb\FeatureRepository;
 use App\Services\Affilate\AffilateService;
 use App\Services\Item\AdditemsService;
+use App\Services\Item\FeatureService;
 use App\Services\Suggestion\SuggestionService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -42,19 +43,17 @@ class AdvertiseController extends Controller
 
     public function getAds(Request $request, SuggestionService $suggestionService, $category_slug = null)
     {
-        $advertise_repository = new AdvertiseRepository();
-
+        abort(410, 'این دسته‌بندی دیگر در دسترس نیست.');
         $title = "";
-        $selectedFeatures = collect();
         $followFeature = null;
         $item = null;
-        $data = new RtablePageData();
 
         $user = null;
         if (auth('user')->check()) {
             $user = auth('user')->user();
         }
 
+        $data = new RtablePageData();
         $meta_title = null;
         $meta_desc = null;
         $meta_desc_editor = null;
@@ -63,55 +62,23 @@ class AdvertiseController extends Controller
         $category = MongoCategory::where('slug', $category_slug)->first();
         if (isset($category)) {
 
-            app(SiteCategoryController::class)->redirectIfPageNotExist($request, $category, 'ads');
+            app(SiteCategoryController::class)->redirectIfPageNotExist($request, $category, 'market');
 
-            $feature_repository = new FeatureRepository();
-            $categoryFeatures = $feature_repository->getFeaturesByCategoryIdForForum($category->id);
-
-            $featuresInUrl = $data->getFeaturesInUrl($request);
-            foreach ($featuresInUrl as $fiu) {
-                $fs = explode('=', $fiu)[0];
-                $f = $categoryFeatures->where('slug', $fs)->first();
-                if (isset($f)) {
-                    $selectedFeatures->add($f);
-                }
-            }
-            $fiu_parentIds = $selectedFeatures->filter->parent_id->pluck('parent_id');
-            $fiu_Ids = $selectedFeatures->filter->id->pluck('id');
-            $childFeaturesInUrl = $categoryFeatures->whereIn('id', $fiu_Ids)->whereNotIn('id', $fiu_parentIds);
+            $childFeature = (new FeatureService())->getChildFeature($category, $request);
 
             $isset_ads = 1;
-            $fiuforp = null;
-            $comments = collect();
-            $questions = collect();
+
             $advertises = collect();
 
-            $selected_items = collect();
-            foreach ($selectedFeatures as $sf) {
-                if (isset($sf)) {
-                    $sitem = MongoItem::where('feature_id', $sf->id)->where('slug', $request[$sf->slug])->first();
-                    if (isset($sitem)) {
-                        $selected_items->add($sitem);
-                    }
+            if (isset($childFeature)) {
+                $item = MongoItem::where('feature_id', $childFeature->id)->where('slug', $request[$childFeature->slug])->with('parent')->first();
+                if ($childFeature->has_follow) {
+                    $followFeature = $childFeature;
                 }
             }
-            foreach ($childFeaturesInUrl as $f) {
-                if (isset($f)) {
-                    $item = $selected_items->where('feature_id', $f->id)->where('slug', $request[$f->slug])->first();
-                    if (isset($item)) {
-                        $tempAds = $advertise_repository->getAdvertiseByItemIdByPaginate($category->id, $item->id, 20);
-                        if (count($advertises) > 0) {
-                            $ids = $advertises->pluck('id');
-                            $advertises = $tempAds->whereIn('id', $ids);
-                        } else {
-                            $advertises = $tempAds;
-                        }
-                        //follow button
-                        if ($f->has_follow) {
-                            $followFeature = $f;
-                        }
-                    }
-                }
+
+            if (isset($item)) {
+                $advertises =  MongoAdvertise::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('items', $item->id)->where('status', 1)->paginate(30);
             }
 
             if (isset($followFeature) && isset($item)) {
@@ -149,14 +116,6 @@ class AdvertiseController extends Controller
                         $meta_desc_editor = str_replace("*", $title, $category->desc_in_ads_editor);
                     }
                 }
-                // if ($user) {
-                //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-                //     if (isset($follow)) {
-                //         $is_follow = 1;
-                //     } else {
-                //         $is_follow = 0;
-                //     }
-                // }
                 $advertises->appends(request()->query());
             } else {
                 $cat_title = $category->full_title ?? $category->title;
@@ -179,7 +138,7 @@ class AdvertiseController extends Controller
                     }
                 }
 
-                $advertises = $advertise_repository->getAdvertiseByCategoryIdByPaginate($category->id, 20);
+                $advertises = MongoAdvertise::orderBy('created_at', 'desc')->where('category_id', $category->id)->where('status', 1)->paginate(30);
             }
 
             $suggests = $suggestionService->suggest($category, $item);
@@ -199,42 +158,28 @@ class AdvertiseController extends Controller
                 $isset_ads = 0;
             }
 
-            if (isset($item)) {
-                $tab_category = $item->category;
-                if ($tab_category->has_comments) {
-                    $comment_page = $item->withParentsCommentUrl();
-                }
-                if ($tab_category->has_forums) {
-                    $forum_page = $item->withParentsForumUrl();
-                }
-                if ($tab_category->has_blogs) {
-                    $blog_page = $item->withParentsBlogUrl();
-                }
-                // if (isset($item->videos)) {
-                //     $ivids = MongoVideo::find($item->videos)->shuffle()->first();
-                //     if (isset($ivids)) {
-                //         $item_video = $ivids;
-                //     }
-                // }
-            } else {
-                if ($category->has_comments) {
-                    $comment_page = route('question.index', $category->slug) . '?s=1';
-                }
-                if ($category->has_forums) {
-                    $forum_page = route('question.index', $category->slug);
-                }
-                if ($category->has_blogs) {
-                    $blog_page = route('blog.index', $category->slug);
-                }
-            }
+            // if (isset($item)) {
+            //     $tab_category = $item->category;
+            //     if ($tab_category->has_comments) {
+            //         $comment_page = $item->withParentsCommentUrl();
+            //     }
+            //     if ($tab_category->has_forums) {
+            //         $forum_page = $item->withParentsForumUrl();
+            //     }
+            // } else {
+            //     if ($category->has_comments) {
+            //         $comment_page = route('question.index', $category->slug) . '?s=1';
+            //     }
+            //     if ($category->has_forums) {
+            //         $forum_page = route('question.index', $category->slug);
+            //     }
+            // }
 
             $affilateService = new AffilateService();
             $affilates = $affilateService->suggestForAds($category, $item);
 
             $features = $category->features();
             $currentQueryParams = $request->query();
-
-            // $hot_pages = Cache::get('hot_pages');
 
             $compactVars = [
                 'item',
@@ -245,27 +190,14 @@ class AdvertiseController extends Controller
                 'isset_ads',
                 'advertises',
                 'title',
-                'category',
-                'currentQueryParams',
-                'selected_items',
+                'category'
             ];
-            // if (isset($item_video)) {
-            //     $compactVars[] = 'item_video';
-            // }
+
             if (isset($features)) {
                 $compactVars[] = 'features';
             }
             if (isset($affilates)) {
                 $compactVars[] = 'affilates';
-            }
-            if (isset($forum_page)) {
-                $compactVars[] = 'forum_page';
-            }
-            if (isset($comment_page)) {
-                $compactVars[] = 'comment_page';
-            }
-            if (isset($blog_page)) {
-                $compactVars[] = 'blog_page';
             }
             if (isset($suggetItems)) {
                 $compactVars[] = 'suggetItems';
@@ -277,16 +209,16 @@ class AdvertiseController extends Controller
             $suggests = $suggestionService->suggest();
             $suggestCats = $suggests['cats'];
 
-            $advertises = $advertise_repository->getlastAdvertiseByPaginate(20);
+            $advertises = MongoAdvertise::orderBy('created_at', 'desc')->where('status', 1)->paginate(20);
 
             $reqs = route('ads.index');
 
-            $forum_page = route('question.index');
-            $comment_page = route('question.index') . '?s=1';
-            $blog_page = route('blog.index');
+            // $forum_page = route('question.index');
+            // $comment_page = route('question.index') . '?s=1';
+            // $blog_page = route('blog.index');
             $isset_ads = 1;
 
-            return view('advertise.index', compact('suggestCats', 'forum_page', 'blog_page', 'comment_page', 'data', 'isset_ads', 'advertises', 'title'));
+            return view('advertise.index', compact('suggestCats', 'data', 'isset_ads', 'advertises', 'title'));
         }
     }
 
@@ -377,7 +309,6 @@ class AdvertiseController extends Controller
         return view('user.savelist', compact('saveItems'));
     }
 
-
     public function adminAll($cat_slug = null)
     {
         if ($cat_slug != null) {
@@ -390,14 +321,60 @@ class AdvertiseController extends Controller
         }
     }
 
+    public function destroy($id)
+    {
+        $ad = MongoAdvertise::find($id);
+        if (!auth('admin')->check()) {
+            if (auth('user')->id() != $ad->user_id) {
+                abort(403);
+            }
+        }
+
+        $this->removeAdvertiseFromItem($ad);
+
+        foreach ($ad->featureValues as $fv) {
+            $fv->delete();
+        }
+        $disk = Storage::disk('ftp');
+        foreach ($ad->getImages() as $key => $image) {
+            if ($key == 0) {
+                $thumb = explode('.webp', $image['filename'])[0] . '2.webp';
+                $disk->delete($thumb);
+            }
+            $disk->delete($image['filename']);
+        }
+        // if (isset($ad->items) && count($ad->items) > 0) {
+        //     dispatch(new ChangeItemPageCount($ad->items, 'advertise', 0))->onQueue('becharkhsite')->delay(now()->addMinutes(5));
+        // }
+        $ad->delete();
+
+        return redirect()->back()->with('success', 'آگهی با موفقیت حذف شد');
+    }
+
+    private function removeAdvertiseFromItem($advertise)
+    {
+        $items = $advertise->getItems();
+        foreach ($items as $item) {
+            $suggest_ads = $item->suggest_ads ?? [];
+
+            if (in_array($advertise->_id, $suggest_ads)) {
+                $suggest_ads = array_filter($suggest_ads, function ($id) use ($advertise) {
+                    return $id != $advertise->_id;
+                });
+
+                $suggest_ads = array_values($suggest_ads);
+
+                $item->suggest_ads = $suggest_ads;
+                $item->update();
+            }
+        }
+    }
+
 
     public function create(Request $request)
     {
         $user = auth('user')->user();
-        if ($user->email_actived != 1) {
-            return redirect()->route('user.dashboard.edit')->with('success', 'برای ثبت آگهی ایمیل خود را تایید کنید');
-        }
-        $categories = MongoCategory::where('status', 1)->where('is_active', 1)->get();
+        $categories = MongoCategory::where('status', 1)->where('has_ads', 1)->where('is_active', 1)->get();
         $categories = $categories->map(function ($category) {
             return [
                 'id' => $category->id,
@@ -456,7 +433,7 @@ class AdvertiseController extends Controller
                 $advertise->unset('not_paid');
                 return back()->with('success', 'آگهی با موفقیت تایید شد');
             } else {
-                return back()->with('success', 'ابتدا موجودی حساب خود را افزایش دهید');
+                return back()->with('success', 'موجودی حساب خود را افزایش دهید');
             }
         }
     }
@@ -531,18 +508,18 @@ class AdvertiseController extends Controller
         $disk->put($path . $filename, (string) $resizedImage);
     }
 
-    public function show(Request $request, $category_slug, $slug, $random, SuggestionService $suggestionService)
+    public function show(Request $request, $slug, SuggestionService $suggestionService)
     {
-        $category = MongoCategory::where('slug', $category_slug)->first();
-        if (!isset($category)) {
-            return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است');
-        }
-        $advertise = MongoAdvertise::where('category_id', $category->id)->where('slug', $slug)->where('random_id', $random)->first();
+        $advertise = MongoAdvertise::where('slug', $slug)->first();
         if (!isset($advertise)) {
             return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
         }
+        $category = MongoCategory::find($advertise->category_id);
+        if (!$category) {
+            return redirect()->route('home')->with('success', 'آگهی در انتظار تایید است');
+        }
         if ($advertise->status == 0) {
-            return redirect()->route('ads.index')->with('success', 'آگهی در انتظار تایید می باشد');
+            return redirect()->route('ads.index')->with('success', 'آگهی در انتظار تایید است');
         } elseif ($advertise->status == 2) {
             return redirect()->back()->with('success', 'آگهی در انتظار پرداخت می باشد');
         }
@@ -556,21 +533,14 @@ class AdvertiseController extends Controller
         if (isset($items) && count($items) > 0) {
             $item_id = $items[0];
             $item = MongoItem::find($item_id);
+            $parent_item = $item->parent;
         }
-        if ($item) {
-            $tab_title = $item->full_title ?? $item->title;
-            // if ($user) {
-            //     $follow = MongoFollowItem::where('item_id', $item->id)->where('user_id', $user->id)->first();
-            //     if (isset($follow)) {
-            //         $is_follow = 1;
-            //     } else {
-            //         $is_follow = 0;
-            //     }
-            // }
+
+        if (isset($parent_item)) {
+            $suggests = $suggestionService->suggest($category, $parent_item);
         } else {
-            $tab_title = $category->full_title ?? $category->title;
+            $suggests = $suggestionService->suggest($category, $item);
         }
-        $suggests = $suggestionService->suggest($category, $item);
         if (isset($suggests['items'])) {
             $suggetItems = $suggests['items'];
         } else {
@@ -588,39 +558,7 @@ class AdvertiseController extends Controller
             $isAdForThisUser = 0;
         }
         $adImages = $advertise->getImages();
-        $adVideo = $advertise->video();
         $advertiseUser = $advertise->user;
-
-        if (isset($item)) {
-            if ($category->has_comments) {
-                $comment_page = $item->withParentsCommentUrl();
-            }
-            if ($category->has_forums) {
-                $forum_page = $item->withParentsForumUrl();
-            }
-            if ($category->has_blogs) {
-                $blog_page = $item->withParentsBlogUrl();
-            }
-            if ($category->has_ads) {
-                $advertise_page = $item->withParentsAdvertiseUrl();
-            }
-            if ($category->has_ads) {
-                $advertise_page = $item->withParentsAdvertiseUrl();
-            }
-        } else {
-            if ($category->has_comments) {
-                $comment_page = route('question.index', $category->slug) . '?s=1';
-            }
-            if ($category->has_forums) {
-                $forum_page = route('question.index', $category->slug);
-            }
-            if ($category->has_blogs) {
-                $blog_page = route('blog.index', $category->slug);
-            }
-            if ($category->has_ads) {
-                $advertise_page = route('ads.index', $category->slug);
-            }
-        }
 
         if (!isset($_COOKIE['page_seen'])) {
             $advertise->seen_count += 1;
@@ -631,8 +569,6 @@ class AdvertiseController extends Controller
             'user',
             'category',
             'item',
-            'tab_title',
-            'adVideo',
             'advertises',
             'user',
             'adImages',
@@ -640,18 +576,7 @@ class AdvertiseController extends Controller
             'isAdForThisUser',
             'advertiseUser'
         ];
-        if (isset($forum_page)) {
-            $compactVars[] = 'forum_page';
-        }
-        if (isset($comment_page)) {
-            $compactVars[] = 'comment_page';
-        }
-        if (isset($blog_page)) {
-            $compactVars[] = 'blog_page';
-        }
-        if (isset($advertise_page)) {
-            $compactVars[] = 'advertise_page';
-        }
+
         if (isset($suggetItems)) {
             $compactVars[] = 'suggetItems';
         } elseif (isset($suggestCats)) {
@@ -741,6 +666,7 @@ class AdvertiseController extends Controller
                 'c_id' => $district->city_id,
             ];
         });
+
         return view('advertise.edit', compact('advertise', 'category', 'provinces', 'cities', 'districts', 'advertiseFeatueItems', 'cfeatures', 'citems'));
     }
 
@@ -764,15 +690,13 @@ class AdvertiseController extends Controller
 
         $advertise->update();
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => auth('admin')->user()->username . '  آگهی با عنوان ' . $advertise->title . ' را ویرایش کرد (admin)',
-                'route' => route('ad.show', ['category_slug' => $advertise->category->slug, 'slug' => $advertise->slug, 'random' => $advertise->random_id]),
-            ]));
-            if ($advertise->status == 0) {
-                Mail::to($admin->email)->send(new EmailToUser('آگهی تایید نشده', 'یک آگهی با عنوان ' . $advertise->title . ' در انتظار تایید می باشد در اسرع وقت نسبت به ویرایش آن اقدام کنید'));
-            }
+        $admin = Admin::first();
+        $admin->notify(new SiteEvent([
+            'action' => auth('admin')->user()->username . '  آگهی با عنوان ' . $advertise->title . ' را ویرایش کرد (admin)',
+            'route' => '',
+        ]));
+        if ($advertise->status == 0) {
+            Mail::to($admin->email)->send(new EmailToUser('آگهی تایید نشده', 'یک آگهی با عنوان ' . $advertise->title . ' در انتظار تایید می باشد در اسرع وقت نسبت به ویرایش آن اقدام کنید'));
         }
 
         return back()->with('success', 'آگهی با موفقیت ویرایش شد');
@@ -797,15 +721,14 @@ class AdvertiseController extends Controller
         $advertise->body = $request->advertise_body;
         $unset_price = 0;
         $unset_phone = 0;
-        $unset_dist = 0;
-        if (isset($request->price)) {
+        if ($request->price) {
             $advertise->price = $request->price;
         } else {
             if (isset($advertise->price)) {
                 $unset_price = 1;
             }
         }
-        if (isset($request->phone)) {
+        if ($request->phone) {
             $advertise->phone = $request->phone;
         } else {
             if (isset($advertise->phone)) {
@@ -832,65 +755,51 @@ class AdvertiseController extends Controller
             }
         }
 
+        $slug = $advertise->slug;
         $category = $advertise->category;
 
-        $adImages = $advertise->images ?? [];
+        $old_images = $advertise->images ?? [];
         $images = [];
-        for ($i = 0; $i < 9; $i++) {
-            $fn = 'img-' . $i + 1;
-            if ($request->hasFile($fn)) {
+        if (isset($request->images)) {
+            foreach ($request->images as $key => $img) {
+                $baseFilename = str_limit($slug, 10, '-') . time() . $key;
                 $path = 'advertise/images/' . $category->slug . '/' . $user->username . '/';
-                $cover = $request->file($fn);
-                if (isset($adImages[$i])) {
-                    $baseFilename = explode('.webp', $adImages[$i])[0];
-                    $baseFilenamearr = explode($path, $baseFilename);
-                    if (isset($baseFilenamearr[1])) {
-                        $baseFilename = $baseFilenamearr[1];
-                    } else {
-                        $baseFilename = Str::limit($advertise->slug, 10, '-') . time() . $i;
-                    }
-                } else {
-                    $baseFilename = Str::limit($advertise->slug, 10, '-') . time() . $i;
-                }
-                if ($i == 0) {
-                    $filename2 = $baseFilename . '2.webp';
-                    $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
-                }
+
+                $filename2 = $baseFilename . '2.webp';
+                $this->uploadAndResizeImage($img, $path, $filename2, 90, 1);
+
                 $filename = $baseFilename . '.webp';
-                $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
+                $this->uploadAndResizeImage($img, $path, $filename, 90, 0);
                 $images[] = $path . $filename;
-            } else {
-                if (isset($adImages[$i])) {
-                    $images[] = $adImages[$i];
-                }
             }
         }
 
         if (count($images) > 0) {
-            $advertise->images = $images;
+            $new_images = array_merge($old_images, $images);
+            $advertise->images = $new_images;
         }
 
-        $addItemService = new AdditemsService();
-        $last_items = $advertise->items ?? [];
-        $add_item_result = $addItemService->addForUpdateAd($category, $last_items, $request);
-        $items = $add_item_result['items'];
-        $items_title = $add_item_result['items_title'];
-        $changeStatus = $add_item_result['changeStatus'];
-        $typeTextFeatures = $add_item_result['typeTextFeatures'];
+        // $addItemService = new AdditemsService();
+        // $last_items = $advertise->items ?? [];
+        // $add_item_result = $addItemService->addForUpdateAd($category, $last_items, $request);
+        // $items = $add_item_result['items'];
+        // $items_title = $add_item_result['items_title'];
+        // $changeStatus = $add_item_result['changeStatus'];
+        // $typeTextFeatures = $add_item_result['typeTextFeatures'];
 
         $returnText = 'تغییرات با موفقیت ثبت شد';
-        if ($changeStatus) {
-            $advertise->status = 0;
-            $advertise->not_item = 1;
-            $returnText = "تغییرات ثبت شد و بعد از تایید نمایش داده میشود";
-        }
+        // if ($changeStatus) {
+        //     $advertise->status = 0;
+        //     $advertise->not_item = 1;
+        //     $returnText = "تغییرات ثبت شد و بعد از تایید نمایش داده میشود";
+        // }
 
-        if (count($items) > 0) {
-            $advertise->items = $items;
-        }
-        if (count($items_title) > 0) {
-            $advertise->items_title = $items_title;
-        }
+        // if (count($items) > 0) {
+        //     $advertise->items = $items;
+        // }
+        // if (count($items_title) > 0) {
+        //     $advertise->items_title = $items_title;
+        // }
 
         $advertise->update();
 
@@ -900,29 +809,26 @@ class AdvertiseController extends Controller
         if ($unset_phone) {
             $advertise->unset('phone');
         }
-        if ($unset_dist) {
-            $advertise->unset('district_id');
-        }
 
-        $afvs = $advertise->featureValues;
-        if (isset($typeTextFeatures)) {
-            foreach ($typeTextFeatures as $feature) {
-                $fn = $feature->slug;
-                if (isset($request->$fn)) {
-                    $afv = $afvs->where('feature_id', $feature->id)->first();
-                    if (isset($afv)) {
-                        $afv->value = $request->$fn;
-                        $afv->update();
-                    } else {
-                        $adFeatureValue = new MongoAdvertiseFeatureValue();
-                        $adFeatureValue->advertise_id = $advertise->id;
-                        $adFeatureValue->feature_id = $feature->id;
-                        $adFeatureValue->value = $request->$fn;
-                        $adFeatureValue->save();
-                    }
-                }
-            }
-        }
+        // $afvs = $advertise->featureValues;
+        // if (isset($typeTextFeatures)) {
+        //     foreach ($typeTextFeatures as $feature) {
+        //         $fn = $feature->slug;
+        //         if (isset($request->$fn)) {
+        //             $afv = $afvs->where('feature_id', $feature->id)->first();
+        //             if (isset($afv)) {
+        //                 $afv->value = $request->$fn;
+        //                 $afv->update();
+        //             } else {
+        //                 $adFeatureValue = new MongoAdvertiseFeatureValue();
+        //                 $adFeatureValue->advertise_id = $advertise->id;
+        //                 $adFeatureValue->feature_id = $feature->id;
+        //                 $adFeatureValue->value = $request->$fn;
+        //                 $adFeatureValue->save();
+        //             }
+        //         }
+        //     }
+        // }
 
         if ($is_admin) {
             return redirect()->route('admin.advertise.all')->with('success', $returnText);
@@ -931,13 +837,13 @@ class AdvertiseController extends Controller
             foreach ($admins as $admin) {
                 $admin->notify(new SiteEvent([
                     'action' => $user->username . '  آگهی با عنوان ' . $advertise->title . ' را ویرایش کرد',
-                    'route' => route('ad.show', ['category_slug' => $advertise->category->slug, 'slug' => $advertise->slug, 'random' => $advertise->random_id]),
+                    'route' => '',
                 ]));
                 if ($advertise->status == 0) {
                     Mail::to($admin->email)->send(new EmailToUser('آگهی تایید نشده', 'یک آگهی با عنوان ' . $advertise->title . ' در انتظار تایید می باشد در اسرع وقت نسبت به ویرایش آن اقدام کنید'));
                 }
             }
-            return redirect()->route('user.dashboard.edit', "ad")->with('success', $returnText);
+            return redirect()->route('user.dashboard.edit')->with('success', $returnText);
         }
     }
 
@@ -964,19 +870,10 @@ class AdvertiseController extends Controller
 
         $returnText = "آگهی با موفقیت ثبت شد";
         $advertise->status = 1;
-        if ($user->email_actived != 1) {
-            $advertise->status = 0;
-            $returnText = "آگهی ثبت شد ، برای نمایش آگهی باید ایمیل خود را تایید کنید";
-        }
         if (!$user->canCreateAd()) {
             $advertise->status = 0;
             $advertise->not_paid = 1;
             $returnText = "آگهی با موفقیت ثبت شد و در انتظار پرداخت می باشد";
-        }
-        if ($category->status != 1) {
-            $advertise->status = 0;
-            $advertise->not_cat = 1;
-            $returnText = "آگهی با موفقیت ثبت شد و بعد از تایید نمایش داده میشود";
         }
 
         $advertise->category_id = $category->id;
@@ -990,9 +887,10 @@ class AdvertiseController extends Controller
         }
         $advertise->title = $request->title;
         $advertise->body = $request->advertise_body;
+
         $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
-        $advertise->slug = $slug;
-        $advertise->random_id = strtolower(str_random(4)) . time();
+        $slug2 = $this->createAdSlug($category->slug, str_limit($slug, 20, ''), 1);
+        $advertise->slug = $slug2;
 
         $advertise->province_id = $request->province_id;
         $advertise->city_id = $request->city_id;
@@ -1022,28 +920,24 @@ class AdvertiseController extends Controller
 
         if (count($items) > 0) {
             $advertise->items = $items;
-            dispatch(new ChangeItemPageCount($items, 'advertise', 1))->onQueue('becharkhsite')->delay(now()->addMinutes(30));
+            dispatch(new ChangeItemPageCount($items, 'advertise', 1))->onQueue('becharkhsite')->delay(now()->addMinutes(2));
         }
         if (count($items_title) > 0) {
             $advertise->items_title = $items_title;
         }
 
         $images = [];
-        for ($i = 1; $i <= 8; $i++) {
-            $fn = 'img-' . $i;
-            if ($request->hasFile($fn)) {
-                $cover = $request->file($fn);
-                $baseFilename = Str::limit($slug, 10, '-') . time() . $i;
+        if (isset($request->images)) {
+            foreach ($request->images as $key => $img) {
+                $baseFilename = str_limit($slug, 10, '-') . time() . $key;
                 $path = 'advertise/images/' . $category->slug . '/' . $user->username . '/';
-                if ($i == 1) {
-                    $filename2 = $baseFilename . '2.webp';
-                    $this->uploadAndResizeImage($cover, $path, $filename2, 90, 1);
-                }
+
+                $filename2 = $baseFilename . '2.webp';
+                $this->uploadAndResizeImage($img, $path, $filename2, 90, 1);
+
                 $filename = $baseFilename . '.webp';
-                $this->uploadAndResizeImage($cover, $path, $filename, 90, 0);
+                $this->uploadAndResizeImage($img, $path, $filename, 90, 0);
                 $images[] = $path . $filename;
-            } else {
-                break;
             }
         }
 
@@ -1070,16 +964,47 @@ class AdvertiseController extends Controller
             $user->decreaseMoneyFor("advertise");
         }
 
+        if ($advertise->status == 1) {
+            $this->addAdvertiseToItem($advertise);
+        }
+
         $admin = Admin::first();
         $admin->notify(new SiteEvent([
             'action' => $user->username . ' یک آگهی با عنوان ' . $request->title . ' ثبت کرد',
-            'route' => route('ad.show', ['category_slug' => $category->slug, 'slug' => $advertise->slug, 'random' => $advertise->random_id]),
+            'route' => route('admin.advertise.all'),
         ]));
         if ($advertise->status == 0) {
             Mail::to($admin->email)->send(new EmailToUser('آگهی تایید نشده', 'یک آگهی با عنوان ' . $advertise->title . ' در انتظار تایید می باشد در اسرع وقت نسبت به ویرایش آن اقدام کنید'));
         }
 
-        return redirect()->route('user.dashboard.edit', "ad")->with('success', $returnText);
+        return redirect()->route('user.dashboard.edit')->with('success', $returnText);
+    }
+
+    private function addAdvertiseToItem($advertise)
+    {
+        $items = $advertise->getItems();
+        foreach ($items as $item) {
+            $suggest_ads = $item->suggest_ads ?? [];
+            if (!in_array($advertise->_id, $suggest_ads)) {
+                array_unshift($suggest_ads, $advertise->_id);
+            }
+            if (count($suggest_ads) > 5) {
+                $suggest_ads = array_slice($suggest_ads, 0, 5);
+            }
+            $item->suggest_ads = $suggest_ads;
+            $item->update();
+        }
+    }
+
+    private function createAdSlug($cat_slug, $slug, $random = 1)
+    {
+        $slug2 = $cat_slug . '-' . $slug . '-' . $random;
+        $is_exist = MongoAdvertise::where('slug', $slug2)->first();
+        if ($is_exist) {
+            return $this->createAdSlug($cat_slug, $slug, $random + 1);
+        } else {
+            return $slug2;
+        }
     }
 
     private function startsWithHttp($url)

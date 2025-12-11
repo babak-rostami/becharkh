@@ -5,11 +5,11 @@
         <changefreq>hourly</changefreq>
         <priority>1</priority>
     </url>
-    <url>
+    {{-- <url>
         <loc>{{ url('/ads') }}</loc>
         <changefreq>hourly</changefreq>
         <priority>0.9</priority>
-    </url>
+    </url> --}}
     <url>
         <loc>{{ url('/forum') }}</loc>
         <changefreq>hourly</changefreq>

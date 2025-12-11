@@ -110,9 +110,14 @@
             <div class="row">
                 <div class="col-12 text-center">
                     @if ($video)
-                        <iframe class="shadow-sm p-0 m-0 radius-10"
-                            src="{{ route('video.embedb.show', $video->slug2) }}" style="border:none;" width="100%"
-                            height="400px" allowfullscreen></iframe>
+                        <iframe class="shadow-sm p-0 m-0 radius-10" src="{{ route('video.embedb.show', $video->slug2) }}"
+                            style="border:none;" width="100%" height="400px" allowfullscreen></iframe>
+                    @elseif(isset($question->video_embed))
+                        <div class="embed-video-wrapper">
+                            <div class="embed-video-container">
+                                {!! $question->video_embed !!}
+                            </div>
+                        </div>
                     @else
                         @if ($question->getImage())
                             <img id="pquestion-img" src="{{ $question->image() }}" alt="{{ $question->title }}"

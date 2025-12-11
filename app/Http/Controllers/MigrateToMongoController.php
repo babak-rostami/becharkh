@@ -247,7 +247,6 @@ class MigrateToMongoController extends Controller
         // $item_for_top_user->item_id = '66821a5910cf783aeb0f0c2f';
         // $item_for_top_user->save();
 
-
         dd("done");
     }
     private function addCategoryQuestions()

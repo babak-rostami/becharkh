@@ -1,37 +1,55 @@
-function saveAdvertise(button) {
-    var tmp = 0;
-    $(".required").each(function(i, el) {
-        if ($(el).is("div")) {
-            let elementId = $(el).attr("id");
-            let inputid = elementId.split("fselect-box-")[1];
-            if ($(`#${inputid}`).length == 0) {
-                tmp += 1;
-            }
-        } else {
-            var data = $(el).val();
-            if (
-                data === null ||
-                data.match(/^ *$/) !== null ||
-                data == "" ||
-                data == "انتخاب کنید"
-            ) {
-                tmp += 1;
-            }
+let isSubmitting = false;
+function storeAdvertise() {
+    let ad_title = $("#title").val().trim();
+    let ad_body = $("#advertise_body").val().trim();
+    let ad_phone = $("#advertise-phone").val();
+    let send_advertise = 1;
+    if (ad_title === '') {
+        send_advertise = 0;
+        $("#title-error").show()
+        $("#title").addClass('input-style-error')
+        $("#title-error").text('لطفا این قسمت را تکمیل کنید')
+        scrollToId('title', 50)
+    }
+    if (ad_body === '') {
+        send_advertise = 0;
+        $("#body-error").show()
+        $("#advertise_body").addClass('input-style-error')
+        $("#body-error").text('لطفا این قسمت را تکمیل کنید')
+        if (ad_title !== '') {
+            scrollToId('advertise_body', 50)
         }
-    });
-    $(".error-count").text(tmp);
-    if (tmp > 0) {
-        $(".errorCat").show();
-    } else {
-        button.disabled = true;
-        button.innerHTML = loadingGif;
-        button.className = "dis-btn mt-2 mb-3 mr-1";
-        $(".errorCat").hide();
+    }
+    if (ad_phone === '') {
+        send_advertise = 0;
+        $("#phone-error").show()
+        $("#advertise-phone").addClass('input-style-error')
+        $("#phone-error").text('لطفا این قسمت را تکمیل کنید')
+    }
+    if (send_advertise) {
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        let store_btn = $("#store-ad-btn");
+        store_btn.prop('disabled', true);
+        store_btn.text('در حال ثبت آگهی...');
+        store_btn.removeClass('btn-primary').addClass('btn-light');
+
         $("#adform").submit();
     }
 }
 
-$("#has_price").change(function() {
+function scrollToId(id, extra_offset = 0) {
+    let sId = "#" + id;
+    let scrollOffset = $(sId).offset().top - extra_offset;
+    $("html, body").animate({
+        scrollTop: scrollOffset
+    },
+        1000
+    );
+}
+
+$("#has_price").change(function () {
     const priceDiv = document.getElementById("price");
     var id = $(this)
         .find("option:selected")
@@ -46,6 +64,13 @@ $("#has_price").change(function() {
         priceDiv.classList.remove("required");
     }
 });
+
+function phoneOnChange(event, el, min, max) {
+    validateNumberInput(event);
+    countCharacters(el, min, max);
+    $("#phone-error").hide();
+    $("#advertise-phone").removeClass('input-style-error');
+}
 
 function validateNumberInput(event) {
     const input = event.target;
@@ -76,7 +101,7 @@ function formatNumber(number) {
 function readURL(input, i) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             id = "#blah-" + i;
             $(id).attr("src", e.target.result);
         };
@@ -127,6 +152,23 @@ function addImage() {
     $("#image-row").append(newImageHtml);
 }
 
+function titleChange(element, min, max) {
+    countCharacters(element, min, max)
+    $("#title-error").hide();
+    const title_input = $("#title");
+    if (title_input.hasClass('input-style-error')) {
+        title_input.removeClass('input-style-error');
+    }
+}
+
+function bodyChange() {
+    $("#body-error").hide();
+    const body_input = $("#advertise_body");
+    if (body_input.hasClass('input-style-error')) {
+        body_input.removeClass('input-style-error');
+    }
+}
+
 function countCharacters(input, min = null, max = null) {
     var currentLength = $(input).val().length;
     var maxLength = max;
@@ -136,14 +178,6 @@ function countCharacters(input, min = null, max = null) {
     var CharMinSpan = $(charMinSpanId);
     var charMaxSpanId = "#charCountMax-" + input.id;
     var CharMaxSpan = $(charMaxSpanId);
-
-    $(".error").hide();
-    if (input.id == "title") {
-        $("#title-error").hide();
-    }
-    if (input.id == "short_description") {
-        $("#short_description-error").hide();
-    }
 
     if (minLength != null) {
         var remainingCharMin = minLength - currentLength;
@@ -227,9 +261,8 @@ function showChildrenFeaturesBoxs(f_id = null) {
         if ($(`#fselect-box-${chf.slug}`).children().length == 0) {
             let featureInput;
             if (chf.type == 0) {
-                featureInput = `<div class="position-relative ${
-                    chf.require ? "required" : ""
-                }" id="fselect-box-${chf.slug}">
+                featureInput = `<div class="position-relative ${chf.require ? "required" : ""
+                    }" id="fselect-box-${chf.slug}">
                                 <span class="d-block">${chf.title}`;
                 if (chf.require) {
                     featureInput += `<span class="red-color">*</span>`;
@@ -257,11 +290,9 @@ function showChildrenFeaturesBoxs(f_id = null) {
                 if (chf.require) {
                     featureInput += `<span class="red-color">*</span>`;
                 }
-                featureInput += `</span><input class="form-control ${
-                    chf.require ? "required" : ""
-                }" id="${chf.slug}" name="${
-                    chf.slug
-                }" type="text" placeholder="${chf.title}">
+                featureInput += `</span><input class="form-control ${chf.require ? "required" : ""
+                    }" id="${chf.slug}" name="${chf.slug
+                    }" type="text" placeholder="${chf.title}">
                             </div>`;
             }
             if (f_id == null) {
@@ -321,7 +352,7 @@ function closeCreateNewItemBox(feature_id) {
     $(`#sfnores-${feature_id}`).show();
 }
 
-$(document).click(function(event) {
+$(document).click(function (event) {
     if (open_box != null) {
         if (!$(event.target).closest(open_box).length) {
             $(open_box).hide();
@@ -469,20 +500,16 @@ function showFeatureItemsInput(feature_id) {
         if (pfeatureInput.length > 0) {
             parent_item_id = pfeatureInput;
             featureItemsForSCFCE(feature_id, parent_item_id).forEach(i => {
-                ilist += `<span class="sfitem-${feature_id} ${
-                    selected_items.includes(i.id) ? "item-selected" : ""
-                }" data-entitle="${i.e_title}" onclick="selectItem('${
-                    i.id
-                }')">${i.title}</span>`;
+                ilist += `<span class="sfitem-${feature_id} ${selected_items.includes(i.id) ? "item-selected" : ""
+                    }" data-entitle="${i.e_title}" onclick="selectItem('${i.id
+                    }')">${i.title}</span>`;
             });
         }
     } else {
         featureItemsForSCFCE(feature_id, null).forEach(i => {
-            ilist += `<span class="sfitem-${feature_id} ${
-                selected_items.includes(i.id) ? "item-selected" : ""
-            }" data-entitle="${i.e_title}" onclick="selectItem('${i.id}')">${
-                i.title
-            }</span>`;
+            ilist += `<span class="sfitem-${feature_id} ${selected_items.includes(i.id) ? "item-selected" : ""
+                }" data-entitle="${i.e_title}" onclick="selectItem('${i.id}')">${i.title
+                }</span>`;
         });
     }
     return ilist;
@@ -536,7 +563,7 @@ function searchFItem(f_id) {
         );
     });
     // Show the filtered items
-    filteredItems.each(function() {
+    filteredItems.each(function () {
         $(this).show();
     });
 }
@@ -592,7 +619,7 @@ function phoneShow(show) {
 
 /* for choose location */
 
-$(document).ready(function() {
+$(document).ready(function () {
     setTimeout(() => {
         if (district_id) {
             chooseDistrict(district_id);
@@ -612,14 +639,14 @@ function showProvinces() {
     container.empty();
     $("#search-choose-location-items").hide();
     $("#choose-location-search").val("");
-    $.each(provinces, function(index, province) {
+    $.each(provinces, function (index, province) {
         let new_item = $("<span>")
             .text(province.name)
             .addClass("choose-location-item")
             .append(
                 `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
             )
-            .click(function() {
+            .click(function () {
                 chooseProvince(province.id);
             });
         if (index == 0) {
@@ -637,7 +664,7 @@ function chooseProvince(prov_id) {
     $("#choose-location-back").show();
     $("#choose-location-back")
         .unbind("click")
-        .bind("click", function() {
+        .bind("click", function () {
             showProvinces();
         });
     $("#choose-location-title").text("انتخاب شهر");
@@ -646,19 +673,19 @@ function chooseProvince(prov_id) {
     $("#search-choose-location-items").hide();
     $("#choose-location-search").val("");
 
-    let prov_cities = cities.filter(function(city) {
+    let prov_cities = cities.filter(function (city) {
         return city.p_id === prov_id;
     });
     if (prov_cities.length > 0) {
         container.empty();
-        $.each(prov_cities, function(index, city) {
+        $.each(prov_cities, function (index, city) {
             let new_item = $("<span>")
                 .text(city.name)
                 .addClass("choose-location-item")
                 .append(
                     `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
                 )
-                .click(function() {
+                .click(function () {
                     chooseCity(city.id);
                 });
             if (index == 0) {
@@ -677,7 +704,7 @@ function chooseCity(c_id) {
     $("#choose-location-back").show();
     $("#choose-location-back")
         .unbind("click")
-        .bind("click", function() {
+        .bind("click", function () {
             chooseProvince(province_id);
         });
     $("#choose-location-title").text("انتخاب محله");
@@ -686,16 +713,16 @@ function chooseCity(c_id) {
     $("#search-choose-location-items").hide();
     $("#choose-location-search").val("");
 
-    let prov_districts = districts.filter(function(district) {
+    let prov_districts = districts.filter(function (district) {
         return district.c_id === c_id;
     });
     if (prov_districts.length > 0) {
         container.empty();
-        $.each(prov_districts, function(index, district) {
+        $.each(prov_districts, function (index, district) {
             let new_item = $("<span>")
                 .text(district.name)
                 .addClass("choose-location-item")
-                .click(function() {
+                .click(function () {
                     chooseDistrict(district.id);
                 });
             if (index == 0) {
@@ -744,11 +771,11 @@ function addLocation() {
 
 var search_loc_delay = 1000;
 var search_loc_timeoutId;
-$("#choose-location-search").on("input", function() {
+$("#choose-location-search").on("input", function () {
     clearTimeout(search_loc_timeoutId);
-    search_loc_timeoutId = setTimeout(function() {
-        searchLocation();
-    }, search_loc_delay);
+    // search_loc_timeoutId = setTimeout(function () {
+    searchLocation();
+    // }, search_loc_delay);
 });
 function searchLocation() {
     if (location_modal_page == "prov" || location_modal_page == "city") {
@@ -756,10 +783,10 @@ function searchLocation() {
         const search_result_box = $("#search-choose-location-items");
         let search_input = $("#choose-location-search").val();
         if (search_input.trim() !== "") {
-            let search_provinces = provinces.filter(function(p) {
+            let search_provinces = provinces.filter(function (p) {
                 return p.name.includes(search_input);
             });
-            let search_cities = cities.filter(function(city) {
+            let search_cities = cities.filter(function (city) {
                 return (
                     (province_id != null ? city.p_id == province_id : true) &&
                     city.name.includes(search_input)
@@ -769,14 +796,14 @@ function searchLocation() {
             search_result_box.show();
             search_result_box.empty();
             if (search_cities.length > 0 || search_provinces.length > 0) {
-                $.each(search_provinces, function(index, province) {
+                $.each(search_provinces, function (index, province) {
                     let new_item = $("<span>")
                         .text("استان " + province.name)
                         .addClass("choose-location-item")
                         .append(
                             `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
                         )
-                        .click(function() {
+                        .click(function () {
                             chooseProvince(province.id);
                         });
                     if (index == 0) {
@@ -784,19 +811,19 @@ function searchLocation() {
                     }
                     new_item.appendTo(search_result_box);
                 });
-                $.each(search_cities, function(index, city) {
+                $.each(search_cities, function (index, city) {
                     let new_item = $("<span>")
                         .text(
                             "شهر " +
-                                city.name +
-                                " در استان " +
-                                findProvById(city.p_id).name
+                            city.name +
+                            " در استان " +
+                            findProvById(city.p_id).name
                         )
                         .addClass("choose-location-item")
                         .append(
                             `<img class="float-left" src="${ftp_path}files/other/images/next.png">`
                         )
-                        .click(function() {
+                        .click(function () {
                             chooseCity(city.id);
                         });
                     if (index == 0) {
@@ -820,7 +847,7 @@ function searchLocation() {
         const search_result_box = $("#search-choose-location-items");
         let search_input = $("#choose-location-search").val();
         if (search_input.trim() !== "") {
-            let search_districts = districts.filter(function(district) {
+            let search_districts = districts.filter(function (district) {
                 return (
                     district.c_id == city_id &&
                     district.name.includes(search_input)
@@ -830,11 +857,11 @@ function searchLocation() {
             search_result_box.show();
             search_result_box.empty();
             if (search_districts.length > 0) {
-                $.each(search_districts, function(index, district) {
+                $.each(search_districts, function (index, district) {
                     let new_item = $("<span>")
                         .text(district.name)
                         .addClass("choose-location-item")
-                        .click(function() {
+                        .click(function () {
                             chooseDistrict(district.id);
                         });
                     if (index == 0) {
@@ -872,3 +899,197 @@ function findCityById(c_id) {
 }
 
 /* end for choose location */
+
+
+
+// for select images box
+
+
+let imageFiles = {}; // ذخیره‌ی فایل‌ها بر اساس id یکتا
+let nextId = 1; // شناسه یکتا برای هر عکس
+const maxImages = 8;
+
+function clickSelectImage() {
+    $('#images').click();
+}
+
+// فقط یک بار event ثبت می‌کنیم
+$(document).on('change', '#images', function (event) {
+    const files = event.target.files;
+
+    for (let file of files) {
+        if (Object.keys(imageFiles).length >= maxImages) break;
+
+        const id = nextId++;
+        imageFiles[id] = file;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (['heic', 'heif'].includes(ext)) {
+            // preview برای آیفون غیر فعال
+            addImagePreview(id, null, file, false);
+        } else {
+            const reader = new FileReader();
+            reader.onload = e => addImagePreview(id, e.target.result, file, true);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    $('#images').val('');
+    updateHiddenInput();
+});
+
+function addImagePreview(id, src, file, showPreview = true) {
+    let imgHtml = showPreview
+        ? `<img src="${src}" alt="selected">`
+        : `<div class="no-preview">انتخاب شد</div>`;
+
+    const html = `
+                    <div class="select-img-item" id="select-img-item-${id}">
+                        ${imgHtml}
+                        <div class="img-actions">
+                            <button type="button" class="edit-img-btn" onclick="editImage(${id})">ویرایش</button>
+                            <button type="button" class="delete-img-btn" onclick="removeImage(${id})">حذف</button>
+                        </div>
+                    </div>
+                `;
+    $('#add-image-btn').before(html);
+
+    if (Object.keys(imageFiles).length >= maxImages) {
+        $('#add-image-btn').hide();
+    }
+}
+
+function removeImage(id) {
+    delete imageFiles[id];
+    $(`#select-img-item-${id}`).remove();
+    updateHiddenInput();
+
+    if (Object.keys(imageFiles).length < maxImages) {
+        $('#add-image-btn').show();
+    }
+}
+
+function editImage(id) {
+    const input = $('<input type="file" accept="image/*" class="d-none">');
+    input.on('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        imageFiles[id] = file;
+
+        if (['heic', 'heif'].includes(ext)) {
+            $(`#select-img-item-${id} img`).remove();
+            $(`#select-img-item-${id}`).prepend('<div class="no-preview">انتخاب شد</div>');
+        } else {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                let imgEl = $(`#select-img-item-${id} img`);
+                if (imgEl.length === 0) {
+                    $(`#select-img-item-${id} .no-preview`).remove();
+                    $(`#select-img-item-${id}`).prepend(`<img src="${ev.target.result}" alt="selected">`);
+                } else {
+                    imgEl.attr('src', ev.target.result);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        updateHiddenInput();
+    });
+    input.click();
+}
+
+function updateHiddenInput() {
+    const newInput = $('<input>', {
+        type: 'file',
+        id: 'images',
+        name: 'images[]',
+        class: 'd-none',
+        multiple: true,
+        accept: 'image/*'
+    });
+
+    const dt = new DataTransfer();
+    Object.values(imageFiles).forEach(file => dt.items.add(file));
+    newInput[0].files = dt.files;
+
+    $('#images').replaceWith(newInput);
+}
+
+// let deleteTarget = null;
+
+// // وقتی کاربر روی "ویرایش" عکس قدیمی کلیک می‌کند
+// function editOldImage(index, advertiseId) {
+//     const input = $('<input type="file" accept="image/*" class="d-none">');
+//     input.on('change', function (e) {
+//         const file = e.target.files[0];
+//         if (!file) return;
+
+//         const formData = new FormData();
+//         formData.append('image', file);
+//         formData.append('advertise_id', advertiseId);
+//         formData.append('index', index);
+//         formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+//         $.ajax({
+//             url: '/advertises/update-image',
+//             type: 'POST',
+//             data: formData,
+//             processData: false,
+//             contentType: false,
+//             beforeSend: () => {
+//                 $(`#select-img-item-${index} .edit-img-btn`).text('در حال ویرایش...');
+//             },
+//             success: (response) => {
+//                 if (response.url) {
+//                     $(`#select-img-item-${index} img`).attr('src', response.url);
+//                 }
+//                 toastr.success('عکس با موفقیت ویرایش شد.');
+//             },
+//             error: () => {
+//                 toastr.error('خطا در ویرایش عکس');
+//             },
+//             complete: () => {
+//                 $(`#select-img-item-${index} .edit-img-btn`).text('ویرایش');
+//             }
+//         });
+//     });
+//     input.click();
+// }
+
+// // وقتی کاربر روی "حذف" عکس قدیمی کلیک می‌کند
+// function confirmDeleteImage(index, advertiseId) {
+//     deleteTarget = { index, advertiseId };
+//     $('#deleteConfirmModal').modal('show');
+// }
+
+// // وقتی کاربر حذف را تأیید می‌کند
+// $('#confirmDeleteBtn').on('click', function () {
+//     if (!deleteTarget) return;
+
+//     const { index, advertiseId } = deleteTarget;
+//     $('#deleteConfirmModal').modal('hide');
+
+//     $.ajax({
+//         url: '/advertises/delete-image',
+//         type: 'POST',
+//         data: {
+//             advertise_id: advertiseId,
+//             index: index,
+//             _token: $('meta[name="csrf-token"]').attr('content')
+//         },
+//         beforeSend: () => {
+//             $(`#select-img-item-${index} .delete-img-btn`).text('در حال حذف...');
+//         },
+//         success: (response) => {
+//             $(`#select-img-item-${index}`).remove();
+//             toastr.success('عکس با موفقیت حذف شد.');
+//         },
+//         error: () => {
+//             toastr.error('خطا در حذف عکس');
+//         }
+//     });
+// });
+
+// end for select images box

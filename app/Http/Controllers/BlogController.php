@@ -63,6 +63,7 @@ class BlogController extends Controller
         $meta_desc_editor = null;
 
         if ($category_slug != null) {
+            abort(410, 'این دسته‌بندی دیگر در دسترس نیست.');
             $feature_repository = new FeatureRepository();
             $category = MongoCategory::where('slug', $category_slug)->first();
             if (!isset($category)) {

@@ -77,7 +77,7 @@
                     <a class="top-nav-link-logo" href="{{ route('home') }}">بچرخ</a>
                 </div>
                 <div class="col-4 text-center">
-                    <a class="mx-3 top-nav-link" href="{{ route('ads.index') }}">بازار</a>
+                    {{-- <a class="mx-3 top-nav-link" href="{{ route('ads.index') }}">بازار</a> --}}
                     <a class="mx-3 top-nav-link" href="{{ route('blog.index') }}">مجله</a>
                     <a class="mx-3 top-nav-link" href="{{ route('question.index') }}">انجمن</a>
                     <a class="mx-3 top-nav-link" href="{{ route('question.index') }}?s=1">نظرات
@@ -442,12 +442,12 @@
                         <img class="w-24 mr-2" src="{{ $ftp_path . 'files/other/images/group.png' }}">
                     </li>
                 </a>
-                <a href="{{ route('ads.index') }}" class="slider-item">
+                {{-- <a href="{{ route('ads.index') }}" class="slider-item">
                     <li class="slider-item-li p-3 radius-10">
                         <span class="slider-item-text">بازار</span>
                         <img class="w-24 mr-2" src="{{ $ftp_path . 'files/other/images/shop2.png' }}">
                     </li>
-                </a>
+                </a> --}}
                 <hr>
                 @if ($user)
                     <span class="ml-2 font-w-600">حساب کاربری</span>
@@ -495,12 +495,12 @@
                             <img class="w-24 mr-2" src="{{ $ftp_path . 'files/other/images/group.png' }}">
                         </li>
                     </a>
-                    <a href="{{ route('ads.index') }}" class="slider-item">
+                    {{-- <a href="{{ route('ads.index') }}" class="slider-item">
                         <li class="slider-item-li p-3 radius-10">
                             <span class="slider-item-text">بازار</span>
                             <img class="w-24 mr-2" src="{{ $ftp_path . 'files/other/images/shop2.png' }}">
                         </li>
-                    </a>
+                    </a> --}}
                     <hr>
                     @if ($user)
                         <span class="ml-2 font-w-600">حساب کاربری</span>

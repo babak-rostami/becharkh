@@ -29,6 +29,8 @@
 
     <div class="row justify-content-center bg-wht">
 
+        @include('mainPart.return-msg')
+
         <div class="col-12 text-center my-3">
             @include('mainPart.mainPage.cat-slider', [
                 'page' => 'show_advertise',
@@ -37,47 +39,18 @@
             ])
         </div>
 
-        <div class="col-12 col-md-8 bg-wht text-right order-md-1">
-
-            @if (session('success'))
-                <p class="alert alert-success text-center">{{ session('success') }}</p>
-            @endif
-            @if ($errors->any())
-                @foreach ($errors->all() as $error)
-                    <p class="alert alert-danger text-center">{{ $error }}</p>
-                @endforeach
-            @endif
-
-            @include('mainPart.mainPage.pages-tabs', [
-                'page' => 'show_advertise',
-                'item' => isset($item) ? $item : null,
-                'user' => isset($user) ? $user : null,
-                'is_follow' => isset($is_follow) ? $is_follow : null,
-            ])
-
-            <h1 class="font-20 mb-4 mt-5 text-center">{{ $advertise->title }}</h1>
+        <div class="col-12 col-md-8 bg-wht text-right">
 
             <?php $count = 0; ?>
             <?php $vcount = 0; ?>
-            @if (count($adImages) > 0 || $adVideo != null)
+            @if (count($adImages) > 0)
                 <div class="imgslider-container">
-                    @if ($adVideo != null)
-                        <?php $count = 1; ?>
-                        <?php $vcount = 1; ?>
-                        <div class="imgslider-ImageSlides imgslider-fade1 text-center">
-                            <div class="imgslider-numbertext"> {{ $count }} / {{ $adImages->count() + $vcount }}
-                            </div>
-                            <video id="ad-video" controls poster="{{ asset($adVideo->image()) }}">
-                                <source src="{{ $adVideo->videoPath() }}" type="video/mp4">
-                            </video>
-                        </div>
-                    @endif
                     @foreach ($adImages as $image)
                         <?php $count++; ?>
                         <div class="imgslider-ImageSlides imgslider-fade1 text-center">
                             <div class="imgslider-numbertext">{{ $count }} / {{ count($adImages) + $vcount }}</div>
-                            <img class="ad-image" onclick="clickImg({{ $count }})"
-                                id="slideImg-{{ $count }}" src="{{ $image['url'] }}">
+                            <img class="ad-image" onclick="clickImg({{ $count }})" id="slideImg-{{ $count }}"
+                                src="{{ $image['url'] }}">
                         </div>
                     @endforeach
                     <div id="imageModal" class="imgslider-modal">
@@ -101,34 +74,88 @@
                 <img class="w-100" src="{{ asset($advertise->image()) }}">
             @endif
 
-            <div class="row align-items-center">
+            <div class="row">
 
+                <div class="col-12 text-right">
+                    <h1 class="font-20 mb-4 mt-5">{{ $advertise->title }}</h1>
+                    <p class="textarea-preline mt-2">{{ $advertise->body }}</p>
+                    <hr>
+                </div>
+
+                <div class="col-6 text-right">
+                    زمان ثبت آگهی
+                </div>
+                <div class="col-6 text-right">
+                    <span>{{ jdate($advertise->created_at)->ago() }}</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-6 text-right">
+                    قیمت
+                    <img style="width: 24px" src="{{ asset('files/other/images/price.png') }}">
+                </div>
+                <div class="col-6 text-right">
+                    @if ($advertise->price != null)
+                        <span>{{ number_format((int) $advertise->price) }}</span>
+                    @else
+                        <span>توافقی</span>
+                    @endif
+                </div>
+                <div class="col-12">
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row">
+                @if ($advertise->phone != null)
+                    <div class="col-6 text-right">
+                        تماس
+                    </div>
+                    <div class="col-6 text-right">
+                        {{ $advertise->phone }}
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                    </div>
+                @endif
+            </div>
+            <div class="row">
+                <div class="col-6 text-right">
+                    محل آگهی
+                    <img style="width: 24px" src="{{ asset('files/other/images/location.png') }}">
+                </div>
+                <div class="col-6 text-right">
+                    {{ $advertise->location }}
+                </div>
+            </div>
+
+
+            @foreach ($advertise->getItems() as $item)
+                <hr>
+                <div class="row">
+                    <div class="col-6 text-right">
+                        {{ $item->feature->title }}
+                    </div>
+                    <div class="col-6 text-right">
+                        {{ $item->title }}
+                    </div>
+                </div>
+            @endforeach
+            @foreach ($advertise->featureValues as $afv)
+                <hr>
+                <div class="row">
+                    <div class="col-6 text-right">
+                        {{ $afv->feature->title }}
+                    </div>
+                    <div class="col-6 text-right">
+                        {{ $afv->value }}
+                    </div>
+                </div>
+            @endforeach
+            <div class="row align-items-center">
                 <div class="col-12 mb-3 text-right">
                     <hr>
-                    <a href="{{ route('user.dashboard', $advertiseUser->username) }}" class="decor-none d-flex my-4">
-                        <img id="user-image" class="mx-2" src="{{ asset($advertiseUser->image()) }}">
-                        <div class="align-content-center">
-                            <span class="font-weight-bold" style="color: #005cbf">{{ $advertiseUser->username }}@</span>
-                            <br>
-                            <span>{{ $advertiseUser->name }}</span>
-                        </div>
-                    </a>
-
-                    @if ($user != null)
-                        @if (!$isAdForThisUser)
-                            <a class="btn mt-2" id="chat-btn" href="{{ route('user.chat.start', $advertiseUser->id) }}">
-                                گفتگو با فروشنده
-                                <img style="width: 24px;" src="{{ asset('files/other/images/ad-chat.gif') }}">
-                            </a>
-                        @endif
-                    @else
-                        <a class="btn mt-2" id="chat-btn" data-toggle="modal" data-target="#login_user" href="">
-                            گفتگو با فروشنده
-                            <img style="width: 24px;" src="{{ asset('files/other/images/ad-chat.gif') }}">
-                        </a>
-                    @endif
-
-
                     <div class="position-relative d-inline-block">
                         <button type="button" class="btn share-span mt-2">
                             اشتراک گذاری
@@ -169,86 +196,6 @@
                         <a class="btn btn-outline-primary mt-2" href="{{ route('ad.edit', $advertise->id) }}">ویرایش
                             آگهی</a>
                     @endif
-                    @if ($advertise->site_link != null)
-                        <a class="btn btn-primary mt-2" target="_blank" href="{{ $advertise->site_link }}"
-                            rel="nofollow">سفارش محصول</a>
-                    @endif
-                    <hr>
-
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-6 text-right">
-                    زمان ثبت آگهی
-                </div>
-                <div class="col-6 text-right">
-                    <span>{{ jdate($advertise->created_at)->ago() }}</span>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-6 text-right">
-                    قیمت
-                    <img style="width: 24px" src="{{ asset('files/other/images/price.png') }}">
-                </div>
-                <div class="col-6 text-right">
-                    @if ($advertise->price != null)
-                        <span>{{ number_format((int) $advertise->price) }}</span>
-                    @else
-                        <span>توافقی</span>
-                    @endif
-                </div>
-            </div>
-            @foreach ($advertise->getItems() as $item)
-                <hr>
-                <div class="row">
-                    <div class="col-6 text-right">
-                        {{ $item->feature->title }}
-                    </div>
-                    <div class="col-6 text-right">
-                        {{ $item->title }}
-                    </div>
-                </div>
-            @endforeach
-            @foreach ($advertise->featureValues as $afv)
-                <hr>
-                <div class="row">
-                    <div class="col-6 text-right">
-                        {{ $afv->feature->title }}
-                    </div>
-                    <div class="col-6 text-right">
-                        {{ $afv->value }}
-                    </div>
-                </div>
-            @endforeach
-            @if (isset($afv) || isset($item))
-                <hr>
-            @endif
-            <div class="row">
-                @if ($advertise->phone != null)
-                    <div class="col-6 text-right">
-                        تماس
-                    </div>
-                    <div class="col-6 text-right">
-                        {{ $advertise->phone }}
-                    </div>
-                    <div class="col-12">
-                        <hr>
-                    </div>
-                @endif
-            </div>
-            <div class="row">
-                <div class="col-6 text-right">
-                    محل آگهی
-                    <img style="width: 24px" src="{{ asset('files/other/images/location.png') }}">
-                </div>
-                <div class="col-6 text-right">
-                    {{ $advertise->location }}
-                </div>
-                <div class="col-12 text-right">
-                    <hr>
-                    <p class="textarea-preline mt-2">{{ $advertise->body }}</p>
                 </div>
             </div>
 
@@ -262,36 +209,44 @@
         </div>
 
 
-        <div class="col-12 col-md-4 px-2 mt-2 text-right order-md-0">
+        <div class="col-12 col-md-8 px-2 mt-2 text-right">
+
+            <div class="row my-3">
+                <div class="col-6 text-center pl-1">
+                    <a class="btn btn-lg btn-primary w-100 radius-10" href="{{ route('new.ad') }}">ثبت آگهی جدید</a>
+                </div>
+                <div class="col-6 text-center pr-1">
+                    @if (isset($item))
+                        <a class="btn btn-lg btn-outline-primary w-100 radius-10"
+                            href="{{ $item->withParentsCommentUrl() }}">نظرات کاربران</a>
+                    @endif
+                </div>
+            </div>
+
             @if (!$advertises->isEmpty())
                 <div class="row mx-2">
-                    <div class="col-12 mt-lg-5">
-                        <h4 class="text-center my-4 pt-3 font-20">هنوز آگهی خود را ثبت نکرده اید؟</h4>
-                        <a class="btn btn-danger mb-4 w-100" id="adsSection" rel="nofollow"
-                            href="{{ route('new.ad') }}">
-                            ثبت آگهی جدید
-                        </a>
-                    </div>
 
                     @foreach ($advertises as $hotad)
-                        <div class="col-12 text-right mb-3">
-                            <a class="text-decoration-none hotad-box radius-10 p-2 d-block"
-                                href="{{ route('ad.show', ['category_slug' => $hotad->category->slug, 'slug' => $hotad->slug, 'random' => $hotad->random_id]) }}">
-                                <div class="d-flex">
-                                    <img class="hotad-image lazy-load" data-src="{{ asset($hotad->image()) }}"
-                                        alt="{{ $hotad->title }}" />
-                                    <div class="mr-2">
-                                        <span class="hotad-title">{{ $hotad->title }}</span>
-                                        <br>
-                                        @if ($hotad->price != null)
-                                            <span class="font-14 text-dark">{{ number_format((int) $hotad->price) }} تومان
-                                            </span>
-                                        @else
-                                            <span class="font-14 text-dark">توافقی</span>
-                                        @endif
-                                        <br>
-                                        <span class="font-14 text-dark">{{ jdate($hotad->created_at)->ago() }}</span>
-                                    </div>
+                        <div class="col-12 shadow-sm bg-wht text-right ad-box">
+                            <a class="decor-none d-block" rel="nofollow" href="{{ route('ad.show', $hotad->slug) }}">
+                                <img class="ad-box-image lazy-load" alt="{{ $hotad->title }}"
+                                    title="{{ $hotad->title }}" data-src="{{ $hotad->thumbnail() }}">
+                                <span class="ad-title">{{ $hotad->title }}</span>
+
+                                @if (isset($hotad->price))
+                                    <span class="ad-price-number">{{ number_format((int) $hotad->price) }}</span>
+                                    <span class="ad-price-format">تومان</span>
+                                @else
+                                    <span class="ad-price-format">توافقی</span>
+                                @endif
+
+                                <div class="ad-f-div">
+                                    <span class="ad-f-item">{{ $hotad->location }}</span>
+                                    @if (isset($hotad->items_title))
+                                        @foreach ($hotad->items_title as $item_title)
+                                            <span class="ad-f-item">{{ $item_title }}</span>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </a>
                         </div>
@@ -304,7 +259,7 @@
         <div class="modal fade" id="advertise-report" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
+                <div class="modal-content text-right">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">گزارش آگهی</h5>
                         <button type="button" class="close float-left ml-0" data-dismiss="modal" aria-label="Close">

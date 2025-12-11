@@ -9,6 +9,7 @@ use App\Http\Controllers\AdvertisePackageController;
 use App\Http\Controllers\AdvertiseReportController;
 use App\Http\Controllers\AdvertiseVideoController;
 use App\Http\Controllers\AffilateController;
+use App\Http\Controllers\BabakController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\BlogCommentLikeController;
@@ -61,6 +62,7 @@ use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SuggestPageController;
 use App\Http\Controllers\SuggestProductController;
 use App\Http\Controllers\SurveyOptionController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserAdvertisePackageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMessageController;
@@ -116,6 +118,10 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('/ads/{category_slug}/{ad_slug}', function ($category_slug) {
         return redirect(route('ads.index', $category_slug));
     });
+    Route::get('ads/{slug}', [AdvertiseController::class, 'show'])->name('ad.show');
+
+    // Route::get('market/{category_slug?}', [AdvertiseController::class, 'getAds'])->name('ads.index');
+    // Route::get('market-item/{slug}', [AdvertiseController::class, 'show'])->name('ad.show');
 
     //------------------------------------------admin routes----------------------------
     Route::get('/admin/register_admin', [AdminController::class, 'register'])->name('admin.register');
@@ -382,13 +388,13 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::post('reset-password', [UserPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
     Route::get('active-user/{username}/{code}', [UserController::class, 'activeUser'])->name('active.user');
 
-    Route::get('/profile/{username}/{tab?}', [UserController::class, 'dashboard'])->name('user.dashboard');
-
     Route::get('new-question/{category_slug?}', [QuestionController::class, 'create'])->name('question.create');
 
     Route::get('fifil-load-items', [CategoryFeatureController::class, 'fifilLoadItems'])->name('fifil.load.items');
 
     Route::post('item-tel-save-number', [MongoItemTelNumberController::class, 'saveNumber'])->name('item.tel.save.number');
+
+    Route::get('/profile/{username}/{tab?}', [UserController::class, 'dashboard'])->name('user.dashboard');
 });
 
 Route::middleware(['user'])->group(function () {
@@ -422,7 +428,7 @@ Route::middleware(['user'])->group(function () {
     Route::post('pay-ad-acc/{advertise_id}', [AdvertiseController::class, 'payAdFromAcc'])->name('pay.ad.from.acc');
     Route::get('ad-edit/{id}', [AdvertiseController::class, 'edit'])->name('ad.edit');
     Route::put('ad-update/{id}', [AdvertiseController::class, 'update'])->name('ad.update');
-    Route::get('delete-ad/{id}', [CarController::class, 'destroy'])->name('destroy.ad');
+    Route::get('delete-ad/{id}', [AdvertiseController::class, 'destroy'])->name('destroy.ad');
 
     Route::get('rocket-ad/{id}', [AdvertiseController::class, 'rocket'])->name('rocket.ad');
 
@@ -551,7 +557,7 @@ Route::get('product/{slug}', [AffilateController::class, 'show'])->name('product
 Route::get('slink/{affilate_id}', [AffilateController::class, 'slink'])->name('slink');
 Route::post('suggest-product', [SuggestProductController::class, 'suggestProduct'])->name('suggest.product');
 
-Route::get('migrate', [MigrateToMongoController::class, 'start']);
+Route::get('migrate', [TestController::class, 'start']);
 
 Route::get('main-search/{type}/{value?}', [IndexController::class, 'mainSearch'])->name('main.search');
 Route::get('search-category-for-create/{forr}/{value?}', [IndexController::class, 'searchCategoryForCreate']);
@@ -567,8 +573,6 @@ Route::get('get-category-children-create/{cat_id}/{for}', [SiteCategoryControlle
 Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::post('download-yv-f', [VideoController::class, 'downloadFormat'])->name('download.yvideo.format');
     Route::get('download-yv/{f_id}', [VideoController::class, 'downloadYoutubeVideo'])->name('download.yv');
-
-    Route::get('ads/{category_slug}/{slug}/{random}', [AdvertiseController::class, 'show'])->name('ad.show');
 
     Route::post('report-advertise', [AdvertiseReportController::class, 'store'])->name('report.advertise');
     Route::post('report-comment', [CommentReportController::class, 'store'])->name('report.comment');
@@ -637,6 +641,8 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     });
 
     Route::post('let-me-know', [LetMeKnowController::class, 'store'])->name('let.me.know');
+
+    Route::get('/babakrostami', [BabakController::class, 'babak'])->name('babak');
 });
 
 // done

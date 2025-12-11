@@ -278,6 +278,13 @@ class UserController extends Controller
             abort(404);
         }
 
+        if ($tab == 'edit') {
+            return view('user.dashboard-edit', compact('user'));
+        } elseif ($tab == 'ads') {
+            $advertises = $user->advertises;
+            return view('user.dashboard-ads', compact('user', 'advertises'));
+        }
+
         if (
             !$user->likes_count_updated_at ||
             now()->diffInHours($user->likes_count_updated_at) >= 1
@@ -294,7 +301,7 @@ class UserController extends Controller
             $user_likes = $user->likes_count;
         }
 
-        return view('user.dashboard-edit', compact('user', 'user_likes'));
+        return view('user.dashboard-main', compact('user', 'user_likes'));
     }
 
     public function uploadUserImage(Request $request)

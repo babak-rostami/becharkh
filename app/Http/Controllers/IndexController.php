@@ -159,7 +159,7 @@ class IndexController extends Controller
                     'cat' => $item->category->full_title ?? $item->category->title,
                     'c_url' => $item->category->has_comments ? $item->withParentsCommentUrl() : null,
                     'f_url' => $item->category->has_forums ? $item->withParentsForumUrl() : null,
-                    'a_url' => $item->category->has_ads ? $item->withParentsAdvertiseUrl() : null,
+                    // 'a_url' => $item->category->has_ads ? $item->withParentsAdvertiseUrl() : null,
                     'img' => $item->thumb()
                 ];
             });
@@ -168,11 +168,10 @@ class IndexController extends Controller
                 return [
                     'id' => $category->id,
                     'title' => $category->full_title ?? $category->title,
-                    'url' => $category->has_ads
-                        ? route('ads.index', $category->slug)
-                        : ($category->has_comments
-                            ? route('question.index', $category->slug) . "?s=1"
-                            : route('question.index', $category->slug)),
+                    'url' => $category->has_comments ?
+                        route('question.index', $category->slug) . "?s=1"
+                        :
+                        route('question.index', $category->slug),
                     'img' => $category->thumb()
                 ];
             });
@@ -409,9 +408,9 @@ class IndexController extends Controller
         if ($category->has_blogs) {
             $result['blog_page'] = route('blog.index', $category->slug);
         }
-        if ($category->has_ads) {
-            $result['advertise_page'] = route('ads.index', $category->slug);
-        }
+        // if ($category->has_ads) {
+        //     $result['advertise_page'] = route('ads.index', $category->slug);
+        // }
         return $result;
     }
 

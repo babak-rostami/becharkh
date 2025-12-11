@@ -170,13 +170,15 @@ div[id^="post-edit-"] {
 
 #active-email-msg {
     display: block;
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-    font-weight: 500;
+    color: #212529;
+    font-size: 20px;
+    font-weight: 600;
     padding: 8px 0;
-    border-radius: 8px;
     margin-bottom: 8px;
+}
+
+#active-email-div {
+    background-color: #fff7e6;
 }
 
 #change-email-msg {
@@ -189,43 +191,6 @@ div[id^="post-edit-"] {
 
 #money-amount-txt {
     font-size: 16px;
-}
-
-.ad-item-div {
-    border-bottom: 1px solid #dee2e6;
-    padding: 16px 4px;
-    display: flex;
-}
-
-.ad-item-div:hover {
-    background-color: #f8f9fa;
-}
-
-.ad-item-div img {
-    width: 54px;
-    height: 54px;
-    background-color: #f5f5f5;
-    border: 1px solid #eee;
-    padding: 4px;
-    object-fit: contain;
-    margin-left: 12px;
-}
-
-#ac-ad-ymoney-t {
-    color: #007bff;
-}
-.ac-ad-money-c {
-    font-size: 15px;
-    font-weight: 600;
-}
-#ac-ad-nmoney-t {
-    color: #6400ff;
-}
-button[id^="rock-ad-btn-loading-"] {
-    display: none;
-}
-button[id^="pay-ad-btn-loading-"] {
-    display: none;
 }
 
 .rcir-glow {
@@ -258,17 +223,24 @@ button[id^="pay-ad-btn-loading-"] {
 
 #uimg-select-btn {
     display: inline-block;
-    padding: 10px 16px;
-    border-radius: 24px;
-    font-size: 18px;
-    font-weight: 600;
-    border: 1px solid #dee2e6;
-    box-shadow: 0 4px 4px #e9ecef;
+    padding: 4px 16px;
+    border-radius: 12px;
+    font-size: 17px;
+    background-color: #1e1e1e;
+    color: #fff;
+}
+#uimg-select-btn:hover {
+    background-color: #6c757d;
 }
 
 .uimg-select-btn-loading {
     background-color: #f1f8ff !important;
-    border: 1px solid #f8f9fa !important;
+    color: #000 !important;
+}
+
+#user-email-span {
+    display: block;
+    margin-top: 8px;
 }
 
 #edit-profile-title {
@@ -284,9 +256,6 @@ button[id^="pay-ad-btn-loading-"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fdfdfd;
-    border-bottom: 1px solid #ddd;
-    padding: 12px 16px;
 }
 
 .uuform-info {
@@ -300,6 +269,7 @@ button[id^="pay-ad-btn-loading-"] {
 .uuform-info span:first-child {
     font-weight: bold;
     color: #555;
+    font-size: 20px;
 }
 
 .uuform-edit a,
@@ -309,8 +279,8 @@ button[id^="pay-ad-btn-loading-"] {
     transition: color 0.2s ease;
     border: none;
     background-color: #fff;
-    padding: 0;
-    font-size: 15px;
+    font-weight: 600;
+    font-size: 17px;
 }
 
 .uuform-edit a:hover {

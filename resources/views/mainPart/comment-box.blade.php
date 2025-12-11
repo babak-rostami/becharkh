@@ -66,10 +66,12 @@
         @case('edit_question_admin')
             {{ method_field('PUT') }}
             <input type="hidden" id="category_id" name="category_id" value="{{ $question->category_id }}">
-            <div class="form-group">
-                <label>موضوعی که کاربر نوشته</label>
-                <span>{{ $question->question_category }}</span>
-            </div>
+            @if ($question->question_category)
+                <div class="form-group">
+                    <label>موضوعی که کاربر نوشته</label>
+                    <span>{{ $question->question_category }}</span>
+                </div>
+            @endif
             <div class="form-group">
                 @if ($question->getImage())
                     <img style="max-height: 256px; margin-bottom: 8px;" src="{{ $question->image() }}">
@@ -107,6 +109,10 @@
                     id="sug_title" value="{{ $question->sug_title }}">
             </div>
             <div class="form-group">
+                <label>video embed</label>
+                <textarea class="form-control" name="video_embed" rows="5">{{ $question->video_embed }}</textarea>
+            </div>
+            <div class="form-group">
                 <label>فقط در صفحه خودش نشون داده بشه؟</label>
                 <select class="form-control" name="just_this_page">
                     <option value="0" {{ $question->just_this_page == 0 ? 'selected' : '' }}>خیر</option>
@@ -138,7 +144,8 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label>نام فیک</label>
-                        <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}">
+                        <input type="text" class="form-control" name="name" id="name"
+                            value="{{ old('name') }}">
                     </div>
                 </div>
                 <div class="col-6">
@@ -650,7 +657,8 @@
     @elseif($page == 'edit_blog')
         <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="editorBlogUpdate()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
+            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+                alt="send">
             ویرایش مطلب
         </button>
     @elseif($page == 'create_affilate' || $page == 'edit_affilate')

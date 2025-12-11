@@ -1,0 +1,101 @@
+.user-image {
+    width: 76px;
+    height: 76px;
+    padding: 4px;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+#dash-edit-btn {
+    background-color: #606060;
+    color: #fff;
+    font-size: 20px;
+    outline: none !important;
+    border: none !important;
+    padding: 4px 16px;
+    border-radius: 22px;
+    text-decoration: none !important;
+    display: block;
+}
+
+#dash-edit-btn:hover {
+    background-color: #888;
+}
+
+#active-email-div {
+    background-color: #fff7e6;
+    padding: 18px 16px;
+    margin: 12px 0;
+}
+
+#active-email-div:hover {
+    background-color: #f7e7c6;
+}
+
+#active-email-title {
+    color: #000;
+    font-weight: 600;
+    font-size: 20px;
+}
+#active-email-desc {
+    color: #888;
+    display: block;
+    margin-top: 12px;
+    font-size: 18px;
+}
+
+#user-money-number {
+    font-size: 28px;
+    font-weight: 600;
+}
+#user-money-format {
+    font-size: 22px;
+    font-weight: 500;
+}
+#user-money-charge-btn {
+    float: left;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 20px;
+    outline: none !important;
+    border: none !important;
+    text-decoration: none !important;
+    padding: 4px 16px;
+    border-radius: 22px;
+}
+
+#user-money-charge-btn:hover {
+    background-color: #67b0ff;
+}
+
+#user-like-number {
+    font-size: 28px;
+    font-weight: 600;
+}
+#user-like-title {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.dash-option-btn {
+    background-color: #fff;
+    padding: 32px 0;
+    border: 1px solid #dfefff;
+    border-radius: 16px;
+    display: block;
+    text-decoration: none !important;
+}
+
+.dash-option-btn:hover {
+    background-color: #f9f9f9;
+}
+
+.dash-option-btn-title {
+    display: block;
+    margin-top: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #6c757d;
+}

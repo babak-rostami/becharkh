@@ -15,10 +15,8 @@
 }
 
 [id^="item-img-"] {
-    height: 200px;
+    height: 250px;
     border-radius: 8px;
-    border: 1px solid #c1c8d1;
-    padding: 3px;
     cursor: pointer;
     margin-left: 4px;
 }

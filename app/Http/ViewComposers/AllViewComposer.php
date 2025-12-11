@@ -5,6 +5,7 @@ namespace App\Http\ViewComposers;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class AllViewComposer
 {
@@ -33,8 +34,8 @@ class AllViewComposer
 
         $user = auth('user')->user();
         $ftp_path = 'https://dl.becharkh.com/user_files/';
-        $ad_price = 20000;
-        $ad_rocket = 10000;
+        $ad_price = Config::get('gvars.ad_price');
+        $ad_rocket = Config::get('gvars.ad_rocket');
         $view->with([
             'ftp_path' => $ftp_path,
             'user' => $user,

@@ -1,9 +1,8 @@
 .top-users-container {
-    background: linear-gradient(135deg, #e9ebee, #f5f7fa);
     border-radius: 16px;
     padding: 20px;
     color: #333;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     position: relative;
     margin-top: 18px;

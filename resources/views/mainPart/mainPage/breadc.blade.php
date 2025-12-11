@@ -40,8 +40,21 @@
             @case('advertise')
                 <a class="breadcr" href="{{ route('ads.index') }}">آگهی ها</a>
                 <span class="breadcr-devider">></span>
-                <a class="breadcr"
-                    href="{{ route('ads.index', $category->slug) }}">{{ $category->full_title ?? $category->title }}</a>
+
+
+                @if (!isset($item))
+                    <span>{{ $category->full_title ?? $category->title }}</span>
+                @else
+                    <a class="breadcr"
+                        href="{{ route('ads.index', $category->slug) }}">{{ $category->full_title ?? $category->title }}</a>
+                    @if (isset($item->parent))
+                        <span class="breadcr-devider">></span>
+                        <a class="breadcr"
+                            href="{{ $item->parent->withParentsAdvertiseUrl() }}">{{ $item->parent->title }}</a>
+                    @endif
+                    <span class="breadcr-devider">></span>
+                    <span>{{ $item->full_title ?? $item->title }}</span>
+                @endif
             @break
 
             @case('blog-index')

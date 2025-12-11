@@ -61,63 +61,34 @@ class SitemapController extends Controller
     public function rTableCategories()
     {
         $uniqueItemIds = Cache::remember('question_items', 3600, function () {
-            $result = MongoQuestion::raw(function ($collection) {
-                return $collection->aggregate([
-                    [
-                        '$unwind' => '$items',
-                    ],
-                    [
-                        '$project' => [
-                            '_id' => 0,
-                            'item' => '$items',
-                        ],
-                    ],
-                    [
-                        '$group' => [
-                            '_id' => null,
-                            'item_ids' => [
-                                '$addToSet' => '$item',
-                            ],
-                        ],
-                    ],
-                ]);
-            })->pluck('item_ids')->first();
-
-            return $result->getArrayCopy();
+            $allItems = MongoQuestion::pluck('items')->flatten()->unique()->values()->toArray();
+            return $allItems;
         });
 
-        $items = MongoItem::select('title', 'full_title', 'images', 'with_parent_url')->find($uniqueItemIds);
+        $items = MongoItem::with('category')
+            ->whereIn('_id', $uniqueItemIds)
+            ->get(['title', 'full_title', 'images', 'with_parent_url', 'category_id']);
+
+        $items = $items->filter(function ($item) {
+            return $item->category && $item->category->has_formus == 1;
+        });
         return response()->view('sitemap.rcategories', compact('items'))->header('Content-Type', 'text/xml');
     }
 
     public function commentCategories()
     {
         $uniqueItemIds = Cache::remember('comment_items', 3600, function () {
-            $result = MongoCategoryComment::raw(function ($collection) {
-                return $collection->aggregate([
-                    [
-                        '$unwind' => '$items',
-                    ],
-                    [
-                        '$project' => [
-                            '_id' => 0,
-                            'item' => '$items',
-                        ],
-                    ],
-                    [
-                        '$group' => [
-                            '_id' => null,
-                            'item_ids' => [
-                                '$addToSet' => '$item',
-                            ],
-                        ],
-                    ],
-                ]);
-            })->pluck('item_ids')->first();
-
-            return $result->getArrayCopy();
+            $allItems = MongoCategoryComment::pluck('items')->flatten()->unique()->values()->toArray();
+            return $allItems;
         });
-        $items = MongoItem::select('title', 'full_title', 'images', 'with_parent_url')->find($uniqueItemIds);
+
+        $items = MongoItem::with('category')
+            ->whereIn('_id', $uniqueItemIds)
+            ->get(['title', 'full_title', 'images', 'with_parent_url', 'category_id']);
+
+        $items = $items->filter(function ($item) {
+            return $item->category && $item->category->has_comments == 1;
+        });
 
         return response()->view('sitemap.ccategories', compact('items'))->header('Content-Type', 'text/xml');
     }
@@ -125,31 +96,17 @@ class SitemapController extends Controller
     public function adPages()
     {
         $uniqueItemIds = Cache::remember('advertise_items', 3600, function () {
-            $result = MongoAdvertise::raw(function ($collection) {
-                return $collection->aggregate([
-                    [
-                        '$unwind' => '$items',
-                    ],
-                    [
-                        '$project' => [
-                            '_id' => 0,
-                            'item' => '$items',
-                        ],
-                    ],
-                    [
-                        '$group' => [
-                            '_id' => null,
-                            'item_ids' => [
-                                '$addToSet' => '$item',
-                            ],
-                        ],
-                    ],
-                ]);
-            })->pluck('item_ids')->first();
-
-            return $result->getArrayCopy();
+            $allItems = MongoAdvertise::pluck('items')->flatten()->unique()->values()->toArray();
+            return $allItems;
         });
-        $items = MongoItem::select('title', 'full_title', 'images', 'with_parent_url')->find($uniqueItemIds);
+
+        $items = MongoItem::with('category')
+            ->whereIn('_id', $uniqueItemIds)
+            ->get(['title', 'full_title', 'images', 'with_parent_url', 'category_id']);
+
+        $items = $items->filter(function ($item) {
+            return $item->category && $item->category->has_ads == 1;
+        });
 
         return response()->view('sitemap.advertise', compact('items'))->header('Content-Type', 'text/xml');
     }

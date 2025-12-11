@@ -43,8 +43,9 @@ fieldset {
 
 #show-price-span {
     position: absolute;
-    right: 140px;
-    color: #0000cd;
+    font-size: 18px;
+    left: 8px;
+    color: #007bff;
 }
 
 .input-char-min {
@@ -72,9 +73,13 @@ fieldset {
     font-weight: 600;
     display: none;
 }
-#title-error {
-    color: #d30000;
-    position: absolute;
+#title-error,
+#body-error,
+#phone-error {
+    color: #ff0018;
+    font-weight: 600;
+    display: block;
+    margin: 8px 0;
 }
 #short_description-error {
     color: #d30000;
@@ -379,3 +384,95 @@ div[id^="sfnores-input-box-"] {
     border: 1px solid #dee2e6;
 }
 /* end for choose location */
+
+.label-title {
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+}
+.label-desc {
+    display: block;
+}
+
+.input-style {
+    padding: 28px 8px;
+    font-size: 20px;
+    margin-top: 12px;
+}
+.input-style-error {
+    border: 1px solid #ff0018 !important;
+}
+
+.body-style {
+    height: 150px !important;
+    font-size: 20px;
+    margin-top: 12px;
+}
+
+.body-style-error {
+    border: 1px solid #ff0018 !important;
+}
+
+.next-page-btn {
+    padding: 12px 0;
+    width: 100%;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+/* for select images box */
+
+.select-img-item {
+    display: inline-block;
+    border: 1px dashed #0079df;
+    border-radius: 8px;
+    text-align: center;
+    margin: 5px;
+    height: 136px;
+    width: 140px;
+    align-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+.select-img-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.img-actions {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.edit-img-btn {
+    background-color: #ffc107;
+    color: #000000;
+    outline: none;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    border: none;
+}
+.edit-img-btn:hover {
+    background-color: #d5a30d;
+}
+.delete-img-btn {
+    background-color: #dc3545;
+    color: #ffffff;
+    outline: none;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    border: none;
+}
+.delete-img-btn:hover {
+    background-color: #a0222f;
+}
+
+/* end for select images box */

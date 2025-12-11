@@ -10,6 +10,7 @@ use App\Jobs\SendUserNotification;
 use App\Jobs\User\UpdateUserFollowItem;
 use App\Models\Admin;
 use App\Models\CategoryCommentEditorImage;
+use App\Models\MongoAdvertise;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoCategoryCommentLike;
@@ -26,6 +27,7 @@ use App\Repositories\Feature\Mongodb\FeatureRepository;
 use App\Services\Affilate\AffilateService;
 use App\Services\Comment\CommentEditorService;
 use App\Services\Item\AdditemsService;
+use App\Services\Item\FeatureService;
 use App\Services\Survey\SurveyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -39,10 +41,8 @@ class CategoryCommentController extends Controller
         $category_comment_repository = new CategoryCommentRepository();
 
         $title = "";
-        $selectedFeatures = collect();
         $followFeature = null;
         $item = null;
-        $data = new RtablePageData();
 
         $user = null;
         if (auth('user')->check()) {
@@ -63,33 +63,13 @@ class CategoryCommentController extends Controller
 
         $hasComments = 1;
 
-        if ($category_slug != null) {
-            $category = MongoCategory::where('slug', $category_slug)->first();
-            if (!isset($category)) {
-                return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
-            }
+        $category = MongoCategory::where('slug', $category_slug)->first();
+
+        if (isset($category)) {
 
             app(SiteCategoryController::class)->redirectIfPageNotExist($request, $category, 'comments');
 
-            $categoryFeatures = $category->features()->where('is_in_filter_rtable', 1);
-            $childFeature = $categoryFeatures->sortByDesc('level')->first();
-            $featuresInUrl = collect($data->getFeaturesInUrl($request))
-                ->map(function ($fiu) {
-                    return explode('=', $fiu)[0];
-                });
-            if ($featuresInUrl->isNotEmpty()) {
-                $featuresBySlug = $categoryFeatures->keyBy('slug');
-                // گرفتن ویژگی هایی که در ادرس صفحه هستن
-                $featuresIsInUrl = $featuresInUrl
-                    ->map(fn($slug) => $featuresBySlug->get($slug))
-                    ->filter();
-
-                if ($featuresIsInUrl->isNotEmpty()) {
-                    if (!$featuresInUrl->contains($childFeature->slug)) {
-                        $childFeature = $featuresIsInUrl->sortByDesc('level')->first();
-                    }
-                }
-            }
+            $childFeature = (new FeatureService())->getChildFeature($category, $request);
 
             $comments = collect();
 
@@ -196,12 +176,19 @@ class CategoryCommentController extends Controller
                 'title',
                 'currentQueryParams'
             ];
+
+            // $suggest_ads_ids = $item->suggest_ads ?? [];
+            // if (count($suggest_ads_ids) < 5) {
+            //     $suggest_ads = MongoAdvertise::find($suggest_ads_ids);
+            //     $suggest_ads = $suggest_ads->merge(MongoAdvertise::orderBy('created_at', 'desc')->take(10)->get()->shuffle())->unique('_id')->take(5);
+            // }
+            // if (isset($suggest_ads)) {
+            //     $compactVars[] = 'suggest_ads';
+            // }
+
             if (isset($ircats)) {
                 $compactVars[] = 'ircats';
             }
-            // if (isset($item_video)) {
-            //     $compactVars[] = 'item_video';
-            // }
             if (isset($affilates)) {
                 $compactVars[] = 'affilates';
             }
@@ -246,6 +233,8 @@ class CategoryCommentController extends Controller
             $advertise_page = route('ads.index');
             $blog_page = route('blog.index');
 
+            // $suggest_ads = MongoAdvertise::orderBy('created_at', 'desc')->take(10)->get()->shuffle()->unique('_id')->take(5);
+
             $compactVars = [
                 'is_admin',
                 'suggestCats',
@@ -255,6 +244,7 @@ class CategoryCommentController extends Controller
                 'advertise_page',
                 'nextPageUrl',
                 'comments',
+                // 'suggest_ads',
                 'title'
             ];
 

@@ -21,9 +21,7 @@
         <meta name="description" content="ثبت آگهی رایگان خرید، فروش، اجاره، املاک، خودرو، استخدام و خدمات در ایران">
     @endif
 
-    @if (isset($category))
-        <link rel="canonical" href="{{ $data->AdvertiseCanonUrl($category, $selected_items ?? null) }}">
-    @endif
+    <link rel="canonical" href="{{ $data->AdvertiseCanonUrl($category ?? null, $item ?? null) }}">
 
     <meta name="robots" content="index, follow">
 @endsection
@@ -32,16 +30,7 @@
 
     <div class="row bg-wht justify-content-center">
 
-        <div class="col-12">
-            @if (session('success'))
-                <p class="alert alert-success text-center">{{ session('success') }}</p>
-            @endif
-            @if ($errors->any())
-                @foreach ($errors->all() as $error)
-                    <p class="alert alert-danger text-center">{{ $error }}</p>
-                @endforeach
-            @endif
-        </div>
+        @include('mainPart.return-msg')
 
         <div class="col-12 text-center">
 
@@ -52,11 +41,6 @@
             ])
 
             @if (isset($category))
-                {{-- @if (isset($item_video))
-                    <iframe class="shadow-sm p-0 m-0 radius-10"
-                        src="{{ route('video.embedb.show', $item_video->slug2) }}" style="border:none;" width="100%"
-                        height="400px" allowfullscreen></iframe>
-                @else --}}
                 @if (isset($item->images))
                     <div id="item-gallery">
                         <img id="item-img-0" fetchpriority="high" class="my-3"
@@ -86,139 +70,101 @@
 
 
     <div class="row justify-content-center bg-wht">
-        <div class="col-12 col-md-10 px-0">
-            @include('mainPart.mainPage.pages-tabs', [
-                'page' => 'advertise',
-                'item' => isset($item) ? $item : null,
-                'user' => isset($user) ? $user : null,
-                'is_follow' => isset($is_follow) ? $is_follow : null,
-            ])
+        <div class="col-12 col-md-10">
 
-            <div class="row mx-1 mt-4">
-                @include('item.top-users')
+            @include('item.top-users')
+
+
+            <div class="text-right" id="page-title-box">
+                @if (isset($category))
+                    <h1 class="mt-4" id="page-title">{{ $meta_title }}</h1>
+                    <p class="textarea-preline">{{ $meta_desc }}</p>
+                @else
+                    <h1 class="mt-4" id="page-title">آگهی خرید و فروش و استخدام</h1>
+                    <p>انجمن بچرخ محلی برای ثبت آگهی و فروش محصول و خدمات شما.</p>
+                @endif
             </div>
 
-            <div class="row mx-1 justify-content-center">
-
-                <div class="col-12 text-right" id="page-title-box">
-                    @if (isset($category))
-                        <h1 class="mt-4" id="page-title">{{ $meta_title }}</h1>
-                        <p class="textarea-preline">{{ $meta_desc }}</p>
+            <div class="row my-3">
+                <div class="col-6 text-center pl-1">
+                    <a class="btn btn-lg btn-primary w-100 radius-10" href="{{ route('new.ad') }}">ثبت آگهی جدید</a>
+                </div>
+                <div class="col-6 text-center pr-1">
+                    @if (isset($item))
+                        <a class="btn btn-lg btn-outline-primary w-100 radius-10"
+                            href="{{ $item->withParentsCommentUrl() }}">نظرات کاربران</a>
+                    @elseif(isset($category))
+                        <a class="btn btn-lg btn-outline-primary w-100 radius-10"
+                            href="{{ route('question.index', $category->slug) . '?s=1' }}">نظرات کاربران</a>
                     @else
-                        <h1 class="mt-4" id="page-title">آگهی خرید و فروش و استخدام</h1>
-                        <p>انجمن بچرخ محلی برای ثبت آگهی و فروش محصول و خدمات شما.</p>
+                        <a class="btn btn-lg btn-outline-primary w-100 radius-10"
+                            href="{{ route('question.index') . '?s=1' }}">نظرات کاربران</a>
                     @endif
                 </div>
+            </div>
 
-                {{-- @if (isset($category) && $category->has_ads)
-                    <button id="new-a-btn" class="btn btn-lg btn-primary"
-                        onclick="jsurl('{{ $category->newAdvertiseUrl($category->slug) }}',1)">
-                        آگهی جدید +
-                    </button>
-                @else
-                    <button id="new-a-btn" class="btn btn-lg btn-primary" onclick="jsurl('{{ route('new.ad') }}',1)">
-                        آگهی جدید +
-                    </button>
+            @if (isset($item) && !empty($item->top_users))
+                @include('item.item_top_users', [
+                    'top_users' => $item->top_users,
+                ])
+            @endif
+
+            <div class="row mx-0 mt-4">
+                @if (!$advertises->isEmpty())
+                    @foreach ($advertises as $key => $advertise)
+                        <div class="col-12 shadow-sm bg-wht text-right ad-box">
+                            <a class="decor-none d-block" rel="nofollow" href="{{ route('ad.show', $advertise->slug) }}">
+                                <img class="ad-image lazy-load" alt="{{ $advertise->title }}"
+                                    title="{{ $advertise->title }}" data-src="{{ $advertise->thumbnail() }}">
+                                <span class="ad-title">{{ $advertise->title }}</span>
+
+                                @if (isset($advertise->price))
+                                    <span class="ad-price-number">{{ number_format((int) $advertise->price) }}</span>
+                                    <span class="ad-price-format">تومان</span>
+                                @else
+                                    <span class="ad-price-format">توافقی</span>
+                                @endif
+
+                                <div class="ad-f-div">
+                                    <span class="ad-f-item">{{ $advertise->location }}</span>
+                                    @if (isset($advertise->items_title))
+                                        @foreach ($advertise->items_title as $item_title)
+                                            <span class="ad-f-item">{{ $item_title }}</span>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                @endif
+
+                @if (isset($affilates))
+                    <div class="col-12 text-right py-2 mb-4">
+                        @foreach ($affilates as $affilate)
+                            <div class="my-4">
+                                @include('affilate.show-box', [
+                                    'affilate' => $affilate,
+                                    'page' => 'advertise',
+                                    'show_link' => 1,
+                                ])
+                                <hr>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                {{-- @if (isset($category))
+                    @if ($meta_desc_editor)
+                        <div class="col-12 mt-5">
+                            <div class="text-right" id="pdesctor">{!! $meta_desc_editor !!}</div>
+                        </div>
+                    @endif
                 @endif --}}
 
                 <div class="col-12">
-
-                    {{-- @include('category.rcats', ['page' => 'advertise']) --}}
-
-                    {{-- @if ($advertises->isEmpty() && isset($category) && isset($item) && !isset($suggestCats))
-                        <div id="let-me-know">
-                            <span id="lmk-title">بهمون اطلاع بدین</span>
-                            <br>
-                            <button id="lmk-btn" onclick="letMeKnow('{{ $category->id }}','{{ $item->id }}')"
-                                class="btn btn-dark my-3">سریعتر موجود شود
-                                +</button>
-                            <br>
-                            <span>محصول مورد نظرتون موجود نیست؟</span>
-                            <br>
-                            <span>با ضربه زدن روی دکمه بالا بهمون اطلاع بدین</span>
-                        </div>
-                    @endif --}}
-                    <div class="row">
-                        {{-- <div class="col-12 text-center">
-                            <span id="dywt">آگهی خود را ثبت نکرده اید؟</span>
-                            @if (isset($category) && $category->has_ads)
-                                <button class="btn btn-outline-primary mb-4 mt-2 w-100" id="adsSection"
-                                    onclick="jsurl('{{ $category->newAdvertiseUrl($category->slug) }}',1)">
-                                    ثبت آگهی جدید +
-                                </button>
-                            @else
-                                <button class="btn btn-outline-primary mb-4 mt-2 w-100" id="adsSection"
-                                    onclick="jsurl('{{ route('new.ad') }}',1)">
-                                    ثبت آگهی جدید +
-                                </button>
-                            @endif
-                        </div> --}}
-                        @if (!$advertises->isEmpty())
-                            @foreach ($advertises as $key => $advertise)
-                                <div class="col-12 shadow-sm bg-wht text-right ad-box"><a class="decor-none" rel="nofollow"
-                                        href="{{ route('ad.show', ['category_slug' => $advertise->category->slug, 'slug' => $advertise->slug, 'random' => $advertise->random_id]) }}">
-                                        <div class="row align-items-center pr-3">
-                                            <div><img class="ad-image lazy-load" alt="{{ $advertise->title }}"
-                                                    title="{{ $advertise->title }}" data-src="{{ $advertise->image() }}">
-                                            </div>
-                                            <div class="col-7 col-sm-8 py-3">
-                                                <b>{{ $advertise->title }}</b><br><span
-                                                    class="text-gray">{{ jdate($advertise->created_at)->ago() }}</span><br><span
-                                                    class="text-gray">{{ $advertise->location }}</span><br>
-                                                @if (isset($advertise->price))
-                                                    <p class="mt-2 font-17 font-600">
-                                                        {{ number_format((int) $advertise->price) }}
-                                                        تومان</p>
-                                                @else
-                                                    <p class="mt-2 font-17 font-600">
-                                                        توافقی</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </a></div>
-                            @endforeach
-                        @endif
-                        @if ($isset_ads)
-                            <div class="col-12 mt-5">{{ $advertises->links() }} </div>
-                        @endif
-
-                        @if (isset($affilates))
-                            <div class="col-12 text-right py-2 mb-4">
-                                @foreach ($affilates as $affilate)
-                                    <div class="my-4">
-                                        @include('affilate.show-box', [
-                                            'affilate' => $affilate,
-                                            'page' => 'advertise',
-                                            'show_link' => 1,
-                                        ])
-                                        <hr>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-
-                        @if (isset($category))
-                            @if ($meta_desc_editor)
-                                <div class="col-12 mt-5">
-                                    <div class="text-right" id="pdesctor">{!! $meta_desc_editor !!}</div>
-                                </div>
-                            @endif
-                        @endif
-
-                        <div class="col-12">
-                            @include('mainPart.mainPage.breadc', ['page' => 'advertise'])
-                        </div>
-
-                        {{-- @if (isset($hot_pages))
-                            <div class="col-12">
-                                <div class="row mt-4 justify-content-center">
-                                    @include('mainPart.hot-pages')
-                                </div>
-                            </div>
-                        @endif --}}
-
-                    </div>
+                    @include('mainPart.mainPage.breadc', ['page' => 'advertise'])
                 </div>
+
             </div>
 
         </div>

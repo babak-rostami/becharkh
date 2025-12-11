@@ -49,21 +49,10 @@ class ItemTopUsersJob
             $userScores = [];
 
             foreach ($comments as $comment) {
-                $userId = $comment->user_id;
-                $likeCount = $comment->like_count ?? 0;
-
-                if (!isset($userScores[$userId])) {
-                    $userScores[$userId] = [
-                        'user_id' => $userId,
-                        'comments' => 0,
-                        'likes' => 0,
-                        'score' => 0,
-                    ];
+                $this->calculateUserScore($comment, $userScores);
+                foreach ($comment->replies as $reply) {
+                    $this->calculateUserScore($reply, $userScores);
                 }
-
-                $userScores[$userId]['comments']++;
-                $userScores[$userId]['likes'] += $likeCount;
-                $userScores[$userId]['score'] = ($userScores[$userId]['comments'] * 10) + $userScores[$userId]['likes'];
             }
 
             $sortedUsers = collect($userScores)
@@ -105,5 +94,25 @@ class ItemTopUsersJob
 
             $item_for_top_user->delete();
         }
+    }
+
+
+    private function calculateUserScore($comment, &$userScores)
+    {
+        $userId = $comment->user_id;
+        $likeCount = $comment->like_count ?? 0;
+
+        if (!isset($userScores[$userId])) {
+            $userScores[$userId] = [
+                'user_id' => $userId,
+                'comments' => 0,
+                'likes' => 0,
+                'score' => 0,
+            ];
+        }
+
+        $userScores[$userId]['comments']++;
+        $userScores[$userId]['likes'] += $likeCount;
+        $userScores[$userId]['score'] = ($userScores[$userId]['comments'] * 10) + $userScores[$userId]['likes'];
     }
 }

@@ -109,9 +109,10 @@ class MongoAdvertise extends Model
     {
         $ad = $this;
         $items = $ad->items ?? [];
+
         $ads = collect();
         if (count($items) > 0) {
-            $tempAds = MongoAdvertise::whereIn('items', $items)->orderBy('created_at', 'desc')->get();
+            $tempAds = MongoAdvertise::where('items', $items[0])->orderBy('created_at', 'desc')->get();
             if (count($tempAds) > 0) {
                 $ads = $ads->merge($tempAds);
             }

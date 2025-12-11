@@ -1,24 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let video = document.getElementById("video-s");
+    const video = document.getElementById("video-s");
 
-    video.muted = true;
+    video.addEventListener("ended", function () {
+        video.currentTime = 0;
+        video.play().catch(() => { });
+    });
 
-    let observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    video.play().catch((err) => {
-                        // if (err.name !== "AbortError") {
-                        //     console.warn("Video play error:", err);
-                        // }
-                    });
-                } else {
+                // وقتی نزدیک دید میشه، فقط متادیتا و تکه اولش رو لود کن
+                if (entry.isIntersecting && !video.dataset.prefetched) {
+                    video.dataset.prefetched = "true";
+                    video.preload = "metadata";
+                    video.load();
+
+                }
+
+                // وقتی کامل دیده میشه، پخش کن
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                    video.muted = true;
+                    video.play().catch(() => { });
+                } else if (!entry.isIntersecting) {
                     if (!video.paused) video.pause();
                 }
             });
-        }, {
-        threshold: 0.5,
-    }
+        },
+        { threshold: [0.2, 0.5] }
     );
 
     observer.observe(video);

@@ -9,35 +9,43 @@
     <meta name="robots" content="noindex">
     <style>
         .hop-item {
-            text-align: right;
+            text-align: center;
             display: block;
-            border: 1px solid #dee2e6;
-            margin-bottom: 8px;
-            padding: 8px;
-            border-radius: 8px;
             text-decoration: none !important;
+            background-color: #fff;
+            border: 2px solid #f7f7f7;
+            color: #000;
+            border-radius: 8px;
+            padding: 8px 12px;
+            box-shadow: 0px 0px 20px 0 #f1f1f1;
         }
 
         .hop-item:hover {
-            background-color: #dee2e6;
+            box-shadow: inset 0 0 20px 0 #ddd;
         }
 
         .hop-title {
             font-weight: 600;
-            color: #1c244f;
+            font-size: 22px;
             display: block;
+            line-height: 36px;
         }
 
         .hop-body {
-            font-size: 14px;
+            font-size: 18px;
             color: #525252;
+            line-height: 36px;
         }
 
         .hop-img {
             max-width: 100%;
-            max-height: 160px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            max-height: 240px;
+            object-fit: contain;
+            border-radius: 36px;
+            margin: 12px 0;
+            border: 2px solid #f1f1f1;
+            background-color: #f7f7f7;
+            padding: 8px;
         }
     </style>
     <link href="{{ asset('mixassets/css/style.min.css') . '?lm=' . filemtime('mixassets/css/style.min.css') }}"

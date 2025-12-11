@@ -1,4 +1,4 @@
-<a class="comusr-link" rel="nofollow" href="{{ route('user.dashboard', $dashuser->username) }}">
+<a target="_blank" class="comusr-link" rel="nofollow" href="{{ route('user.dashboard', $dashuser->username) }}">
     <div class="comusr-container">
         <img alt="عکس {{ $dashuser->name }}"
             class="@if ($dashuser->getImage()) comusr-style @else dcomusr-style @endif @if ($lazyload == 1) lazy-load @endif"

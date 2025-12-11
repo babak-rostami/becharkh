@@ -1,0 +1,110 @@
+.ad-item-div {
+    border-bottom: 1px solid #dee2e6;
+    padding: 16px 8px;
+    background-color: #fff;
+    margin: 12px 0;
+    border-radius: 8px;
+}
+
+.ad-item-div:hover {
+    background-color: #fbfbfb;
+}
+
+.ad-item-img {
+    width: 81px;
+    max-height: 81px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    border-radius: 8px;
+}
+
+.ad-item-title {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.ad-active-alert {
+    display: block;
+    background-color: #d0edd6;
+    color: #006c14;
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.ad-btns {
+    display: block;
+    margin-bottom: 12px;
+}
+
+#ac-ad-ymoney-t {
+    font-weight: 600;
+    color: #212529;
+    font-size: 22px;
+}
+.ac-ad-money-c {
+    font-size: 17px;
+    font-weight: 600;
+    color: #6c757d;
+}
+#ac-ad-nmoney-t {
+    color: #00731a;
+    font-size: 21px;
+    font-weight: 600;
+}
+button[id^="rock-ad-btn-loading-"] {
+    display: none;
+}
+button[id^="pay-ad-btn-loading-"] {
+    display: none;
+}
+#ad-notp-alert {
+    background-color: #fff7e6;
+    color: #464646;
+    padding: 12px 0;
+    font-size: 17px;
+    font-weight: 600;
+    width: 50%;
+}
+#ad-notcat-alert {
+    background-color: #fff7e6;
+    text-align: center;
+    color: #464646;
+    padding: 12px 0;
+    font-size: 17px;
+    font-weight: 600;
+    width: 100%;
+}
+#ad-notp-need-alert {
+    background-color: #d0edd6;
+    color: #006c14;
+    padding: 12px 0;
+    font-size: 17px;
+    font-weight: 600;
+    width: 50%;
+}
+
+#edit-ad-page-info-box {
+    background-color: #fff;
+    text-align: center;
+    border-radius: 8px;
+}
+#edit-ad-page-info-title {
+    font-size: 24px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 12px;
+}
+#edit-ad-page-404-box {
+    background-color: #fff7e6;
+    text-align: center;
+    border-radius: 8px;
+}
+#edit-ad-page-404-title {
+    font-size: 24px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 12px;
+}

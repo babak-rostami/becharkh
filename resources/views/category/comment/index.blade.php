@@ -205,6 +205,45 @@
                     @include('item.telegram')
                 @endif
             @endif
+
+
+            {{-- <div class="row mt-4">
+                <div class="col-12">
+                    <span id="ad-suggest-box-title">پیشنهادی امروز</span>
+                </div>
+                <div class="col-12" id="ad-suggest-box-list">
+                    @foreach ($suggest_ads as $suggest_ad)
+                        <a class="ad-suggest-box-item" rel="nofollow" href="{{ route('ad.show', $suggest_ad->slug) }}">
+                            <img class="ad-suggest-image lazy-load" alt="{{ $suggest_ad->title }}"
+                                title="{{ $suggest_ad->title }}" data-src="{{ $suggest_ad->thumbnail() }}">
+                            <span class="ad-suggest-title">{{ $suggest_ad->title }}</span>
+
+                            @if (isset($suggest_ad->price))
+                                <span class="ad-suggest-price-number">{{ number_format((int) $suggest_ad->price) }}</span>
+                                <span class="ad-suggest-price-format">تومان</span>
+                            @else
+                                <span class="ad-suggest-price-format">توافقی</span>
+                            @endif
+
+                            @if (isset($suggest_ad->items_title))
+                                <div class="ad-suggest-f-div">
+                                    @foreach ($suggest_ad->items_title as $item_title)
+                                        <span class="ad-suggest-f-item">{{ $item_title }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+                <div class="col-6 text-center pl-1 mt-3">
+                    <a class="btn btn-lg btn-primary w-100 radius-10" href="{{ route('new.ad') }}">ثبت آگهی جدید</a>
+                </div>
+                <div class="col-6 text-center pr-1 mt-3">
+                    <a class="btn btn-lg btn-outline-primary w-100 radius-10" href="">مشاهده بیشتر</a>
+                </div>
+            </div> --}}
+
+
             @include('mainPart.mainPage.add-to-home')
 
             @if (isset($item) && isset($item->tags_array))

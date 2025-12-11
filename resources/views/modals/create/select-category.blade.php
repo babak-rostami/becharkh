@@ -1,14 +1,16 @@
-<div>
-    <span>دسته بندی</span>
-    <div class="my-2 pb-2" id="sug-cat-box">
-        <span id="sug-cat-title">پیشنهادی:</span>
-    </div>
+@if ($categories->count() == 1)
+    <span class="label-title">دسته بندی آگهی</span>
+    <span id="cat-selected-1s">{{ $categories->first()['title'] }}</span>
+@else
+    <span class="select-category-label">دسته بندی</span>
     <span id="modcat-select-input" data-toggle="modal" data-target="#select-category-modal"
-        onclick="showCatChildrenModalForSCFCE(0)">انتخاب دسته بندی</span>
-</div>
+        onclick="showCatChildrenModalForSCFCE(0)">انتخاب دسته بندی
+        <img class="lazy-load float-left" data-src="{{ $ftp_path . 'files/other/images/next.png' }}">
+    </span>
+@endif
 
-<div class="modal fade" id="select-category-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
+<div class="modal fade" id="select-category-modal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-body">
