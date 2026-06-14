@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class PageError extends Model
 {
 
     protected $connection = 'mongodb';
-    protected $collection = 'page_errors';
+    protected $table = 'page_errors';
 }

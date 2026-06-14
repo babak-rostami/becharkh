@@ -17,6 +17,17 @@
 body {
     font-family: "Vazirmatn", sans-serif;
     font-weight: 400;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+form,
+form *,
+#item-id-for-tel {
+    user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
 }
 
 .top-nav-link-logo {

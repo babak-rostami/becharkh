@@ -8,6 +8,7 @@ use App\Models\MongoBlog;
 use App\Models\MongoCategory;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
+use App\Models\MongoUser;
 use App\Models\MongoVideo;
 use App\Models\Ostan;
 use App\Models\Question;

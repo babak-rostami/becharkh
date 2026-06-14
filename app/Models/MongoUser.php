@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Support\Facades\Config;
@@ -12,19 +11,12 @@ use Illuminate\Support\Facades\Cookie;
 class MongoUser extends Model implements AuthenticatableContract
 {
 
-    // سطح کاربرا
-    //default کاوشگر
-    //1 آگاه
-    //2 حرفه ای
-    //3 متخصص
-
     // user update 1 = name    2 = phone    3 = body    4 = image
 
     use Authenticatable;
 
     protected $connection = 'mongodb';
-    protected $collection = 'users';
-
+    protected $table = 'users';
     protected $fillable = [
         'name',
         'username',

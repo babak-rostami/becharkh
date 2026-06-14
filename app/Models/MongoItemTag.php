@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoItemTag extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'item_tags';
+    protected $table = 'item_tags';
 
     public function tagItems()
     {

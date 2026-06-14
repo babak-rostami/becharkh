@@ -169,7 +169,7 @@
                 <p class="alert alert-dark text-center">این گفتگو پاسخ داده شد و بسته شد.</p>
             @endif
 
-            @if (isset($item))
+            @if (isset($item) && isset($category) && ($category->has_comments == 1 || $category->has_forums == 1))
                 {{-- @if ($item->feature_id == '6682148710cf783aeb0ef6ce')
                     @include('item.telegram')
                 @else --}}

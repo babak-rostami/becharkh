@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Cache;
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoCategoryComment extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'category_comments';
+    protected $table = 'category_comments';
 
     protected $fillable = [
         'parent_id',

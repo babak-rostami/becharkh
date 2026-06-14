@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Cache;
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoAdvertise extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'advertises';
+    protected $table = 'advertises';
 
     protected $fillable = [
         'title',

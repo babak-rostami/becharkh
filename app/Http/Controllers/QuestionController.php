@@ -456,7 +456,11 @@ class QuestionController extends Controller
             $tab_title = $category->full_title ?? $category->title;
         }
         $questions = $questions->whereNotIn('_id', $question->id);
-        $suggests = $suggestionService->suggest($category, $item);
+        if ($category->has_comments == 1 || $category->has_forums == 1) {
+            $suggests = $suggestionService->suggest($category, $item);
+        } else {
+            $suggests = $suggestionService->suggest(null, null);
+        }
         if (isset($suggests['items'])) {
             $suggetItems = $suggests['items'];
         } else {

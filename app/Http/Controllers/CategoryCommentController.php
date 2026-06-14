@@ -7,23 +7,16 @@ use App\Jobs\Item\ChangeItemPageCount;
 use App\Jobs\pages\UpdateHotPages;
 use App\Jobs\SendEmailCategoryComment;
 use App\Jobs\SendUserNotification;
-use App\Jobs\User\UpdateUserFollowItem;
-use App\Models\Admin;
 use App\Models\CategoryCommentEditorImage;
-use App\Models\MongoAdvertise;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
-use App\Models\MongoVideo;
-use App\Models\RtablePageData;
 use App\Models\SurveyOption;
-use App\Notifications\SiteEvent;
 use App\Repositories\Category\Mongodb\CategoryRepository;
 use App\Repositories\CategoryComment\Mongodb\CategoryCommentRepository;
-use App\Repositories\Feature\Mongodb\FeatureRepository;
 use App\Services\Affilate\AffilateService;
 use App\Services\Comment\CommentEditorService;
 use App\Services\Item\AdditemsService;
@@ -160,6 +153,8 @@ class CategoryCommentController extends Controller
 
             // $hot_pages = Cache::get('hot_pages');
 
+            $qaSchema = $this->buildQaSchema($meta_title, $meta_desc, $comments, $acceptedAnswer);
+
             $compactVars = [
                 'is_admin',
                 'page_intro_title',
@@ -174,7 +169,8 @@ class CategoryCommentController extends Controller
                 'comments',
                 'category',
                 'title',
-                'currentQueryParams'
+                'currentQueryParams',
+                'qaSchema'
             ];
 
             // $suggest_ads_ids = $item->suggest_ads ?? [];
@@ -229,6 +225,8 @@ class CategoryCommentController extends Controller
 
             $comments = $this->sendCommentRefferIdToTop($request, $comments);
 
+            $qaSchema = $this->buildQaSchema($meta_title, $meta_desc, $comments, null);
+
             $forum_page = route('question.index');
             $advertise_page = route('ads.index');
             $blog_page = route('blog.index');
@@ -244,13 +242,68 @@ class CategoryCommentController extends Controller
                 'advertise_page',
                 'nextPageUrl',
                 'comments',
-                // 'suggest_ads',
+                'qaSchema',
                 'title'
             ];
 
             return view('category.comment.index', compact(...$compactVars));
         }
     }
+
+    private function buildQaSchema($meta_title, $meta_desc, $comments, $acceptedAnswer = null)
+    {
+        if (!$acceptedAnswer) {
+            return;
+        }
+
+        $suggestedAnswers = [];
+
+        foreach ($comments as $k => $c) {
+            if ($k > 5) break;
+            if ($c->id == $acceptedAnswer->id) continue;
+
+            $suggestedAnswers[] = [
+                "@type" => "Answer",
+                "text" => $c->body,
+                "upvoteCount" => $c->like_count ?? 0,
+                "datePublished" => $c->created_at->format('Y-m-d\TH:i:sP'),
+                "author" => [
+                    "@type" => "Person",
+                    "name" => $c->user->name,
+                    "url"  => route('user.dashboard', $c->user->username),
+                ]
+            ];
+        }
+
+        $data = [
+            "@context" => "https://schema.org",
+            "@type" => "QAPage",
+            "mainEntity" => [
+                "@type" => "Question",
+                "name" => $meta_title,
+                "text" => $meta_desc,
+                "answerCount" => count($comments),
+
+                "acceptedAnswer" => [
+                    "@type" => "Answer",
+                    "text" => $acceptedAnswer->body,
+                    "upvoteCount" => $acceptedAnswer->like_count ?? 0,
+                    "datePublished" => $acceptedAnswer->created_at->format('Y-m-d\TH:i:sP'),
+                    "author" => [
+                        "@type" => "Person",
+                        "name" => $acceptedAnswer->user->name,
+                        "url"  => route('user.dashboard', $acceptedAnswer->user->username),
+                    ]
+                ],
+
+                "suggestedAnswer" => $suggestedAnswers
+            ]
+        ];
+
+        // ساخت JSON بدون اسلش و بدون تبدیل کاراکتر HTML
+        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
 
     public function sendCommentRefferIdToTop($request, $comments)
     {

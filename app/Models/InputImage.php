@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class InputImage extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'input_images';
+    protected $table = 'input_images';
 }

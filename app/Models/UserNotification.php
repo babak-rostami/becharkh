@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class UserNotification extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'user_notifications';
+    protected $table = 'user_notifications';
 
     public function user()
     {

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class ProductCommentLike extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'product_comment_likes';
+    protected $table = 'product_comment_likes';
 }

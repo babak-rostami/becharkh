@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoFeature extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'features';
+    protected $table = 'features';
 
     protected $fillable = [
         'category_id',

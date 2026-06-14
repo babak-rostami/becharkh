@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class LetMeKnow extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'let_me_knows';
+    protected $table = 'let_me_knows';
 
     public function category()
     {

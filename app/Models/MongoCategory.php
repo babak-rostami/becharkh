@@ -5,12 +5,11 @@ namespace App\Models;
 use App\Services\Elasticsearch;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoCategory extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'categories';
+    protected $table = 'categories';
 
     public static $elasticIndexName = 'categories';
     public static $elasticField = [

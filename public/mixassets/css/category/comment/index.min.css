@@ -17,6 +17,17 @@
 body {
     font-family: "Vazirmatn", sans-serif;
     font-weight: 400;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+form,
+form *,
+#item-id-for-tel {
+    user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
 }
 
 .top-nav-link-logo {
@@ -1430,6 +1441,78 @@ header {
     cursor: pointer;
 }
 /* end for comments tags */
+
+/* for 45 sell cal */
+.sell-hero {
+    direction: rtl;
+    text-align: right;
+    padding: 60px 30px;
+}
+
+#sell-hero-1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1f1f1f;
+    margin-bottom: 15px;
+}
+
+.sell-hero-highlight {
+    color: #28a745;
+}
+
+.sell-hero p {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.sell-hero .badge-free {
+    display: inline-block;
+    background: #f1f8f4;
+    color: #28a745;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    font-size: 17px;
+    border: 1px solid #d4edda;
+}
+
+.cta-btn {
+    background: #28a745;
+    color: #fff !important;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    animation: pulse 2s infinite;
+    text-decoration: none !important;
+    display: inline-block;
+}
+
+.cta-btn:hover {
+    background: #218838;
+    transform: translateY(-3px);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(40, 167, 69, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+/* end for 45 sell cal */
+
 .btn-follow-item {
     background-color: rgb(0, 123, 255);
     outline: none !important;

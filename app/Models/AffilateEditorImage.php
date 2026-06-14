@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class AffilateEditorImage extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'affilate_editor_images';
+    protected $table = 'affilate_editor_images';
 }

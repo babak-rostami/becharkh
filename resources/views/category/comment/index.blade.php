@@ -34,56 +34,12 @@
         href="{{ asset('mixassets/css/category/comment/index.min.css') . '?lm=' . filemtime('mixassets/css/category/comment/index.min.css') }}"
         rel="stylesheet" type="text/css" />
 
-    @if (isset($category) && isset($hasComments) && $hasComments == 1 && count($comments) >= 2)
+    @if (!empty($qaSchema))
         <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "QAPage",
-          "mainEntity": {
-            "@type": "Question",
-            "name": "{{ $meta_title }}",
-            "text": "{{ $meta_desc }}",
-            "answerCount": {{count($comments)}},
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "{{$acceptedAnswer->body}}",
-                "upvoteCount": {{$acceptedAnswer->like_count ?? 0}},
-                "datePublished": "{{$acceptedAnswer->created_at->format('Y-m-d\TH:i:sP')}}"
-                ,"author": {
-                    "@type": "Person",
-                    "name": "{{$acceptedAnswer->user->name}}",
-                    "url": "{{ route('user.dashboard', $acceptedAnswer->user->username) }}"
-                }
-            },
-            "suggestedAnswer": [
-                @php($ifc = 1)
-                @foreach($comments as $k => $c)
-                    @if($k>5)
-                        @break
-                    @endif
-                    @if($c->id != $acceptedAnswer->id)
-                    @if($ifc == 0)
-                    ,
-                    @endif
-                    @php($ifc = 0)
-                    {
-                        "@type": "Answer",
-                        "text": "{{$c->body}}",
-                        "upvoteCount": {{$c->like_count ?? 0}},
-                        "datePublished": "{{$c->created_at->format('Y-m-d\TH:i:sP')}}"
-                        ,"author": {
-                            "@type": "Person",
-                            "name": "{{$c->user->name}}",
-                            "url": "{{ route('user.dashboard', $c->user->username) }}"
-                        }
-                    }
-                    @endif
-                @endforeach
-            ]
-          }
-        }
-        </script>
+        {!! $qaSchema !!}
+    </script>
     @endif
+
 @endsection
 
 @section('content')
@@ -133,6 +89,38 @@
     </div>
 
     <div class="row bg-wht justify-content-center" id="forum-line-height">
+
+        {{-- <div class="col-12 col-md-10 sell-hero">
+            <span id="sell-hero-1">
+                <span> فروش خودروی شما در</span>
+                <span class="sell-hero-highlight">۴۵ دقیقه</span>
+            </span>
+            <p>
+                خرید و فروش خودرو با بهترین قیمت
+            </p>
+            <div class="badge-free">
+                ✔ کارشناسی تخصصی کاملاً رایگان
+            </div>
+            <br>
+            <a class="cta-btn" href="http://kh45.co/1lk5e">همین حالا قیمت بگیر</a>
+        </div> --}}
+
+        @if (isset($item) && isset($item->id_for_tel))
+            <div class="col-12 col-md-10 sell-hero">
+                <span id="sell-hero-1">
+                    <span>گروه تلگرام </span>
+                    <span class="sell-hero-highlight">{{ $item->title_for_tel }}</span>
+                </span>
+                <p>{{ $item->desc_for_tel }}</p>
+                <div id="item-id-for-tel" class="badge-free">
+                    ✔ آی دی گروه : {{ $item->id_for_tel }}
+                </div>
+                <br>
+                <a class="cta-btn" target="_blank" href="https://t.me/{{ $item->id_for_tel }}">برای عضویت کلیک کنید</a>
+            </div>
+        @endif
+
+
         <div class="col-12 col-md-10">
             <div class="mt-2" id="page-title-box">
                 @if (isset($category))

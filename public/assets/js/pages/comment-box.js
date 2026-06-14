@@ -22,7 +22,11 @@ setTimeout(() => {
             page == "admin_edit_product_comment"
         ) {
             editor_id = "#cm-input";
-        } else if (page == "create_affilate" || page == "edit_affilate" || page == "admin_edit_comment") {
+        } else if (
+            page == "create_affilate" ||
+            page == "edit_affilate" ||
+            page == "admin_edit_comment"
+        ) {
             editor_id = "#cm-input";
             editor2_id = "#cm-input-2";
         }
@@ -44,7 +48,11 @@ setTimeout(() => {
             "undo",
             "redo"
         ];
-        if (page !== "admin_edit_comment") {
+        if (
+            page !== "admin_edit_comment" &&
+            page !== "create_question_admin" &&
+            page !== "edit_question_admin"
+        ) {
             pluginsToRemove.push("Link");
         } else {
             toolbarItems.splice(3, 0, "link");
@@ -184,10 +192,10 @@ setTimeout(() => {
 
 if (typeof page !== "undefined") {
     if (page == "comment" || page == "show_question" || page == "show_product")
-        $(document).ready(function () {
-            $('#cm-input').on('input', function () {
-                $(this).css('height', 'auto');
-                $(this).css('height', Math.max(this.scrollHeight, 100) + 'px');
+        $(document).ready(function() {
+            $("#cm-input").on("input", function() {
+                $(this).css("height", "auto");
+                $(this).css("height", Math.max(this.scrollHeight, 100) + "px");
             });
         });
 }
@@ -238,7 +246,9 @@ function userCcommentSend() {
     let load_btn = $("#comment-editor-load-btn");
     let comment_form = $("#cm_form");
     let submit_form = 0;
-    let editor_contents = $('#cm-input').val().trim();
+    let editor_contents = $("#cm-input")
+        .val()
+        .trim();
     let error_span = $("#comeditor-msg");
 
     if (editor_contents !== "") {
@@ -314,10 +324,10 @@ function editorQuestionStore() {
     let comment_form = $("#qform");
     let error_span = $("#comeditor-msg");
     let editor_contents = comment_editor.getData();
-    let cat = $('#category_id');
+    let cat = $("#category_id");
     if (hasAtLeastOneParagraph(editor_contents)) {
         if ($("#title").val().length >= 20 && $("#title").val().length < 60) {
-            if (!cat.length || (cat.val() || '').trim()) {
+            if (!cat.length || (cat.val() || "").trim()) {
                 // if (send_question_after_login == 1) {
                 //     $("#login_user").modal("show");
                 // } else {
@@ -488,7 +498,7 @@ function hasAtLeastOneParagraph(content) {
 //     }
 // }
 
-$("#edImageModal").on("click", function (event) {
+$("#edImageModal").on("click", function(event) {
     if ($(event.target).attr("id") !== "ed-img") {
         closeEdModalImage();
     }
@@ -503,7 +513,7 @@ function clickEdImg(imgId) {
         modal.css("display", "flex");
     }
     modalImg.attr("src", img.attr("src"));
-    $("#close-ed-img").click(function () {
+    $("#close-ed-img").click(function() {
         closeEdModalImage();
     });
 }

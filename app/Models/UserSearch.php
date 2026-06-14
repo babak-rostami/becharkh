@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class UserSearch extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'user_searches';
+    protected $table = 'user_searches';
 }

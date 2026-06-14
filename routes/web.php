@@ -94,8 +94,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
 Route::get('/getCities', [IndexController::class, 'getCities'])->name('get.cities');
 Route::get('/getCitiesCreate', [IndexController::class, 'getCitiesCreate'])->name('get.cities.create');
 // Route::get('/get-cats/{pid?}', [SiteCategoryController::class, 'getCats'])->name('get.cats');

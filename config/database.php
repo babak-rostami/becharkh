@@ -70,9 +70,6 @@ return [
             'database' => env('DB_MONGO_DATABASE', 'your_mongo_database'),
             'username' => env('DB_MONGO_USERNAME', ''),
             'password' => env('DB_MONGO_PASSWORD', ''),
-            'options' => [
-                'database' => env('DB_MONGO_AUTH_DATABASE', 'admin') // required with Mongo 3+
-            ]
         ],
 
         'pgsql' => [

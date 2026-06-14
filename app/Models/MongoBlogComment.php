@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoBlogComment extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'blog_comments';
+    protected $table = 'blog_comments';
 
     protected $fillable = [
         'parent_id',

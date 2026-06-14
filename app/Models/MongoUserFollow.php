@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoUserFollow extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'user_follows';
+    protected $table = 'user_follows';
 
     protected $fillable = [
         'user_1',

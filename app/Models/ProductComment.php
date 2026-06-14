@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class ProductComment extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'product_comments';
+    protected $table = 'product_comments';
 
     public function user()
     {

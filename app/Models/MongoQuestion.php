@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Services\Elasticsearch;
 use Illuminate\Support\Facades\Cache;
-use Jenssegers\Mongodb\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class MongoQuestion extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'questions';
+    protected $table = 'questions';
 
     public static $elasticIndexName = 'questions';
     public static $elasticField = [

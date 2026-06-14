@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class SurveyOption extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'survey_options';
+    protected $table = 'survey_options';
 }

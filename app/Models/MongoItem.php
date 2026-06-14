@@ -6,12 +6,11 @@ use App\Services\Elasticsearch;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoItem extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'items';
+    protected $table = 'items';
 
     protected $fillable = [
         'feature_id',

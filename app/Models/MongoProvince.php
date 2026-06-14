@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoProvince extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'provinces';
+    protected $table = 'provinces';
 }

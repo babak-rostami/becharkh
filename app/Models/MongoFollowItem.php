@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoFollowItem extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'follow_items';
+    protected $table = 'follow_items';
 
     public function user()
     {

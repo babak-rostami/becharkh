@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoBlogLike extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'blog_likes';
+    protected $table = 'blog_likes';
 
     protected $fillable = [
         'blog_id',

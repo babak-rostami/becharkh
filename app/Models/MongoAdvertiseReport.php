@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoAdvertiseReport extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'advertise_report';
+    protected $table = 'advertise_report';
 }

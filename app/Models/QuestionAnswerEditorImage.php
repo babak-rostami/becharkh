@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class QuestionAnswerEditorImage extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'qanswer_editor_images';
+    protected $table = 'qanswer_editor_images';
 }

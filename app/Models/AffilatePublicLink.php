@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class AffilatePublicLink extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'affilate_plink';
+    protected $table = 'affilate_plink';
 }

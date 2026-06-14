@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoConversation extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'conversation';
+    protected $table = 'conversation';
 
     public function messages()
     {

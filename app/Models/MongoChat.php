@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoChat extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'chats';
+    protected $table = 'chats';
 
     protected $fillable = [
         'message',

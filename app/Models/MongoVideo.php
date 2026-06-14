@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Cache;
-use Jenssegers\Mongodb\Eloquent\Model;
-use Illuminate\Support\Str;
+use MongoDB\Laravel\Eloquent\Model;
 
 
 class MongoVideo extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'videos';
+    protected $table = 'videos';
 
     protected $fillable = [
         'title',

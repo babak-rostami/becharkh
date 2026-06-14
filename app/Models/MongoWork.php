@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoWork extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'works';
+    protected $table = 'works';
 
     protected $fillable = [
         'title',

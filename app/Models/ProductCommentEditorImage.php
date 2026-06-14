@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class ProductCommentEditorImage extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'product_comment_editor_images';
+    protected $table = 'product_comment_editor_images';
 }

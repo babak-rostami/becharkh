@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoQuestionEmail extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'question_emails';
+    protected $table = 'question_emails';
 }

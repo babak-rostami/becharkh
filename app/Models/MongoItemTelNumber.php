@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoItemTelNumber extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'item_tel_numbers';
+    protected $table = 'item_tel_numbers';
 
     public function item()
     {

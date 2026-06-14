@@ -3,13 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Models\Advertise;
-use App\Models\Blog;
-use App\Models\CategoryFeatureItem;
 use App\Models\ChangeUsername;
-use App\Models\LetMeKnow;
-use App\Models\MongoAdvertise;
-use App\Models\MongoBlog;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoItem;
@@ -18,12 +12,8 @@ use App\Models\MongoQuestion;
 use App\Models\MongoUser;
 use App\Models\MongoVideo;
 use App\Models\PageError;
-use App\Models\Question;
-use App\Models\SiteCategory;
-use App\Models\User;
 use App\Models\UserNotification;
 use App\Models\UserSearch;
-use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;

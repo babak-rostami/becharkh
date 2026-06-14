@@ -4,15 +4,14 @@ namespace App\Models;
 
 use App\Services\Elasticsearch;
 use Illuminate\Support\Facades\Cache;
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 //status 0 mean not accepted because blog category or item not accepted
 //status 1 mean accepted
 //status 2 mean post temporary saved
 class MongoBlog extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'blogs';
+    protected $table = 'blogs';
 
     protected $fillable = [
         'category_id',

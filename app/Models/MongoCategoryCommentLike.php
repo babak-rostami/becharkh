@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoCategoryCommentLike extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'category_comment_likes';
+    protected $table = 'category_comment_likes';
 
     protected $fillable = [
         'comment_id',

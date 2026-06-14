@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class ItemForTopUser extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'item_for_top_users';
+    protected $table = 'item_for_top_users';
 }

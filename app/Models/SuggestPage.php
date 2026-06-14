@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class SuggestPage extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'suggest_pages';
+    protected $table = 'suggest_pages';
 
     public function image()
     {

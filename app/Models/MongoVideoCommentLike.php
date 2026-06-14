@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoVideoCommentLike extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'video_comment_likes';
+    protected $table = 'video_comment_likes';
 
     protected $fillable = [
         'comment_id',

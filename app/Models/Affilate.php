@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class Affilate extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'affilates';
+    protected $table = 'affilates';
 
     public function videoPath()
     {

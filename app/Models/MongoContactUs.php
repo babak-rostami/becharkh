@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoContactUs extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'contact_us';
+    protected $table = 'contact_us';
 
     public function user()
     {

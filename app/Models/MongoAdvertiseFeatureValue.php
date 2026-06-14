@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class MongoAdvertiseFeatureValue extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'advertise_feature_value';
+    protected $table = 'advertise_feature_value';
 
     protected $fillable = [
         'advertise_id',

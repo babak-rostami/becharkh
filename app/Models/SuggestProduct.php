@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
-
+use MongoDB\Laravel\Eloquent\Model;
 class SuggestProduct extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'suggest_products';
+    protected $table = 'suggest_products';
 }
