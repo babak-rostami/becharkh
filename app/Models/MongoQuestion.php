@@ -11,7 +11,7 @@ class MongoQuestion extends Model
     protected $connection = 'mongodb';
     protected $table = 'questions';
 
-    public static $elasticIndexName = 'questions';
+    public static $elasticIndexName = 'becharkh_questions';
     public static $elasticField = [
         'properties' => [
             'title' => [

@@ -11,7 +11,7 @@ class MongoCategory extends Model
     protected $connection = 'mongodb';
     protected $table = 'categories';
 
-    public static $elasticIndexName = 'categories';
+    public static $elasticIndexName = 'becharkh_categories';
     public static $elasticField = [
         'properties' => [
             'similar_search' => [

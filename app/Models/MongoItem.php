@@ -23,7 +23,7 @@ class MongoItem extends Model
         'images'
     ];
 
-    public static $elasticIndexName = 'items';
+    public static $elasticIndexName = 'becharkh_items';
     public static $elasticField = [
         'properties' => [
             'similar_search' => [

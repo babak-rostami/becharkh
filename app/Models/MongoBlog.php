@@ -33,7 +33,7 @@ class MongoBlog extends Model
         'updated_at',
     ];
 
-    public static $elasticIndexName = 'blogs';
+    public static $elasticIndexName = 'becharkh_blogs';
     public static $elasticField = [
         'properties' => [
             'title' => [
