@@ -19,6 +19,9 @@
         "predis/predis": "^2.3",
         "pusher/pusher-php-server": "^7.2",
         "shetabit/payment": "^6.3.0",
+        "symfony/browser-kit": "^7.4",
+        "symfony/dom-crawler": "^7.4",
+        "symfony/http-client": "^7.4",
         "unisharp/laravel-filemanager": "~1.8"
     },
     "require-dev": {

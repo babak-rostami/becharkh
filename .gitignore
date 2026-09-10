@@ -5,5 +5,6 @@
 /public/files
 /public/ampbech
 /public/ckeditor
+/public/mixassets
 .env
 .env.backup
