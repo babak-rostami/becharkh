@@ -6,6 +6,7 @@ use App\Models\MongoCategory;
 use App\Models\MongoItem;
 use App\Models\MongoUser;
 use App\Models\UserNotification;
+use Illuminate\Support\Str;
 
 class UserNotificationController extends Controller
 {
@@ -40,7 +41,7 @@ class UserNotificationController extends Controller
                 $this->updateUserNotifs($parent_comment->user_id);
                 $notif->user_id = $parent_comment->user_id;
                 $notif->msg = $notif_text;
-                $notif->body = str_limit($new_object->body, 100, '...');
+                $notif->body = Str::limit($new_object->body, 100, '...');
                 $notif->route = $notif_route;
                 $notif->unread = 1;
                 $notif->type = 'ccomment';
@@ -69,7 +70,7 @@ class UserNotificationController extends Controller
                 $notid_r = route('question.show',  $question->slug2);
             }
             if (strpos($notid_r, "http://localhost") === 0) {
-                $notid_r = str_replace("http://localhost", "https://becharkh.com", $notid_r);
+                $notid_r = Str::replace("http://localhost", "https://becharkh.com", $notid_r);
             }
             $notif_route = $notid_r;
 
@@ -78,7 +79,7 @@ class UserNotificationController extends Controller
                 $this->updateUserNotifs($parent_comment->user_id);
                 $notif_to_anw_user->user_id = $parent_comment->user_id;
                 $notif_to_anw_user->msg = $notif_text;
-                $notif_to_anw_user->body = str_limit($new_object->body, 100, '...');
+                $notif_to_anw_user->body = Str::limit($new_object->body, 100, '...');
                 $notif_to_anw_user->route = $notif_route;
                 $notif_to_anw_user->unread = 1;
                 $notif_to_anw_user->type = 'question_answer';
@@ -92,7 +93,7 @@ class UserNotificationController extends Controller
                     $this->updateUserNotifs($question_user->id);
                     $notif_to_q_user->user_id = $question_user->id;
                     $notif_to_q_user->msg = $notif_text;
-                    $notif_to_q_user->body = str_limit($new_object->body, 100, '...');
+                    $notif_to_q_user->body = Str::limit($new_object->body, 100, '...');
                     $notif_to_q_user->route = $notif_route;
                     $notif_to_q_user->unread = 1;
                     $notif_to_q_user->type = 'question_answer';

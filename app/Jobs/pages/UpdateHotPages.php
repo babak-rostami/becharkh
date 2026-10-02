@@ -14,6 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use stdClass;
 
 class UpdateHotPages implements ShouldQueue
@@ -63,7 +64,7 @@ class UpdateHotPages implements ShouldQueue
                         }
                         $title .= ' | نظرات + تجربیات + مشکلات';
                         $new_page->title = $title;
-                        $new_page->body = str_limit($cc->body, 100, '...');
+                        $new_page->body = Str::limit($cc->body, 100, '...');
                         $new_page->url = $item->withParentsCommentUrl();
                         $new_page->image = $item->image();
                         $new_page->time = $cc->created_at->format('Y-m-d H:i:s');
@@ -100,9 +101,9 @@ class UpdateHotPages implements ShouldQueue
                 if ($question &&  $question->status == 1 && $question->google_index == 1 && !in_array($question->id, $processed_question_ids)) {
                     $new_page = new stdClass();
                     $new_page->title = $question->sug_title ?? $question->title;
-                    $new_page->body = str_limit($qc->body, 100, '...');
+                    $new_page->body = Str::limit($qc->body, 100, '...');
                     $question_route = route('question.show', $question->slug2);
-                    $new_page->url = 'https://becharkh.com' . str_replace('http://localhost', '', $question_route);
+                    $new_page->url = 'https://becharkh.com' . Str::replace('http://localhost', '', $question_route);
                     if ($question->getImage()) {
                         $new_page->image = $question->image();
                     } else {

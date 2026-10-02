@@ -1,0 +1,128 @@
+name: becharkh
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    image: becharkh-app
+    container_name: becharkh-app
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php-fpm
+    volumes:
+      - ./:/var/www
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      # - mysql
+      - redis
+    networks:
+      - becharkh-network
+      - music-network
+
+  # تعداد نسخه‌ی این سرویس رو با --scale زیاد/کم کن، نه با کپی کردن بلوک:
+  #   docker compose up -d --scale queue-worker=3
+  # کل پروژه فقط از یه اسم صف استفاده می‌کنه: ->onQueue('becharkhsite')
+  queue-worker:
+    image: becharkh-app
+    restart: unless-stopped
+    working_dir: /var/www
+    command: >
+      php artisan queue:work --queue=becharkhsite,default --tries=3 --timeout=300 --max-jobs=200 --max-time=3600
+    volumes:
+      - ./:/var/www
+    env_file:
+      - .env
+    depends_on:
+      - app
+    networks:
+      - becharkh-network
+      - music-network
+
+  scheduler:
+    image: becharkh-app
+    container_name: becharkh-scheduler
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan schedule:work
+    volumes:
+      - ./:/var/www
+    env_file:
+      - .env
+    depends_on:
+      - app
+    networks:
+      - becharkh-network
+      - music-network
+
+  nginx:
+    image: nginx:1.31
+    container_name: becharkh-nginx
+    restart: unless-stopped
+    ports:
+      - "8006:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - becharkh-network
+
+  mongo:
+    image: mongo:8.0
+    container_name: becharkh-mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DB_MONGO_DATABASE}
+    volumes:
+      - becharkh_mongo_data:/data/db
+    ports:
+      # فقط برای مهاجرت داده/اتصال با Compass لازمه؛ روی سرور واقعی این دو خط رو حذف یا با فایروال ببند
+      - "27017:27017"
+    networks:
+      - becharkh-network
+      - music-network
+
+  # دیتابیسِ در حال حذف‌شدن — طبق چک‌لیستی که قبلاً دادم، هر مدلی که از mysql به mongo منتقل کردی
+  # از این سرویس دیگه استفاده نمی‌کنه. وقتی Admin/Mission/... هم منتقل شدن، کل این بلوک رو حذف کن.
+  # mysql:
+  #   image: mysql:8.4
+  #   container_name: becharkh-mysql
+  #   restart: unless-stopped
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+  #     - MYSQL_DATABASE=${DB_DATABASE}
+  #     - MYSQL_USER=${DB_USERNAME}
+  #     - MYSQL_PASSWORD=${DB_PASSWORD}
+  #   volumes:
+  #     - becharkh_mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - becharkh-network
+  #     - music-network
+
+  redis:
+    image: redis:8.8
+    container_name: becharkh-redis
+    restart: unless-stopped
+    volumes:
+      - becharkh_redis_data:/data
+    networks:
+      - becharkh-network
+
+networks:
+  becharkh-network:
+    driver: bridge
+  music-network:
+    external: true
+
+volumes:
+  becharkh_mongo_data:
+  # becharkh_mysql_data:
+  becharkh_redis_data:

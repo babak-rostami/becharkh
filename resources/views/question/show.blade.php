@@ -22,66 +22,9 @@
     <link href="{{ asset('mixassets/css/forum/show.min.css') . '?lm=' . filemtime('mixassets/css/forum/show.min.css') }}"
         rel="stylesheet" type="text/css" />
 
-    @if ($acceptedAnswer != null)
-        <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "QAPage",
-          "mainEntity": {
-            "@type": "Question",
-            "name": "{{ $question->title }}",
-            "text": "{{ $question->body }}",
-            "answerCount": {{$question->answer_count ?? 0}},
-            "upvoteCount": {{$question->likes_count ?? 0}},
-            "datePublished": "{{$question->created_at->format('Y-m-d\TH:i:sP')}}",
-            "author": {
-            "@type": "Person",
-            "name": "{{$question->user->name}}",
-            "url": "{{ route('user.dashboard', $question->user->username) }}"
-            },
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "{{$acceptedAnswer->body}}",
-                "upvoteCount": {{$acceptedAnswer->like_count ?? 0}},
-                "datePublished": "{{$acceptedAnswer->created_at->format('Y-m-d\TH:i:sP')}}"
-                @if(isset($acceptedAnswer->user))
-                    ,"author": {
-                        "@type": "Person",
-                        "name": "{{$acceptedAnswer->user->name}}",
-                        "url": "{{ route('user.dashboard', $acceptedAnswer->user->username) }}"
-                    }
-                @endif
-            },
-            "suggestedAnswer": [
-                @php($ifc = 1)
-                @foreach($answers as $k => $a)
-                    @if($k>5)
-                        @break
-                    @endif
-                    @if($a->id != $acceptedAnswer->id)
-                    @if($ifc == 0)
-                    ,
-                    @endif
-                    @php($ifc = 0)
-                    {
-                        "@type": "Answer",
-                        "text": "{{$a->body}}",
-                        "upvoteCount": {{$a->like_count ?? 0}},
-                        "datePublished": "{{$a->created_at->format('Y-m-d\TH:i:sP')}}"
-                        @if(isset($a->user))
-                                ,"author": {
-                                    "@type": "Person",
-                                    "name": "{{$a->user->name}}",
-                                    "url": "{{ route('user.dashboard', $a->user->username) }}"
-                                }
-                        @endif
-                    }
-                    @endif
-                @endforeach
-            ]
-          }
-        }
-        </script>
+    @if ($questionSchema)
+        <script
+            type="application/ld+json">{!! json_encode($questionSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
     @endif
 @endsection
 
@@ -171,7 +114,7 @@
 
             @if (isset($item) && isset($category) && ($category->has_comments == 1 || $category->has_forums == 1))
                 {{-- @if ($item->feature_id == '6682148710cf783aeb0ef6ce')
-                    @include('item.telegram')
+                @include('item.telegram')
                 @else --}}
                 <div class="text-center py-4 px-2 mt-3" id="itempl-div"
                     style="--itempl-div-bg-url: url('{{ $item->image() }}')">
@@ -197,18 +140,18 @@
             @include('category.rcats')
 
             {{-- @if (!$questions->isEmpty())
-                @foreach ($questions as $ques)
-                    <a class="questions-box" href="{{ route('question.show', $ques->slug2) }}">
-                        @if ($ques->getImage())
-                            <img class="lazy-load hop-img" data-src="{{ $ques->image() }}" alt="{{ $ques->title }}">
-                        @endif
-                        <h2 class="sq-item-title">{{ $ques->sug_title ?? $ques->title }}</h2>
-                        @if (isset($ques->answer))
-                            <span class="c-shortans">-{{ $ques->answer }}
-                            </span>
-                        @endif
-                    </a>
-                @endforeach
+            @foreach ($questions as $ques)
+            <a class="questions-box" href="{{ route('question.show', $ques->slug2) }}">
+                @if ($ques->getImage())
+                <img class="lazy-load hop-img" data-src="{{ $ques->image() }}" alt="{{ $ques->title }}">
+                @endif
+                <h2 class="sq-item-title">{{ $ques->sug_title ?? $ques->title }}</h2>
+                @if (isset($ques->answer))
+                <span class="c-shortans">-{{ $ques->answer }}
+                </span>
+                @endif
+            </a>
+            @endforeach
             @endif --}}
 
         </div>
@@ -230,5 +173,5 @@
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/forum/show.min.js') . '?lm=' . filemtime('mixassets/js/forum/show.min.js') }}">
-    </script>
+        </script>
 @endsection

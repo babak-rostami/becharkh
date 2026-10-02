@@ -27,7 +27,7 @@
                 @foreach ($notifications as $key => $notification)
                     <a class="notif-a" target="_blank" href="{{ $notification->route }}">
                         <span class="notif-a-title">{{ $notification->msg }}</span>
-                        <span class="notif-a-body">{{ str_limit($notification->body, 45, '...') }}</span>
+                        <span class="notif-a-body">{{ Str::limit($notification->body, 45, '...') }}</span>
                         <span class="notif-a-time">{{ jdate($notification->created_at)->ago() }}</span>
                         @if ($notification->seen)
                             <span class="notif-new">جدید</span>

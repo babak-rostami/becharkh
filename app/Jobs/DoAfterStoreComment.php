@@ -75,7 +75,7 @@ class DoAfterStoreComment implements ShouldQueue
         if ($this->checkCommentContent($comment->body)) {
             $comment->status = 0;
             $comment->update();
-            $route = 'https://becharkh.com' . str_replace('http://localhost', '', route('admin.category.comment.index'));
+            $route = 'https://becharkh.com' . Str::replace('http://localhost', '', route('admin.category.comment.index'));
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' یک نظر تایید نشده دارد!',
                 'route' => $route
@@ -84,7 +84,7 @@ class DoAfterStoreComment implements ShouldQueue
 
         if ($page == 'show_question') {
             dispatch(new SendUserNotification('question_answer', $user, $comment))->onQueue('becharkhsite');
-            $route = 'https://becharkh.com' . str_replace('http://localhost', '', route('question.show', $object->slug2));
+            $route = 'https://becharkh.com' . Str::replace('http://localhost', '', route('question.show', $object->slug2));
             $admin->notify(new SiteEvent([
                 'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $object->title . ' منتشر کرد',
                 'route' => $route
@@ -97,7 +97,7 @@ class DoAfterStoreComment implements ShouldQueue
             if (isset($comment->parent_id)) {
                 dispatch(new SendEmailCategoryComment($comment->parent_id, $requestData['reply_id'], $user))->onQueue('becharkhsite');
                 $commentPage = route('question.index', $object->slug) . "?s=1";
-                $route = 'https://becharkh.com' . str_replace('http://localhost', '', $commentPage);
+                $route = 'https://becharkh.com' . Str::replace('http://localhost', '', $commentPage);
                 $this->sendUserNotification('ccomment', $user, $comment);
                 $admin->notify(new SiteEvent([
                     'action' => $user->username . ' یک ریپلای ارسال کرد',
@@ -108,7 +108,7 @@ class DoAfterStoreComment implements ShouldQueue
                     $commentPage = $item->withParentsCommentUrl();
                     $commentPageTitle = $item->full_title ?? $item->title;
                 } else {
-                    $commentPage = 'https://becharkh.com' . str_replace('http://localhost', '', route('question.index', $object->slug) . "?s=1");
+                    $commentPage = 'https://becharkh.com' . Str::replace('http://localhost', '', route('question.index', $object->slug) . "?s=1");
                     $commentPageTitle = $object->full_title ?? $object->title;
                 }
                 $route = $commentPage;

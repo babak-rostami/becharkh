@@ -11,7 +11,7 @@
                 @if ($user)
                     <img id="bm-user-img" alt="{{ $user->username }}" src="{{ asset($user->thumb()) }}">
                     <br>
-                    <span class="n-active-btab-mobile" id="bm-user-txt">{{ str_limit($user->name, 12, '') }}</span>
+                    <span class="n-active-btab-mobile" id="bm-user-txt">{{ Str::limit($user->name, 12, '') }}</span>
                 @else
                     <img id="bm-user-img" alt="user image" src="{{ $ftp_path . 'files/other/images/profile.png' }}">
                     <br>

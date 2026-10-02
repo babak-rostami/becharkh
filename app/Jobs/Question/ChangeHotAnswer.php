@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 
 class ChangeHotAnswer implements ShouldQueue
 {
@@ -40,10 +41,10 @@ class ChangeHotAnswer implements ShouldQueue
                 $like_answer = $answers->sortByDesc('like_count')->first();
                 $unlike_answer = $answers->sortByDesc('unlike_count')->first();
                 if ($like_answer->like_count > $unlike_answer->unlike_count) {
-                    $question->answer = str_limit($like_answer->body, 65, '...');
+                    $question->answer = Str::limit($like_answer->body, 65, '...');
                     $question->update();
                 } else {
-                    $question->answer = str_limit($unlike_answer->body, 65, '...');
+                    $question->answer = Str::limit($unlike_answer->body, 65, '...');
                     $question->update();
                 }
             }

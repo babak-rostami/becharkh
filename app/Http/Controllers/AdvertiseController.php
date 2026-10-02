@@ -92,47 +92,47 @@ class AdvertiseController extends Controller
                     $title = $ctitle . ($item->full_title  ?? $item->title);
                 }
                 if ($item->title_in_ads) {
-                    $meta_title = str_replace("*", $title, $item->title_in_ads);
+                    $meta_title = Str::replace("*", $title, $item->title_in_ads);
                 } else {
                     if ($category->title_in_ads) {
-                        $meta_title = str_replace("*", $title, $category->title_in_ads);
+                        $meta_title = Str::replace("*", $title, $category->title_in_ads);
                     } else {
                         $meta_title = "آگهی های " . $title;
                     }
                 }
                 if ($item->desc_in_ads) {
-                    $meta_desc = str_replace("*", $title, $item->desc_in_ads);
+                    $meta_desc = Str::replace("*", $title, $item->desc_in_ads);
                 } else {
                     if ($category->desc_in_ads) {
-                        $meta_desc = str_replace("*", $title, $category->desc_in_ads);
+                        $meta_desc = Str::replace("*", $title, $category->desc_in_ads);
                     } else {
                         $meta_desc = "آکهی های با موضوع " . $title;
                     }
                 }
                 if ($item->desc_in_ads_editor) {
-                    $meta_desc_editor = str_replace("*", $title, $item->desc_in_ads_editor);
+                    $meta_desc_editor = Str::replace("*", $title, $item->desc_in_ads_editor);
                 } else {
                     if ($category->desc_in_ads_editor) {
-                        $meta_desc_editor = str_replace("*", $title, $category->desc_in_ads_editor);
+                        $meta_desc_editor = Str::replace("*", $title, $category->desc_in_ads_editor);
                     }
                 }
                 $advertises->appends(request()->query());
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if (isset($category->title_in_ads_noi)) {
-                    $meta_title = str_replace("*", $cat_title, $category->title_in_ads_noi);
+                    $meta_title = Str::replace("*", $cat_title, $category->title_in_ads_noi);
                 } else {
                     if ($category->title_in_ads) {
-                        $meta_title = str_replace("*", $cat_title, $category->title_in_ads);
+                        $meta_title = Str::replace("*", $cat_title, $category->title_in_ads);
                     } else {
                         $meta_title = "آگهی های " . $cat_title;
                     }
                 }
                 if ($category->desc_in_ads_noi) {
-                    $meta_desc = str_replace("*", $cat_title, $category->desc_in_ads_noi);
+                    $meta_desc = Str::replace("*", $cat_title, $category->desc_in_ads_noi);
                 } else {
                     if ($category->desc_in_ads) {
-                        $meta_desc = str_replace("*", $cat_title, $category->desc_in_ads);
+                        $meta_desc = Str::replace("*", $cat_title, $category->desc_in_ads);
                     } else {
                         $meta_desc = "آکهی های با موضوع " . $cat_title;
                     }
@@ -762,7 +762,7 @@ class AdvertiseController extends Controller
         $images = [];
         if (isset($request->images)) {
             foreach ($request->images as $key => $img) {
-                $baseFilename = str_limit($slug, 10, '-') . time() . $key;
+                $baseFilename = Str::limit($slug, 10, '-') . time() . $key;
                 $path = 'advertise/images/' . $category->slug . '/' . $user->username . '/';
 
                 $filename2 = $baseFilename . '2.webp';
@@ -889,7 +889,7 @@ class AdvertiseController extends Controller
         $advertise->body = $request->advertise_body;
 
         $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
-        $slug2 = $this->createAdSlug($category->slug, str_limit($slug, 20, ''), 1);
+        $slug2 = $this->createAdSlug($category->slug, Str::limit($slug, 20, ''), 1);
         $advertise->slug = $slug2;
 
         $advertise->province_id = $request->province_id;
@@ -929,7 +929,7 @@ class AdvertiseController extends Controller
         $images = [];
         if (isset($request->images)) {
             foreach ($request->images as $key => $img) {
-                $baseFilename = str_limit($slug, 10, '-') . time() . $key;
+                $baseFilename = Str::limit($slug, 10, '-') . time() . $key;
                 $path = 'advertise/images/' . $category->slug . '/' . $user->username . '/';
 
                 $filename2 = $baseFilename . '2.webp';

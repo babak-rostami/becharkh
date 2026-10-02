@@ -16,6 +16,7 @@ use App\Services\Suggestion\SuggestionService;
 use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class AffilateController extends Controller
@@ -35,7 +36,7 @@ class AffilateController extends Controller
 
     function createUniqueSlug($title)
     {
-        $slug = preg_replace('~[^\pL\d]+~u', '-', str_limit($title, '45', '-'));
+        $slug = preg_replace('~[^\pL\d]+~u', '-', Str::limit($title, '45', '-'));
         $originalSlug = $slug;
         $counter = 1;
         while (Affilate::where('slug', $slug)->exists()) {
@@ -532,7 +533,7 @@ class AffilateController extends Controller
             $link = $affilate->link;
         } else if (isset($affilate->public_link)) {
             $base64EncodedUrl = base64_encode($affilate->product_link);
-            $link = str_replace('{YOUR_BASE64_ENCODED_URL}', $base64EncodedUrl, $affilate->public_link);
+            $link = Str::replace('{YOUR_BASE64_ENCODED_URL}', $base64EncodedUrl, $affilate->public_link);
         }
         return redirect()->away($link);
     }

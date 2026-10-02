@@ -129,7 +129,7 @@ class IndexController extends Controller
     {
         $persianNumerals = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
         $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        return str_replace($persianNumerals, $englishNumerals, $input);
+        return Str::replace($persianNumerals, $englishNumerals, $input);
     }
 
     public function mainSearch($type, $value = null)
@@ -335,26 +335,26 @@ class IndexController extends Controller
         $title = $result['title'] ?? ($item->full_title ?? $item->title);
 
         $result['meta_title'] = isset($item->title_in_comment)
-            ? str_replace("*", $title, $item->title_in_comment)
+            ? Str::replace("*", $title, $item->title_in_comment)
             : (isset($category->title_in_comment)
-                ? str_replace("*", $title, $category->title_in_comment)
+                ? Str::replace("*", $title, $category->title_in_comment)
                 : "نظرات کاربران درباره " . $title);
 
         $result['meta_desc'] = isset($item->desc_in_comment)
-            ? str_replace("*", $title, $item->desc_in_comment)
+            ? Str::replace("*", $title, $item->desc_in_comment)
             : (isset($category->desc_in_comment)
-                ? str_replace("*", $title, $category->desc_in_comment)
+                ? Str::replace("*", $title, $category->desc_in_comment)
                 : "بحث و گفتگو با موضوع  " . $title);
 
         if (isset($item->desc_in_comment_editor)) {
-            $result['meta_desc_editor'] = str_replace("*", $title, $item->desc_in_comment_editor);
+            $result['meta_desc_editor'] = Str::replace("*", $title, $item->desc_in_comment_editor);
         } elseif (isset($category->desc_in_comment_editor)) {
-            $result['meta_desc_editor'] = str_replace("*", $title, $category->desc_in_comment_editor);
+            $result['meta_desc_editor'] = Str::replace("*", $title, $category->desc_in_comment_editor);
         }
 
         if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
-            $result['page_intro_title'] = str_replace("*", $title, $followFeature->page_intro_title);
-            $result['page_intro_desc'] = str_replace("*", $title, $followFeature->page_intro_desc);
+            $result['page_intro_title'] = Str::replace("*", $title, $followFeature->page_intro_title);
+            $result['page_intro_desc'] = Str::replace("*", $title, $followFeature->page_intro_desc);
         }
 
         return $result;
@@ -367,18 +367,18 @@ class IndexController extends Controller
         $result['title'] = $cat_title;
 
         if (isset($category->title_in_comment_noi)) {
-            $result['meta_title'] = str_replace("*", $cat_title, $category->title_in_comment_noi);
+            $result['meta_title'] = Str::replace("*", $cat_title, $category->title_in_comment_noi);
         } else {
             $result['meta_title'] = isset($category->title_in_comment)
-                ? str_replace("*", $cat_title, $category->title_in_comment)
+                ? Str::replace("*", $cat_title, $category->title_in_comment)
                 : "نظرات کاربران درباره " . $cat_title;
         }
 
         if ($category->desc_in_comment_noi) {
-            $result['meta_desc'] = str_replace("*", $cat_title, $category->desc_in_comment_noi);
+            $result['meta_desc'] = Str::replace("*", $cat_title, $category->desc_in_comment_noi);
         } else {
             $result['meta_desc'] = isset($category->desc_in_comment)
-                ? str_replace("*", $cat_title, $category->desc_in_comment)
+                ? Str::replace("*", $cat_title, $category->desc_in_comment)
                 : "بحث و گفتگو با موضوع  " . $cat_title;
         }
 

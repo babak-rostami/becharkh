@@ -11,6 +11,7 @@ use App\Models\QuestionAnswerEditorImage;
 use App\Models\QuestionEditorImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class EditorImageController extends Controller
@@ -22,7 +23,7 @@ class EditorImageController extends Controller
         if ($request->hasFile('upload')) {
             $disk = Storage::disk('ftp');
             $file = $request->file('upload');
-            $image_name = strtolower(str_random(12));
+            $image_name = strtolower(Str::random(12));
             $filename =  time() . '-' . $image_name . '.webp';
             $resizedImage = Image::make($file)->encode('webp', 90);
 

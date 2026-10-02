@@ -9,6 +9,7 @@ use App\Models\UserMoney;
 use App\Models\UserOrder;
 use App\Notifications\SiteEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment;
@@ -59,7 +60,7 @@ class UserOrderController extends Controller
     public function chargeAccount(Request $request)
     {
         $user = auth('user')->user();
-        $amount = intval(str_replace(",", "", $request->ammount));
+        $amount = intval(Str::replace(",", "", $request->ammount));
         if ($amount < 10000 || $amount > 99999999) {
             return back()->with('success', 'لطفا رقمی بین ده هزار تا صد میلیون تومان انتخاب کنید');
         }

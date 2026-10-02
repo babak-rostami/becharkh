@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ItemTopUsersJob
 {
@@ -83,7 +84,7 @@ class ItemTopUsersJob
                     'username' => $user->username,
                     'user_img' => $user_img,
                     'user_has_img' => $user_has_img,
-                    'user_dash' => str_replace('http://localhost', 'https://becharkh.com', route('user.dashboard', $user->username)),
+                    'user_dash' => Str::replace('http://localhost', 'https://becharkh.com', route('user.dashboard', $user->username)),
                     'score' => $topUser['score'],
                 ];
                 $top_users[] = $object;

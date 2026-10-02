@@ -36,7 +36,7 @@
                     <div class="bslider-item cat-slider-item">
                         {{-- @if (isset($category) && $suggetItem->category_id != $category->id)
                             <a class="suggest-item" id="slidera-{{ $suggetItem->id }}" draggable="false"
-                                href="{{ str_replace($suggetItem->category->slug, $category->slug, $suggetItem->withParentsAdvertiseUrl()) }}">
+                                href="{{ Str::replace($suggetItem->category->slug, $category->slug, $suggetItem->withParentsAdvertiseUrl()) }}">
                                 <img draggable="false" alt="عکس {{$suggetItem->full_title ?? $suggetItem->title}}" src="{{ $suggetItem->thumb() }}">
                                 <span>
                                     {{ $suggetItem->full_title ?? $suggetItem->title }}

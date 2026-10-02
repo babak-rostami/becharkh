@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ImageCompressor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class ImageCompressorController extends Controller
@@ -37,7 +38,7 @@ class ImageCompressorController extends Controller
 
         if ($request->hasFile('image')) {
             $cover = $request->file('image');
-            $fileName = str_replace('/', '-', $cover->getClientOriginalName());
+            $fileName = Str::replace('/', '-', $cover->getClientOriginalName());
             $ext = $cover->getClientOriginalExtension();
             $path = 'imageCompress/org-images/';
             //main image          

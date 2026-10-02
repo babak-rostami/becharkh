@@ -11,7 +11,9 @@ class Elasticsearch
 
     public function __construct()
     {
-        $this->client = ClientBuilder::create()->build();
+        $this->client = ClientBuilder::create()
+            ->setHosts([env('ELASTICSEARCH_HOST', 'localhost:9200')])
+            ->build();
     }
 
     public function createIndex($indexName, $mapping)

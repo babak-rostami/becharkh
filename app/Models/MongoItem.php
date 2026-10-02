@@ -6,6 +6,7 @@ use App\Services\Elasticsearch;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use MongoDB\Laravel\Eloquent\Model;
 class MongoItem extends Model
 {
@@ -139,7 +140,7 @@ class MongoItem extends Model
     {
         $comment_url = $this->withParentsCommentUrl();
         if ($comment_url != null) {
-            return str_replace('s=1&', '', $comment_url);
+            return Str::replace('s=1&', '', $comment_url);
         }
         return null;
     }
@@ -152,7 +153,7 @@ class MongoItem extends Model
                 $item_cat = $this->category;
                 $forum_url = preg_replace('/' . preg_quote($item_cat->slug, '/') . '/', $category_slug, $forum_url, 1);
             }
-            return str_replace('forum', 'market', $forum_url);
+            return Str::replace('forum', 'market', $forum_url);
         }
         return null;
     }
@@ -161,7 +162,7 @@ class MongoItem extends Model
     {
         $forum_url = $this->withParentsForumUrl();
         if ($forum_url != null) {
-            return str_replace('forum', 'blogs', $forum_url);
+            return Str::replace('forum', 'blogs', $forum_url);
         }
         return null;
     }

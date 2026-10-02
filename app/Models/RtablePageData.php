@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 
 class RtablePageData extends Model
 {
@@ -181,7 +182,7 @@ class RtablePageData extends Model
                 $allQuery[1] = substr($allQuery[1], 1);
             }
             while (strpos($allQuery[1], '&&') !== false) {
-                $allQuery[1] = str_replace('&&', '&', $allQuery[1]);
+                $allQuery[1] = Str::replace('&&', '&', $allQuery[1]);
             }
             $query = explode("&", $allQuery[1]);
             $f = MongoFeature::where('slug', $feature)->first();
@@ -268,10 +269,10 @@ class RtablePageData extends Model
                 strpos($allQueryarr[1], '&&') !== false || strpos($allQueryarr[1], '?&') !== false
                 || strpos($allQueryarr[1], '&?') !== false || strpos($allQueryarr[1], '??') !== false
             ) {
-                $allQueryarr[1] = str_replace('??', '?', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('?&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&?', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('??', '?', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('?&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&?', '&', $allQueryarr[1]);
             }
 
             $allQuery = $allQueryarr[1];
@@ -302,10 +303,10 @@ class RtablePageData extends Model
                 strpos($allQueryarr[1], '&&') !== false || strpos($allQueryarr[1], '?&') !== false
                 || strpos($allQueryarr[1], '&?') !== false || strpos($allQueryarr[1], '??') !== false
             ) {
-                $allQueryarr[1] = str_replace('??', '?', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('?&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&?', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('??', '?', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('?&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&?', '&', $allQueryarr[1]);
             }
 
             $allQuery = $allQueryarr[1];

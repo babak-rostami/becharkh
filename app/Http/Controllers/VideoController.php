@@ -1187,7 +1187,7 @@ class VideoController extends Controller
             }
         } else {
             $video = new MongoVideo();
-            $video->random_id = str_random(10);
+            $video->random_id = Str::random(10);
             $video->status = 0;
             $video->category_id = $category->id;
             $video->user_id = $user->id;
@@ -1412,10 +1412,10 @@ class VideoController extends Controller
                 ];
             }
 
-            $videoSlug =  preg_replace('~[^\pL\d]+~u', '-', str_limit($videoTitle, 30));
+            $videoSlug =  preg_replace('~[^\pL\d]+~u', '-', Str::limit($videoTitle, 30));
 
             $disk = Storage::disk('ftp');
-            $basename = str_limit($videoSlug, 12, '-') . strtolower(str_random(8)) . time();
+            $basename = Str::limit($videoSlug, 12, '-') . strtolower(Str::random(8)) . time();
             $baseFilename = 'video/yimages/' . $basename;
 
             //main imag
@@ -1434,7 +1434,7 @@ class VideoController extends Controller
             $video->title = $videoTitle;
             $video->slug = $videoSlug;
             $video->description = $videoBody;
-            $video->random_id = str_random(10);
+            $video->random_id = Str::random(10);
             $video->status = 2;
             $video->category_id = "6682148310cf783aeb0ef6a8";
             $video->image = $filePath1;

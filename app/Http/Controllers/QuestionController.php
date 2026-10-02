@@ -126,43 +126,43 @@ class QuestionController extends Controller
                     $title = $ctitle . ($followFeature->is_feature_in_title == 1 ? ' ' . $followFeature->title : '') . ($item->full_title  ?? $item->title);
                 }
                 if (isset($item->title_in_rtable)) {
-                    $meta_title = str_replace("*", $title, $item->title_in_rtable);
+                    $meta_title = Str::replace("*", $title, $item->title_in_rtable);
                 } else {
                     if ($category->title_in_rtable) {
-                        $meta_title = str_replace("*", $title, $category->title_in_rtable);
+                        $meta_title = Str::replace("*", $title, $category->title_in_rtable);
                     } else {
                         $meta_title = "انجمن " . $title;
                     }
                 }
                 if (isset($item->desc_in_rtable)) {
-                    $meta_desc = str_replace("*", $title, $item->desc_in_rtable);
+                    $meta_desc = Str::replace("*", $title, $item->desc_in_rtable);
                 } else {
                     if ($category->desc_in_rtable) {
-                        $meta_desc = str_replace("*", $title, $category->desc_in_rtable);
+                        $meta_desc = Str::replace("*", $title, $category->desc_in_rtable);
                     } else {
                         $meta_desc = "هر سوالی داری توی انجمن " . $title . " به جواب میرسی";
                     }
                 }
                 if (isset($item->desc_in_rtable_editor)) {
-                    $meta_desc_editor = str_replace("*", $title, $item->desc_in_rtable_editor);
+                    $meta_desc_editor = Str::replace("*", $title, $item->desc_in_rtable_editor);
                 } else {
                     if ($category->desc_in_rtable_editor) {
-                        $meta_desc_editor = str_replace("*", $title, $category->desc_in_rtable_editor);
+                        $meta_desc_editor = Str::replace("*", $title, $category->desc_in_rtable_editor);
                     }
                 }
                 if (isset($followFeature->page_intro_title) && isset($followFeature->page_intro_desc)) {
-                    $page_intro_title = str_replace("*", $title, $followFeature->page_intro_title);
-                    $page_intro_desc = str_replace("*", $title, $followFeature->page_intro_desc);
+                    $page_intro_title = Str::replace("*", $title, $followFeature->page_intro_title);
+                    $page_intro_desc = Str::replace("*", $title, $followFeature->page_intro_desc);
                 }
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if ($category->title_in_rtable) {
-                    $meta_title = str_replace("*", $cat_title, $category->title_in_rtable);
+                    $meta_title = Str::replace("*", $cat_title, $category->title_in_rtable);
                 } else {
                     $meta_title = "انجمن " . $cat_title;
                 }
                 if ($category->desc_in_rtable) {
-                    $meta_desc = str_replace("*", $cat_title, $category->desc_in_rtable);
+                    $meta_desc = Str::replace("*", $cat_title, $category->desc_in_rtable);
                 } else {
                     $meta_desc = "هر سوالی داری توی انجمن " . $cat_title . " به جواب میرسی";
                 }
@@ -512,6 +512,11 @@ class QuestionController extends Controller
 
         $affilates = $all_affiliates->take(3);
 
+        $questionSchema = $this->getQuestionSchema(
+            $question,
+            $acceptedAnswer,
+            $answers
+        );
 
         $compactVars = [
             'content',
@@ -521,6 +526,7 @@ class QuestionController extends Controller
             'answers',
             'acceptedAnswer',
             'questions',
+            'questionSchema',
             'item',
             'category',
             'tab_title',
@@ -543,6 +549,89 @@ class QuestionController extends Controller
         return view('question.show', compact(...$compactVars));
     }
 
+    private function getQuestionSchema($question, $acceptedAnswer, $answers): ?array
+    {
+        if (!$acceptedAnswer) {
+            return null;
+        }
+
+        $suggestedAnswers = [];
+
+        foreach ($answers as $answer) {
+            if ($answer->id == $acceptedAnswer->id) {
+                continue;
+            }
+
+            if (count($suggestedAnswers) >= 6) {
+                break;
+            }
+
+            $item = [
+                '@type' => 'Answer',
+                'text' => $answer->body,
+                'upvoteCount' => $answer->like_count ?? 0,
+                'datePublished' => $answer->created_at->format('Y-m-d\TH:i:sP'),
+            ];
+
+            if ($answer->user) {
+                $item['author'] = [
+                    '@type' => 'Person',
+                    'name' => $answer->user->name,
+                    'url' => route(
+                        'user.dashboard',
+                        $answer->user->username
+                    ),
+                ];
+            }
+
+            $suggestedAnswers[] = $item;
+        }
+
+        $acceptedAnswerSchema = [
+            '@type' => 'Answer',
+            'text' => $acceptedAnswer->body,
+            'upvoteCount' => $acceptedAnswer->like_count ?? 0,
+            'datePublished' => $acceptedAnswer->created_at->format('Y-m-d\TH:i:sP'),
+        ];
+
+        if ($acceptedAnswer->user) {
+            $acceptedAnswerSchema['author'] = [
+                '@type' => 'Person',
+                'name' => $acceptedAnswer->user->name,
+                'url' => route(
+                    'user.dashboard',
+                    $acceptedAnswer->user->username
+                ),
+            ];
+        }
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'QAPage',
+
+            'mainEntity' => [
+                '@type' => 'Question',
+                'name' => $question->title,
+                'text' => $question->body,
+                'answerCount' => $question->answer_count ?? 0,
+                'upvoteCount' => $question->likes_count ?? 0,
+                'datePublished' => $question->created_at->format('Y-m-d\TH:i:sP'),
+
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $question->user->name,
+                    'url' => route(
+                        'user.dashboard',
+                        $question->user->username
+                    ),
+                ],
+
+                'acceptedAnswer' => $acceptedAnswerSchema,
+
+                'suggestedAnswer' => $suggestedAnswers,
+            ],
+        ];
+    }
     public function showForVue($id)
     {
         $question = Question::with('user')->with('category')->where('id', $id)->first();

@@ -404,39 +404,39 @@ class MigrateToMongoController extends Controller
     {
         $similarSearches = [];
 
-        $base = str_replace("iPhone", "آیفون", $model);
+        $base = Str::replace("iPhone", "آیفون", $model);
         $variations = [$base];
 
         if (stripos($model, 'Pro Max') !== false) {
-            $variations[] = str_replace("Pro Max", "پرومکس", $base);
-            $variations[] = str_replace("Pro Max", "پرو مکس", $base);
+            $variations[] = Str::replace("Pro Max", "پرومکس", $base);
+            $variations[] = Str::replace("Pro Max", "پرو مکس", $base);
         } elseif (stripos($model, 'Pro') !== false) {
-            $variations[] = str_replace("Pro", "پرو", $base);
+            $variations[] = Str::replace("Pro", "پرو", $base);
         }
 
         if (stripos($model, 'Plus') !== false) {
-            $variations[] = str_replace("Plus", "پلاس", $base);
+            $variations[] = Str::replace("Plus", "پلاس", $base);
         }
 
         if (stripos($model, 'Mini') !== false) {
-            $variations[] = str_replace("Mini", "مینی", $base);
+            $variations[] = Str::replace("Mini", "مینی", $base);
         }
 
         if (stripos($model, 'XS') !== false) {
-            $variations[] = str_replace("XS", "ایکس اس", $base);
+            $variations[] = Str::replace("XS", "ایکس اس", $base);
         }
 
         if (stripos($model, 'SE') !== false) {
-            $variations[] = str_replace("SE", "اس ای", $base);
+            $variations[] = Str::replace("SE", "اس ای", $base);
         }
 
         if (stripos($model, 'XR') !== false) {
-            $variations[] = str_replace("XR", "ایکس ار", $base);
-            $variations[] = str_replace("XR", "ایکس آر", $base);
+            $variations[] = Str::replace("XR", "ایکس ار", $base);
+            $variations[] = Str::replace("XR", "ایکس آر", $base);
         }
 
         if (preg_match('/\bX\b/', $model)) {
-            $variations[] = str_replace("X", "ایکس", $base);
+            $variations[] = Str::replace("X", "ایکس", $base);
         }
 
         $similarSearches = implode(" ", array_unique($variations));
@@ -539,10 +539,10 @@ class MigrateToMongoController extends Controller
                 $like_answer = $question->answers->sortByDesc('like_count')->first();
                 $unlike_answer = $question->answers->sortByDesc('unlike_count')->first();
                 if ($like_answer->like_count > $unlike_answer->unlike_count) {
-                    $question->answer = str_limit($like_answer->body, 65, '...');
+                    $question->answer = Str::limit($like_answer->body, 65, '...');
                     $question->update();
                 } else {
-                    $question->answer = str_limit($unlike_answer->body, 65, '...');
+                    $question->answer = Str::limit($unlike_answer->body, 65, '...');
                     $question->update();
                 }
             }

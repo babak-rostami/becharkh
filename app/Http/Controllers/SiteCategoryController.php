@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class SiteCategoryController extends Controller
@@ -577,25 +578,25 @@ class SiteCategoryController extends Controller
         $new_url = $request->root() . $request->getRequestUri();
         if ($check_has_comments && $category->has_comments) {
             if (strpos($new_url, '?') === false) {
-                $new_url = str_replace($category->slug, $category->slug . '?s=1', $new_url);
+                $new_url = Str::replace($category->slug, $category->slug . '?s=1', $new_url);
             } else {
-                $new_url = str_replace($category->slug . '?', $category->slug . '?s=1&', $new_url);
+                $new_url = Str::replace($category->slug . '?', $category->slug . '?s=1&', $new_url);
             }
-            $new_url = str_replace($page_title, 'forum', $new_url);
+            $new_url = Str::replace($page_title, 'forum', $new_url);
             Redirect::to($new_url, 301)->send();
         }
-        $new_url = str_replace('s=1&', '', $new_url);
-        $new_url = str_replace('?s=1', '', $new_url);
+        $new_url = Str::replace('s=1&', '', $new_url);
+        $new_url = Str::replace('?s=1', '', $new_url);
         if ($check_has_ads && $category->has_ads) {
-            $new_url = str_replace($page_title, 'market', $new_url);
+            $new_url = Str::replace($page_title, 'market', $new_url);
             Redirect::to($new_url, 301)->send();
         }
         if ($check_has_forums && $category->has_forums) {
-            $new_url = str_replace($page_title, 'forum', $new_url);
+            $new_url = Str::replace($page_title, 'forum', $new_url);
             Redirect::to($new_url, 301)->send();
         }
         if ($check_has_blogs && $category->has_blogs) {
-            $new_url = str_replace($page_title, 'blogs', $new_url);
+            $new_url = Str::replace($page_title, 'blogs', $new_url);
             Redirect::to($new_url, 301)->send();
         }
     }

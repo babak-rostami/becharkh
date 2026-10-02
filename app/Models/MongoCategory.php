@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Services\Elasticsearch;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use MongoDB\Laravel\Eloquent\Model;
 class MongoCategory extends Model
 {
@@ -232,10 +233,10 @@ class MongoCategory extends Model
                 strpos($allQueryarr[1], '&&') !== false || strpos($allQueryarr[1], '?&') !== false
                 || strpos($allQueryarr[1], '&?') !== false || strpos($allQueryarr[1], '??') !== false
             ) {
-                $allQueryarr[1] = str_replace('??', '?', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('?&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&?', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('??', '?', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('?&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&?', '&', $allQueryarr[1]);
             }
 
             $allQuery = $allQueryarr[1];
@@ -267,10 +268,10 @@ class MongoCategory extends Model
                 strpos($allQueryarr[1], '&&') !== false || strpos($allQueryarr[1], '?&') !== false
                 || strpos($allQueryarr[1], '&?') !== false || strpos($allQueryarr[1], '??') !== false
             ) {
-                $allQueryarr[1] = str_replace('??', '?', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('?&', '&', $allQueryarr[1]);
-                $allQueryarr[1] = str_replace('&?', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('??', '?', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('?&', '&', $allQueryarr[1]);
+                $allQueryarr[1] = Str::replace('&?', '&', $allQueryarr[1]);
             }
 
             $allQuery = $allQueryarr[1];

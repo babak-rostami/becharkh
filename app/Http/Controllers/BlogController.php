@@ -127,28 +127,28 @@ class BlogController extends Controller
                     $title = $ctitle . ($followFeature->is_feature_in_title == 1 ? $followFeature->title : '') . ' ' . ($item->full_title  ?? $item->title);
                 }
                 if (isset($item->title_in_blogs)) {
-                    $meta_title = str_replace("*", $title, $item->title_in_blogs);
+                    $meta_title = Str::replace("*", $title, $item->title_in_blogs);
                 } else {
                     if ($category->title_in_blogs) {
-                        $meta_title = str_replace("*", $title, $category->title_in_blogs);
+                        $meta_title = Str::replace("*", $title, $category->title_in_blogs);
                     } else {
                         $meta_title = "مجله - " . $title;
                     }
                 }
                 if (isset($item->desc_in_blogs)) {
-                    $meta_desc = str_replace("*", $title, $item->desc_in_blogs);
+                    $meta_desc = Str::replace("*", $title, $item->desc_in_blogs);
                 } else {
                     if ($category->desc_in_blogs) {
-                        $meta_desc = str_replace("*", $title, $category->desc_in_blogs);
+                        $meta_desc = Str::replace("*", $title, $category->desc_in_blogs);
                     } else {
                         $meta_desc = "مطالب و پست های کاربران با موضوع " . $title;
                     }
                 }
                 if (isset($item->desc_in_blogs_editor)) {
-                    $meta_desc_editor = str_replace("*", $title, $item->desc_in_blogs_editor);
+                    $meta_desc_editor = Str::replace("*", $title, $item->desc_in_blogs_editor);
                 } else {
                     if ($category->desc_in_blogs_editor) {
-                        $meta_desc_editor = str_replace("*", $title, $category->desc_in_blogs_editor);
+                        $meta_desc_editor = Str::replace("*", $title, $category->desc_in_blogs_editor);
                     }
                 }
                 // if ($user) {
@@ -162,12 +162,12 @@ class BlogController extends Controller
             } else {
                 $cat_title = $category->full_title ?? $category->title;
                 if ($category->title_in_blogs) {
-                    $meta_title = str_replace("*", $cat_title, $category->title_in_blogs);
+                    $meta_title = Str::replace("*", $cat_title, $category->title_in_blogs);
                 } else {
                     $meta_title = "مجله - " . $cat_title;
                 }
                 if ($category->desc_in_blogs) {
-                    $meta_desc = str_replace("*", $cat_title, $category->desc_in_blogs);
+                    $meta_desc = Str::replace("*", $cat_title, $category->desc_in_blogs);
                 } else {
                     $meta_desc = "مطالب و پست های کاربران با موضوع " . $cat_title;
                 }
@@ -465,9 +465,9 @@ class BlogController extends Controller
     //                 $html .= '</a>';
     //             }
     //             $html .= '</div>';
-    //             $blog_content = str_replace('@##' . $affilate_id . '##@', $html, $blog_content);
+    //             $blog_content = Str::replace('@##' . $affilate_id . '##@', $html, $blog_content);
     //         } else {
-    //             $blog_content = str_replace('@##' . $affilate_id . '##@', '', $blog_content);
+    //             $blog_content = Str::replace('@##' . $affilate_id . '##@', '', $blog_content);
     //         }
     //     }
     //     return $blog_content;
@@ -651,7 +651,7 @@ class BlogController extends Controller
         $blog->short_description = $request->short_description;
         $blog->user_id = $user->id;
         $blog->category_id = $category->id;
-        $blog->random_id = str_random(10);
+        $blog->random_id = Str::random(10);
         $slug = preg_replace('~[^\pL\d]+~u', '-', $request->title);
         $blog->slug = $slug;
         $blog->google_index = 0;

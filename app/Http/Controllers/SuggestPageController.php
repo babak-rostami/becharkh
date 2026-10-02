@@ -7,6 +7,7 @@ use App\Models\MongoItem;
 use App\Models\SuggestPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class SuggestPageController extends Controller
@@ -46,7 +47,7 @@ class SuggestPageController extends Controller
 
         if ($request->hasFile('image')) {
             $cover = $request->file('image');
-            $basefilename = str_limit(str_slug($request->title, '-'), 10, '') . time();
+            $basefilename = Str::limit(Str::slug($request->title, '-'), 10, '') . time();
             $path = 'sugp/images/';
 
             $filename = $basefilename . '.webp';
@@ -126,7 +127,7 @@ class SuggestPageController extends Controller
                 $image_name = explode($path, $sugp->getImage())[1];
                 $basefilename = explode('.webp', $image_name)[0];
             } else {
-                $basefilename = str_limit(str_slug($request->title, '-'), 10, '') . time();
+                $basefilename = Str::limit(Str::slug($request->title, '-'), 10, '') . time();
             }
             $filename = $basefilename . '.webp';
             $sugp->image = $path . $filename;
