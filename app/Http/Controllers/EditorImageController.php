@@ -6,8 +6,6 @@ use App\Models\AffilateEditorImage;
 use App\Models\BlogEditorImage;
 use App\Models\CategoryCommentEditorImage;
 use App\Models\ProductCommentEditorImage;
-use App\Models\ProductEditorImage;
-use App\Models\QuestionAnswerEditorImage;
 use App\Models\QuestionEditorImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

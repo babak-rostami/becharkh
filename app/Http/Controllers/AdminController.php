@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\AdminNotification;
 use App\Models\ChangeUsername;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
@@ -52,43 +53,8 @@ class AdminController extends Controller
 
     public function deleteNotification($notif)
     {
-        DB::table('notifications')
-            ->where('id', $notif)->delete();
+        AdminNotification::find($notif)->delete();
         return back()->with('success', 'رویداد با موفقیت حذف شد');
-    }
-
-    public function register()
-    {
-        return view('admin.register');
-    }
-
-
-    public function registerSend(Request $request)
-    {
-        $this->validate($request, [
-            'name' => 'required',
-            'username' => 'required|unique:admins',
-            'email' => 'required|unique:admins',
-            'password' => 'required',
-        ], [
-            'name.required' => 'لطفا نام خود را وارد کنید',
-            'username.required' => 'لطفا نام کاربری خود را وارد کنید',
-            'username.unique' => 'نام کاربری مورد نظر قبلا انتخاب شده است',
-            'email.required' => 'لطفا ایمیل خود را وارد کنید',
-            'email.unique' => 'ایمیل وارد شده قبلا استفاده شده است',
-            'password.required' => 'لطفا پسورد را وارد کنید',
-        ]);
-
-        $admin = new Admin();
-        $admin->name = $request->name;
-        $admin->username = $request->username;
-        $admin->email = $request->email;
-        $admin->password = bcrypt($request->password);
-
-        $admin->save();
-
-
-        return redirect()->route('admin.register')->with('success', 'ثبت نام با موفقیت انجام شد');
     }
 
 

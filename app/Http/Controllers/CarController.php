@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\Item\ChangeItemPageCount;
-use App\Models\Advertise;
-use App\Models\MongoAdvertise;
 use App\Models\ShortLink;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CarController extends Controller

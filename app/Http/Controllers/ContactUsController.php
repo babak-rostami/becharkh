@@ -7,6 +7,7 @@ use App\Models\ContactUs;
 use App\Models\MongoContactUs;
 use App\Models\MongoUser;
 use App\Notifications\SiteEvent;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 
 class ContactUsController extends Controller
@@ -40,13 +41,10 @@ class ContactUsController extends Controller
 
         $contact->save();
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $name . ' تماس با ما با عنوان ' . $contact->title . ' را ارسال کرد',
-                'route' => route('contact.list'),
-            ]));
-        }
+        AdminNotificationService::send(
+            $name . ' تماس با ما با عنوان ' . $contact->title . ' را ارسال کرد',
+            route('contact.list')
+        );
 
         return back()->with('success', 'پیام شما با موفقیت به پشتیبانی بچرخ ارسال شد');
     }

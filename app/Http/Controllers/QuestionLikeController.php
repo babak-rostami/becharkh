@@ -6,7 +6,6 @@ use App\Models\MongoQuestion;
 use App\Models\MongoQuestionLike;
 use App\Models\Question;
 use App\Models\QuestionLike;
-use App\Notifications\UserNotif;
 use Illuminate\Http\Request;
 
 class QuestionLikeController extends Controller

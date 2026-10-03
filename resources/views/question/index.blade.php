@@ -61,8 +61,7 @@
                     <div id="item-gallery">
                         <img id="item-img-0" fetchpriority="high" class="my-3"
                             onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
-                            title="{{ $item->full_title ?? $item->title }}"
-                            alt="عکس {{ $item->full_title ?? $item->title }}">
+                            title="{{ $item->full_title ?? $item->title }}" alt="عکس {{ $item->full_title ?? $item->title }}">
                     </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
@@ -95,8 +94,7 @@
 
             @if (isset($page_intro_title) && isset($page_intro_desc))
                 <div id="page-g-div" class="text-center mt-3">
-                    <img class="lazy-load" id="page-g-img"
-                        data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
+                    <img class="lazy-load" id="page-g-img" data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
                     <span id="page-g-title">{{ $page_intro_title }}</span>
                     <span id="page-g">{{ $page_intro_desc }}</span>
                 </div>
@@ -130,9 +128,9 @@
             @include('mainPart.mainPage.breadc', ['page' => 'forum'])
 
             {{-- @if (isset($hot_pages))
-                <div class="row mt-4 justify-content-center">
-                    @include('mainPart.hot-pages')
-                </div>
+            <div class="row mt-4 justify-content-center">
+                @include('mainPart.hot-pages')
+            </div>
             @endif --}}
 
         </div>
@@ -149,7 +147,6 @@
         const is_rtable_page = 1;
 
         const csrf_t = "{{ csrf_token() }}";
-        const follow_item_route = '{{ route('follow.item') }}';
         const loadingGif = '<img src="{{ $ftp_path . 'files/other/images/loading.gif' }}">';
 
         let product_ids = {!! isset($affilate) ? json_encode([$affilate->id]) : '[]' !!};
@@ -158,5 +155,5 @@
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/forum/index.min.js') . '?lm=' . filemtime('mixassets/js/forum/index.min.js') }}">
-    </script>
+        </script>
 @endsection

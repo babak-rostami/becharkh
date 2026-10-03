@@ -9,7 +9,7 @@ use App\Models\MongoVideoComment;
 use App\Models\Video;
 use App\Models\VideoComment;
 use App\Notifications\SiteEvent;
-use App\Notifications\UserNotif;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -82,13 +82,7 @@ class VideoCommentController extends Controller
             $video->update();
         }
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' نظری در ویدیو ' . $video->title . ' ارسال کرد',
-                'route' => route('video.show', $video->slug2),
-            ]));
-        }
+        AdminNotificationService::send($user->username . ' نظری در ویدیو ' . $video->title . ' ارسال کرد', route('video.show', $video->slug2));
 
         $comment->save();
 
@@ -99,17 +93,6 @@ class VideoCommentController extends Controller
     {
         if (isset($toUser)) {
             Mail::to($toUser->email)->send(new ReplyToCommentMail($video->title, $fromUser->username, route('video.show',  $video->slug2)));
-            //     $toUser->notify(new UserNotif([
-            //         'action' => ' یک نظر جدید از ' . $fromUser->username . ' دریافت کرده اید ',
-            //         'route' => route('video.show',  $video->slug2),
-            //         'userImage' => asset($fromUser->thumb()),
-            //         'pageImage' => asset($video->thumb()),
-            //         'pageType' => 'video',
-            //         'notifType' => 'comment',
-            //         'important' => 0,
-            //         'pageId' => $video->id,
-            //         'userId' => $fromUser->id,
-            //     ]));
         }
     }
 }

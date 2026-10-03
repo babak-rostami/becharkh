@@ -36,17 +36,8 @@ class BlogVideoController extends Controller
             Cache::put($cache_key, 1, now()->addMinutes(1));
         }
         $video = MongoVideo::where('youtube_link', $request->youtube_link)->first();
-        if (!$video) {
-            $result = app(VideoController::class)->createYoutubeVideo($request->youtube_link);
-            $status = $result['status'];
-            if ($status == 1) {
-                $video_id = $result['video_id'];
-            } elseif ($status == 0) {
-                return response()->json(['status' => 0, 'message' => $result['message']], 404);
-            }
-        } else {
-            $video_id = $video->id;
-        }
+        $video_id = $video->id;
+
         if (isset($video_id)) {
             if (!$is_free) {
                 $user->decreaseMoneyFor('add-video');

@@ -177,8 +177,6 @@
         let page = 'advertise';
         const index_route = "{{ route('ads.index') }}";
         let csrf_t = "{{ csrf_token() }}";
-        let follow_item_route = "{{ route('follow.item') }}";
-        let let_me_know_route = "{{ route('let.me.know') }}";
 
         let product_ids = {!! isset($affilates) ? json_encode($affilates->pluck('id')->toArray()) : '[]' !!};
     </script>

@@ -22,24 +22,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # --- PHP extensions ---
-# mbstring : لاراول بدونش اصلاً بوت نمی‌شه (پیش‌نیاز composer.json خود فریم‌ورکه)
-# pdo_mysql/mysqli : بخشی از مدل‌ها (Admin, Mission, CategoryFeature, SiteCategory, ...) هنوز mysql هستن
-# gd   : Intervention Image (پردازش عکس با خروجی webp)
-# zip  : آپلود/laravel-filemanager
-# bcmath, curl, pcntl : نیازهای استاندارد لاراول + queue:work (pcntl برای graceful shutdown صف)
 RUN docker-php-ext-configure gd \
     --with-freetype \
     --with-jpeg \
     --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
     mbstring \
-    pdo_mysql \
-    mysqli \
     gd \
     zip \
     bcmath \
     curl \
-    pcntl
+    pcntl \
+    ftp \
+    exif
 
 # --- اکستنشن‌های PECL ---
 # redis لازم است چون کش/سشن/صف (queue-general) از همان Redis پروژه‌ی musicbot استفاده می‌کنند

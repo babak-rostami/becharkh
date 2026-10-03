@@ -1,49 +1,28 @@
 <?php
 
-use App\Http\Controllers\Admin\ElasticsearchController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdvertiseCommentController;
-use App\Http\Controllers\AdvertiseCommentLikeController;
 use App\Http\Controllers\AdvertiseController;
-use App\Http\Controllers\AdvertiseImageController;
-use App\Http\Controllers\AdvertisePackageController;
 use App\Http\Controllers\AdvertiseReportController;
 use App\Http\Controllers\AdvertiseVideoController;
 use App\Http\Controllers\AffilateController;
 use App\Http\Controllers\BabakController;
-use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\BlogCommentLikeController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogLikeController;
 use App\Http\Controllers\BlogVideoController;
-use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CarController;
-use App\Http\Controllers\CarImagesController;
-use App\Http\Controllers\CarModelCommentController;
-use App\Http\Controllers\CarModelController;
-use App\Http\Controllers\CarReminderController;
 use App\Http\Controllers\CategoryCommentController;
 use App\Http\Controllers\CategoryCommentLikeController;
 use App\Http\Controllers\CategoryFeatureController;
 use App\Http\Controllers\CategoryFeatureItemController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\CommentReportController;
 use App\Http\Controllers\ContactUsController;
-use App\Http\Controllers\DiamondPackageController;
-use App\Http\Controllers\EditInformationController;
 use App\Http\Controllers\EditorImageController;
-use App\Http\Controllers\EmailToUserController;
 use App\Http\Controllers\FollowController;
-use App\Http\Controllers\FollowFeatureItemController;
-use App\Http\Controllers\FourChoiceController;
-use App\Http\Controllers\ImageCompressorController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\InputImagesController;
 use App\Http\Controllers\ItemImageController;
-use App\Http\Controllers\LetMeKnowController;
 use App\Http\Controllers\MigrateToMongoController;
-use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ModelDatailController;
 use App\Http\Controllers\MongoItemTagController;
 use App\Http\Controllers\MongoItemTelNumberController;
@@ -56,18 +35,14 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionEmailController;
 use App\Http\Controllers\QuestionLikeController;
 use App\Http\Controllers\QuestionVideoController;
-use App\Http\Controllers\RaceController;
-use App\Http\Controllers\ShortLinkController;
 use App\Http\Controllers\SiteCategoryController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SuggestPageController;
 use App\Http\Controllers\SuggestProductController;
 use App\Http\Controllers\SurveyOptionController;
 use App\Http\Controllers\TestController;
-use App\Http\Controllers\UserAdvertisePackageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMessageController;
-use App\Http\Controllers\UserMissionController;
 use App\Http\Controllers\UserNotificationController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\UserPasswordController;
@@ -110,11 +85,6 @@ Route::get('/parent-feature/{pid}', [SiteCategoryController::class, 'getParentFe
 Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('/', [IndexController::class, 'home'])->name('home');
 
-    Route::get('image-compressor', [ImageCompressorController::class, 'index'])->name('image.compressor.index');
-    // Route::post('/image-compressor-upload', [ImageCompressorController::class, 'upload'])->name('image.compressor.upload');
-    // Route::post('/image-compressor-compress', [ImageCompressorController::class, 'compress'])->name('image.compressor.compress');
-    // Route::get('/image-compress-download/{id}', [ImageCompressorController::class, 'downloadImage'])->name('image.compressor.download');
-
     Route::get('/ads/{category_slug?}', [AdvertiseController::class, 'getAds'])->name('ads.index');
     Route::get('/ads/{category_slug}/{ad_slug}', function ($category_slug) {
         return redirect(route('ads.index', $category_slug));
@@ -125,9 +95,7 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     // Route::get('market-item/{slug}', [AdvertiseController::class, 'show'])->name('ad.show');
 
     //------------------------------------------admin routes----------------------------
-    Route::get('/admin/register_admin', [AdminController::class, 'register'])->name('admin.register');
     Route::get('/admin/login_admin', [AdminController::class, 'login'])->name('admin.login');
-    Route::post('/admin/register_admin', [AdminController::class, 'registerSend'])->name('admin.register.send');
     Route::post('/admin/login_admin', [AdminController::class, 'loginSend'])->name('admin.login.send');
 });
 
@@ -144,20 +112,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('user-notifs', [UserNotificationController::class, 'adminUserNotifs'])->name('admin.user.notifs');
     Route::get('user-notif-destroy/{id}', [UserNotificationController::class, 'adminUserNotifDestroy'])->name('admin.user.notif.destroy');
 
-    Route::get('reminders', [CarReminderController::class, 'all'])->name('reminder.all');
-    Route::delete('reminder/destroy/{id}', [CarReminderController::class, 'destroy'])->name('reminder.destroy');
-
-    Route::post('email-to-user', [EmailToUserController::class, 'store'])->name('email.to.user');
-
     Route::get('users/{type?}', [AdminController::class, 'users'])->name('admin.users');
     Route::post('user-update/{id}', [UserController::class, 'updateAdmin'])->name('user.update.admin');
     Route::get('change-username-reqs', [UserController::class, 'changeUserNameReqs'])->name('admin.change.username.reqs');
     Route::delete('destroy-chun-reqs', [UserController::class, 'DestroyChunReqs'])->name('admin.destroy.chun.reqs');
-
-    Route::resource('brand', BrandController::class);
-
-    Route::resource('model', CarModelController::class)->except('index');
-    Route::get('models/{id}', [CarModelController::class, 'index'])->name('model.index');
 
     Route::get('car-detail/create/{model_id}', [ModelDatailController::class, 'create'])->name('car.detail.create');
     Route::post('car-detail/store/{model_id}', [ModelDatailController::class, 'store'])->name('car.detail.store');
@@ -167,42 +125,19 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('car-detail/delete/{detail_id}', [ModelDatailController::class, 'delete'])->name('car.detail.delete');
     Route::post('car-detail/priority', [ModelDatailController::class, 'priority'])->name('car.detail.priority');
 
-
-    Route::get('diamond-packages', [DiamondPackageController::class, 'adminAll'])->name('admin.diamond.packages');
-    Route::post('diamond-package/store', [DiamondPackageController::class, 'store'])->name('diamond.package.store');
-    Route::put('diamond-package/update/{id}', [DiamondPackageController::class, 'update'])->name('diamond.package.update');
-    Route::delete('diamond-package/destroy/{id}', [DiamondPackageController::class, 'destroy'])->name('diamond.package.destroy');
-
-
     Route::get('advertise/all/{cat_slug?}', [AdvertiseController::class, 'adminAll'])->name('admin.advertise.all');
-    Route::get('advertise/packages', [AdvertisePackageController::class, 'adminAll'])->name('admin.advertise.packages');
-    Route::post('advertise-package/store', [AdvertisePackageController::class, 'store'])->name('advertise.package.store');
-    Route::put('advertise-package/update/{id}', [AdvertisePackageController::class, 'update'])->name('advertise.package.update');
-    Route::delete('advertise-package/destroy/{id}', [AdvertisePackageController::class, 'destroy'])->name('advertise.package.destroy');
-
     Route::put('ad/update/{id}', [AdvertiseController::class, 'update'])->name('ad.update.admin');
     Route::get('ad/edit/{id}', [AdvertiseController::class, 'edit'])->name('ad.edit.admin');
 
     Route::get('accept-ad-video/{id}', [AdvertiseVideoController::class, 'acceptVideo'])->name('accept.advertise.video');
     Route::get('reject-ad-video/{id}', [AdvertiseVideoController::class, 'rejectVideo'])->name('reject.advertise.video');
 
-    Route::get('comments', [CommentController::class, 'all'])->name('comment.all');
-    Route::delete('comment/delete/{id}', [CommentController::class, 'deleteForAdmin'])->name('admin.comment.delete');
-    Route::put('comment/update', [CommentController::class, 'update'])->name('comment.update');
-
     Route::get('advertise/reports', [AdvertiseReportController::class, 'all'])->name('advertise.report.all');
     Route::get('advertise-report/destroy/{id}', [AdvertiseReportController::class, 'destroy'])->name('advertise.report.destroy');
-
-
-    Route::get('comment/reports', [CommentReportController::class, 'all'])->name('comment.report.all');
-    Route::get('comment-report/destroy/{id}', [CommentReportController::class, 'destroy'])->name('comment.report.destroy');
-
 
     Route::get('blogs', [BlogController::class, 'all'])->name('blog.all');
     Route::get('blog/create', [BlogController::class, 'create'])->name('blog.create');
     Route::post('blog/store/{status}/{exit}', [BlogController::class, 'store'])->name('blog.store');
-    // Route::get('blog/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit');
-    // Route::put('blog/update/{id}/{status}/{exit}', [BlogController::class, 'update'])->name('blog.update');
     Route::delete('blog/destroy/{id}', [BlogController::class, 'destroy'])->name('blog.destroy');
     Route::get('blog/comments', [BlogCommentController::class, 'all'])->name('blog.comment.all');
     Route::post('blog-comment-store', [BlogCommentController::class, 'storeAdmin'])->name('admin.blog.comment.store');
@@ -212,10 +147,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::put('update-post/{id}', [BlogController::class, 'UserUpdatePost'])->name('user.update.post');
     Route::post('add-post', [BlogController::class, 'UserStorePost'])->name('user.store.post');
     Route::post('temp-store-post', [BlogController::class, 'UserStorePostTemprory'])->name('user.store.post.temprory');
-
-    Route::get('blog/categories', [BlogCategoryController::class, 'index'])->name('blog.categories');
-    Route::post('blog/category/store', [BlogCategoryController::class, 'store'])->name('blog.category.store');
-    Route::put('blog/category/update/{category}', [BlogCategoryController::class, 'update'])->name('blog.category.update');
 
     Route::get('accept-blog-video/{id}', [BlogVideoController::class, 'acceptVideo'])->name('accept.blog.video');
     Route::get('reject-blog-video/{id}', [BlogVideoController::class, 'rejectVideo'])->name('reject.blog.video');
@@ -260,34 +191,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     Route::get('/orders', [UserOrderController::class, 'orders'])->name('orders');
 
-    Route::get('/race/create', [RaceController::class, 'createAdmin'])->name('race.create');
-    Route::post('/race/store', [RaceController::class, 'store'])->name('race.store');
-    Route::put('/race/update/{id}', [RaceController::class, 'update'])->name('race.update');
-    Route::get('/race/destroy/{id}', [RaceController::class, 'destroy'])->name('race.destroy');
-    Route::get('/races', [RaceController::class, 'indexAdmin'])->name('race.admin.index');
-    Route::get('/race/true/{id}', [RaceController::class, 'raceTrue'])->name('race.status.true');
-    Route::get('/race/false/{id}', [RaceController::class, 'raceFalse'])->name('race.status.false');
-    //options
-    Route::get('/race/options/{id}', [RaceController::class, 'raceOptionsAdmin'])->name('admin.race.options');
-    Route::post('/race/option/store', [RaceController::class, 'optionStore'])->name('race.option.store');
-    Route::put('/race/option/update/{id}', [RaceController::class, 'optionUpdate'])->name('race.option.update');
-    Route::get('/race/option/destroy/{id}', [RaceController::class, 'optionDestroy'])->name('race.option.destroy');
-
-    Route::get('/edit-informations', [EditInformationController::class, 'indexAdmin'])->name('edit.informations.admin');
-    Route::put('/edit-information-done', [EditInformationController::class, 'editDone'])->name('edit.informations.done');
-    Route::delete('/edit-information-delete', [EditInformationController::class, 'editDelete'])->name('edit.informations.delete');
-
-
-    Route::get('four-choice/list', [FourChoiceController::class, 'listAdmin'])->name('four.choice.list.admin');
-
     Route::get('car/forums', [AdminController::class, 'carForums'])->name('car.forums');
-
-
-    Route::get('car/images', [CarImagesController::class, 'CarImagesAdmin'])->name('car.images.admin');
-    Route::get('car-images/accept/{id}', [CarImagesController::class, 'CarImageAccept'])->name('car.image.accept');
-    Route::get('car-images/reject/{id}', [CarImagesController::class, 'CarImageReject'])->name('car.image.reject');
-
-    Route::get('user-packages/{id}', [UserAdvertisePackageController::class, 'userPackAdmin'])->name('user.packs.admin');
 
     Route::get('cats-items', [SiteCategoryController::class, 'catsItemsIndex'])->name('cats.items.admin');
     Route::get('category/{id?}', [SiteCategoryController::class, 'indexAdmin'])->name('site.category.admin');
@@ -358,11 +262,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::put('category-comment-update/{comment_id}', [CategoryCommentController::class, 'updateAdmin'])->name('admin.category.comment.update');
     Route::delete('category-comment-delete', [CategoryCommentController::class, 'deleteAdmin'])->name('admin.category.comment.delete');
 
-    Route::get('image-compreses', [ImageCompressorController::class, 'adminIndex'])->name('admin.image.compress.index');
-    Route::get('image-compreses-desrtoy/{id}', [ImageCompressorController::class, 'adminDestroy'])->name('admin.image.compress.destroy');
-
-    Route::get('let-me-know-index', [LetMeKnowController::class, 'index'])->name('lmk.index');
-
     Route::get('user-searches', [UserSearchController::class, 'index'])->name('admin.user.searches');
     Route::get('destroy-user-search/{id}', [UserSearchController::class, 'delete'])->name('admin.destroy.user.search');
 
@@ -411,7 +310,6 @@ Route::middleware(['user'])->group(function () {
     Route::post('user-change-email', [UserController::class, 'userChangeEmail'])->name('user.change.email');
 
     Route::get('notifications', [UserController::class, 'notifications'])->name('user.notifications');
-    Route::get('notification/destroy/{notif}', [UserController::class, 'destroyNotification'])->name('notification.destroy');
     Route::get('event/delete/{notif}', [AdminController::class, 'deleteNotification'])->name('event.delete');
 
     Route::put('user-update', [UserController::class, 'update'])->name('user.update');
@@ -435,20 +333,8 @@ Route::middleware(['user'])->group(function () {
 
     // Route::get('click-cat-rtable-create/{id}', [SiteCategoryController::class, 'clickCategoryCreateRT'])->name('rt.create.click.category');
 
-    Route::post('ads-image-store/{slug}/{random_id}', [AdvertiseImageController::class, 'store'])->name('ads.image.store');
-    Route::get('ads-image-delete/{id}', [AdvertiseImageController::class, 'delete'])->name('ad.image.delete');
-
     Route::get('mylist', [UserController::class, 'myList'])->name('mylist');
 
-    Route::get('ad-save/{id}', [AdvertiseController::class, 'adSave'])->name('ad.save');
-    Route::get('ad-save-remove/{id}', [AdvertiseController::class, 'adRemoveFromSave'])->name('ad.save.remove');
-    Route::get('savelist', [AdvertiseController::class, 'savelist'])->name('savelist');
-
-    Route::post('comment-store/{advertise_id}', [CommentController::class, 'store'])->name('comment.store');
-    Route::post('reply-store/{advertise_id}', [CommentController::class, 'replyStore'])->name('reply.store');
-    Route::delete('comment-delete/{id}', [CommentController::class, 'delete'])->name('comment.delete');
-
-    Route::get('buyPlan/{id}', [UserOrderController::class, 'buyPackage'])->name('buy.diamond.plan');
     Route::post('charge-acc', [UserOrderController::class, 'chargeAccount'])->name('user.charge.account');
 
     Route::get('follow/{user_2}', [FollowController::class, 'follow'])->name('follow');
@@ -464,18 +350,6 @@ Route::middleware(['user'])->group(function () {
     Route::get('question-edit/{question_id}', [QuestionController::class, 'edit'])->name('question.edit');
     Route::put('question-update', [QuestionController::class, 'userQuestionUpdate'])->name('user.question.update');
     Route::post('question-ckeditor-upload/{id?}', [QuestionController::class, 'updateCkeditor'])->name('question.ckeditor.upload');
-
-    Route::post('follow-item', [FollowFeatureItemController::class, 'follow'])->name('follow.item');
-
-    Route::post('fgame-store', [FourChoiceController::class, 'store'])->name('fgame.store');
-
-    Route::get('diamond-plans', [DiamondPackageController::class, 'plans'])->name('diamond.plans');
-    Route::get('free-diamond-package', [DiamondPackageController::class, 'freePack'])->name('free.user.diamond.package');
-
-    Route::get('advertise-plans', [AdvertisePackageController::class, 'plans'])->name('advertise.plans');
-    Route::get('buy-advertise-package/{id}', [UserAdvertisePackageController::class, 'buy'])->name('buy.user.advertise.package');
-    Route::get('advertise-callback', [UserAdvertisePackageController::class, 'callback'])->name('advertise-callback');
-    Route::get('send-top-advertise/{id}', [UserAdvertisePackageController::class, 'addToTop'])->name('send.top.advertise');
 
     Route::delete('destroy-post', [BlogController::class, 'UserdestroyPost'])->name('user.destroy.post');
 
@@ -510,20 +384,10 @@ Route::middleware(['user'])->group(function () {
     Route::post('input-images-destroy', [InputImagesController::class, 'destroy'])->name('input.images.destroy');
     Route::post('input-images-update', [InputImagesController::class, 'update'])->name('input.images.update');
 
-    //advertise comment
-    Route::post('ad-comment/store', [AdvertiseCommentController::class, 'store'])->name('advertise.comment.store');
-
     //blog comment
     Route::post('blog-comment-store', [BlogCommentController::class, 'store'])->name('blog.comment.store');
     Route::put('blog-comment-update/{id}', [BlogCommentController::class, 'update'])->name('blog.comment.update');
     Route::delete('blog-comment-destroy/{id}', [BlogCommentController::class, 'destroy'])->name('blog.comment.destroy');
-
-    //car forum comments
-    Route::post('model-comment-store', [CarModelCommentController::class, 'store'])->name('model.comment.store');
-
-
-    Route::get('/missions', [MissionController::class, 'index'])->name('mission.index');
-    Route::get('/get-mission-rewards/{mission_id}', [UserMissionController::class, 'missionCompleted'])->name('get.mission.rewards');
 
     //user jobs
     Route::post('user-job-store', [UserWorkController::class, 'store'])->name('user.job.store');
@@ -562,12 +426,8 @@ Route::get('migrate', [TestController::class, 'start']);
 
 Route::get('main-search/{type}/{value?}', [IndexController::class, 'mainSearch'])->name('main.search');
 Route::get('search-category-for-create/{forr}/{value?}', [IndexController::class, 'searchCategoryForCreate']);
-Route::get('search-category-for-fgame/{value?}', [FourChoiceController::class, 'searchCategory']);
-Route::get('search-fea-item/{forr}/{f_id}/{value?}', [CategoryFeatureItemController::class, 'searchFeatureItem']);
 
 Route::get('get-category-children/{cat_id}/{for}', [SiteCategoryController::class, 'getCategoryChildren'])->name('get.category.children');
-
-Route::get('feature-children-item/{feature_id}/{item_id?}', [CategoryFeatureItemController::class, 'fChildrenByItem'])->name('feature.children.item');
 
 Route::get('get-category-children-create/{cat_id}/{for}', [SiteCategoryController::class, 'getCategoryChildrenCreate']);
 
@@ -576,7 +436,6 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('download-yv/{f_id}', [VideoController::class, 'downloadYoutubeVideo'])->name('download.yv');
 
     Route::post('report-advertise', [AdvertiseReportController::class, 'store'])->name('report.advertise');
-    Route::post('report-comment', [CommentReportController::class, 'store'])->name('report.comment');
 
     Route::get('blogs/{slug?}', [BlogController::class, 'index'])->name('blog.index');
     Route::get('blogs/{category_slug}/{slug}/{random_id?}', [BlogController::class, 'show'])->name('blog.show');
@@ -620,8 +479,6 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('video/embed-b/{category_slug}/{video_slug?}/{random_id?}', [VideoController::class, 'showEmbedb'])->name('video.embedb.show');
     // Route::get('video/embed/{category_slug}/{video_slug}/{random_id}', [VideoController::class, 'showEmbed'])->name('video.embed.show');
 
-    Route::get('shl/{short_link}', [ShortLinkController::class, 'show'])->name('shortlink.show');
-
     //car page redirect
     Route::get('car-page/{brand_slug}/{model_slug?}', [CarController::class, 'carPage'])->name('car.page');
 
@@ -632,7 +489,6 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::post('blog-comment-like', [BlogCommentLikeController::class, 'store'])->name('blog.comment.like');
     Route::post('video-comment-like', [VideoCommentLikeController::class, 'store'])->name('video.comment.like');
     Route::post('category-comment-like', [CategoryCommentLikeController::class, 'store'])->name('category.comment.like');
-    Route::post('advertise-comment-like', [AdvertiseCommentLikeController::class, 'store'])->name('advertise.comment.like');
     Route::post('surop-choose', [SurveyOptionController::class, 'choose'])->name('surop.choose');
 
     Route::post('blog-like', [BlogLikeController::class, 'store'])->name('blog.like');
@@ -640,8 +496,6 @@ Route::group(['middleware' => 'throttle:35,1'], function () {
     Route::get('cars/{brand?}/{model?}', function () {
         return redirect()->route('ads.index');
     });
-
-    Route::post('let-me-know', [LetMeKnowController::class, 'store'])->name('let.me.know');
 
     Route::get('/babakrostami', [BabakController::class, 'babak'])->name('babak');
 });

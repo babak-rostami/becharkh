@@ -69,13 +69,7 @@ return [
             'retry_after' => 90,
             'block_for' => null,
             'after_commit' => false,
-        ],
-
-        'becharkhsite' => [
-            'connection' => 'database',
-            'queue' => 'becharkhsite',
-            'retry_after' => 90,
-        ],
+        ]
 
     ],
 
@@ -91,9 +85,13 @@ return [
     */
 
     'failed' => [
-        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-        'database' => env('DB_CONNECTION', 'mysql'),
-        'table' => 'failed_jobs',
+        'driver' => env('QUEUE_FAILED_DRIVER', 'file'),
+        'path' => storage_path('framework/cache/failed-jobs.json'),
     ],
+    // 'failed' => [
+    //     'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+    //     'database' => env('DB_CONNECTION', 'mysql'),
+    //     'table' => 'failed_jobs',
+    // ],
 
 ];

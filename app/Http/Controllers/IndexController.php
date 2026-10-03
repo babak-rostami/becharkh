@@ -8,12 +8,9 @@ use App\Models\MongoBlog;
 use App\Models\MongoCategory;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
-use App\Models\MongoUser;
 use App\Models\MongoVideo;
 use App\Models\Ostan;
 use App\Models\Question;
-use App\Models\SiteCategory;
-use App\Models\User;
 use App\Models\UserSearch;
 use App\Repositories\CategoryComment\Mongodb\CategoryCommentRepository;
 use App\Services\Affilate\AffilateService;
@@ -27,17 +24,12 @@ class IndexController extends Controller
 
     public function home(SuggestionService $suggestionService)
     {
-        // $products = Affilate::orderBy('created_at', 'desc')->where('google_index', 1)->where('status', 1)->take(15)->get();
-
         $suggests = $suggestionService->suggest();
         $categories = $suggests['cats'];
-
-        // $questions = MongoQuestion::where('status', 1)->orderBy('created_at', 'desc')->take(20)->with('user')->get();
 
         $hot_pages = Cache::get('hot_pages');
 
         return view('home', compact('hot_pages', 'categories'));
-        // return view('home', compact('questions', 'products', 'categories', 'hot_pages'));
     }
 
     public function getCities(Request $request)
@@ -55,34 +47,6 @@ class IndexController extends Controller
         }
     }
 
-    public function getModels(Request $request)
-    {
-        $brand = Brand::where('nameEn', $request->nameEn)->first();
-        if (isset($brand)) {
-            echo '<option value=' . "" . '>' . "همه ی مدل ها" . '</option>';
-            foreach ($brand->models as $model) {
-                if ($model->cars->count() > 0) {
-                    echo '<option value=' . $model->nameEn . '>' . $model->title . '</option>';
-                }
-            }
-        } else {
-            echo '<option value=' . "" . '>' . "همه ی مدل ها" . '</option>';
-        }
-    }
-
-    public function getModelsReminder(Request $request)
-    {
-        $brand = Brand::find($request->id);
-        if (isset($brand)) {
-            echo '<option value=' . "" . '>' . "همه ی مدل ها" . '</option>';
-            foreach ($brand->models as $model) {
-                echo '<option value=' . $model->id . '>' . $model->title . '</option>';
-            }
-        } else {
-            echo '<option value=' . "" . '>' . "همه ی مدل ها" . '</option>';
-        }
-    }
-
     public function getCitiesCreate(Request $request)
     {
         $ostan = Ostan::find($request->id);
@@ -93,35 +57,6 @@ class IndexController extends Controller
             }
         } else {
             echo '<option value=' . "" . '>' . "شهر را انتخاب کنید" . '</option>';
-        }
-    }
-
-    public function getModelsCreate(Request $request)
-    {
-        $brand = Brand::find($request->id);
-        if (isset($brand)) {
-            echo '<option value=' . "" . '>' . "مدل را انتخاب کنید" . '</option>';
-            foreach ($brand->models as $model) {
-                echo '<option value=' . $model['id'] . '>' . $model->title . '</option>';
-            }
-        } else {
-            echo '<option value=' . "" . '>' . "مدل را انتخاب کنید" . '</option>';
-        }
-    }
-
-
-    public function getMainModels(Request $request)
-    {
-        $brand = Brand::where('nameEn', $request->id)->first();
-        if (isset($brand)) {
-            echo '<option class="d-none" value=' . "" . '>' . "مدل را انتخاب کنید" . '</option>';
-            foreach ($brand->models as $model) {
-                if ($model->details->count() > 0) {
-                    echo '<option value=' . $model->nameEn . '>' . $model->title . '</option>';
-                }
-            }
-        } else {
-            echo '<option class="d-none" value=' . "" . '>' . "مدل را انتخاب کنید" . '</option>';
         }
     }
 
@@ -209,104 +144,6 @@ class IndexController extends Controller
                 ];
             });
             return response()->json(['videos' => $videos], 200);
-        }
-    }
-
-    public function searchCategoryForCreate($for, $value = null)
-    {
-        if (!isset($value)) {
-            return '<li class="px-3 pt-2 pb-3 cat-result-a radius-10 text-center">جستجوی دسته بندی در بچرخ</li>';
-        }
-
-        if ($for == 1) {
-            $categories = SiteCategory::where('status', 1)->where('has_ads', 1)->doesntHave('children')->get();
-        } elseif ($for == 2) {
-            $categories = SiteCategory::where('status', 1)->doesntHave('children')->get();
-        }
-        foreach ($categories as $key => $category) {
-            if (!Str::contains($category->withParentsTitle(), Str::lower($value)) && !Str::contains($category->similar_search, Str::lower($value))) {
-                $categories->forget($key);
-            }
-        }
-
-        echo '<div class="list-group">';
-        if ($categories->count() > 0) {
-            foreach ($categories as $c) {
-                if ($for == 1) {
-                    echo '<a class="decor-none" href="' . route('new.ad', $c->slug) . '">
-                    <li class="px-3 pt-2 pb-3 cat-result-a radius-10">
-                    ' . $c->withParentsTitle() . '
-                    </li>
-                    </a>';
-                } elseif ($for == 2) {
-                    echo '<a class="decor-none" href="' . route('question.create', $c->slug) . '">
-                    <li class="px-3 pt-2 pb-3 cat-result-a radius-10">
-                    ' . $c->withParentsTitle() . '
-                    </li>
-                    </a>';
-                }
-            }
-        }
-        if ($categories->count() == 0) {
-            echo '<p class="p-3 text-center">نتیجه ای پیدا نشد</p>';
-        }
-        echo '</div>';
-    }
-
-    public function mainSearchBlog($value = null)
-    {
-        if (!isset($value)) {
-            return;
-        }
-        $blogs = Blog::where('title', 'like', '%' . $value . '%')->where('status', 1)->take(6)->get();
-
-        echo '<img class="mx-2" src="' . asset('files/other/images/blogs.png') . '"><span>مقالات</span><hr>';
-        if ($blogs->count() > 0) {
-            echo '<ul>';
-            foreach ($blogs as $blog) {
-                echo '<li class="my-2"> <a href="' . route('blog.show', ['category_slug' => $blog->category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id]) . '">' . $blog->title . '</a></li>';
-            }
-            echo '</ul>';
-        } else {
-            echo '<p>مقاله ای پیدا نشد</p>';
-        }
-    }
-
-    public function mainSearchUser($value = null)
-    {
-        if (!isset($value)) {
-            return;
-        }
-        $users = User::where('username', 'like', '%' . $value . '%')->take(6)->get();
-
-        echo '<img class="mx-2" src="' . asset('files/other/images/account.png') . '"><span>کاربر</span><hr>';
-        if ($users->count() > 0) {
-            echo '<ul>';
-            foreach ($users as $user) {
-                echo '<li class="my-2"> <a href="' . route('user.dashboard', $user->username) . '">' . $user->username . '</a></li>';
-            }
-            echo '</ul>';
-        } else {
-            echo '<p>کاربری پیدا نشد</p>';
-        }
-    }
-
-    public function mainSearchQuestion($value = null)
-    {
-        if (!isset($value)) {
-            return;
-        }
-        $questions = Question::where('title', 'like', '%' . $value . '%')->take(6)->get();
-
-        echo '<img class="mx-2" src="' . asset('files/other/images/blogs.png') . '"><span>سوالات</span><hr>';
-        if ($questions->count() > 0) {
-            echo '<ul>';
-            foreach ($questions as $question) {
-                echo '<li class="my-2"> <a href="' . route('question.show', $question->slug2) . '">' . $question->title . '</a></li>';
-            }
-            echo '</ul>';
-        } else {
-            echo '<p>سوال پیدا نشد میزگرد جدیدی ایجاد کنید</p>';
         }
     }
 
@@ -409,9 +246,6 @@ class IndexController extends Controller
         if ($category->has_blogs) {
             $result['blog_page'] = route('blog.index', $category->slug);
         }
-        // if ($category->has_ads) {
-        //     $result['advertise_page'] = route('ads.index', $category->slug);
-        // }
         return $result;
     }
 

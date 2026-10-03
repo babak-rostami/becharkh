@@ -4,8 +4,7 @@ if (!function_exists('admin_notification_count')) {
     function admin_notification_count()
     {
         if (auth('admin')->check()) {
-            $notifications = auth('admin')->user()->notifications;
-            return $notifications->count();
+            return auth('admin')->user()->notifications()->count();
         } else {
             return 0;
         }

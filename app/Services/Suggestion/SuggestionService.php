@@ -7,7 +7,6 @@ use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
-use App\RepositoryInterface\Category\CategoryRepositoryInterface;
 use App\RepositoryInterface\Feature\FeatureRepositoryInterface;
 use App\RepositoryInterface\Item\ItemRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
@@ -16,16 +15,13 @@ class SuggestionService
 {
     private $itemRepository;
     private $featureRepository;
-    private $categoryRepository;
 
     public function __construct(
         ItemRepositoryInterface $itemRepository,
         FeatureRepositoryInterface $featureRepository,
-        CategoryRepositoryInterface $categoryRepository
     ) {
         $this->itemRepository = $itemRepository;
         $this->featureRepository = $featureRepository;
-        $this->categoryRepository = $categoryRepository;
     }
 
     public function suggest($category = null, $item = null)
@@ -85,7 +81,7 @@ class SuggestionService
         } elseif ($cats !== null) {
             return ['cats' => $cats];
         } else {
-            $children = $this->categoryRepository->getCategoryChildren($category->id)->where('show_in_sug', 1);
+            $children = MongoCategory::where('parent_id', $category->id)->where('show_in_sug', 1)->get();
             if (count($children) > 0) {
                 $cats = Cache::remember($catsCacheKey, 21600, function () use ($children) {
                     return $children;
@@ -177,7 +173,7 @@ class SuggestionService
                 return $collection->distinct('category_id');
             });
             $categoryIds = array_unique(array_merge($comment_categoryIds, $question_categoryIds, $advertise_categoryIds));
-            return $this->categoryRepository->getCategoryByIds($categoryIds)->where('show_in_sug', 1);
+            return MongoCategory::whereIn('_id', $categoryIds)->where('show_in_sug', 1)->get();
         });
         return ['cats' => $suggestCats];
     }

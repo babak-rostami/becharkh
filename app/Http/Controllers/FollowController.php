@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Follow;
 use App\Models\MongoUser;
 use App\Models\MongoUserFollow;
-use App\Models\User;
-use App\Notifications\UserNotif;
 use Illuminate\Http\Request;
 
 class FollowController extends Controller

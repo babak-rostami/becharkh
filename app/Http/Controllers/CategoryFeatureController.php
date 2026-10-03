@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\MongoCategory;
 use App\Models\MongoFeature;
-use App\Models\SiteCategory;
 use App\Repositories\Item\Mongodb\ItemRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class CategoryFeatureController extends Controller
 {

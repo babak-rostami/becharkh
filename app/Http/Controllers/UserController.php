@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\UserActivation;
 use App\Models\UserMoney;
 use App\Notifications\SiteEvent;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -118,13 +119,9 @@ class UserController extends Controller
         auth('user')->attempt(
             $this->credentials($request)
         );
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => ' کاربری جدید با نام  ' . $request->username . ' ثبت نام کرد',
-                'route' => route('user.dashboard', $request->username),
-            ]));
-        }
+
+        AdminNotificationService::send(' کاربری جدید با نام  ' . $request->username . ' ثبت نام کرد', route('user.dashboard', $request->username));
+
         return response()->json(['success' => 1], 200);
     }
 
@@ -156,11 +153,7 @@ class UserController extends Controller
             $this->credentials($request)
         );
 
-        $admin = Admin::first();
-        $admin->notify(new SiteEvent([
-            'action' => ' کاربری جدید با نام  ' . $request->username . ' ثبت نام کرد',
-            'route' => route('user.dashboard', $request->username),
-        ]));
+        AdminNotificationService::send(' کاربری جدید با نام  ' . $request->username . ' ثبت نام کرد', route('user.dashboard', $request->username));
 
         return redirect()->back()->with('success', 'ثبت نام با موفقیت انجام شد');
     }
@@ -562,11 +555,7 @@ class UserController extends Controller
 
             app(AdvertiseController::class)->activeAdsAfterActiveEmail($user->id);
 
-            $admin = Admin::first();
-            $admin->notify(new SiteEvent([
-                'action' => ' کاربر با نام کاربری ' . $user->username . ' ایمیل خود را تایید کرد',
-                'route' => route('user.dashboard', $user->username),
-            ]));
+            AdminNotificationService::send(' کاربر با نام کاربری ' . $user->username . ' ایمیل خود را تایید کرد', route('user.dashboard', $user->username));
 
             return redirect()->route('home')->with('success', 'تبریک حساب کاربری شما با موفقیت فعال شد');
         } else {
@@ -614,18 +603,6 @@ class UserController extends Controller
         }
     }
 
-    public function getuserImageApi($question_id)
-    {
-        $question = Question::find($question_id);
-        return $question->user->image();
-    }
-
-    public function destroyNotification($notif)
-    {
-        DB::table('notifications')
-            ->where('id', $notif)->delete();
-        return back()->with('success', 'پیام با موفقیت حذف شد');
-    }
 
     public function favoriteIndex()
     {

@@ -12,6 +12,7 @@ use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
 use App\Notifications\SiteEvent;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -76,19 +77,15 @@ class DoAfterStoreComment implements ShouldQueue
             $comment->status = 0;
             $comment->update();
             $route = 'https://becharkh.com' . Str::replace('http://localhost', '', route('admin.category.comment.index'));
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک نظر تایید نشده دارد!',
-                'route' => $route
-            ]));
+            AdminNotificationService::send($user->username . ' یک نظر تایید نشده دارد!', $route);
         }
 
         if ($page == 'show_question') {
             dispatch(new SendUserNotification('question_answer', $user, $comment))->onQueue('becharkhsite');
             $route = 'https://becharkh.com' . Str::replace('http://localhost', '', route('question.show', $object->slug2));
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $object->title . ' منتشر کرد',
-                'route' => $route
-            ]));
+
+            AdminNotificationService::send($user->username . ' یک پاسخ برای پرسش با عنوان ' . $object->title . ' منتشر کرد', $route);
+
             // if (isset($object->items)) {
             //     dispatch(new UpdateUserFollowItem('question_answer', $comment->id))->onQueue('becharkhsite');
             // }
@@ -99,10 +96,8 @@ class DoAfterStoreComment implements ShouldQueue
                 $commentPage = route('question.index', $object->slug) . "?s=1";
                 $route = 'https://becharkh.com' . Str::replace('http://localhost', '', $commentPage);
                 $this->sendUserNotification('ccomment', $user, $comment);
-                $admin->notify(new SiteEvent([
-                    'action' => $user->username . ' یک ریپلای ارسال کرد',
-                    'route' => $route,
-                ]));
+
+                AdminNotificationService::send($user->username . ' یک ریپلای ارسال کرد', $route);
             } else {
                 if (isset($requestData['item_id'])) {
                     $commentPage = $item->withParentsCommentUrl();
@@ -112,10 +107,8 @@ class DoAfterStoreComment implements ShouldQueue
                     $commentPageTitle = $object->full_title ?? $object->title;
                 }
                 $route = $commentPage;
-                $admin->notify(new SiteEvent([
-                    'action' => $user->username . ' نظری در صفحه ' . $commentPageTitle . ' ارسال کرد',
-                    'route' => $route,
-                ]));
+
+                AdminNotificationService::send($user->username . ' نظری در صفحه ' . $commentPageTitle . ' ارسال کرد', $route);
             }
 
             if (isset($item)) {

@@ -2,25 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\MissionComplete;
 use App\Jobs\Question\ChangeHotAnswer;
 use App\Jobs\Question\SendEmailQuestionAnswer;
 use App\Jobs\SendUserNotification;
-use App\Jobs\User\UpdateUserFollowItem;
-use App\Mail\ReplyToCommentMail;
 use App\Models\Admin;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoCategoryCommentLike;
 use App\Models\MongoQuestion;
-use App\Models\MongoQuestionAnswer;
-use App\Models\MongoQuestionAnswerLike;
 use App\Models\MongoUser;
 use App\Models\QuestionAnswerEditorImage;
 use App\Notifications\SiteEvent;
+use App\Services\Admin\AdminNotificationService;
 use App\Services\Comment\CommentEditorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class QuestionAnswerController extends Controller
@@ -86,11 +81,11 @@ class QuestionAnswerController extends Controller
 
         dispatch(new SendUserNotification('question_answer', $user, $answer))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
 
-        $admin = Admin::first();
-        $admin->notify(new SiteEvent([
-            'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
-            'route' => route('question.show', $question->slug2)
-        ]));
+        AdminNotificationService::send(
+            $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
+            route('question.show', $question->slug2)
+        );
+
 
         // if (isset($question->items)) {
         //     dispatch(new UpdateUserFollowItem('question_answer', $answer->id))->onQueue('becharkhsite')->delay(now()->addMinutes(1));
@@ -164,13 +159,10 @@ class QuestionAnswerController extends Controller
             $editor_service->updateImageCommentId($editor_images, $answer->id);
         }
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
-                'route' => route('question.show', $question->slug2)
-            ]));
-        }
+        AdminNotificationService::send(
+            $user->username . ' یک پاسخ برای پرسش با عنوان ' . $question->title . ' منتشر کرد',
+            route('question.show', $question->slug2)
+        );
 
         return response()->json([
             'success' => 'نظر شما با موفقیت ثبت شد',

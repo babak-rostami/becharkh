@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Blog;
-use App\Models\BlogLike;
 use App\Models\MongoBlog;
 use App\Models\MongoBlogLike;
-use App\Notifications\UserNotif;
 use Illuminate\Http\Request;
 
 class BlogLikeController extends Controller

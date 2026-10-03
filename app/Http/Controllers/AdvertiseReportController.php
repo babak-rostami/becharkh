@@ -23,20 +23,4 @@ class AdvertiseReportController extends Controller
 
         return back()->with('success', 'گزارش شما با موفقیت ثبت شد');
     }
-
-
-    public function all()
-    {
-        $reports = AdvertiseReport::all();
-        return view('report.advertise', compact('reports'));
-    }
-
-
-    public function destroy($id)
-    {
-        $report = AdvertiseReport::find($id);
-        $report->delete();
-
-        return back()->with('success', 'گزارش با موفقیت حذف شد');
-    }
 }

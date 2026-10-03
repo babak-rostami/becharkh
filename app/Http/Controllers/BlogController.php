@@ -4,42 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Jobs\Item\ChangeItemPageCount;
 use App\Models\Admin;
-use App\Models\AdvertiseVideo;
-use App\Models\Affilate;
-use App\Models\Blog;
 use App\Models\BlogEditorImage;
-use App\Models\BlogFeatureValue;
-use App\Models\Brand;
-use App\Models\CategoryFeatureItem;
 use App\Models\MongoBlog;
-use App\Models\MongoBlogLike;
 use App\Models\MongoCategory;
-use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoVideo;
-use App\Models\Question;
-use App\Models\QuestionFeatureValue;
 use App\Models\RtablePageData;
 use App\Models\ShortLink;
-use App\Models\SiteCategory;
-use App\Models\UserCkImage;
-use App\Models\VideoFeatureValue;
 use App\Notifications\SiteEvent;
-use App\Repositories\Category\Mongodb\CategoryRepository;
 use App\Repositories\Feature\Mongodb\FeatureRepository;
-use App\Repositories\Item\Mongodb\ItemRepository;
+use App\Services\Admin\AdminNotificationService;
 use App\Services\Affilate\AffilateService;
 use App\Services\Comment\CommentEditorService;
 use App\Services\Item\AdditemsService;
 use App\Services\Suggestion\SuggestionService;
-use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -439,40 +423,6 @@ class BlogController extends Controller
         return view('blog.show', compact(...$compactVars));
     }
 
-    // private function replaceAffilateWithHtml($blog_content)
-    // {
-    //     preg_match_all('/@##(.*?)##@/', $blog_content, $matches);
-
-    //     foreach ($matches[1] as $affilate_id) {
-    //         $affilate = Affilate::with('video')->find($affilate_id);
-
-    //         if (isset($affilate)) {
-    //             $html = '<div class="col-12 text-right py-2 my-4">';
-    //             if (isset($affilate->video_path)) {
-    //                 $video_embed_route = route('video.embedb.show', ['category_slug' => $affilate->video->category->slug, 'video_slug' => $affilate->video->slug, 'random_id' => $affilate->video->random_id]);
-    //                 $html .= '<iframe class="shadow-sm p-0 m-0 radius-10"';
-    //                 $html .= 'src="' . $video_embed_route . '"';
-    //                 $html .= 'style="border:none;" width="100%" height="400px" allowfullscreen></iframe>';
-    //             } else {
-    //                 $html .= '<img id="affilb-img" alt="' . $affilate->title . '" title="' . $affilate->title . '" src="' . $affilate->image() . '">';
-    //             }
-    //             $html .= '<h2 id="affilb-title">' . $affilate->title . '</h2>';
-    //             $html .= '<span id="affilb-body">' . $affilate->body . '</span>';
-    //             if (isset($affilate->link)) {
-    //                 $html .= '<a id="affilb-link" rel="nofollow" target="_blank" class="text-decoration-none d-inline-block" href="' . $affilate->link . '">';
-    //                 $html .= '<span class="font-600">مشاهده و خرید محصول</span>';
-    //                 $html .= '<img class="lazy-load" data-src="https://dl.becharkh.com/user_files/files/other/images/next-light-w.png" alt="shop">';
-    //                 $html .= '</a>';
-    //             }
-    //             $html .= '</div>';
-    //             $blog_content = Str::replace('@##' . $affilate_id . '##@', $html, $blog_content);
-    //         } else {
-    //             $blog_content = Str::replace('@##' . $affilate_id . '##@', '', $blog_content);
-    //         }
-    //     }
-    //     return $blog_content;
-    // }
-
     private function getHotQuestions($category = null, $item_id = null)
     {
         $hotRelated = collect();
@@ -702,13 +652,10 @@ class BlogController extends Controller
 
         $editor_service->updateImageCommentId($editor_images, $blog->id);
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' مقاله ' . $blog->title . ' را منتشر کرد',
-                'route' => route('blog.show', ['category_slug' => $category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id])
-            ]));
-        }
+        AdminNotificationService::send(
+            $user->username . ' مقاله ' . $blog->title . ' را منتشر کرد',
+            route('blog.show', ['category_slug' => $category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id])
+        );
 
         return redirect()->route('user.dashboard.edit', 'post')->with('success', 'مقاله با موفقیت منتشر شد');
     }
@@ -785,14 +732,6 @@ class BlogController extends Controller
         }
 
         $blog->update();
-
-        // $admins = Admin::all();
-        // foreach ($admins as $admin) {
-        //     $admin->notify(new SiteEvent([
-        //         'action' => $user->name . ' مقاله ' . $blog->title . ' را ویرایش کرد',
-        //         'route' => route('blog.show', ['category_slug' => $category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id])
-        //     ]));
-        // }
 
         return redirect()->route('user.dashboard.edit', 'post')->with('success', 'تغییرات با موفقیت ثبت شد');
     }

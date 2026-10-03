@@ -17,25 +17,25 @@
             <div class="table-responsive mb-4 mt-4">
                 <table id="zero-config" class="table table-hover" style="width:100%">
                     <thead>
-                    <tr>
-                        <th>ردیف</th>
-                        <th>پیام</th>
-                        <th>زمان</th>
-                        <th>عملیات</th>
-                    </tr>
+                        <tr>
+                            <th>ردیف</th>
+                            <th>پیام</th>
+                            <th>زمان</th>
+                            <th>عملیات</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach($events as $key => $event)
-                        <tr>
-                            <td>{{$key+1}}</td>
-                            <td>{{$event->data['action']}}</td>
-                            <td>{{jdate($event->created_at)->ago()}}</td>
-                            <td>
-                                <a target="_blank" class="btn btn-primary" href="{{$event->data['route']}}">مشاهده</a>
-                                <a class="btn btn-danger" href="{{route('event.delete',$event)}}">حذف</a>
-                            </td>
-                        </tr>
-                    @endforeach
+                        @foreach($events as $key => $event)
+                            <tr>
+                                <td>{{$key + 1}}</td>
+                                <td>{{$event->action}}</td>
+                                <td>{{jdate($event->created_at)->ago()}}</td>
+                                <td>
+                                    <a target="_blank" class="btn btn-primary" href="{{$event->route}}">مشاهده</a>
+                                    <a class="btn btn-danger" href="{{route('event.delete', $event)}}">حذف</a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

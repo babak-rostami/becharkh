@@ -7,19 +7,14 @@ use App\Models\Admin;
 use App\Models\Affilate;
 use App\Models\MongoCategory;
 use App\Models\MongoCategoryComment;
-use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoQuestion;
-use App\Models\MongoQuestionAnswer;
 use App\Models\MongoVideo;
-use App\Models\Question;
 use App\Models\QuestionAnswerEditorImage;
-use App\Models\QuestionCategory;
 use App\Models\QuestionEditorImage;
-use App\Models\QuestionLike;
 use App\Models\RtablePageData;
 use App\Models\SurveyOption;
-use App\Models\Tag;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Support\Str;
 use App\Notifications\SiteEvent;
 use App\Repositories\Feature\Mongodb\FeatureRepository;
@@ -36,7 +31,6 @@ use Intervention\Image\Facades\Image;
 use App\Services\Suggestion\SuggestionService;
 use App\Services\Survey\SurveyService;
 use DOMDocument;
-use Illuminate\Support\Facades\Cache;
 
 class QuestionController extends Controller
 {
@@ -367,21 +361,6 @@ class QuestionController extends Controller
         }
     }
 
-    public function category($category)
-    {
-        $categories = QuestionCategory::all();
-        $category = QuestionCategory::where('slug', $category)->first();
-        if (isset($category)) {
-            $questions = $category->questions;
-            $tags = Tag::all()->sortByDesc(function ($tag) {
-                return $tag->pageCount();
-            });
-            return view('question.index', compact('categories', 'questions', 'category', 'tags'));
-        } else {
-            return redirect()->route('home')->with('success', 'آدرس صفحه تغییر کرده است، از منو سایت دوباره جستجو کنید');
-        }
-    }
-
     public function showShortLink($id)
     {
         $question = MongoQuestion::find($id);
@@ -632,17 +611,6 @@ class QuestionController extends Controller
             ],
         ];
     }
-    public function showForVue($id)
-    {
-        $question = Question::with('user')->with('category')->where('id', $id)->first();
-        return $question;
-    }
-
-    public function all()
-    {
-        $questions = Question::with('user')->with('category')->get();
-        return $questions;
-    }
 
     public function create(Request $request)
     {
@@ -807,13 +775,7 @@ class QuestionController extends Controller
 
         $editor_service->updateImageCommentId($editor_images, $question->id);
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' یک پرسش با عنوان ' . $request->title . ' منتشر کرد',
-                'route' => route('question.index.admin'),
-            ]));
-        }
+        AdminNotificationService::send($user->username . ' یک پرسش با عنوان ' . $request->title . ' منتشر کرد', route('question.index.admin'));
 
         return redirect()->route('user.dashboard', $user->username)->with('success', 'مطلب با موفقیت ثبت شد');
     }
@@ -1253,41 +1215,8 @@ class QuestionController extends Controller
 
         $question->update();
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' پرسش با عنوان ' . $question->title . ' را ویرایش کرد',
-                'route' => route('question.show', $question->slug2),
-            ]));
-        }
+        AdminNotificationService::send($user->username . ' پرسش با عنوان ' . $question->title . ' را ویرایش کرد', route('question.show', $question->slug2));
 
         return redirect()->route('user.dashboard.edit', 'forum')->with('success', 'تغییرات ثبت شد');
-    }
-
-    public function like($question_id, $user_id)
-    {
-        $question_like = QuestionLike::where('question_id', $question_id)->where('user_id', $user_id)->first();
-        if (isset($question_like)) {
-            $question_like->delete();
-        } else {
-            $question_like = new QuestionLike();
-            $question_like->question_id = $question_id;
-            $question_like->user_id = $user_id;
-            $question_like->save();
-        }
-    }
-    public function randomQuestion(Request $request)
-    {
-        $question = Question::inRandomOrder()->first();
-        return response()->json(
-            [
-                'username' => $question->user->username,
-                'src' => asset($question->user->image()),
-                'title' => $question->title,
-                'body' => Str::limit($question->body, 100, '...'),
-                'url' => route('question.show', $question->slug2),
-            ],
-            200
-        );
     }
 }

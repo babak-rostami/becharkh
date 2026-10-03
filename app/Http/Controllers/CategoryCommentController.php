@@ -15,7 +15,6 @@ use App\Models\MongoItem;
 use App\Models\MongoQuestion;
 use App\Models\MongoUser;
 use App\Models\SurveyOption;
-use App\Repositories\Category\Mongodb\CategoryRepository;
 use App\Repositories\CategoryComment\Mongodb\CategoryCommentRepository;
 use App\Services\Affilate\AffilateService;
 use App\Services\Comment\CommentEditorService;
@@ -331,10 +330,8 @@ class CategoryCommentController extends Controller
 
     public function getCommentsPaginatePage($query, $category_id, $page, $lastId, $cri = null)
     {
-        $category_repository = new CategoryRepository();
         $category_comment_repository = new CategoryCommentRepository();
-
-        $category = $category_repository->getCategoryByIds($category_id);
+        $category = MongoCategory::find($category_id);
         $featuresInUrl = explode("---", $query);
         $allComments = collect();
         if ($category_id != 'null') {
@@ -950,22 +947,4 @@ class CategoryCommentController extends Controller
             dispatch(new UpdateHotPages())->onQueue('becharkhsite')->delay(now()->addMinutes(30));
         }
     }
-
-    // private function NE($fromUser, $toUser, $route, $title)
-    // {
-    //     if (isset($toUser)) {
-    //         Mail::to($toUser->email)->send(new ReplyToCommentMail($title, $fromUser->username, $route));
-    //         // $toUser->notify(new UserNotif([
-    //         //     'action' => ' یک نظر جدید از ' . $fromUser->username . ' در صفحه ' . $title . ' دریافت کرده اید ',
-    //         //     'route' => $route,
-    //         //     'userImage' => asset($fromUser->image()),
-    //         //     'pageImage' => null,
-    //         //     'pageType' => 'blog',
-    //         //     'notifType' => 'comment',
-    //         //     'important' => 0,
-    //         //     'pageId' => null,
-    //         //     'userId' => $fromUser->id,
-    //         // ]));
-    //     }
-    // }
 }

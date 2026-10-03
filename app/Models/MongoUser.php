@@ -228,26 +228,6 @@ class MongoUser extends Model implements AuthenticatableContract
         }
     }
 
-    public function checkMission($mission_id)
-    {
-        $userMissions = $this->missions ?? [];
-        if (in_array($mission_id, $userMissions)) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public function missionRewardReceived($mission_id)
-    {
-        $userMissionsDone = $this->missions_done ?? [];
-        if (in_array($mission_id, $userMissionsDone)) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
     public function chats()
     {
         $chats = MongoConversation::where('user_1', $this->id)->orWhere('user_2', $this->id)->get();

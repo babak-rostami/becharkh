@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\ReplyToCommentMail;
 use App\Models\Admin;
-use App\Models\Blog;
-use App\Models\BlogComment;
 use App\Models\MongoBlog;
 use App\Models\MongoBlogComment;
 use App\Notifications\SiteEvent;
-use App\Notifications\UserNotif;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -66,13 +64,10 @@ class BlogCommentController extends Controller
             $blog->update();
         }
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $admin->notify(new SiteEvent([
-                'action' => $user->username . ' نظری در مقاله ' . $blog->title . ' ارسال کرد',
-                'route' => route('blog.show', ['category_slug' => $blog->category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id]),
-            ]));
-        }
+        AdminNotificationService::send(
+            $user->username . ' نظری در مقاله ' . $blog->title . ' ارسال کرد',
+            route('blog.show', ['category_slug' => $blog->category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id])
+        );
 
         $comment->save();
 
@@ -112,40 +107,5 @@ class BlogCommentController extends Controller
         if (isset($toUser) && (!isset($toUser->email_actived) || $toUser->email_actived != 0)) {
             Mail::to($toUser->email)->send(new ReplyToCommentMail($blog->title, $fromUser->username, route('blog.show', ['category_slug' => $blog->category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id])));
         }
-    }
-
-    public function all()
-    {
-        $comments = BlogComment::orderBy('id', 'desc')->get();
-        return view('blog.comments', compact('comments'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $this->validate($request, [
-            'name' => 'required|max:250',
-            'email' => 'required|max:250',
-            'body' => 'required',
-        ], [
-            'name.required' => 'نام الزامی می باشد.',
-            'email.required' => 'ایمیل الزامی می باشد.',
-            'body.required' => 'متن پیام الزامی می باشد.',
-        ]);
-
-        $comment = BlogComment::find($id);
-        $comment->name = $request->name;
-        $comment->email = $request->email;
-        $comment->body = $request->body;
-        $comment->update();
-
-        return back()->with('success', 'نظر شما با موفقیت ویرایش شد');
-    }
-
-
-    public function destroy($id)
-    {
-        $comment = BlogComment::find($id);
-        $comment->delete();
-        return back()->with('success', 'نظر با موفقیت حذف شد');
     }
 }

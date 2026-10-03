@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlogComment;
-use App\Models\BlogCommentLike;
 use App\Models\MongoBlogComment;
 use App\Models\MongoBlogCommentLike;
-use App\Models\MongoBlogLike;
 use Illuminate\Http\Request;
 
 class BlogCommentLikeController extends Controller

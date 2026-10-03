@@ -9,6 +9,7 @@ use App\Models\MongoUser;
 use App\Models\ProductComment;
 use App\Models\ProductCommentEditorImage;
 use App\Notifications\SiteEvent;
+use App\Services\Admin\AdminNotificationService;
 use App\Services\Comment\CommentEditorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -113,11 +114,10 @@ class ProductCommentController extends Controller
 
         $this->SendEmailToParentComment($user, $product, $request);
 
-        $admin = Admin::first();
-        $admin->notify(new SiteEvent([
-            'action' => $user->username . ' نظری در محصول ' . $product->title . ' ارسال کرد',
-            'route' => route('product.show', $product->slug),
-        ]));
+        AdminNotificationService::send(
+            $user->username . ' نظری در محصول ' . $product->title . ' ارسال کرد',
+            route('product.show', $product->slug)
+        );
 
         return back()->with('success', 'نظر شما با موفقیت ثبت شد');
     }

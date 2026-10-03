@@ -5,10 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\Question\ChangeHotAnswer;
 use App\Models\MongoCategoryComment;
 use App\Models\MongoCategoryCommentLike;
-use App\Models\MongoQuestionAnswer;
-use App\Models\MongoQuestionAnswerLike;
-use App\Models\QuestionAnswer;
-use App\Models\QuestionAnswerLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 

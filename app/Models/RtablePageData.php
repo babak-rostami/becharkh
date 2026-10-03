@@ -510,11 +510,6 @@ class RtablePageData extends Model
         return $questions;
     }
 
-    public function suggestAdvertises()
-    {
-        $advertises = Advertise::where('status', 1)->orderBy('id', 'desc')->get()->take(6);
-        return $advertises;
-    }
     public static function staticSuggestAdvertises()
     {
         $advertises = MongoAdvertise::where('status', 1)->orderBy('created_at', 'desc')->get()->take(5);

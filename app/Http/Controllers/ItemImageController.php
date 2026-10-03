@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\MongoItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 

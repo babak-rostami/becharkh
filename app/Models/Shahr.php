@@ -15,11 +15,4 @@ class Shahr extends Model
     {
         return $this->belongsTo(Ostan::class, 'ostan_id');
     }
-
-    public function advertises()
-    {
-        return $this->hasMany(Advertise::class, 'city');
-    }
-
-
 }

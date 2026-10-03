@@ -5,24 +5,18 @@ namespace App\Http\Controllers;
 use App\Jobs\Item\ChangeItemPageCount;
 use App\Mail\EmailToUser;
 use App\Models\Admin;
-use App\Models\Advertise;
 use App\Models\MongoAdvertise;
 use App\Models\MongoAdvertiseFeatureValue;
 use App\Models\MongoCategory;
 use App\Models\MongoCity;
 use App\Models\MongoDistrict;
-use App\Models\MongoFeature;
-use App\Models\MongoFollowItem;
 use App\Models\MongoItem;
 use App\Models\MongoProvince;
 use App\Models\MongoQuestion;
 use App\Models\MongoVideo;
 use App\Models\RtablePageData;
-use App\Models\SaveList;
-use App\Models\SiteCategory;
 use App\Notifications\SiteEvent;
-use App\Repositories\Advertise\Mongodb\AdvertiseRepository;
-use App\Repositories\Feature\Mongodb\FeatureRepository;
+use App\Services\Admin\AdminNotificationService;
 use App\Services\Affilate\AffilateService;
 use App\Services\Item\AdditemsService;
 use App\Services\Item\FeatureService;
@@ -32,7 +26,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -282,31 +275,6 @@ class AdvertiseController extends Controller
         }
 
         return $lap;
-    }
-
-    public function adSave($id)
-    {
-        $saveList = new SaveList();
-        $saveList->user_id = auth('user')->id();
-        $saveList->advertise_id = $id;
-
-        $saveList->save();
-
-        return back()->with('success', 'آگهی با موفقیت ذخیره شد');
-    }
-
-    public function adRemoveFromSave($advertise_id)
-    {
-        $save_item = SaveList::where('user_id', auth('user')->id())->where('advertise_id', $advertise_id)->first();
-        $save_item->delete();
-
-        return back()->with('success', 'آگهی از لیست علاقه مندی ها حذف شد');
-    }
-
-    public function savelist()
-    {
-        $saveItems = auth('user')->user()->saveAdvertises();
-        return view('user.savelist', compact('saveItems'));
     }
 
     public function adminAll($cat_slug = null)
@@ -670,38 +638,6 @@ class AdvertiseController extends Controller
         return view('advertise.edit', compact('advertise', 'category', 'provinces', 'cities', 'districts', 'advertiseFeatueItems', 'cfeatures', 'citems'));
     }
 
-    public function updateAdmin(Request $request, $id)
-    {
-        $advertise = MongoAdvertise::find($id);
-
-        $category = SiteCategory::find($request->category_id);
-        if ($request->status == 1) {
-            if ($category->status == 0) {
-                return back()->with('success', 'برای تایید آگهی ابتدا دسته بندی را تایید کنید');
-            } else {
-                $advertise->status = $request->status;
-            }
-        } else {
-            $advertise->status = $request->status;
-        }
-
-        $advertise->category_id = $category->id;
-        $advertise->body = $request->body;
-
-        $advertise->update();
-
-        $admin = Admin::first();
-        $admin->notify(new SiteEvent([
-            'action' => auth('admin')->user()->username . '  آگهی با عنوان ' . $advertise->title . ' را ویرایش کرد (admin)',
-            'route' => '',
-        ]));
-        if ($advertise->status == 0) {
-            Mail::to($admin->email)->send(new EmailToUser('آگهی تایید نشده', 'یک آگهی با عنوان ' . $advertise->title . ' در انتظار تایید می باشد در اسرع وقت نسبت به ویرایش آن اقدام کنید'));
-        }
-
-        return back()->with('success', 'آگهی با موفقیت ویرایش شد');
-    }
-
     public function update(Request $request, $id)
     {
         set_time_limit(360);
@@ -833,16 +769,7 @@ class AdvertiseController extends Controller
         if ($is_admin) {
             return redirect()->route('admin.advertise.all')->with('success', $returnText);
         } else {
-            $admins = Admin::all();
-            foreach ($admins as $admin) {
-                $admin->notify(new SiteEvent([
-                    'action' => $user->username . '  آگهی با عنوان ' . $advertise->title . ' را ویرایش کرد',
-                    'route' => '',
-                ]));
-                if ($advertise->status == 0) {
-                    Mail::to($admin->email)->send(new EmailToUser('آگهی تایید نشده', 'یک آگهی با عنوان ' . $advertise->title . ' در انتظار تایید می باشد در اسرع وقت نسبت به ویرایش آن اقدام کنید'));
-                }
-            }
+            AdminNotificationService::send($user->username . '  آگهی با عنوان ' . $advertise->title . ' را ویرایش کرد', '');
             return redirect()->route('user.dashboard.edit')->with('success', $returnText);
         }
     }
@@ -968,11 +895,8 @@ class AdvertiseController extends Controller
             $this->addAdvertiseToItem($advertise);
         }
 
+        AdminNotificationService::send($user->username . ' یک آگهی با عنوان ' . $request->title . ' ثبت کرد', route('admin.advertise.all'));
         $admin = Admin::first();
-        $admin->notify(new SiteEvent([
-            'action' => $user->username . ' یک آگهی با عنوان ' . $request->title . ' ثبت کرد',
-            'route' => route('admin.advertise.all'),
-        ]));
         if ($advertise->status == 0) {
             Mail::to($admin->email)->send(new EmailToUser('آگهی تایید نشده', 'یک آگهی با عنوان ' . $advertise->title . ' در انتظار تایید می باشد در اسرع وقت نسبت به ویرایش آن اقدام کنید'));
         }

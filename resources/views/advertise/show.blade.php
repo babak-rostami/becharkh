@@ -46,7 +46,7 @@
             @if (count($adImages) > 0)
                 <div class="imgslider-container">
                     @foreach ($adImages as $image)
-                        <?php $count++; ?>
+                        <?php        $count++; ?>
                         <div class="imgslider-ImageSlides imgslider-fade1 text-center">
                             <div class="imgslider-numbertext">{{ $count }} / {{ count($adImages) + $vcount }}</div>
                             <img class="ad-image" onclick="clickImg({{ $count }})" id="slideImg-{{ $count }}"
@@ -187,8 +187,7 @@
                         </div>
                     </div>
 
-                    <a class="btn btn-outline-danger mt-2 mr-1" href="" data-toggle="modal"
-                        data-target="#advertise-report">
+                    <a class="btn btn-outline-danger mt-2 mr-1" href="" data-toggle="modal" data-target="#advertise-report">
                         گزارش آگهی
                     </a>
 
@@ -201,9 +200,9 @@
 
             {{-- <div class="row">
                 @if (isset($item) && isset($item->crl_price_url))
-                    @include('item.price-box', [
-                        'item' => $item,
-                    ])
+                @include('item.price-box', [
+                'item' => $item,
+                ])
                 @endif
             </div> --}}
         </div>
@@ -229,8 +228,8 @@
                     @foreach ($advertises as $hotad)
                         <div class="col-12 shadow-sm bg-wht text-right ad-box">
                             <a class="decor-none d-block" rel="nofollow" href="{{ route('ad.show', $hotad->slug) }}">
-                                <img class="ad-box-image lazy-load" alt="{{ $hotad->title }}"
-                                    title="{{ $hotad->title }}" data-src="{{ $hotad->thumbnail() }}">
+                                <img class="ad-box-image lazy-load" alt="{{ $hotad->title }}" title="{{ $hotad->title }}"
+                                    data-src="{{ $hotad->thumbnail() }}">
                                 <span class="ad-title">{{ $hotad->title }}</span>
 
                                 @if (isset($hotad->price))
@@ -256,8 +255,8 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="advertise-report" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal fade" id="advertise-report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content text-right">
                     <div class="modal-header">
@@ -304,10 +303,9 @@
             slide_count = "{{ count($adImages) }}"
         }
 
-        const follow_item_route = '{{ route('follow.item') }}';
     </script>
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/advertise/show.min.js') . '?lm=' . filemtime('mixassets/js/advertise/show.min.js') }}">
-    </script>
+        </script>
 @endsection
