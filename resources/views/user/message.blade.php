@@ -68,10 +68,12 @@
 
                     <div class="w-100">
                         <div class="form-group">
-                            <textarea class="form-control mx-1" name="message" id="user-message-input" placeholder="پیام خود را بنویسید..."></textarea>
+                            <textarea class="form-control mx-1" name="message" id="user-message-input"
+                                placeholder="پیام خود را بنویسید..."></textarea>
                         </div>
 
-                        <button class="w-100 btn btn-sm btn-primary" id="send-message-btn" onclick="sendMessage()" type="button">ارسال
+                        <button class="w-100 btn btn-sm btn-primary" id="send-message-btn" onclick="sendMessage()"
+                            type="button">ارسال
                         </button>
                     </div>
 
@@ -83,7 +85,6 @@
 @endsection
 
 @section('script')
-    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
     <script>
         const chat_csrf_token = "{{ csrf_token() }}";
         const this_user_id = "{{ $user->id }}";
