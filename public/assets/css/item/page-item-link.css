@@ -1,0 +1,46 @@
+#itempl-div {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+#itempl-div::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--itempl-div-bg-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px) brightness(75%);
+    z-index: 0;
+}
+
+#itempl-div::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+}
+
+#itempl-div > * {
+    position: relative;
+    z-index: 1;
+}
+
+#itempl-title {
+    display: block;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 12px 0;
+    color: #fff;
+    text-shadow: 0 2px 8px #000;
+}
+
+#itempl-desc {
+    display: block;
+    font-size: 18px;
+    color: #e9ecef;
+    text-shadow: 0 2px 2px #000;
+}

@@ -1,0 +1,45 @@
+@extends('index')
+
+@section('title', 'قوانین استفاده از سایت')
+
+@section('style')
+    <link href="{{ asset('mixassets/css/pages/terms.min.css') . '?lm=' . filemtime('mixassets/css/pages/terms.min.css') }}"
+        rel="stylesheet" type="text/css" />
+@endsection
+
+@section('content')
+    <div class="row justify-content-center bg-wht">
+        <div class="col-12 col-md-8 text-right">
+            <div class="mb-5 p-4 bg-white rounded">
+                <h1 class="font-bold mb-4" id="ptfs">قوانین استفاده از سایت بچرخ</h1>
+
+                <p>
+                    استفاده از انجمن بچرخ یعنی قبول کردن این چندتا قانون ساده که باعث میشن فضا مفید، محترمانه و منظم بمونه.
+                </p>
+
+                <p>
+                    لطفاً قبل از فعالیت توی سایت، این موارد رو با دقت بخون:
+                </p>
+
+                <ul class="list-disc pr-4 space-y-2">
+                    <li>توهین، تمسخر یا بی‌احترامی به بقیه کاربرا ممنوعه، لطفا نظرتو مودبانه و محترمانه بنویس.</li>
+                    <li>ارسال لینک گروه، سایت، شبکه‌های اجتماعی و... در پیام‌ها مجاز نیست و نظر منتشر نمیشه.</li>
+                    <li>پست‌های تبلیغاتی یا هر نوع اسپم حذف میشن و تکرار باعث مسدودی حساب میشه.</li>
+                    <li>قبل از پرسیدن سوال لطفا یه جستجوی کوچیک بکن، شاید جوابت قبلا داده شده!</li>
+                    <li>لطفا هر سوال یا مشکل رو توی انجمن خودش بپرس تا نظم گروه بهم نریزه.</li>
+                    <li>انتشار اطلاعات شخصی بقیه (مثل شماره تلفن، آدرس، پلاک ماشین و...) ممنوعه.</li>
+                    <li>به دلیل مسائل قانونی اسم بردن از اشخاص یا مدیران به قصد تخریب، ممنوعه و نظر منتشر نمیشه.</li>
+                </ul>
+
+                <p>بچرخ فضایی برای یادگیری و کمک به همدیگه هستش، حواسمون باشه این فضا به حاشیه نره و همچنان آموزشی باقی
+                    بمونه.</p>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('script')
+    <script type="text/javascript"
+        src="{{ asset('mixassets/js/pages/terms.min.js') . '?lm=' . filemtime('mixassets/js/pages/terms.min.js') }}">
+    </script>
+@endsection

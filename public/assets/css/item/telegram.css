@@ -1,0 +1,41 @@
+#item-telegram-box {
+    text-align: center;
+    background-color: #fcfcfc;
+    border: 1px solid #dee2e6;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+#itb-title {
+    display: block;
+    font-size: 21px;
+    font-weight: 600;
+}
+
+#itb-desc {
+    display: block;
+    margin: 8px 0;
+}
+
+#itb-link {
+    font-size: 20px;
+    display: block;
+}
+
+#itb-img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    animation: itb-blink 1.5s infinite;
+}
+
+@keyframes itb-blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}

@@ -1,0 +1,33 @@
+.share-span {
+    cursor: pointer;
+    background-color: #e6f0f5;
+    border-radius: 50%;
+    padding: 4px;
+    display: inline-block;
+}
+
+.share-box {
+    position: absolute;
+    top: 40px;
+    width: 300px;
+    left: -60px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+    z-index: 1;
+    background-color: #f7f7f7;
+}
+
+.hide-share {
+    display: none;
+}
+
+#copy-clipboard-done-span {
+    width: 100%;
+    border-radius: 8px;
+    color: #ffffff;
+    background-color: #0b9100;
+    margin-top: 8px;
+    display: none;
+}

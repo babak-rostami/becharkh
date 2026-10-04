@@ -1,0 +1,500 @@
+.breadcrumb-item + .breadcrumb-item::before {
+    padding-left: 4px;
+    padding-right: 2px;
+}
+
+.sq-box {
+    border: 1px solid #e1e1e1;
+}
+
+#pquestion-img {
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 10px;
+    max-width: 100%;
+}
+
+#noans-title {
+    display: block;
+    margin-top: 4px;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+#noans-decs {
+    font-size: 16px;
+    margin-top: 12px;
+    display: block;
+    color: #a2a2a2;
+}
+
+#noans-box {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    border: 3px solid #e9ecef;
+    border-radius: 8px;
+    padding: 21px 0;
+    font-size: 18px;
+}
+
+.sq-user-image {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+.sq-item-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.qa-form-ta {
+    width: 100%;
+    height: 150px;
+    resize: none;
+    padding: 8px;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+}
+
+.reply-box {
+    background-color: #f8f9f9;
+    border: 2px solid #e0e1be;
+}
+
+.forum-breadcrumb-item {
+    background-color: #495057;
+    border-radius: 6px;
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 0 8px;
+    display: inline-block;
+}
+
+#breadcrumb-box {
+    overflow-x: auto;
+    text-wrap: nowrap;
+    height: 44px;
+    overflow-y: hidden;
+}
+
+#cm-input {
+    min-height: 120px;
+    border: 1px solid #00b2ff;
+}
+
+.share-span {
+    border: 1px solid #6c757d;
+}
+
+.share-span img {
+    width: 21px;
+}
+
+.share-box {
+    position: absolute;
+    top: 40px;
+    width: 300px;
+    left: -100px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+    z-index: 1;
+    background-color: #f7f7f7;
+}
+
+.hide-share {
+    display: none;
+}
+
+#copy-clipboard-done-span {
+    width: 100%;
+    border-radius: 8px;
+    color: #ffffff;
+    background-color: #0b9100;
+    margin-top: 8px;
+    display: none;
+}
+
+.rep-name {
+    font-size: 14px;
+    background-color: #fff;
+    padding: 0 4px;
+    border-radius: 8px;
+    border: 1px solid #dfdfdf;
+}
+
+.question-editor p {
+    font-size: 20px;
+    line-height: 38px;
+}
+
+#page-title {
+    margin-bottom: 8px;
+    line-height: 44px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.question-editor h2 {
+    margin: 15px 0 10px;
+    line-height: 44px;
+    font-size: 28px;
+    border-bottom: 1px solid #eee;
+    font-weight: 700;
+    color: #000;
+}
+
+.question-editor h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #004085;
+    margin: 15px 0 10px;
+    line-height: 44px;
+    border-bottom: 1px solid #eee;
+}
+
+.question-editor h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #373737;
+    margin: 15px 0 10px;
+    line-height: 44px;
+    border-bottom: 1px solid #eee;
+}
+
+.question-editor .table {
+    overflow: auto;
+}
+/* 
+.question-editor .table th {
+    background-color: #f8f9fa;
+    font-size: 20px;
+} */
+
+.question-editor ul,
+.question-editor ol {
+    padding-inline-start: 24px;
+}
+
+#qsh-can-help-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+@keyframes ulcomoveDown {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+.unlike-ans-image {
+    display: inline-block;
+    transition: transform 0.6s ease;
+}
+.unlike-ans-image.clicked {
+    animation: ulcomoveDown 0.6s ease;
+}
+
+@keyframes lcomoveDown {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+.like-ans-image {
+    display: inline-block;
+    transition: transform 0.6s ease;
+}
+.like-ans-image.clicked {
+    animation: lcomoveDown 0.6s ease;
+}
+
+.questions-box {
+    text-align: right;
+    display: block;
+    text-decoration: none !important;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 4px;
+    color: #000;
+    border: 1px solid #f1f1f1;
+    margin: 12px 0;
+}
+
+#cm-input {
+    width: 100%;
+    min-height: 140px;
+    overflow: hidden;
+    resize: none;
+    font-size: 21px;
+}
+
+.c-shortans {
+    color: #888;
+    font-size: 14px;
+}
+
+.sug-q-like-icon {
+    background-color: #e3f2f9;
+    border: 1px solid #b6daff;
+    color: #075e91;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 12px;
+    border-radius: 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.sug-q-like-icon img {
+    width: 18px;
+}
+
+.question-editor img {
+    max-width: 100%;
+    max-height: 350px;
+    border-radius: 8px;
+}
+
+.rcir-glow {
+    animation: rcir-glow-anim 0.5s infinite alternate;
+}
+
+@keyframes rcir-glow-anim {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#page-g-div {
+    background-color: #fbfbfb;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+}
+
+#page-g-title {
+    font-size: 21px;
+    display: block;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+#page-g {
+    margin-top: 16px;
+    font-size: 18px;
+    color: #495057;
+    display: block;
+    white-space: pre-line;
+}
+
+@keyframes page-g-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(20deg);
+    }
+
+    50% {
+        transform: rotate(-20deg);
+    }
+
+    75% {
+        transform: rotate(20deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+#page-g-img {
+    animation: page-g-anim 2s ease-in-out infinite;
+}
+
+/* for question user */
+
+.qusr-link {
+    outline: 0 !important;
+    padding: 8px;
+    background-color: unset;
+    width: 100%;
+    border-top: none;
+    border-bottom: 1px solid #f1f1f1;
+    border-right: none;
+    border-left: none;
+    display: flex;
+    align-items: center;
+}
+
+.qusr-username {
+    font-weight: 500;
+}
+.qusr-name {
+    font-weight: 500;
+    color: #888;
+    font-size: 14px;
+}
+
+.qusr-label {
+    margin-right: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0 8px;
+    border-radius: 12px;
+    border-left: 2px solid #c1c8d1;
+    border-top: 1px solid #c1c8d1;
+    background-color: #fff;
+}
+
+.qusr-style {
+    max-width: 60px;
+    height: 60px;
+    max-height: 120px;
+    object-fit: contain;
+    border-radius: 12px;
+    background-color: #f1f1f1;
+    border: 1px solid #d9ecff;
+}
+
+.dqusr-style {
+    max-width: 60px;
+    height: 60px;
+    max-height: 120px;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    border: 1px solid #d9ecff;
+}
+
+.qusr-name-div {
+    text-align: right;
+    margin-right: 8px;
+}
+
+/* end for question user */
+
+.embed-video-wrapper {
+    width: 100%;
+    max-width: 600px;
+    /* عرض نهایی در دسکتاپ */
+    margin: 0 auto;
+}
+
+.embed-video-container {
+    position: relative;
+    width: 100%;
+    /* این خط نسبت تصویر رو نگه می‌داره */
+    padding-bottom: 56.25%;
+    /* نسبت 16:9 → (9 ÷ 16 = 0.5625) */
+    height: 0;
+    overflow: hidden;
+    background: #000;
+    border-radius: 10px;
+}
+
+.embed-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* در موبایل اجازه بده عرض کامل بشه */
+@media (max-width: 767px) {
+    .embed-video-wrapper {
+        max-width: 100%;
+    }
+}
+
+/* for 45 sell cal */
+.sell-hero {
+    direction: rtl;
+    text-align: right;
+    padding: 60px 30px;
+}
+
+#sell-hero-1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1f1f1f;
+    margin-bottom: 15px;
+}
+
+.sell-hero-highlight {
+    color: #28a745;
+}
+
+.sell-hero p {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.sell-hero .badge-free {
+    display: inline-block;
+    background: #f1f8f4;
+    color: #28a745;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    font-size: 17px;
+    border: 1px solid #d4edda;
+}
+
+.cta-btn {
+    background: #28a745;
+    color: #fff !important;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    animation: pulse 2s infinite;
+    text-decoration: none !important;
+    display: inline-block;
+}
+
+.cta-btn:hover {
+    background: #218838;
+    transform: translateY(-3px);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(40, 167, 69, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+/* end for 45 sell cal */

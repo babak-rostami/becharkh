@@ -1,0 +1,158 @@
+.new-ad-btn {
+    background-color: rgb(62, 70, 133);
+    color: #ffffff;
+}
+.new-ad-btn:hover {
+    background-color: rgb(41, 46, 88);
+    color: #ffffff;
+}
+
+.pagination .page-item {
+    width: 31px;
+}
+
+.font-600 {
+    font-weight: 600;
+}
+
+.ad-box {
+    border-bottom: 1px solid #d8d8d8;
+    border: 1px solid #dfdfdf;
+    border-radius: 8px;
+    padding: 8px;
+}
+.ad-image {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+}
+
+.ad-title {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.ad-price-number {
+    font-size: 20px;
+}
+.ad-price-format {
+    font-size: 14px;
+}
+
+.ad-f-div {
+    overflow: auto;
+    margin: 12px 0;
+    padding: 8px 0;
+    white-space: nowrap;
+}
+.ad-f-item {
+    display: inline-block;
+    background-color: #d8dbfd;
+    color: #262a98;
+    padding: 4px 12px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.font-17 {
+    font-size: 17px;
+}
+
+.first-popu {
+    background-color: #ffd700;
+    color: #000;
+}
+
+#page-img {
+    max-height: 164px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+#page-title-box {
+    background-color: #f2f9ff;
+    padding: 1px 12px;
+    border-radius: 12px;
+}
+
+#page-title {
+    font-weight: 700;
+    font-size: 18px;
+    margin: 12px 0;
+}
+
+#pititle {
+    text-align: right;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.video-slider-item {
+    text-align: center;
+}
+
+#ads-seller-title {
+    display: block;
+    text-align: right;
+    border-right: 3px solid #dc3545;
+    padding-right: 8px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 17px;
+}
+#new-a-btn {
+    position: fixed;
+    bottom: 76px;
+    left: 24px;
+    z-index: 10;
+    padding: 6px 12px;
+}
+
+#let-me-know {
+    width: 100%;
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 36px 0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+#lmk-title {
+    font-size: 21px;
+    font-weight: 600;
+    color: #220070;
+}
+#dywt {
+    font-size: 21px;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#pdesctor h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #002053;
+}
+#pdesctor p,
+#pdesctor ul {
+    margin-bottom: 6px;
+}
+
+.rcir-glow {
+    animation: rcir-glow-anim 0.5s infinite alternate;
+}
+
+@keyframes rcir-glow-anim {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
