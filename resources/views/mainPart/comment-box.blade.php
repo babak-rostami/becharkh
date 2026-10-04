@@ -638,7 +638,7 @@
     @if ($page == 'edit_question_admin' || $page == 'edit_question')
         <button type="button" class="btn btn-primary w-100 my-2" onclick="editorQuestionUpdate()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
+            <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy" alt="send">
             ویرایش سوال
         </button>
     @elseif($page == 'create_question_admin' || $page == 'create_question')
@@ -651,20 +651,20 @@
     @elseif($page == 'create_blog')
         <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="editorBlogStore()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load" alt="send">
+            <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy" alt="send">
             انتشار مطلب
         </button>
     @elseif($page == 'edit_blog')
         <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="editorBlogUpdate()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+            <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy"
                 alt="send">
             ویرایش مطلب
         </button>
     @elseif($page == 'create_affilate' || $page == 'edit_affilate')
         <button type="button" class="btn btn-primary w-100 mb-2 mt-5" onclick="affilateStoreUpdate()"
             id="comment-editor-btn">
-            <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+            <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy"
                 alt="send">
             ثبت افیلیت
         </button>
@@ -679,14 +679,14 @@
                 <div class="d-flex">
                     <button type="button" class="btn btn-primary my-2 flex-grow-1" onclick="userCcommentSend()"
                         id="comment-editor-btn">
-                        <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+                        <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy"
                             alt="send">
                         ارسال نظر
                     </button>
                     <input type="hidden" id="has_survey" name="has_survey" value="0">
                     <button class="btn btn-light bg-wht my-2" id="add-survey-btn" onclick="addSurvey()"
                         type="button">
-                        <img data-src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" class="lazy-load"
+                        <img src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" loading="lazy"
                             alt="survey">
                     </button>
                 </div>
@@ -695,14 +695,14 @@
                 <div class="d-flex">
                     <button type="button" class="btn btn-primary my-2 flex-grow-1" onclick="editorCommentSend()"
                         id="comment-editor-btn">
-                        <img data-src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" class="lazy-load"
+                        <img src="{{ $ftp_path . 'files/other/images/send-com24.webp' }}" loading="lazy"
                             alt="send">
                         ارسال نظر
                     </button>
                     <input type="hidden" id="has_survey" name="has_survey" value="0">
                     <button class="btn btn-light bg-wht my-2" id="add-survey-btn" onclick="addSurvey()"
                         type="button">
-                        <img data-src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" class="lazy-load"
+                        <img src="{{ $ftp_path . 'files/other/images/ntest-22.png' }}" loading="lazy"
                             alt="survey">
                     </button>
                 </div>
@@ -740,12 +740,12 @@
             $page == 'create_blog' ||
             $page == 'edit_blog')
         <button type="button" class="btn btn-light w-100 my-2" id="comment-editor-load-btn">
-            <img class="lazy-load ml-2" data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
+            <img class="ml-2" loading="lazy" src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
             در حال ثبت...
         </button>
     @else
         <button type="button" class="btn btn-light w-100 my-2" id="comment-editor-load-btn">
-            <img class="lazy-load ml-2" data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
+            <img class="ml-2" loading="lazy" src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
             در حال ارسال پیام...
         </button>
     @endif

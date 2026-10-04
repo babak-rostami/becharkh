@@ -3,14 +3,14 @@
         <a @if ($hq->google_index == 0) rel="nofollow" @endif href="{{ route('question.show', $hq->slug2) }}"
             class="text-decoration-none text-dark">
             <div>
-                <img class="sug-q-img lazy-load" data-src="{{ asset($hq->user->thumb()) }}" alt="user image">
+                <img class="sug-q-img" loading="lazy" src="{{ asset($hq->user->thumb()) }}" alt="user image">
                 <span class="sug-q-username">{{ $hq->user->username }}</span>
 
                 @if ($hq->like_count > 0)
                     <span class="float-left">
                         <span>{{ $hq->like_count }}</span>
-                        <img class="sug-q-like-icon lazy-load"
-                            data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
+                        <img class="sug-q-like-icon" loading="lazy"
+                            src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
                     </span>
                 @endif
             </div>

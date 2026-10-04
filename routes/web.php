@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ElasticsearchController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdvertiseController;
 use App\Http\Controllers\AdvertiseReportController;
@@ -70,7 +71,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('elastic-init', [ElasticsearchController::class, 'initial']);
+Route::get('elastic-init', [ElasticsearchController::class, 'initial']);
 
 Route::get('/getCities', [IndexController::class, 'getCities'])->name('get.cities');
 Route::get('/getCitiesCreate', [IndexController::class, 'getCitiesCreate'])->name('get.cities.create');

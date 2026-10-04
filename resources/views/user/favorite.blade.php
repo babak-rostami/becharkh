@@ -41,10 +41,10 @@
         @endif
         <div class="col-12 text-center mb-5">
             <a class="btn btn-primary mb-2" href="{{ route('question.index') }}">انجمن
-                <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}">
+                <img loading="lazy" src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}">
             </a>
             <a class="btn btn-dark mb-2" href="{{ route('question.index') . '?s=1' }}">تجربیات و نظرات کاربران
-                <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}">
+                <img loading="lazy" src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}">
             </a>
         </div>
     </div>
@@ -53,5 +53,5 @@
 @section('script')
     <script type="text/javascript"
         src="{{ asset('mixassets/js/user/favorite.min.js') . '?lm=' . filemtime('mixassets/js/user/favorite.min.js') }}">
-    </script>
+        </script>
 @endsection

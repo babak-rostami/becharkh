@@ -101,8 +101,8 @@
                     نشان داده
                     نشود</button> --}}
                 <div id="phone-input-form">
-                    <input class="form-control number-only input-style" placeholder="شماره تماس" type="text"
-                        name="phone" id="advertise-phone" oninput="phoneOnChange(event, this, 0, 18)">
+                    <input class="form-control number-only input-style" placeholder="شماره تماس" type="text" name="phone"
+                        id="advertise-phone" oninput="phoneOnChange(event, this, 0, 18)">
                     <span id="phone-error"></span>
                 </div>
             </div>
@@ -115,7 +115,7 @@
 
                 <span id="choose-location-btn" onclick="showProvinces()" data-toggle="modal" data-dismiss="modal"
                     data-target="#choose-location-modal">انتخاب موقعیت مکانی
-                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next.png' }}">
+                    <img loading="lazy" src="{{ $ftp_path . 'files/other/images/next.png' }}">
                 </span>
                 <span id="location-error"></span>
 
@@ -124,8 +124,8 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content radius-10">
                             <div class="modal-body">
-                                <img id="choose-location-back" class="lazy-load"
-                                    data-src="{{ $ftp_path . 'files/other/images/back.png' }}">
+                                <img id="choose-location-back" loading="lazy"
+                                    src="{{ $ftp_path . 'files/other/images/back.png' }}">
                                 <span id="choose-location-title">انتخاب استان</span>
                                 <span class="close float-left cur-p" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -197,5 +197,5 @@
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/advertise/create.min.js') . '?lm=' . filemtime('mixassets/js/advertise/create.min.js') }}">
-    </script>
+        </script>
 @endsection

@@ -164,6 +164,10 @@
 }
 /* end for itempr */
 
+#cat-abt-img {
+    height: 72px;
+}
+
 #cat-abt-title {
     display: block;
     margin-top: 12px;

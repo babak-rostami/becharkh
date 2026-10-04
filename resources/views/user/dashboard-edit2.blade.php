@@ -64,7 +64,7 @@
                         <a class="btn btn-sm btn-secondary" href="" data-toggle="modal"
                             data-target="#change_email">تغییر ایمیل</a>
                         <span id="active-email-msg">ایمیل شما تایید نشده است!</span>
-                        <img class="lazy-load rcir-glow" data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
+                        <img class="rcir-glow" loading="lazy" src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
                         <hr>
                     </div>
                 @endif

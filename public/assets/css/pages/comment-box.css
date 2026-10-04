@@ -113,3 +113,7 @@
 #comment-editor-btn {
     font-size: 21px;
 }
+#comment-editor-btn img {
+    width: 24px;
+    aspect-ratio: 1;
+}

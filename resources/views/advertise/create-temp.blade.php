@@ -100,7 +100,7 @@
                         <span class="red-color ml-2">*</span>
                         <span id="choose-location-btn" onclick="showProvinces()" data-toggle="modal" data-dismiss="modal"
                             data-target="#choose-location-modal">انتخاب مکان آگهی
-                            <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next.png' }}">
+                            <img loading="lazy" src="{{ $ftp_path . 'files/other/images/next.png' }}">
                         </span>
                     </div>
                     <div class="modal fade text-right" id="choose-location-modal" tabindex="-1" role="dialog"
@@ -108,14 +108,14 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content radius-10">
                                 <div class="modal-body">
-                                    <img id="choose-location-back" class="lazy-load"
-                                        data-src="{{ $ftp_path . 'files/other/images/back.png' }}">
+                                    <img id="choose-location-back" loading="lazy"
+                                        src="{{ $ftp_path . 'files/other/images/back.png' }}">
                                     <span id="choose-location-title">انتخاب استان</span>
                                     <span class="close float-left cur-p" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </span>
-                                    <input id="choose-location-search" class="form-control mt-3"
-                                        placeholder="جستجو کنید..." type="text">
+                                    <input id="choose-location-search" class="form-control mt-3" placeholder="جستجو کنید..."
+                                        type="text">
                                     <div id="choose-location-items">
                                     </div>
                                     <div id="search-choose-location-items">
@@ -155,11 +155,11 @@
                 <div class="col-12">
                     <div class="row justify-content-center" id="image-row">
                         <div class="col-12 col-md-3 text-center shadow-sm p-4 mx-1 mt-2 image-box">
-                            <img class="def-image" id="blah-1"
-                                src="{{ asset('files/other/images/choose-image.gif') }}" alt="تصویر را انتخاب کنید" />
+                            <img class="def-image" id="blah-1" src="{{ asset('files/other/images/choose-image.gif') }}"
+                                alt="تصویر را انتخاب کنید" />
                             <br>
-                            <input onchange="readURL(this,1)" type='file' name="img-1" id="imgInp-1"
-                                class="d-none" accept="image/*" data-msg-accept="برای انتخاب عکس کلیک کنید" />
+                            <input onchange="readURL(this,1)" type='file' name="img-1" id="imgInp-1" class="d-none"
+                                accept="image/*" data-msg-accept="برای انتخاب عکس کلیک کنید" />
                             <button type="button" class="btn btn-outline-dark"
                                 onclick="document.getElementById('imgInp-1').click()">برای انتخاب
                                 عکس
@@ -184,8 +184,7 @@
                         تکمیل
                         کنید</p>
 
-                    <button class="btn btn-success w-100 my-3" id="sub_ad_form" type="button"
-                        onclick="saveAdvertise(this)">
+                    <button class="btn btn-success w-100 my-3" id="sub_ad_form" type="button" onclick="saveAdvertise(this)">
                         آگهی ثبت شود
                         <img src="{{ asset('files/other/images/next-light-w.png') }}">
                     </button>
@@ -249,5 +248,5 @@
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/advertise/create.min.js') . '?lm=' . filemtime('mixassets/js/advertise/create.min.js') }}">
-    </script>
+        </script>
 @endsection

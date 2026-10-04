@@ -5,12 +5,12 @@
     <span class="select-category-label">دسته بندی</span>
     <span id="modcat-select-input" data-toggle="modal" data-target="#select-category-modal"
         onclick="showCatChildrenModalForSCFCE(0)">انتخاب دسته بندی
-        <img class="lazy-load float-left" data-src="{{ $ftp_path . 'files/other/images/next.png' }}">
+        <img class="float-left" loading="lazy" src="{{ $ftp_path . 'files/other/images/next.png' }}">
     </span>
 @endif
 
-<div class="modal fade" id="select-category-modal" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="select-category-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-body">

@@ -28,8 +28,8 @@
                     <a class="chat-item" href="{{ route('user.show.message', $chat->id) }}">
                         <div class="row chat-row p-3 radius-10">
                             <div class="col-12">
-                                <img class="chat-item-img lazy-load" alt="{{ $chat->user2->username }} profile"
-                                    data-src="{{ asset($chat->user2->image()) }}">
+                                <img class="chat-item-img" loading="lazy" alt="{{ $chat->user2->username }} profile"
+                                    src="{{ asset($chat->user2->image()) }}">
                                 <span class="chat-item-uname">{{ $chat->user2->username }}</span>
                                 <span class="chat-item-time">{{ jdate($chat->updated_at)->ago() }}</span>
                             </div>

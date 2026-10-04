@@ -45,8 +45,8 @@
                             @foreach ($comment->iimages as $iimg)
                                 <img alt="comment image {{ $iimg['id'] }}"
                                     onclick="clickGalleryImg('iimg-{{ $comment->id }}-{{ $iimg['id'] }}','comment')"
-                                    id="iimg-{{ $comment->id }}-{{ $iimg['id'] }}" class="com-img lazy-load"
-                                    data-src="{{ $ftp_path . $iimg['path'] }}">
+                                    id="iimg-{{ $comment->id }}-{{ $iimg['id'] }}" class="com-img" loading="lazy"
+                                    src="{{ $ftp_path . $iimg['path'] }}">
                             @endforeach
                         </div>
                     @endif
@@ -82,16 +82,15 @@
                     <span class="like-icon" onclick="likeCategoryComment('{{ $comment->id }}')">
                         <span
                             id="category-comment-like-count-{{ $comment->id }}">{{ $comment->like_count ? $comment->like_count : 0 }}</span>
-                        <img alt="like icon" class="lazy-load like-com-image"
-                            data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
-                            id="like-com-image-{{ $comment->id }}">
+                        <img alt="like icon" class="like-com-image" loading="lazy"
+                            src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}" id="like-com-image-{{ $comment->id }}">
                     </span>
 
                     <span class="dislike-icon" onclick="unlikeCategoryComment('{{ $comment->id }}')">
                         <span
                             id="category-comment-unlike-count-{{ $comment->id }}">{{ $comment->unlike_count ? $comment->unlike_count : 0 }}</span>
-                        <img alt="dislike icon" class="lazy-load unlike-com-image"
-                            data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
+                        <img alt="dislike icon" class="unlike-com-image" loading="lazy"
+                            src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
                             id="unlike-com-image-{{ $comment->id }}">
                     </span>
 
@@ -101,31 +100,27 @@
                         @if ($question->close != 1)
                             <button class="comment-reply-btn"
                                 onclick="openCCommentModal('reply','{{ $comment->question_id }}','{{ $comment->id }}')">پاسخ<img
-                                    alt="reply icon" class="mr-1 lazy-load"
-                                    data-src="{{ asset('files/other/images/reply.png') }}">
+                                    alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
                             </button>
                         @endif
                     @elseif ($page == 'comment')
                         <button class="comment-reply-btn"
                             onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
-                                alt="reply icon" class="mr-1 lazy-load"
-                                data-src="{{ asset('files/other/images/reply.png') }}">
+                                alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
                         </button>
                     @endif
 
                     @if ($page == 'comment')
-                        <span class="copy-comment" id="copy-comment-{{ $comment->id }}"
-                            onclick="copyComment('{{ $comment->id }}')">
+                        <span class="copy-comment" id="copy-comment-{{ $comment->id }}" onclick="copyComment('{{ $comment->id }}')">
                             ذخیره
-                            <img data-src="{{ $ftp_path . 'files/other/images/copy-18.png' }}" alt="copy"
-                                class="copy-com-image lazy-load" id="copy-com-image-{{ $comment->id }}">
+                            <img src="{{ $ftp_path . 'files/other/images/copy-18.png' }}" alt="copy" class="copy-com-image"
+                                loading="lazy" id="copy-com-image-{{ $comment->id }}">
                         </span>
 
-                        <span class="share-comment" id="share-comment-{{ $comment->id }}"
-                            onclick="shareComment('{{ $comment->id }}')">
+                        <span class="share-comment" id="share-comment-{{ $comment->id }}" onclick="shareComment('{{ $comment->id }}')">
                             ارسال
-                            <img data-src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share"
-                                class="share-com-image lazy-load" id="share-com-image-{{ $comment->id }}">
+                            <img src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share" class="share-com-image"
+                                loading="lazy" id="share-com-image-{{ $comment->id }}">
                         </span>
                     @endif
 
@@ -141,7 +136,7 @@
                         </button>
                     @endif
 
-                    @if ($is_admin)
+                    @if (isset($is_admin))
                         <hr>
                         <a target="_blank" class="btn btn-warning"
                             href="{{ route('admin.category.comment.edit', $comment->id) }}">ویرایش</a>
@@ -178,8 +173,8 @@
                         @foreach ($comment->iimages as $iimg)
                             <img alt="comment image {{ $iimg['id'] }}"
                                 onclick="clickGalleryImg('iimg-{{ $comment->id }}-{{ $iimg['id'] }}','comment')"
-                                id="iimg-{{ $comment->id }}-{{ $iimg['id'] }}" class="com-img lazy-load"
-                                data-src="{{ $ftp_path . $iimg['path'] }}">
+                                id="iimg-{{ $comment->id }}-{{ $iimg['id'] }}" class="com-img" loading="lazy"
+                                src="{{ $ftp_path . $iimg['path'] }}">
                         @endforeach
                     </div>
                 @endif
@@ -215,16 +210,15 @@
                 <span class="like-icon" onclick="likeCategoryComment('{{ $comment->id }}')">
                     <span
                         id="category-comment-like-count-{{ $comment->id }}">{{ $comment->like_count ? $comment->like_count : 0 }}</span>
-                    <img alt="like icon" class="lazy-load like-com-image"
-                        data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}"
-                        id="like-com-image-{{ $comment->id }}">
+                    <img alt="like icon" class="like-com-image" loading="lazy"
+                        src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}" id="like-com-image-{{ $comment->id }}">
                 </span>
 
                 <span class="dislike-icon" onclick="unlikeCategoryComment('{{ $comment->id }}')">
                     <span
                         id="category-comment-unlike-count-{{ $comment->id }}">{{ $comment->unlike_count ? $comment->unlike_count : 0 }}</span>
-                    <img alt="dislike icon" class="lazy-load unlike-com-image"
-                        data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
+                    <img alt="dislike icon" class="unlike-com-image" loading="lazy"
+                        src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}"
                         id="unlike-com-image-{{ $comment->id }}">
                 </span>
 
@@ -234,31 +228,27 @@
                     @if ($question->close != 1)
                         <button class="comment-reply-btn"
                             onclick="openCCommentModal('reply','{{ $comment->question_id }}','{{ $comment->id }}')">پاسخ<img
-                                alt="reply icon" class="mr-1 lazy-load"
-                                data-src="{{ asset('files/other/images/reply.png') }}">
+                                alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
                         </button>
                     @endif
                 @elseif ($page == 'comment')
                     <button class="comment-reply-btn"
                         onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
-                            alt="reply icon" class="mr-1 lazy-load"
-                            data-src="{{ asset('files/other/images/reply.png') }}">
+                            alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
                     </button>
                 @endif
 
                 @if ($page == 'comment')
-                    <span class="copy-comment" id="copy-comment-{{ $comment->id }}"
-                        onclick="copyComment('{{ $comment->id }}')">
+                    <span class="copy-comment" id="copy-comment-{{ $comment->id }}" onclick="copyComment('{{ $comment->id }}')">
                         ذخیره
-                        <img data-src="{{ $ftp_path . 'files/other/images/copy-18.png' }}" alt="copy"
-                            class="copy-com-image lazy-load" id="copy-com-image-{{ $comment->id }}">
+                        <img src="{{ $ftp_path . 'files/other/images/copy-18.png' }}" alt="copy" class="copy-com-image"
+                            loading="lazy" id="copy-com-image-{{ $comment->id }}">
                     </span>
 
-                    <span class="share-comment" id="share-comment-{{ $comment->id }}"
-                        onclick="shareComment('{{ $comment->id }}')">
+                    <span class="share-comment" id="share-comment-{{ $comment->id }}" onclick="shareComment('{{ $comment->id }}')">
                         ارسال
-                        <img data-src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share"
-                            class="share-com-image lazy-load" id="share-com-image-{{ $comment->id }}">
+                        <img src="{{ $ftp_path . 'files/other/images/share-18.png' }}" alt="share" class="share-com-image"
+                            loading="lazy" id="share-com-image-{{ $comment->id }}">
                     </span>
                 @endif
 
@@ -274,7 +264,7 @@
                     </button>
                 @endif
 
-                @if ($is_admin)
+                @if (isset($is_admin))
                     <hr>
                     <a target="_blank" class="btn btn-warning"
                         href="{{ route('admin.category.comment.edit', $comment->id) }}">ویرایش</a>
@@ -299,7 +289,8 @@
         @endif
     @endforeach
 
-    @while ($affnum != -1 || $pqnum != -1)
+    {{-- @while ($affnum != -1 || $pqnum != -1) --}}
+    @while ($affnum != -1)
         @if ($affnum != -1 && isset($affilates) && $affilates->slice($affnum, 1)->first() != null)
             <div class="col-12 text-right py-2 px-0 mt-3">
                 @include('affilate.show-box', [
@@ -312,16 +303,16 @@
         @else
             @php $affnum = -1 @endphp
         @endif
-        @if ($pqnum != -1 && isset($pin_questions) && $pin_questions->slice($pqnum, 1)->first() != null)
-            <div class="col-12 text-right py-2 px-0 mt-4">
-                @include('question.hot-question-item', [
-                    'pin_question' => $pin_questions->slice($pqnum, 1)->first(),
-                ])
-                @php $pqnum += 1 @endphp
-            </div>
+        {{-- @if ($pqnum != -1 && isset($pin_questions) && $pin_questions->slice($pqnum, 1)->first() != null)
+        <div class="col-12 text-right py-2 px-0 mt-4">
+            @include('question.hot-question-item', [
+            'pin_question' => $pin_questions->slice($pqnum, 1)->first(),
+            ])
+            @php $pqnum += 1 @endphp
+        </div>
         @else
-            @php $pqnum = -1 @endphp
-        @endif
+        @php $pqnum = -1 @endphp
+        @endif --}}
     @endwhile
 </div>
 @include('modals.categoryComment.reply')

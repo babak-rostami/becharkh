@@ -143,10 +143,12 @@
 [id^="affil-gallery-"] figure img,
 [id^="affil-gallery-"] img,
 #product-vimg-div img {
-    max-height: 200px;
+    height: 200px;
     border-radius: 8px;
     margin-left: 12px;
     cursor: pointer;
+    object-fit: contain;
+    aspect-ratio: 1;
 }
 
 [id^="affil-gallery-"] figure img:hover,
@@ -240,6 +242,8 @@
 .spb-arrow {
     animation: prsmoveLB 1s ease-in-out infinite;
     margin-right: 4px;
+    width: 24px;
+    height: 24px;
 }
 
 .prod-a-api {

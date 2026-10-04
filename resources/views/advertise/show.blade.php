@@ -159,22 +159,22 @@
                     <div class="position-relative d-inline-block">
                         <button type="button" class="btn share-span mt-2">
                             اشتراک گذاری
-                            <img class="lazy-load" data-src="{{ asset('files/other/images/share.png') }}">
+                            <img loading="lazy" src="{{ asset('files/other/images/share.png') }}">
                         </button>
                         <div class="share-box hide-share mt-2">
                             <div class="row">
                                 <div class="col text-center cur-p" onclick="sentPageToTelegram()">
-                                    <img class="lazy-load" data-src="{{ asset('files/other/images/telegram.png') }}">
+                                    <img loading="lazy" src="{{ asset('files/other/images/telegram.png') }}">
                                     <br>
                                     <span>تلگرام</span>
                                 </div>
                                 <div class="col text-center cur-p" onclick="copyToClipboard()">
-                                    <img class="lazy-load" data-src="{{ asset('files/other/images/chain.png') }}">
+                                    <img loading="lazy" src="{{ asset('files/other/images/chain.png') }}">
                                     <br>
                                     <span>کپی آدرس</span>
                                 </div>
                                 <div class="col text-center cur-p" onclick="sentPageToWhatsapp()">
-                                    <img class="lazy-load" data-src="{{ asset('files/other/images/whatsapp.png') }}">
+                                    <img loading="lazy" src="{{ asset('files/other/images/whatsapp.png') }}">
                                     <br>
                                     <span>واتساپ</span>
                                 </div>
@@ -228,8 +228,8 @@
                     @foreach ($advertises as $hotad)
                         <div class="col-12 shadow-sm bg-wht text-right ad-box">
                             <a class="decor-none d-block" rel="nofollow" href="{{ route('ad.show', $hotad->slug) }}">
-                                <img class="ad-box-image lazy-load" alt="{{ $hotad->title }}" title="{{ $hotad->title }}"
-                                    data-src="{{ $hotad->thumbnail() }}">
+                                <img class="ad-box-image" loading="lazy" alt="{{ $hotad->title }}" title="{{ $hotad->title }}"
+                                    src="{{ $hotad->thumbnail() }}">
                                 <span class="ad-title">{{ $hotad->title }}</span>
 
                                 @if (isset($hotad->price))

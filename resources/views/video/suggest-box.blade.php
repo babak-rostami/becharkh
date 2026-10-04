@@ -10,8 +10,7 @@
                                 <source src="{{ $hv->videoPath() }}" type="video/mp4" />
                             </video>
                         @else
-                            <img id="video-img" alt="{{ $hv->title }}" title="{{ $hv->title }}"
-                                src="{{ $hv->image() }}">
+                            <img id="video-img" alt="{{ $hv->title }}" title="{{ $hv->title }}" src="{{ $hv->image() }}">
                         @endif
 
                         <a id="s-video-url" class="decor-none" @if (!$hv->google_index) rel="nofollow" @endif
@@ -24,8 +23,7 @@
                                     href="{{ $hv->pr_link }}">
                                     <span class="font-600">سفارش محصول</span>
                                     <span class="float-left">پرداخت درب منزل</span>
-                                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/buy-24.png' }}"
-                                        alt="shop">
+                                    <img loading="lazy" src="{{ $ftp_path . 'files/other/images/buy-24.png' }}" alt="shop">
                                 </a>
                             </div>
                         @endif
@@ -37,10 +35,9 @@
             @foreach ($hotVideos as $key => $hv)
                 @if ($key > 0)
                     <div class="bslider-item video-slider-item radius-10">
-                        <a id="slidera-{{ $hv->id }}" class="decor-none d-block" draggable="false"
-                            @if (!$hv->google_index) rel="nofollow" @endif
-                            href="{{ route('video.show', $hv->slug2) }}">
-                            <img draggable="false" class="s-videos-img lazy-load" data-src="{{ $hv->thumb() }}"
+                        <a id="slidera-{{ $hv->id }}" class="decor-none d-block" draggable="false" @if (!$hv->google_index)
+                        rel="nofollow" @endif href="{{ route('video.show', $hv->slug2) }}">
+                            <img draggable="false" class="s-videos-img" loading="lazy" src="{{ $hv->thumb() }}"
                                 alt="{{ $hv->title }}">
                             <span class="s-videos-title">{{ Str::limit($hv->title, 50) }}</span>
                         </a>

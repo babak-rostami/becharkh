@@ -107,8 +107,8 @@
                                         'itemid' => $comment->id,
                                     ])
                                 @else
-                                    <img class="comment-profile-style rounded-circle mr-2 lazy-load"
-                                        data-src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">{{ $comment->name }}
+                                    <img class="comment-profile-style rounded-circle mr-2" loading="lazy"
+                                        src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">{{ $comment->name }}
                                 @endif
 
                                 <div class="cedshow">
@@ -116,20 +116,20 @@
                                 </div>
 
                                 <a class="comment-reply-btn" href="" data-toggle="modal"
-                                    data-target="#reply-{{ $comment->id }}">پاسخ<img class="mr-1 lazy-load"
-                                        data-src="{{ asset('files/other/images/reply.png') }}"></a>
+                                    data-target="#reply-{{ $comment->id }}">پاسخ<img class="mr-1" loading="lazy"
+                                        src="{{ asset('files/other/images/reply.png') }}"></a>
 
                                 <span class="like-icon" onclick="likeProductComment('{{ $comment->id }}')">
                                     <span
                                         id="product-comment-like-count-{{ $comment->id }}">{{ $comment->like_count ? $comment->like_count : 0 }}</span>
-                                    <img class="lazy-load"
-                                        data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
+                                    <img loading="lazy"
+                                        src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
                                 </span>
                                 <span class="dislike-icon" onclick="unlikeProductComment('{{ $comment->id }}')">
                                     <span
                                         id="product-comment-unlike-count-{{ $comment->id }}">{{ $comment->unlike_count ? $comment->unlike_count : 0 }}</span>
-                                    <img class="lazy-load"
-                                        data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
+                                    <img loading="lazy"
+                                        src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
                                 </span>
                             </div>
                         </div>
@@ -144,26 +144,26 @@
                                             'itemid' => $reply->id,
                                         ])
                                     @else
-                                        <img class="comment-profile-style rounded-circle mr-2 lazy-load"
-                                            data-src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">{{ $reply->name }}
+                                        <img class="comment-profile-style rounded-circle mr-2" loading="lazy"
+                                            src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">{{ $reply->name }}
                                     @endif
                                     <p class="comment-text">{{ $reply->body }}</p>
 
                                     <a class="comment-reply-btn" href="" data-toggle="modal"
-                                        data-target="#replyto-{{ $reply->id }}">پاسخ<img class="mr-1 lazy-load"
-                                            data-src="{{ asset('files/other/images/reply.png') }}"></a>
+                                        data-target="#replyto-{{ $reply->id }}">پاسخ<img class="mr-1" loading="lazy"
+                                            src="{{ asset('files/other/images/reply.png') }}"></a>
 
                                     <span class="like-icon" onclick="likeProductComment('{{ $reply->id }}')">
                                         <span
                                             id="product-comment-like-count-{{ $reply->id }}">{{ $reply->like_count ? $reply->like_count : 0 }}</span>
-                                        <img class="lazy-load"
-                                            data-src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
+                                        <img loading="lazy"
+                                            src="{{ $ftp_path . 'files/other/images/like-finger.svg' }}">
                                     </span>
                                     <span class="dislike-icon" onclick="unlikeProductComment('{{ $reply->id }}')">
                                         <span
                                             id="product-comment-unlike-count-{{ $reply->id }}">{{ $reply->unlike_count ? $reply->unlike_count : 0 }}</span>
-                                        <img class="lazy-load"
-                                            data-src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
+                                        <img loading="lazy"
+                                            src="{{ $ftp_path . 'files/other/images/dislike-finger.svg' }}">
                                     </span>
 
                                     {{-- <span
@@ -189,11 +189,11 @@
                                                 <div class="row p-3">
                                                     <div class="col-1 px-0 text-center">
                                                         @if ($user)
-                                                            <img class="lazy-load com-user-img"
-                                                                data-src="{{ asset($user->thumb()) }}">
+                                                            <img class="com-user-img" loading="lazy"
+                                                                src="{{ asset($user->thumb()) }}">
                                                         @else
-                                                            <img class="lazy-load com-user-img"
-                                                                data-src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">
+                                                            <img class="com-user-img" loading="lazy"
+                                                                src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">
                                                         @endif
                                                     </div>
                                                     <div class="col-8 col-lg-9 px-0">
@@ -243,11 +243,11 @@
                                             <div class="row p-3">
                                                 <div class="col-1 px-0 text-center">
                                                     @if ($user)
-                                                        <img class="lazy-load com-user-img"
-                                                            data-src="{{ asset($user->thumb()) }}">
+                                                        <img class="com-user-img" loading="lazy"
+                                                            src="{{ asset($user->thumb()) }}">
                                                     @else
-                                                        <img class="lazy-load com-user-img"
-                                                            data-src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">
+                                                        <img class="com-user-img" loading="lazy"
+                                                            src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">
                                                     @endif
                                                 </div>
                                                 <div class="col-8 col-lg-9 px-0">

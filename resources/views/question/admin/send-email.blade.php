@@ -20,11 +20,11 @@
             <img id="qesearch-magicon" src="{{ $ftp_path . 'files/other/images/search-blue.png' }}">
             <div class="pt-2 pb-5" id="show-qesearch-result"></div>
             <div class="p-4 text-center mt-2" id="show-qesearch-loading">
-                <img class="mt-2 lazy-load" data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
+                <img class="mt-2" loading="lazy" src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
                 <span>در حال جستجو</span>
             </div>
             <div class="p-4 text-center mt-2" id="show-qesearch-empty">
-                <img class="mt-2 lazy-load" data-src="{{ $ftp_path . 'files/other/images/search.webp' }}">
+                <img class="mt-2" loading="lazy" src="{{ $ftp_path . 'files/other/images/search.webp' }}">
                 <span>جستجو کنید...</span>
             </div>
         </div>
@@ -48,5 +48,5 @@
     </script>
     <script type="text/javascript"
         src="{{ asset('assets/js/forum/send-email-index.js') . '?lm=' . filemtime('assets/js/forum/send-email-index.js') }}">
-    </script>
+        </script>
 @endsection

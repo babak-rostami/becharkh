@@ -161,20 +161,6 @@
             @include('mainPart.gallery')
             @include('category.rcats')
 
-            {{-- @if (!$questions->isEmpty())
-            @foreach ($questions as $ques)
-            <a class="questions-box" href="{{ route('question.show', $ques->slug2) }}">
-                @if ($ques->getImage())
-                <img class="lazy-load hop-img" data-src="{{ $ques->image() }}" alt="{{ $ques->title }}">
-                @endif
-                <h2 class="sq-item-title">{{ $ques->sug_title ?? $ques->title }}</h2>
-                @if (isset($ques->answer))
-                <span class="c-shortans">-{{ $ques->answer }}
-                </span>
-                @endif
-            </a>
-            @endforeach
-            @endif --}}
 
         </div>
     </div>

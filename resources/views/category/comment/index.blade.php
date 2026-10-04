@@ -36,8 +36,8 @@
 
     @if (!empty($qaSchema))
         <script type="application/ld+json">
-        {!! $qaSchema !!}
-    </script>
+                {!! $qaSchema !!}
+            </script>
     @endif
 
 @endsection
@@ -70,8 +70,7 @@
                     <div id="item-gallery">
                         <img id="item-img-0" fetchpriority="high" class="my-3"
                             onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
-                            title="{{ $item->full_title ?? $item->title }}"
-                            alt="عکس {{ $item->full_title ?? $item->title }}">
+                            title="{{ $item->full_title ?? $item->title }}" alt="عکس {{ $item->full_title ?? $item->title }}">
                     </div>
                 @else
                     <img id="page-img" class="mb-3 mt-4" fetchpriority="high" src="{{ asset($category->image()) }}"
@@ -120,7 +119,7 @@
             @if (isset($category) && $category->getAnim())
                 <div class="row mt-4">
                     <div class="col-12 text-center">
-                        <img alt="about page" src="{{ $category->anim() }}">
+                        <img id="cat-abt-img" alt="about page" src="{{ $category->anim() }}">
                         @if (!empty($category->tips) && is_array($category->tips))
                             <span id="cat-abt-title"></span>
                             <p id="cat-abt-desc"></p>
@@ -180,43 +179,6 @@
             @endif
 
 
-            {{-- <div class="row mt-4">
-                <div class="col-12">
-                    <span id="ad-suggest-box-title">پیشنهادی امروز</span>
-                </div>
-                <div class="col-12" id="ad-suggest-box-list">
-                    @foreach ($suggest_ads as $suggest_ad)
-                        <a class="ad-suggest-box-item" rel="nofollow" href="{{ route('ad.show', $suggest_ad->slug) }}">
-                            <img class="ad-suggest-image lazy-load" alt="{{ $suggest_ad->title }}"
-                                title="{{ $suggest_ad->title }}" data-src="{{ $suggest_ad->thumbnail() }}">
-                            <span class="ad-suggest-title">{{ $suggest_ad->title }}</span>
-
-                            @if (isset($suggest_ad->price))
-                                <span class="ad-suggest-price-number">{{ number_format((int) $suggest_ad->price) }}</span>
-                                <span class="ad-suggest-price-format">تومان</span>
-                            @else
-                                <span class="ad-suggest-price-format">توافقی</span>
-                            @endif
-
-                            @if (isset($suggest_ad->items_title))
-                                <div class="ad-suggest-f-div">
-                                    @foreach ($suggest_ad->items_title as $item_title)
-                                        <span class="ad-suggest-f-item">{{ $item_title }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </a>
-                    @endforeach
-                </div>
-                <div class="col-6 text-center pl-1 mt-3">
-                    <a class="btn btn-lg btn-primary w-100 radius-10" href="{{ route('new.ad') }}">ثبت آگهی جدید</a>
-                </div>
-                <div class="col-6 text-center pr-1 mt-3">
-                    <a class="btn btn-lg btn-outline-primary w-100 radius-10" href="">مشاهده بیشتر</a>
-                </div>
-            </div> --}}
-
-
             @include('mainPart.mainPage.add-to-home')
 
             @if (isset($item) && isset($item->tags_array))
@@ -224,8 +186,7 @@
                     <span id="item-tags-title">بحث های مهم</span>
                     <span id="item-tags-body">جستجوی سریع در بحث ها و مشکلات پرتکرار</span>
                     <div id="item-tags">
-                        <span class="item-tag-selected"
-                            onclick="selectItemTag('{{ $category->id }}','{{ $item->id }}','null')"
+                        <span class="item-tag-selected" onclick="selectItemTag('{{ $category->id }}','{{ $item->id }}','null')"
                             id="item-tag-null">همه نظرات
                             <img id="item-tag-tick-icon" alt="tick icon"
                                 src="{{ $ftp_path . 'files/other/images/tick-18.png' }}">
@@ -273,13 +234,13 @@
             @endif
 
             {{-- @if (isset($category))
-                @if ($meta_desc_editor)
-                    <div class="row mt-5">
-                        <div class="col-12">
-                            <div class="text-right" id="pdesctor">{!! $meta_desc_editor !!}</div>
-                        </div>
-                    </div>
-                @endif
+            @if ($meta_desc_editor)
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="text-right" id="pdesctor">{!! $meta_desc_editor !!}</div>
+                </div>
+            </div>
+            @endif
             @endif --}}
 
 
@@ -290,9 +251,9 @@
             </div>
 
             {{-- @if (isset($hot_pages))
-                <div class="row mt-4 justify-content-center">
-                    @include('mainPart.hot-pages')
-                </div>
+            <div class="row mt-4 justify-content-center">
+                @include('mainPart.hot-pages')
+            </div>
             @endif --}}
 
         </div>
@@ -318,5 +279,5 @@
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/category/comment/index.min.js') . '?lm=' . filemtime('mixassets/js/category/comment/index.min.js') }}">
-    </script>
+        </script>
 @endsection

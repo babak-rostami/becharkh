@@ -31,6 +31,7 @@ use Intervention\Image\Facades\Image;
 use App\Services\Suggestion\SuggestionService;
 use App\Services\Survey\SurveyService;
 use DOMDocument;
+use Illuminate\Support\Facades\Config;
 
 class QuestionController extends Controller
 {
@@ -446,7 +447,7 @@ class QuestionController extends Controller
             $suggestCats = $suggests['cats'];
         }
 
-        $initialAnswersLimit = 20;
+        $initialAnswersLimit = Config::get('gvars.initial_comments_count');
 
         $acceptedAnswer = MongoCategoryComment::where('question_id', $question->id)
             ->where('parent_id', null)
@@ -548,9 +549,6 @@ class QuestionController extends Controller
             'currentQueryParams',
             'nextPageUrl'
         ];
-        // if (isset($pin_questions) && !$pin_questions->isEmpty()) {
-        //     $compactVars[] = 'pin_questions';
-        // }
         if (isset($features)) {
             $compactVars[] = 'features';
         }
@@ -567,6 +565,8 @@ class QuestionController extends Controller
 
     public function answersNextPage(Request $request, $question_id, $lastId, $exclude = null)
     {
+        $perPage = Config::get('gvars.initial_comments_count');
+
         $question = MongoQuestion::find($question_id);
         $lastComment = $question ? MongoCategoryComment::find($lastId) : null;
 
@@ -583,8 +583,8 @@ class QuestionController extends Controller
             $query->where('_id', '!=', $exclude);
         }
 
-        $answers = $query->with('user')->take(21)->get();
-        $hasMore = $answers->count() > 20;
+        $answers = $query->with('user')->take($perPage + 1)->get();
+        $hasMore = $answers->count() > $perPage;
         $answers = $answers->take(20)->values();
 
         if ($answers->isEmpty()) {
@@ -598,7 +598,7 @@ class QuestionController extends Controller
         }
 
         return response()->json([
-            'html' => view('question.comment-items', [
+            'html' => view('question.comment-items-api', [
                 'comments' => $answers,
                 'page' => 'question',
                 'question' => $question,

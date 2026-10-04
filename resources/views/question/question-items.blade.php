@@ -18,7 +18,7 @@
     <div class="col-12 col-md-6 text-right my-2">
         <a class="p-2 hop-item" href="{{ route('question.show', $question->slug2) }}">
             @if ($question->getImage())
-                <img class="lazy-load hop-img" data-src="{{ $question->image() }}" alt="{{ $question->title }}">
+                <img class="hop-img" loading="lazy" src="{{ $question->image() }}" alt="{{ $question->title }}">
             @endif
 
             <h2 class="hop-title my-2">{{ $question->sug_title ?? $question->title }}</h2>

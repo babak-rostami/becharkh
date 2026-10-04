@@ -59,16 +59,6 @@
             <p class="mt-3">ممکن است آدرس تغییر کرده باشد دوباره جستجو کنید</p>
         </div>
 
-        {{-- <div class="col-12 text-center mt-2 mb-5">
-            <a class="btn btn-primary mt-4" rel="nofollow" href="{{ route('question.create') }}">
-                سوال جدید +
-            </a>
-            <br>
-            <img class="mt-3 lazy-load" data-src="{{ $ftp_path . 'files/other/images/uarrow.gif' }}" alt="arrow down">
-            <br>
-            <span>سوال شما قبلا در انجمن پرسیده نشده است؟</span>
-        </div> --}}
-
         @include('mainPart.hot-pages', ['hot_pages' => Cache::get('hot_pages')])
 
     </div>

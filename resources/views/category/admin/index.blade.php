@@ -41,8 +41,7 @@
                         <div class="col-12 col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="title">نام دسته</label>
-                                <input type="text" class="form-control" name="title" id="title"
-                                    value="{{ old('title') }}">
+                                <input type="text" class="form-control" name="title" id="title" value="{{ old('title') }}">
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 mt-3">
@@ -55,8 +54,7 @@
                         <div class="col-12 col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="slug">اسلاگ</label>
-                                <input type="text" class="form-control" name="slug" id="slug"
-                                    value="{{ old('slug') }}">
+                                <input type="text" class="form-control" name="slug" id="slug" value="{{ old('slug') }}">
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 mt-3">
@@ -134,14 +132,14 @@
                             </div>
                             <div class="form-group">
                                 <label>دسکریپشن میزگرد ادیتور</label>
-                                <textarea class="form-control ckeditor" name="desc_in_rtable_editor">{{ old('desc_in_rtable_editor') }}</textarea>
+                                <textarea class="form-control ckeditor"
+                                    name="desc_in_rtable_editor">{{ old('desc_in_rtable_editor') }}</textarea>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 mt-3">
                             <div class="form-group">
                                 <label for="title_in_comment">متا تایتل نظرات کاربران</label>
-                                <input type="text" class="form-control" name="title_in_comment"
-                                    id="title_in_comment">
+                                <input type="text" class="form-control" name="title_in_comment" id="title_in_comment">
                             </div>
                             <div class="form-group">
                                 <label for="desc_in_comment">متا دسکریپشن نظرات کاربران</label>
@@ -149,7 +147,8 @@
                             </div>
                             <div class="form-group">
                                 <label>دسکریپشن نظرات ادیتور</label>
-                                <textarea class="form-control ckeditor" name="desc_in_comment_editor">{{ old('desc_in_comment_editor') }}</textarea>
+                                <textarea class="form-control ckeditor"
+                                    name="desc_in_comment_editor">{{ old('desc_in_comment_editor') }}</textarea>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 mt-3">
@@ -163,7 +162,8 @@
                             </div>
                             <div class="form-group">
                                 <label>دسکریپشن آگهی ادیتور</label>
-                                <textarea class="form-control ckeditor" name="desc_in_ads_editor">{{ old('desc_in_ads_editor') }}</textarea>
+                                <textarea class="form-control ckeditor"
+                                    name="desc_in_ads_editor">{{ old('desc_in_ads_editor') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -177,11 +177,11 @@
             <input id="cisearch_input" class="form-control my-2 w-100" type="text" placeholder="جستجو کنید...">
             <div class="pt-2 pb-5" id="show-cisearch-result"></div>
             <div class="p-4 text-center mt-2" id="show-cisearch-loading">
-                <img class="mt-2 lazy-load" data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
+                <img class="mt-2" loading="lazy" src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
                 <span>در حال جستجو</span>
             </div>
             <div class="p-4 text-center mt-2" id="show-cisearch-empty">
-                <img class="mt-2 lazy-load" data-src="{{ $ftp_path . 'files/other/images/search.webp' }}">
+                <img class="mt-2" loading="lazy" src="{{ $ftp_path . 'files/other/images/search.webp' }}">
                 <span>جستجو کنید...</span>
             </div>
         </div>
@@ -191,5 +191,5 @@
 @section('script')
     <script type="text/javascript"
         src="{{ asset('assets/js/category/admin/index.js') . '?lm=' . filemtime('assets/js/category/admin/index.js') }}">
-    </script>
+        </script>
 @endsection

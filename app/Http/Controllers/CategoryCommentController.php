@@ -23,6 +23,7 @@ use App\Services\Item\FeatureService;
 use App\Services\Survey\SurveyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryCommentController extends Controller
@@ -30,6 +31,8 @@ class CategoryCommentController extends Controller
 
     public function index($request, $suggestionService, $category_slug)
     {
+        $initialCommentsCount = Config::get('gvars.initial_comments_count');
+
         $category_comment_repository = new CategoryCommentRepository();
 
         $title = "";
@@ -73,9 +76,9 @@ class CategoryCommentController extends Controller
             }
 
             $comments = app(IndexController::class)->getMainComments($category->id, isset($item) ? $item->id : 'null', 'null');
-            $hasNextPage = count($comments) > 40 ? 1 : 0;
+            $hasNextPage = count($comments) > $initialCommentsCount ? 1 : 0;
 
-            $get_top_comments_data = app(IndexController::class)->selectTopComments($comments, 1);
+            $get_top_comments_data = app(IndexController::class)->selectTopComments($comments, 1, $initialCommentsCount);
             $comments = $get_top_comments_data['comments'];
             $acceptedAnswer = $get_top_comments_data['acceptedAnswer'];
 
@@ -89,7 +92,7 @@ class CategoryCommentController extends Controller
                 $comments = MongoCategoryComment::orderBy('created_at', 'desc')
                     ->whereNull('parent_id')
                     ->where('category_id', $category->id)
-                    ->take(20)
+                    ->take($initialCommentsCount)
                     ->with('user')
                     ->get();
                 $hasComments = 0;
@@ -218,7 +221,7 @@ class CategoryCommentController extends Controller
             $firstComs = $lastComments->take(3);
             $topUnLikes = $lastComments->sortByDesc('unlike_count')->take(3);
             $topLikes = $lastComments->sortByDesc('like_count')->take(3);
-            $comments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($comments)->unique()->take(20);
+            $comments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($comments)->unique()->take($initialCommentsCount);
 
             $nextPageUrl = app(IndexController::class)->getCommentsNextPageUrl($comments, 'null', 'null', 'null', 1, $request->cri);
 

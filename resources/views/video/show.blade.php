@@ -20,28 +20,28 @@
     <link rel="canonical" href="{{ url()->current() }}" />
 
     <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "VideoObject",
-          "name": "{{$video->title}}",
-          "description": "{{$video->description}}",
-          "thumbnailUrl": [
-            "{{asset($video->image())}}"
-           ],
-          "uploadDate": "{{$video->created_at->format('Y-m-d\TH:i:sP')}}",
-          @if($video->isVideoFromYoutue())
-          "contentUrl": "{{$format_vp}}",
-          @else
-          "contentUrl": "{{asset($video->videoPath())}}",
-          @endif
-          "embedUrl": "{{url()->current()}}",
-          "interactionStatistic": {
-              "@type": "InteractionCounter",
-              "interactionType": { "@type": "WatchAction" },
-              "userInteractionCount": {{$video->seen_count}}
-            }
-        }
-    </script>
+                {
+                  "@context": "https://schema.org",
+                  "@type": "VideoObject",
+                  "name": "{{$video->title}}",
+                  "description": "{{$video->description}}",
+                  "thumbnailUrl": [
+                    "{{asset($video->image())}}"
+                   ],
+                  "uploadDate": "{{$video->created_at->format('Y-m-d\TH:i:sP')}}",
+                  @if($video->isVideoFromYoutue())
+                      "contentUrl": "{{$format_vp}}",
+                  @else
+                      "contentUrl": "{{asset($video->videoPath())}}",
+                  @endif
+                  "embedUrl": "{{url()->current()}}",
+                  "interactionStatistic": {
+                      "@type": "InteractionCounter",
+                      "interactionType": { "@type": "WatchAction" },
+                      "userInteractionCount": {{$video->seen_count}}
+                    }
+                }
+            </script>
 @endsection
 
 
@@ -77,8 +77,7 @@
                         <button id="affilb-link-{{ $affilate->id }}" class="product-aflink"
                             onclick="jsurl('{{ route('slink', $affilate->id) }}',1)">
                             <span>مشاهده قیمت و ثبت سفارش</span>
-                            <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}"
-                                alt="shop">
+                            <img loading="lazy" src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}" alt="shop">
                         </button>
                     @endif
                 @elseif(isset($question))
@@ -86,11 +85,9 @@
                         مشاهده مطلب و نظرات
                     </a>
                 @elseif(isset($video->pr_link))
-                    <button id="affilb-link-{{ $video->id }}" class="product-aflink"
-                        onclick="jsurl('{{ $video->pr_link }}',1)">
+                    <button id="affilb-link-{{ $video->id }}" class="product-aflink" onclick="jsurl('{{ $video->pr_link }}',1)">
                         <span>مشاهده قیمت و ثبت سفارش</span>
-                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}"
-                            alt="shop">
+                        <img loading="lazy" src="{{ $ftp_path . 'files/other/images/next-light-w.png' }}" alt="shop">
                     </button>
                 @endif
                 <hr>
@@ -100,12 +97,11 @@
                 @foreach ($videos as $v)
                     @if ($v->id != $video->id)
                         <div class="col-12 col-sm-6 related-post-hover mb-3">
-                            <a class="text-decoration-none related-post-a"
-                                @if (!$v->google_index) rel="nofollow" @endif
+                            <a class="text-decoration-none related-post-a" @if (!$v->google_index) rel="nofollow" @endif
                                 href="{{ route('video.show', $v->slug2) }}">
                                 <div class="row">
                                     <div class="col-auto mx-1">
-                                        <img class="s-blog-img lazy-load" data-src="{{ asset($v->thumb()) }}">
+                                        <img class="s-blog-img" loading="lazy" src="{{ asset($v->thumb()) }}">
                                     </div>
                                     <div class="col pr-0">
                                         <span class="sug-blogs-title">{{ $v->title }}</span>
@@ -126,7 +122,7 @@
 @section('script')
     <script type="text/javascript"
         src="{{ asset('mixassets/js/video/show.min.js') . '?lm=' . filemtime('mixassets/js/video/show.min.js') }}">
-    </script>
+        </script>
     <script>
         const player = new Plyr('#video-s');
     </script>

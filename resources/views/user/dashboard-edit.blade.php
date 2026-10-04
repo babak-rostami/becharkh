@@ -51,7 +51,7 @@
             <div class="col-12 col-md-10 text-right radius-10 py-3 my-2" id="active-email-div">
                 @if (!$user->email_actived)
                     <span id="active-email-msg">
-                        <img class="lazy-load rcir-glow" data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
+                        <img class="rcir-glow" loading="lazy" src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
                         ایمیل شما تایید نشده است!</span>
                     @if (isset($user->active_code))
                         <button class="btn btn-primary" id="active-email-btn" onclick="activeEmail()">ارسال مجدد
@@ -106,8 +106,8 @@
                                 <h4 class="text-center mb-4">تغییر نام کاربری</h4>
                                 <div class="form-group">
                                     <label>نام کاربری جدید را بنویسید</label>
-                                    <input required type="text" class="form-control" name="new_username"
-                                        id="new_username" placeholder="نام کاربری جدید را اینجا بنویسید">
+                                    <input required type="text" class="form-control" name="new_username" id="new_username"
+                                        placeholder="نام کاربری جدید را اینجا بنویسید">
                                     <span id="new_username_msg"></span>
                                 </div>
                                 <ul class="mt-5">
@@ -207,5 +207,5 @@
 
     <script type="text/javascript"
         src="{{ asset('mixassets/js/user/dashboard-edit.min.js') . '?lm=' . filemtime('mixassets/js/user/dashboard-edit.min.js') }}">
-    </script>
+        </script>
 @endsection

@@ -7,7 +7,8 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    {{-- <link href="{{ asset('admin_c/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" /> --}}
+    {{--
+    <link href="{{ asset('admin_c/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" /> --}}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700|Open+Sans">
@@ -112,8 +113,8 @@
                         </div>
                     </div>
                     @if ($user)
-                        <a class="dropdown-toggle top-nav-link" href="#" id="navbarDropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="dropdown-toggle top-nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
                             حساب کاربری
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -128,8 +129,7 @@
                             <a class="dropdown-item top-nav-link" href="{{ route('user.logout') }}">خروج</a>
                         </div>
                     @else
-                        <a class="top-nav-link" href="" data-toggle="modal" data-dismiss="modal"
-                            data-target="#login_user">
+                        <a class="top-nav-link" href="" data-toggle="modal" data-dismiss="modal" data-target="#login_user">
                             <img style="border-radius: 50%; width: 36px ; height: 36px;object-fit:contain"
                                 src="{{ $ftp_path . 'files/other/images/profile.jpg' }}">
                         </a>
@@ -151,11 +151,10 @@
                                     aria-hidden="true">×</span>
                                 <input id="main_search_input" class="form-control my-2 w-100" type="text"
                                     placeholder="جستجو کنید...">
-                                <img id="msearch-magicon"
-                                    src="{{ $ftp_path . 'files/other/images/search-blue.png' }}">
+                                <img id="msearch-magicon" src="{{ $ftp_path . 'files/other/images/search-blue.png' }}">
                                 <div id="msearch-tabs">
-                                    <span onclick="showMainSearchItemsResults(1)"
-                                        class="msearch-tab msearch-tab-active" id="msearch-tab-items">دسته
+                                    <span onclick="showMainSearchItemsResults(1)" class="msearch-tab msearch-tab-active"
+                                        id="msearch-tab-items">دسته
                                         بندی</span>
                                     <span class="msearch-tab" id="msearch-tab-questions"
                                         onclick="showMainSearchForumResults(2)">انجمن</span>
@@ -164,13 +163,13 @@
                                 </div>
                                 <div class="pt-2 pb-5" id="show-msearch-result"></div>
                                 <div class="p-4 text-center mt-2" id="show-msearch-loading">
-                                    <img class="mt-2 lazy-load"
-                                        data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
+                                    <img class="mt-2" loading="lazy"
+                                        src="{{ $ftp_path . 'files/other/images/loading.gif' }}">
                                     <span>در حال جستجو</span>
                                 </div>
                                 <div class="p-4 text-center mt-2" id="show-msearch-empty">
-                                    <img class="mt-2 lazy-load"
-                                        data-src="{{ $ftp_path . 'files/other/images/search.webp' }}">
+                                    <img class="mt-2" loading="lazy"
+                                        src="{{ $ftp_path . 'files/other/images/search.webp' }}">
                                     <span>جستجو کنید...</span>
                                 </div>
                             </div>
@@ -182,8 +181,8 @@
 
 
         @if (!$user)
-            <div class="modal fade" id="login_user" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="login_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-body">
@@ -202,15 +201,14 @@
                                     </div>
 
                                     <button id="check-email-loading" type="button" class="w-100 btn btn-light mb-2">
-                                        <img data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}"
-                                            class="lazy-load">
+                                        <img src="{{ $ftp_path . 'files/other/images/loading.gif' }}" loading="lazy">
                                     </button>
-                                    <button type="button" onclick="sendLoginRequest(1)"
-                                        class="w-100 btn btn-primary mb-2" id="click_for_login_fix_mistake">بله
+                                    <button type="button" onclick="sendLoginRequest(1)" class="w-100 btn btn-primary mb-2"
+                                        id="click_for_login_fix_mistake">بله
                                         آدرس را تصحیح کن
                                     </button>
-                                    <button type="button" class="w-100 btn btn-dark mb-2"
-                                        id="click_for_login_is_true" onclick="sendLoginRequest(0)">خیر
+                                    <button type="button" class="w-100 btn btn-dark mb-2" id="click_for_login_is_true"
+                                        onclick="sendLoginRequest(0)">خیر
                                         صحیح است
                                     </button>
                                     <button type="button" id="click_for_login" onclick="sendLoginRequest()"
@@ -224,8 +222,8 @@
                                 <div class="col-12 text-center">
                                     <button class="btn btn-sm btn-light" onclick="showEnterEmailPageForAuth()"
                                         type="button">
-                                        <img data-src="{{ $ftp_path . 'files/other/images/back.png' }}"
-                                            class="lazy-load ch-acc-auth-img">
+                                        <img src="{{ $ftp_path . 'files/other/images/back.png' }}" class="ch-acc-auth-img"
+                                            loading="lazy">
                                         تغییر حساب
                                     </button>
                                     <br>
@@ -244,30 +242,26 @@
                                             id="password_for_login" autocomplete="off"
                                             placeholder="رمز عبور خود را وارد کنید">
                                         <img onclick="changeTypePasswordLogin()"
-                                            data-src="{{ $ftp_path . 'files/other/images/eye.png' }}"
-                                            class="lazy-load change-pass-eye-img">
+                                            src="{{ $ftp_path . 'files/other/images/eye.png' }}" class="change-pass-eye-img"
+                                            loading="lazy">
                                     </div>
 
                                     <div class="col-12 text-center">
                                         <div class="text-right" id="login-error-box">
-                                            <img data-src="{{ $ftp_path . 'files/other/images/circle.webp' }}"
-                                                class="lazy-load">
+                                            <img src="{{ $ftp_path . 'files/other/images/circle.webp' }}" loading="lazy">
                                             <span class="text-danger" id="login-error-message"></span>
                                         </div>
                                         <span id="login-suc-message"></span>
-                                        <button id="login-submit-loading" type="button"
-                                            class="w-100 btn btn-light mb-4">
-                                            <img data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}"
-                                                class="lazy-load">
+                                        <button id="login-submit-loading" type="button" class="w-100 btn btn-light mb-4">
+                                            <img src="{{ $ftp_path . 'files/other/images/loading.gif' }}" loading="lazy">
                                         </button>
                                         <button id="login-submit-btn" onclick="loginUser()" type="button"
                                             class="w-100 btn btn-danger mb-4">ورود به بچرخ
-                                            <img data-src="{{ $ftp_path . 'files/other/images/next-light.png' }}"
-                                                class="lazy-load">
+                                            <img src="{{ $ftp_path . 'files/other/images/next-light.png' }}" loading="lazy">
                                         </button>
                                         <br>
-                                        <a href="" data-toggle="modal" data-dismiss="modal"
-                                            data-target="#forget_password" onclick="setEmailForForgetPass()">رمز
+                                        <a href="" data-toggle="modal" data-dismiss="modal" data-target="#forget_password"
+                                            onclick="setEmailForForgetPass()">رمز
                                             عبور خود را فراموش
                                             کرده ام</a>
                                     </div>
@@ -276,8 +270,7 @@
                             <div class="row" id="registerFormLoginModal">
                                 <div class="col-12 text-center">
                                     <span id="register-form-title">ثبت نام</span>
-                                    <button type="button" class="close float-left" data-dismiss="modal"
-                                        aria-label="Close">
+                                    <button type="button" class="close float-left" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                     <br>
@@ -287,8 +280,8 @@
 
                                 <div class="col-12 text-center">
                                     <span id="email-register-box" onclick="showEnterEmailPageForAuth()">
-                                        <img data-src="{{ $ftp_path . 'files/other/images/back.png' }}"
-                                            class="lazy-load ch-acc-auth-img">
+                                        <img src="{{ $ftp_path . 'files/other/images/back.png' }}" class="ch-acc-auth-img"
+                                            loading="lazy">
                                         <span id="email-register-span"></span>
                                     </span>
                                 </div>
@@ -297,8 +290,8 @@
 
                                     <div>
                                         <span>نام</span>
-                                        <input oninput="limitMaxChar(this,25)" class="form-control" type="text"
-                                            name="name" id="name_for_register" placeholder="نام شما ...">
+                                        <input oninput="limitMaxChar(this,25)" class="form-control" type="text" name="name"
+                                            id="name_for_register" placeholder="نام شما ...">
                                     </div>
 
                                     <div class="mt-2">
@@ -315,25 +308,21 @@
 
                                     <div class="mt-2 position-relative">
                                         <span>رمز عبور</span>
-                                        <input type="text" class="form-control" name="password"
-                                            autocomplete="off" id="password_for_register"
-                                            placeholder="رمز عبور خود را به یاد بسپارید">
+                                        <input type="text" class="form-control" name="password" autocomplete="off"
+                                            id="password_for_register" placeholder="رمز عبور خود را به یاد بسپارید">
                                         <img onclick="changeTypePasswordRegister()"
-                                            data-src="{{ $ftp_path . 'files/other/images/eye.png' }}"
-                                            class="lazy-load" id="change-pass-eye-img-register">
+                                            src="{{ $ftp_path . 'files/other/images/eye.png' }}" loading="lazy"
+                                            id="change-pass-eye-img-register">
                                     </div>
 
                                     <div class="mt-4 text-center">
                                         <div class="text-right" id="register-error-box">
-                                            <img data-src="{{ $ftp_path . 'files/other/images/circle.webp' }}"
-                                                class="lazy-load">
+                                            <img src="{{ $ftp_path . 'files/other/images/circle.webp' }}" loading="lazy">
                                             <span class="text-danger" id="register-error-message"></span>
                                         </div>
                                         <span id="register-suc-message"></span>
-                                        <button id="register-submit-loading" type="button"
-                                            class="btn btn-light w-100">
-                                            <img data-src="{{ $ftp_path . 'files/other/images/loading.gif' }}"
-                                                class="lazy-load">
+                                        <button id="register-submit-loading" type="button" class="btn btn-light w-100">
+                                            <img src="{{ $ftp_path . 'files/other/images/loading.gif' }}" loading="lazy">
                                         </button>
                                         <button id="register-submit-btn" onclick="registerUser()"
                                             class="btn btn-lg btn-danger w-100" type="button">ثبت نام</button>
@@ -346,8 +335,8 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="forget_password" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="forget_password" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -359,8 +348,8 @@
                         <div class="modal-body text-right">
                             <div class="form-group">
                                 <span>ایمیل اکانت خود را وارد کنید</span>
-                                <input required type="email" class="form-control" name="email"
-                                    id="email_forget_pass" placeholder="ایمیلی که با آن ثبت نام کرده اید وارد کنید">
+                                <input required type="email" class="form-control" name="email" id="email_forget_pass"
+                                    placeholder="ایمیلی که با آن ثبت نام کرده اید وارد کنید">
                                 <span id="error_for_email_forget"></span>
                             </div>
                             <div id="reset_password_suggestion">
@@ -368,8 +357,8 @@
                                     id="click_for_reset_password_fix_mistake">بله
                                     آدرس را تصحیح کن
                                 </button>
-                                <button type="button" class="w-100 btn btn-dark mb-2"
-                                    id="click_for_reset_password_is_true" onclick="resetPassword(0)">خیر
+                                <button type="button" class="w-100 btn btn-dark mb-2" id="click_for_reset_password_is_true"
+                                    onclick="resetPassword(0)">خیر
                                     صحیح است
                                 </button>
                             </div>
@@ -383,8 +372,8 @@
                 </div>
             </div>
         @else
-            <div class="modal fade" id="charge-account" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="charge-account" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-body p-0">
@@ -393,17 +382,15 @@
                                     <span id="chac-header">افزایش اعتبار</span>
                                 </div>
                                 <div class="col-10 text-right p-2">
-                                    <form onsubmit="return submitChacForm()"
-                                        action="{{ route('user.charge.account') }}" method="POST">
+                                    <form onsubmit="return submitChacForm()" action="{{ route('user.charge.account') }}"
+                                        method="POST">
                                         @csrf
                                         <label>مبلغ</label>
                                         <span id="chac-tom-span">به تومان</span>
-                                        <input name="ammount" class="form-control mb-4"
-                                            oninput="convertToMoneyFormat(this)" placeholder="مبلغ به تومان"
-                                            type="text" id="chacinp">
+                                        <input name="ammount" class="form-control mb-4" oninput="convertToMoneyFormat(this)"
+                                            placeholder="مبلغ به تومان" type="text" id="chacinp">
                                         <button class="btn btn-primary w-50" type="submit">پرداخت</button>
-                                        <button class="btn btn-danger" data-dismiss="modal"
-                                            type="button">انصراف</button>
+                                        <button class="btn btn-danger" data-dismiss="modal" type="button">انصراف</button>
                                     </form>
                                 </div>
                             </div>
@@ -507,8 +494,7 @@
                         <a href="{{ route('user.dashboard.edit') }}" class="slider-item">
                             <li class="slider-item-li p-3 radius-10">
                                 <span class="slider-item-text">{{ $user->username }}</span>
-                                <img class="mr-2"
-                                    style="width: 40px;height:40px;border-radius: 50%;object-fit:cover"
+                                <img class="mr-2" style="width: 40px;height:40px;border-radius: 50%;object-fit:cover"
                                     src="{{ asset($user->image()) }}">
                             </li>
                         </a>

@@ -376,7 +376,7 @@ class IndexController extends Controller
         return $nextPageUrl;
     }
 
-    public function selectTopComments($allComments, $getAccepted)
+    public function selectTopComments($allComments, $getAccepted, $limit = 40)
     {
         $lastComments = $allComments->take(30);
         $firstComs = $lastComments->take(3);
@@ -386,7 +386,7 @@ class IndexController extends Controller
         $allComments = $firstComs->merge($topUnLikes)->merge($topLikes)->merge($allComments)->unique('id')->values();
 
         if ($getAccepted == 1) {
-            $allComments = $allComments->take(40);
+            $allComments = $allComments->take($limit);
             if (count($topUnLikes) > 0) {
                 $acceptedAnswer = $topUnLikes->first();
             } else {

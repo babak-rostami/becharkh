@@ -7,7 +7,8 @@
 @section('style')
     <meta name="robots" content="noindex, nofollow">
 
-    <link href="{{ asset('mixassets/css/user/profile.min.css') . '?lm=' . filemtime('mixassets/css/user/profile.min.css') }}"
+    <link
+        href="{{ asset('mixassets/css/user/profile.min.css') . '?lm=' . filemtime('mixassets/css/user/profile.min.css') }}"
         rel="stylesheet" type="text/css" />
 @endsection
 
@@ -39,7 +40,7 @@
 
             @if ($user && $user->id == $dashuser->id && !$user->email_actived)
                 <span id="active-email-msg">
-                    <img class="lazy-load rcir-glow" data-src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
+                    <img class="rcir-glow" loading="lazy" src="{{ $ftp_path . 'files/other/images/red-circle.png' }}">
                     ایمیل شما تایید نشده است!
                 </span>
                 <a class="btn btn-dark my-2" href="{{ route('user.dashboard.edit') }}">
@@ -71,8 +72,8 @@
                                         @foreach ($user_content->iimages as $iimg)
                                             <img alt="comment image {{ $iimg['id'] }}"
                                                 onclick="clickGalleryImg('iimg-{{ $user_content->id }}-{{ $iimg['id'] }}','comment')"
-                                                id="iimg-{{ $user_content->id }}-{{ $iimg['id'] }}"
-                                                class="com-img lazy-load" data-src="{{ $ftp_path . $iimg['path'] }}">
+                                                id="iimg-{{ $user_content->id }}-{{ $iimg['id'] }}" class="com-img" loading="lazy"
+                                                src="{{ $ftp_path . $iimg['path'] }}">
                                         @endforeach
                                     </div>
                                 @endif
@@ -147,8 +148,7 @@
                                         @endif
                                     @else
                                         @if ($user_content->page_url)
-                                            <a class="btn btn-lg btn-primary w-100"
-                                                href="{{ $user_content->page_url }}">مشاهده
+                                            <a class="btn btn-lg btn-primary w-100" href="{{ $user_content->page_url }}">مشاهده
                                                 مطلب</a>
                                         @endif
                                     @endif
@@ -179,16 +179,14 @@
                                                         <img class="cm-box-img" src="{{ $user_content->page_img }}">
                                                         <span class="link-icon">
                                                             مشاهده مطلب
-                                                            <img
-                                                                src="{{ $ftp_path . 'files/other/images/next-light.png' }}">
+                                                            <img src="{{ $ftp_path . 'files/other/images/next-light.png' }}">
                                                         </span>
                                                     </a>
                                                 </div>
                                             @endif
                                         @else
                                             @if ($user_content->page_url)
-                                                <a class="btn btn-lg btn-primary w-100"
-                                                    href="{{ $user_content->page_url }}">مشاهده
+                                                <a class="btn btn-lg btn-primary w-100" href="{{ $user_content->page_url }}">مشاهده
                                                     مطلب</a>
                                             @endif
                                         @endif
@@ -211,5 +209,5 @@
 @section('script')
     <script type="text/javascript"
         src="{{ asset('mixassets/js/user/profile.min.js') . '?lm=' . filemtime('mixassets/js/user/profile.min.js') }}">
-    </script>
+        </script>
 @endsection

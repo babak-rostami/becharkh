@@ -47,7 +47,7 @@ class ElasticsearchController extends Controller
         $client = new Elasticsearch();
         MongoQuestion::chunk(200, function ($questions) use ($client) {
             foreach ($questions as $question) {
-                $client->createDocument('questions', $question->id, [
+                $client->createDocument(MongoQuestion::$elasticIndexName, $question->id, [
                     'title' => $question->title,
                 ]);
             }
@@ -59,7 +59,7 @@ class ElasticsearchController extends Controller
         $client = new Elasticsearch();
         MongoBlog::chunk(200, function ($blogs) use ($client) {
             foreach ($blogs as $blog) {
-                $client->createDocument('blogs', $blog->id, [
+                $client->createDocument(MongoBlog::$elasticIndexName, $blog->id, [
                     'title' => $blog->title,
                 ]);
             }
@@ -72,7 +72,7 @@ class ElasticsearchController extends Controller
         MongoItem::chunk(200, function ($items) use ($client) {
             foreach ($items as $item) {
                 if ($item->feature->is_in_filter_rtable == 1) {
-                    $client->createDocument('items', $item->id, [
+                    $client->createDocument(MongoItem::$elasticIndexName, $item->id, [
                         'similar_search' => $item->similar_search,
                     ]);
                 }
@@ -85,7 +85,7 @@ class ElasticsearchController extends Controller
         $client = new Elasticsearch();
         MongoCategory::chunk(200, function ($categories) use ($client) {
             foreach ($categories as $category) {
-                $client->createDocument('categories', $category->id, [
+                $client->createDocument(MongoCategory::$elasticIndexName, $category->id, [
                     'similar_search' => $category->similar_search
                 ]);
             }

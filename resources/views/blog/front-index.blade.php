@@ -60,20 +60,18 @@
                 @if (isset($item->images))
                     <div id="item-gallery">
                         @foreach ($item->images as $key => $img)
-                            <img id="item-img-{{ $key }}" class="my-3 lazy-load"
-                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
-                                data-src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
-                                alt="عکس {{ $item->full_title ?? $item->title }}">
+                            <img id="item-img-{{ $key }}" class="my-3" loading="lazy"
+                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')" src="{{ asset($item->image($key)) }}"
+                                title="{{ $item->full_title ?? $item->title }}" alt="عکس {{ $item->full_title ?? $item->title }}">
                         @endforeach
                     </div>
                 @else
-                    <img id="page-img" class="mb-3 mt-4" src="{{ asset($category->image()) }}"
-                        title="{{ $category->title }}" alt="{{ $category->title }}">
+                    <img id="page-img" class="mb-3 mt-4" src="{{ asset($category->image()) }}" title="{{ $category->title }}"
+                        alt="{{ $category->title }}">
                 @endif
             @else
                 <h1 class="mt-4" id="page-title">مجله</h1>
-                <img class="mb-3" src="{{ $ftp_path . 'files/other/images/cat-comments.png' }}" title="مجله"
-                    alt="مجله">
+                <img class="mb-3" src="{{ $ftp_path . 'files/other/images/cat-comments.png' }}" title="مجله" alt="مجله">
             @endif
         </div>
 
@@ -97,10 +95,8 @@
             @include('category.rcats', ['page' => 'blog-index'])
 
             {{-- <h4 class="text-center mt-5 mb-4">میخواهید محتوایی آموزشی بنویسید؟</h4>
-            <a
-                @if ($user) href="{{ route('user.new.post') }}" class="btn btn-danger w-100"
-                    @else href="" class="btn btn-danger w-100" data-toggle="modal" data-dismiss="modal"
-                    data-target="#login_user" @endif>
+            <a @if ($user) href="{{ route('user.new.post') }}" class="btn btn-danger w-100" @else href=""
+                class="btn btn-danger w-100" data-toggle="modal" data-dismiss="modal" data-target="#login_user" @endif>
                 نوشتن مطلب جدید
             </a> --}}
 
@@ -125,8 +121,7 @@
                                     <div class="col-12 mt-4 pb-2 text-right">
                                         <span class="mt-2 blog-title">{{ $blog->title }}</span>
                                         <hr>
-                                        <span
-                                            class="text-gray">{{ $blog->category->full_title ?? $blog->category->title }}</span>
+                                        <span class="text-gray">{{ $blog->category->full_title ?? $blog->category->title }}</span>
                                     </div>
                                 </div>
 
@@ -183,5 +178,5 @@
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/blog/index.min.js') . '?lm=' . filemtime('mixassets/js/blog/index.min.js') }}">
-    </script>
+        </script>
 @endsection

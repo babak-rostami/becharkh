@@ -5,17 +5,17 @@
             <div class="modal-body">
                 <div class="row mt-3">
                     <div class="col text-center cur-p" onclick="sentPageToTelegram()">
-                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/telegram.png' }}">
+                        <img loading="lazy" src="{{ $ftp_path . 'files/other/images/telegram.png' }}">
                         <br>
                         <span>تلگرام</span>
                     </div>
                     <div class="col text-center cur-p" onclick="copyToClipboard()">
-                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/chain.png' }}">
+                        <img loading="lazy" src="{{ $ftp_path . 'files/other/images/chain.png' }}">
                         <br>
                         <span>کپی کردن آدرس</span>
                     </div>
                     <div class="col text-center cur-p" onclick="sentPageToWhatsapp()">
-                        <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/whatsapp.png' }}">
+                        <img loading="lazy" src="{{ $ftp_path . 'files/other/images/whatsapp.png' }}">
                         <br>
                         <span>واتساپ</span>
                     </div>

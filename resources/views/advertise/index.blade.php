@@ -45,13 +45,11 @@
                     <div id="item-gallery">
                         <img id="item-img-0" fetchpriority="high" class="my-3"
                             onclick="clickGalleryImg('item-img-0','item-gallery')" src="{{ asset($item->image(0)) }}"
-                            title="{{ $item->full_title ?? $item->title }}"
-                            alt="عکس {{ $item->full_title ?? $item->title }}">
+                            title="{{ $item->full_title ?? $item->title }}" alt="عکس {{ $item->full_title ?? $item->title }}">
                         {{-- @foreach ($item->images as $key => $img)
-                            <img id="item-img-{{ $key }}" {!! $key == 0 ? 'fetchpriority="high"' : '' !!} class="my-3"
-                                onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')"
-                                src="{{ asset($item->image($key)) }}" title="{{ $item->full_title ?? $item->title }}"
-                                alt="عکس {{ $item->full_title ?? $item->title }}">
+                        <img id="item-img-{{ $key }}" {!! $key==0 ? 'fetchpriority="high"' : '' !!} class="my-3"
+                            onclick="clickGalleryImg('item-img-{{ $key }}','item-gallery')" src="{{ asset($item->image($key)) }}"
+                            title="{{ $item->full_title ?? $item->title }}" alt="عکس {{ $item->full_title ?? $item->title }}">
                         @endforeach --}}
                     </div>
                 @else
@@ -114,8 +112,8 @@
                     @foreach ($advertises as $key => $advertise)
                         <div class="col-12 shadow-sm bg-wht text-right ad-box">
                             <a class="decor-none d-block" rel="nofollow" href="{{ route('ad.show', $advertise->slug) }}">
-                                <img class="ad-image lazy-load" alt="{{ $advertise->title }}"
-                                    title="{{ $advertise->title }}" data-src="{{ $advertise->thumbnail() }}">
+                                <img class="ad-image" loading="lazy" alt="{{ $advertise->title }}" title="{{ $advertise->title }}"
+                                    src="{{ $advertise->thumbnail() }}">
                                 <span class="ad-title">{{ $advertise->title }}</span>
 
                                 @if (isset($advertise->price))
@@ -154,11 +152,11 @@
                 @endif
 
                 {{-- @if (isset($category))
-                    @if ($meta_desc_editor)
-                        <div class="col-12 mt-5">
-                            <div class="text-right" id="pdesctor">{!! $meta_desc_editor !!}</div>
-                        </div>
-                    @endif
+                @if ($meta_desc_editor)
+                <div class="col-12 mt-5">
+                    <div class="text-right" id="pdesctor">{!! $meta_desc_editor !!}</div>
+                </div>
+                @endif
                 @endif --}}
 
                 <div class="col-12">
@@ -182,5 +180,5 @@
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/advertise/index.min.js') . '?lm=' . filemtime('mixassets/js/advertise/index.min.js') }}">
-    </script>
+        </script>
 @endsection

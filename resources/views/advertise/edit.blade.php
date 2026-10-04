@@ -34,8 +34,7 @@
 
                     {{-- عکس‌های موجود از دیتابیس --}}
                     @foreach ($advertise->getImages() as $index => $img)
-                        <div class="select-img-item old-image" id="select-img-item-{{ $index }}"
-                            data-id="{{ $index }}">
+                        <div class="select-img-item old-image" id="select-img-item-{{ $index }}" data-id="{{ $index }}">
                             <img src="{{ $img['url'] }}" alt="image">
                             {{-- <div class="img-actions">
                                 <button type="button" class="edit-img-btn"
@@ -82,7 +81,8 @@
             <div class="col-12 col-sm-10 my-2 text-right px-0">
                 <span class="label-title">توضیحات آگهی <span class="red-color">*</span></span>
                 <textarea class="form-control body-style" oninput="bodyChange()"
-                    placeholder="توضیحات دقیقی بنویسید که اگه خودتون خریدار بودین دوست داشتین بدونین." id="advertise_body" name="advertise_body">{{ $advertise->body }}</textarea>
+                    placeholder="توضیحات دقیقی بنویسید که اگه خودتون خریدار بودین دوست داشتین بدونین." id="advertise_body"
+                    name="advertise_body">{{ $advertise->body }}</textarea>
                 <span id="body-error"></span>
             </div>
 
@@ -109,7 +109,8 @@
             <div class="col-12 col-sm-10 my-2 text-right px-0">
                 <span class="label-title d-inline-block" id="price-tag-label">شماره تماس</span>
                 <span class="red-color">*</span>
-                {{-- <button type="button" class="btn btn-sm btn-primary mt-2" onclick="phoneShow(1)" id="show-phone-option">
+                {{-- <button type="button" class="btn btn-sm btn-primary mt-2" onclick="phoneShow(1)"
+                    id="show-phone-option">
                     نشان
                     داده
                     شود</button>
@@ -133,15 +134,15 @@
                 <span class="label-title">موقعیت آگهی <span class="red-color">*</span></span>
                 <span id="choose-location-btn" onclick="showProvinces()" data-toggle="modal" data-dismiss="modal"
                     data-target="#choose-location-modal">انتخاب مکان آگهی
-                    <img class="lazy-load" data-src="{{ $ftp_path . 'files/other/images/next.png' }}">
+                    <img loading="lazy" src="{{ $ftp_path . 'files/other/images/next.png' }}">
                 </span>
                 <div class="modal fade text-right" id="choose-location-modal" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content radius-10">
                             <div class="modal-body">
-                                <img id="choose-location-back" class="lazy-load"
-                                    data-src="{{ $ftp_path . 'files/other/images/back.png' }}">
+                                <img id="choose-location-back" loading="lazy"
+                                    src="{{ $ftp_path . 'files/other/images/back.png' }}">
                                 <span id="choose-location-title">انتخاب استان</span>
                                 <span class="close float-left cur-p" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -195,7 +196,7 @@
     </script>
     <script type="text/javascript"
         src="{{ asset('mixassets/js/advertise/edit.min.js') . '?lm=' . filemtime('mixassets/js/advertise/edit.min.js') }}">
-    </script>
+        </script>
 
     @if (!isset($advertise->price))
         <script>

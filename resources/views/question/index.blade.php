@@ -94,7 +94,7 @@
 
             @if (isset($page_intro_title) && isset($page_intro_desc))
                 <div id="page-g-div" class="text-center mt-3">
-                    <img class="lazy-load" id="page-g-img" data-src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
+                    <img loading="lazy" id="page-g-img" src="{{ $ftp_path . 'files/other/images/approval-36.png' }}">
                     <span id="page-g-title">{{ $page_intro_title }}</span>
                     <span id="page-g">{{ $page_intro_desc }}</span>
                 </div>
