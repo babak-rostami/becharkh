@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /new-question/
-Disallow: /comment-editor-img/comment
-Disallow: /new-ad/
