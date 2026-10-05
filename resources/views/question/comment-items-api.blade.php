@@ -63,7 +63,7 @@
 
         <button class="comment-reply-btn"
             onclick="openCCommentModal('reply','{{ isset($comment->question_id) ? $comment->question_id : $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
-                class="mr-1" src="{{ asset('files/other/images/reply.png') }}">
+                class="mr-1" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
         </button>
 
         <span class="copy-comment" id="copy-comment-{{ $comment->id }}" onclick="copyComment('{{ $comment->id }}')">

@@ -19,29 +19,7 @@
         rel="stylesheet" type="text/css" />
     <link rel="canonical" href="{{ url()->current() }}" />
 
-    <script type="application/ld+json">
-                {
-                  "@context": "https://schema.org",
-                  "@type": "VideoObject",
-                  "name": "{{$video->title}}",
-                  "description": "{{$video->description}}",
-                  "thumbnailUrl": [
-                    "{{asset($video->image())}}"
-                   ],
-                  "uploadDate": "{{$video->created_at->format('Y-m-d\TH:i:sP')}}",
-                  @if($video->isVideoFromYoutue())
-                      "contentUrl": "{{$format_vp}}",
-                  @else
-                      "contentUrl": "{{asset($video->videoPath())}}",
-                  @endif
-                  "embedUrl": "{{url()->current()}}",
-                  "interactionStatistic": {
-                      "@type": "InteractionCounter",
-                      "interactionType": { "@type": "WatchAction" },
-                      "userInteractionCount": {{$video->seen_count}}
-                    }
-                }
-            </script>
+    <script type="application/ld+json">{!! $videoSchema !!}</script>
 @endsection
 
 

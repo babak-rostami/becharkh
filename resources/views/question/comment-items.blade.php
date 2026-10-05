@@ -100,13 +100,13 @@
                         @if ($question->close != 1)
                             <button class="comment-reply-btn"
                                 onclick="openCCommentModal('reply','{{ $comment->question_id }}','{{ $comment->id }}')">پاسخ<img
-                                    alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
+                                    alt="reply icon" class="mr-1" loading="lazy" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
                             </button>
                         @endif
                     @elseif ($page == 'comment')
                         <button class="comment-reply-btn"
                             onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
-                                alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
+                                alt="reply icon" class="mr-1" loading="lazy" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
                         </button>
                     @endif
 
@@ -228,13 +228,13 @@
                     @if ($question->close != 1)
                         <button class="comment-reply-btn"
                             onclick="openCCommentModal('reply','{{ $comment->question_id }}','{{ $comment->id }}')">پاسخ<img
-                                alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
+                                alt="reply icon" class="mr-1" loading="lazy" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
                         </button>
                     @endif
                 @elseif ($page == 'comment')
                     <button class="comment-reply-btn"
                         onclick="openCCommentModal('reply','{{ $comment->category_id }}','{{ $comment->id }}')">پاسخ<img
-                            alt="reply icon" class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
+                            alt="reply icon" class="mr-1" loading="lazy" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
                     </button>
                 @endif
 

@@ -56,8 +56,11 @@ class VideoController extends Controller
             $video->update();
         }
 
+        $videoSchema = $this->generateVideoSchema($video);
+
         $compactVars = [
             'video',
+            'videoSchema',
             'videos',
         ];
         if (isset($video->affilate_id)) {
@@ -69,6 +72,43 @@ class VideoController extends Controller
             $compactVars[] = 'question';
         }
         return view('video.show', compact(...$compactVars));
+    }
+
+    private function generateVideoSchema($video): string
+    {
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'VideoObject',
+
+            'name' => $video->title,
+
+            'description' => $video->description,
+
+            'thumbnailUrl' => [
+                asset($video->image()),
+            ],
+
+            'uploadDate' => $video->created_at->format('c'),
+
+            'contentUrl' => asset($video->videoPath()),
+
+            'embedUrl' => url()->current(),
+
+            'interactionStatistic' => [
+                '@type' => 'InteractionCounter',
+
+                'interactionType' => [
+                    '@type' => 'WatchAction',
+                ],
+
+                'userInteractionCount' => $video->seen_count,
+            ],
+        ];
+
+        return json_encode(
+            $schema,
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+        );
     }
 
     public function showEmbedb($category_slug, $video_slug = null, $random_id = null)

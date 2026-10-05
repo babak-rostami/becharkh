@@ -52,7 +52,7 @@ class UserController extends Controller
             auth('user')->logout();
             return response()->json(['message' => 'اکانت شما غیر فعال شده است'], 403);
         } else {
-            return response()->json(['status' => 1], 200);
+            return response()->json(['status' => 1, 'csrf_token' => csrf_token()], 200);
         }
     }
 
@@ -122,7 +122,7 @@ class UserController extends Controller
 
         AdminNotificationService::send(' کاربری جدید با نام  ' . $request->username . ' ثبت نام کرد', route('user.dashboard', $request->username));
 
-        return response()->json(['success' => 1], 200);
+        return response()->json(['success' => 1, 'csrf_token' => csrf_token()], 200);
     }
 
     public function registerSend(Request $request)

@@ -385,10 +385,13 @@ class BlogController extends Controller
 
         $hot_pages = Cache::get('hot_pages');
 
+        $blogSchema = $this->generateBlogSchema($blog);
+
         $compactVars = [
             'hot_pages',
             'hotQuestions',
             'blog',
+            'blogSchema',
             'blogs',
             'blogVideo',
             'user',
@@ -421,6 +424,48 @@ class BlogController extends Controller
             $compactVars[] = 'suggestCats';
         }
         return view('blog.show', compact(...$compactVars));
+    }
+
+    private function generateBlogSchema($blog): string
+    {
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BlogPosting',
+
+            'mainEntityOfPage' => [
+                '@type' => 'WebPage',
+                '@id' => route('blog.show', [
+                    'category_slug' => $blog->category->slug,
+                    'slug' => $blog->slug,
+                    'random_id' => $blog->random_id,
+                ]),
+            ],
+
+            'headline' => $blog->title,
+
+            'image' => [
+                asset($blog->image()),
+            ],
+
+            'datePublished' => $blog->created_at->format('Y-m-d\TH:i:sP'),
+
+            'dateModified' => $blog->updated_at->format('Y-m-d\TH:i:sP'),
+
+            'author' => [
+                '@type' => 'Person',
+                'name' => $blog->user->name,
+                'url' => route('user.dashboard', $blog->user->username),
+            ],
+        ];
+
+        if ($blog->short_description !== null) {
+            $schema['description'] = $blog->short_description;
+        }
+
+        return json_encode(
+            $schema,
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+        );
     }
 
     private function getHotQuestions($category = null, $item_id = null)

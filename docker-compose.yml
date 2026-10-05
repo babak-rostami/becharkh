@@ -16,15 +16,11 @@ services:
       - .env
     depends_on:
       - mongo
-      # - mysql
       - redis
     networks:
       - becharkh-network
       - music-network
 
-  # تعداد نسخه‌ی این سرویس رو با --scale زیاد/کم کن، نه با کپی کردن بلوک:
-  #   docker compose up -d --scale queue-worker=3
-  # کل پروژه فقط از یه اسم صف استفاده می‌کنه: ->onQueue('becharkhsite')
   queue-worker:
     image: becharkh-app
     restart: unless-stopped
@@ -81,31 +77,10 @@ services:
       - MONGO_INITDB_DATABASE=${DB_MONGO_DATABASE}
     volumes:
       - becharkh_mongo_data:/data/db
-    ports:
-      # فقط برای مهاجرت داده/اتصال با Compass لازمه؛ روی سرور واقعی این دو خط رو حذف یا با فایروال ببند
-      - "27017:27017"
     networks:
       - becharkh-network
       - music-network
 
-  # دیتابیسِ در حال حذف‌شدن — طبق چک‌لیستی که قبلاً دادم، هر مدلی که از mysql به mongo منتقل کردی
-  # از این سرویس دیگه استفاده نمی‌کنه. وقتی Admin/Mission/... هم منتقل شدن، کل این بلوک رو حذف کن.
-  # mysql:
-  #   image: mysql:8.4
-  #   container_name: becharkh-mysql
-  #   restart: unless-stopped
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-  #     - MYSQL_DATABASE=${DB_DATABASE}
-  #     - MYSQL_USER=${DB_USERNAME}
-  #     - MYSQL_PASSWORD=${DB_PASSWORD}
-  #   volumes:
-  #     - becharkh_mysql_data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
-  #   networks:
-  #     - becharkh-network
-  #     - music-network
 
   redis:
     image: redis:8.8
@@ -124,5 +99,4 @@ networks:
 
 volumes:
   becharkh_mongo_data:
-  # becharkh_mysql_data:
   becharkh_redis_data:

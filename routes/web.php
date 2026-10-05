@@ -71,7 +71,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('elastic-init', [ElasticsearchController::class, 'initial']);
+// Route::get('elastic-init', [ElasticsearchController::class, 'initial']);
 
 Route::get('/getCities', [IndexController::class, 'getCities'])->name('get.cities');
 Route::get('/getCitiesCreate', [IndexController::class, 'getCitiesCreate'])->name('get.cities.create');

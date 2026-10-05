@@ -52,7 +52,7 @@
             @if ($question->close != 1)
                 <button type="button" class="comment-reply-btn"
                     onclick="openAnsReplyModal('replyto','{{ $question->id }}','{{ $answer->id }}')">پاسخ<img class="mr-1"
-                        loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
+                        loading="lazy" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
                 </button>
             @endif
 
@@ -84,7 +84,7 @@
                 @if ($question->close != 1)
                     <button type="button" class="comment-reply-btn"
                         onclick="openAnsReplyModal('replyToRep','{{ $question->id }}','{{ $answer->id }}','{{ $reply->id }}')">پاسخ<img
-                            class="mr-1" loading="lazy" src="{{ asset('files/other/images/reply.png') }}">
+                            class="mr-1" loading="lazy" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
                     </button>
                 @endif
                 <span class="like-icon" onclick="like('{{ $reply->id }}')">

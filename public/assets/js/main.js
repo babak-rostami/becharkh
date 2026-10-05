@@ -549,6 +549,10 @@ function loginUser() {
                 $("#login-error-box").hide();
                 $("#login-suc-message").text("خوش آمدید");
                 $("#login-suc-message").show();
+                if (data.csrf_token) {
+                    csrf_token = data.csrf_token;
+                    $('input[name="_token"]').val(data.csrf_token);
+                }
                 if (typeof page !== "undefined") {
                     if (
                         page == "comment" ||
@@ -611,6 +615,10 @@ function registerUser() {
                 $("#register-error-box").hide();
                 $("#register-suc-message").text("خوش آمدید");
                 $("#register-suc-message").show();
+                if (data.csrf_token) {
+                    csrf_token = data.csrf_token;
+                    $('input[name="_token"]').val(data.csrf_token);
+                }
                 if (typeof page !== "undefined") {
                     if (
                         page == "comment" ||

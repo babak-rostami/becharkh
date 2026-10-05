@@ -15,7 +15,7 @@
             <button type="button" class="comment-reply-btn"
                 onclick="openCCommentModal('replyto','{{ isset($comment->question_id) ? $comment->question_id : $comment->category_id }}','{{ $comment->id }}','{{ $reply->id }}')">
                 پاسخ
-                <img alt="reply icon" class="mr-1" src="{{ asset('files/other/images/reply.png') }}">
+                <img alt="reply icon" class="mr-1" src="{{ $ftp_path . 'files/other/images/reply.png' }}">
             </button>
             <span class="like-icon" onclick="likeCategoryComment('{{ $reply->id }}')">
                 <span id="category-comment-like-count-{{ $reply->id }}">

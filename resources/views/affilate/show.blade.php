@@ -117,7 +117,7 @@
 
                                 <a class="comment-reply-btn" href="" data-toggle="modal"
                                     data-target="#reply-{{ $comment->id }}">پاسخ<img class="mr-1" loading="lazy"
-                                        src="{{ asset('files/other/images/reply.png') }}"></a>
+                                        src="{{ $ftp_path . 'files/other/images/reply.png' }}"></a>
 
                                 <span class="like-icon" onclick="likeProductComment('{{ $comment->id }}')">
                                     <span
@@ -151,7 +151,7 @@
 
                                     <a class="comment-reply-btn" href="" data-toggle="modal"
                                         data-target="#replyto-{{ $reply->id }}">پاسخ<img class="mr-1" loading="lazy"
-                                            src="{{ asset('files/other/images/reply.png') }}"></a>
+                                            src="{{ $ftp_path .'files/other/images/reply.png' }}"></a>
 
                                     <span class="like-icon" onclick="likeProductComment('{{ $reply->id }}')">
                                         <span

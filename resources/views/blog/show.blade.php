@@ -20,30 +20,7 @@
     <link href="{{ asset('mixassets/css/blog/show.min.css') . '?lm=' . filemtime('mixassets/css/blog/show.min.css') }}"
         rel="stylesheet" type="text/css" />
 
-    <script type="application/ld+json">
-            {
-              "@context": "http://schema.org",
-              "@type": "BlogPosting",
-              "mainEntityOfPage": {
-                "@type": "WebPage",
-                "@id": "{{ route('blog.show', ['category_slug' => $blog->category->slug, 'slug' => $blog->slug, 'random_id' => $blog->random_id]) }}"
-              },
-              "headline": "{{$blog->title}}",
-              "image": [
-                "{{asset($blog->image())}}"
-              ],
-              "datePublished": "{{$blog->created_at->format('Y-m-d\TH:i:sP')}}",
-              "dateModified": "{{$blog->updated_at->format('Y-m-d\TH:i:sP')}}",
-              "author": {
-                "@type": "Person",
-                "name": "{{$blog->user->name}}",
-                "url": "{{ route('user.dashboard', $blog->user->username) }}"
-              },
-              @if($blog->short_description != null)
-              "description": "{{$blog->short_description}}"
-              @endif
-            }
-            </script>
+    <script type="application/ld+json">{!! $blogSchema !!}</script>
 @endsection
 
 
@@ -174,7 +151,7 @@
 
                                 <a class="comment-reply-btn" href="" data-toggle="modal"
                                     data-target="#reply-{{ $comment->id }}">پاسخ<img class="mr-1" loading="lazy"
-                                        src="{{ asset('files/other/images/reply.png') }}"></a>
+                                        src="{{ $ftp_path . 'files/other/images/reply.png' }}"></a>
 
                                 <span class="like-icon" onclick="likeBlogComment('{{ $comment->id }}')">
                                     <span
@@ -210,7 +187,7 @@
 
                                     <a class="comment-reply-btn" href="" data-toggle="modal"
                                         data-target="#replyto-{{ $reply->id }}">پاسخ<img class="mr-1" loading="lazy"
-                                            src="{{ asset('files/other/images/reply.png') }}"></a>
+                                            src="{{ $ftp_path . 'files/other/images/reply.png' }}"></a>
 
                                     <span class="like-icon" onclick="likeBlogComment('{{ $reply->id }}')">
                                         <span
